@@ -25,52 +25,47 @@
         }
         *, *::before, *::after { box-sizing: border-box; }
         body { font-family: var(--font-family); margin: 0; background-color: var(--bg-color); color: var(--dark-color); }
-        .container { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 1.5rem; }
         
         /* --- Navigation --- */
         nav { background: #fff; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--box-shadow); position: sticky; top: 0; z-index: 1000; }
         .nav-left h1 { margin: 0; font-size: 1.75rem; color: var(--primary-color); cursor: pointer; }
         .nav-right { display: flex; align-items: center; gap: 1rem; }
         .nav-icon { cursor: pointer; position: relative; background: none; border: none; padding: 0.5rem; border-radius: 50%; transition: background-color 0.2s; }
-        .nav-icon:hover { background-color: var(--light-grey); }
-        .nav-icon svg { width: 24px; height: 24px; stroke: var(--dark-color); }
         #cart-count { position: absolute; top: 0; right: 0; background-color: #EF4444; color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.7rem; font-weight: bold; }
         
         /* --- PROFESSIONAL BUTTON STYLES --- */
-        button { 
-            border: 1px solid transparent; 
-            border-radius: var(--border-radius); 
-            cursor: pointer; 
-            font-family: var(--font-family); 
-            font-weight: 600; 
-            transition: all 0.2s ease-in-out; 
-            padding: 0.75rem 1.5rem;
-            box-shadow: var(--box-shadow);
-        }
+        button { border: 1px solid transparent; border-radius: var(--border-radius); cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: all 0.2s ease-in-out; padding: 0.75rem 1.5rem; box-shadow: var(--box-shadow); }
         button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: var(--box-shadow-md); }
         button:active:not(:disabled) { transform: translateY(0px); box-shadow: var(--box-shadow); }
-        
         .btn-primary { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
         .btn-primary:hover:not(:disabled) { background-color: var(--primary-hover); border-color: var(--primary-hover); }
-        
         .btn-dark { background-color: var(--dark-color); color: white; border-color: var(--dark-color); }
         .btn-dark:hover:not(:disabled) { background-color: #374151; border-color: #374151; }
-
         .btn-outline { background-color: white; color: var(--dark-color); border-color: #d1d5db; }
         .btn-outline:hover:not(:disabled) { background-color: var(--light-grey); border-color: #9ca3af; }
-
         button:disabled { background-color: #e5e7eb; cursor: not-allowed; color: #9ca3af; box-shadow: none; }
         
         /* --- PRODUCT DETAIL PAGE STYLES --- */
-        .product-layout { display: grid; grid-template-columns: 1fr; gap: 2rem; }
-        @media (min-width: 1024px) { .product-layout { grid-template-columns: 1fr 1fr; gap: 3rem; } }
+        .product-layout-container { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+        @media (min-width: 1024px) { 
+            .product-layout-container { grid-template-columns: auto 1fr 1fr; gap: 2rem; }
+            .product-layout-main { grid-column: 2 / 3; }
+            .product-layout-sidebar { grid-column: 3 / 4; }
+        }
 
-        .image-gallery-container { display: flex; gap: 1rem; }
-        .thumbnail-images { display: flex; flex-direction: column; gap: 0.75rem; }
-        .thumbnail-images img { width: 80px; height: 80px; object-fit: cover; border-radius: var(--border-radius); cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s; }
-        .thumbnail-images img:hover, .thumbnail-images img.active { border-color: var(--primary-color); }
-        .main-image { flex: 1; }
+        .image-gallery-container { display: flex; flex-direction: column; gap: 1rem; }
         .main-image img { width: 100%; border-radius: var(--border-radius); box-shadow: var(--box-shadow-md); }
+        .thumbnail-images { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+        .thumbnail-images img { width: 80px; height: 80px; object-fit: cover; border-radius: var(--border-radius); cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s; }
+        .thumbnail-images img.active { border-color: var(--primary-color); }
+        
+        @media (min-width: 1024px) {
+            .image-gallery-container { flex-direction: row; gap: 1.5rem; }
+            .thumbnail-images { flex-direction: column; }
+            .main-image { order: 2; flex: 1; }
+            .thumbnail-images { order: 1; }
+        }
         
         .product-info h4 { color: var(--secondary-color); font-weight: 400; font-size: 0.9rem; margin: 0 0 0.5rem; }
         .product-info h1 { font-size: 2rem; margin: 0 0 1rem; }
@@ -79,26 +74,39 @@
         .old-price { font-size: 1.25rem; text-decoration: line-through; color: var(--secondary-color); }
         
         .attributes { line-height: 1.6; font-size: 0.9rem; }
-        .attributes strong { font-weight: 600; color: var(--dark-color); }
+        .attributes strong { font-weight: 700; color: var(--dark-color); }
 
         .size-selector { margin: 2rem 0; }
-        .size-selector h4 { margin-bottom: 0.75rem; font-size: 1rem; }
         .size-options { display: flex; flex-wrap: wrap; gap: 0.5rem; }
         .size-options button { background-color: white; color: var(--dark-color); border: 1px solid #d1d5db; box-shadow: none; }
-        .size-options button:hover:not(:disabled) { transform: none; box-shadow: none; background-color: var(--light-grey); }
         .size-options button.selected { background-color: var(--dark-color); color: white; border-color: var(--dark-color); }
         .size-options button:disabled { background-color: white; border: 1px dashed #d1d5db; color: #9ca3af; position: relative; overflow: hidden; }
         .size-options button:disabled::after { content: ''; position: absolute; top: 50%; left: -10%; width: 120%; height: 1.5px; background: #d1d5db; transform: rotate(-20deg); }
 
-        .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
-        .wishlist-btn { width: 100%; grid-column: 1 / -1; }
+        .action-buttons { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 1.5rem; }
+        @media (min-width: 480px) { .action-buttons { grid-template-columns: 1fr 1fr; } }
+        .wishlist-btn { grid-column: 1 / -1; }
+
+        /* --- Right Sidebar Styles --- */
+        .product-sidebar-right { padding-left: 1rem; }
+        .vtl-tb-main-widget { border: 1px solid #e5e7eb; border-radius: var(--border-radius); padding: 1rem; }
+        .vtl-tb-main-widget__badges { display: flex; flex-direction: column; gap: 1rem; }
+        .vtl-tb-main-widget__badge-img { width: 100%; max-width: 120px; height: auto; }
+
+        .product-accordion { margin-top: 2rem; }
+        .product-accordion details { border-bottom: 1px solid #e5e7eb; }
+        .product-accordion details:first-child { border-top: 1px solid #e5e7eb; }
+        .product-accordion summary { display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 1rem 0; font-weight: 600; list-style: none; }
+        .product-accordion summary::-webkit-details-marker { display: none; }
+        .product-accordion summary svg { transition: transform 0.2s; }
+        .product-accordion details[open] summary svg { transform: rotate(180deg); }
+        .product-accordion .accordion__content { padding-bottom: 1rem; font-size: 0.9rem; color: var(--secondary-color); }
+        .product-accordion ol { padding-left: 1.5rem; margin: 0; }
 
         #related-products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
 
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
-        .toast { padding: 1rem 1.5rem; margin-bottom: 1rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow-md); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
-        .toast.success { background-color: #10B981; }
-        .toast.error { background-color: #EF4444; }
+        .toast { padding: 1rem 1.5rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow-md); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
         @keyframes fadeOut { to { opacity: 0; } }
     </style>
@@ -152,6 +160,7 @@
                 renderNav();
             });
             fetchAllProductsThenRender();
+            window.addEventListener('hashchange', fetchAllProductsThenRender);
         });
 
         async function fetchAllProductsThenRender() {
@@ -160,19 +169,10 @@
             renderProductDetails();
         }
         
-        // --- HELPER FUNCTION FOR DESCRIPTION FORMATTING (FIXED) ---
         function formatDescription(text) {
             if (!text) return 'No description available.';
-            const escapedText = text
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-            
-            return escapedText
-                .replace(/\*(.*?)\*/g, '<strong>$1</strong>')
-                .replace(/\n/g, '<br>');
+            const escapedText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            return escapedText.replace(/\*(.*?)\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
         }
 
         // --- PRODUCT DETAIL LOGIC ---
@@ -197,41 +197,53 @@
                     <div class="main-image"><img src="${product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/600'}" alt="${product.name}"></div>
                 </div>`;
             
-            const detailsHtml = `
-                <div class="product-info">
-                    <h4>${product.category}</h4>
-                    <h1>${product.name}</h1>
-                    <div class="price-container">
-                        <span class="current-price">$${product.price.toFixed(2)}</span>
-                        ${product.oldPrice > 0 ? `<span class="old-price">$${product.oldPrice.toFixed(2)}</span>` : ''}
-                    </div>
-                    
-                    <div class="attributes">
-                        <p>${formattedDescription}</p>
-                    </div>
-
-                    <div class="size-selector">
-                        <h4>Size:</h4>
-                        <div class="size-options">
-                            ${(product.sizes || []).map(sizeObj => `<button data-size="${sizeObj.name}" ${!sizeObj.available ? 'disabled' : ''}>${sizeObj.name}</button>`).join('')}
+            const mainDetailsHtml = `
+                <div class="product-layout-main">
+                    <div class="product-info">
+                        <h4>${product.category}</h4>
+                        <h1>${product.name}</h1>
+                        <div class="price-container">
+                            <span class="current-price">$${product.price.toFixed(2)}</span>
+                            ${product.oldPrice > 0 ? `<span class="old-price">$${product.oldPrice.toFixed(2)}</span>` : ''}
+                        </div>
+                        <div class="attributes"><p>${formattedDescription}</p></div>
+                        <div class="size-selector">
+                            <h4>Size:</h4>
+                            <div class="size-options">${(product.sizes || []).map(sizeObj => `<button data-size="${sizeObj.name}" ${!sizeObj.available ? 'disabled' : ''}>${sizeObj.name}</button>`).join('')}</div>
+                        </div>
+                        <div class="action-buttons">
+                            ${product.isAvailable ? `
+                                <button class="btn-dark" id="add-to-cart-btn" disabled>Add to Cart</button>
+                                <button class="btn-primary" id="buy-now-btn" disabled>Buy It Now</button>
+                                <button class="btn-outline wishlist-btn" onclick="alert('Wishlist feature coming soon!')">Add to Wishlist</button>
+                            ` : `<button class="btn-dark" disabled style="grid-column: 1 / -1;">Sold Out</button>`}
                         </div>
                     </div>
-                    
-                    <!-- Button container with corrected structure -->
-                    <div class="action-buttons">
-                        ${product.isAvailable ? `
-                            <button class="btn-dark" id="add-to-cart-btn" disabled>Add to Cart</button>
-                            <button class="btn-primary" id="buy-now-btn" disabled>Buy It Now</button>
-                            <button class="btn-outline wishlist-btn" onclick="alert('Wishlist feature coming soon!')">Add to Wishlist</button>
-                        ` : `
-                            <button class="btn-dark" disabled style="grid-column: 1 / -1;">Sold Out</button>
-                        `}
+                </div>`;
+            
+            const sidebarHtml = `
+                <div class="product-layout-sidebar">
+                    <div class="vtl-tb-main-widget">
+                        <div class="vtl-tb-main-widget__badges">
+                           <div><svg class="vtl-tb-main-widget__badge-img" width="90" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500"><path d="M107.84 348v-43.637h15.554c3.395 0 6.207.618 8.437 1.854 2.23 1.236 3.899 2.926 5.007 5.071 1.108 2.131 1.662 4.531 1.662 7.202 0 2.684-.561 5.099-1.683 7.244-1.108 2.131-2.784 3.821-5.028 5.071-2.23 1.236-5.036 1.854-8.416 1.854h-10.697v-5.583h10.1c2.145 0 3.885-.369 5.22-1.108 1.335-.752 2.315-1.775 2.94-3.068.625-1.292.938-2.763.938-4.41 0-1.648-.313-3.111-.938-4.39-.625-1.278-1.612-2.279-2.961-3.004-1.335-.724-3.097-1.086-5.284-1.086h-8.267V348h-6.584Zm40.179 0v-43.637h15.554c3.38 0 6.186.583 8.416 1.747 2.244 1.165 3.92 2.777 5.028 4.837 1.108 2.046 1.662 4.411 1.662 7.095 0 2.671-.561 5.022-1.683 7.053-1.108 2.017-2.784 3.586-5.028 4.709-2.23 1.122-5.036 1.683-8.417 1.683h-11.782v-5.668h11.186c2.131 0 3.863-.305 5.199-.916 1.349-.611 2.336-1.499 2.961-2.663.625-1.165.938-2.564.938-4.198 0-1.647-.32-3.075-.959-4.282-.625-1.208-1.612-2.131-2.962-2.77-1.335-.654-3.089-.98-5.262-.98h-8.267V348h-6.584Zm21.541-19.688L180.341 348h-7.5l-10.568-19.688h7.287ZM188.491 348v-43.637h27.358v5.668h-20.775v13.295h19.347v5.647h-19.347v13.359h21.03V348h-27.613Zm37.952-43.637h7.99l13.892 33.921h.511l13.892-33.921h7.991V348h-6.265v-31.577h-.404l-12.87 31.513h-5.199l-12.869-31.534h-.405V348h-6.264v-43.637Zm62.231 0V348h-6.583v-43.637h6.583Zm39.45 0h6.605v28.701c0 3.054-.718 5.76-2.152 8.117-1.435 2.344-3.452 4.191-6.051 5.54-2.6 1.335-5.647 2.003-9.141 2.003-3.48 0-6.52-.668-9.119-2.003-2.6-1.349-4.617-3.196-6.051-5.54-1.435-2.357-2.152-5.063-2.152-8.117v-28.701h6.583v28.168c0 1.974.434 3.729 1.3 5.263.881 1.534 2.124 2.741 3.729 3.622 1.605.866 3.508 1.3 5.71 1.3 2.216 0 4.126-.434 5.731-1.3 1.62-.881 2.856-2.088 3.708-3.622.866-1.534 1.3-3.289 1.3-5.263v-28.168Zm17.977 0h7.99l13.892 33.921h.511l13.892-33.921h7.99V348h-6.264v-31.577h-.405l-12.869 31.513h-5.199l-12.869-31.534h-.405V348h-6.264v-43.637ZM134.159 406.852h6.477l4.56 5.945 2.152 2.642 7.265 9.481h-6.733l-4.857-6.328-1.662-2.301-7.202-9.439Zm21.861-7.671c0 4.66-.853 8.665-2.557 12.018-1.705 3.338-4.041 5.909-7.01 7.713-2.955 1.789-6.314 2.684-10.078 2.684-3.779 0-7.152-.895-10.121-2.684-2.954-1.804-5.284-4.383-6.989-7.735-1.704-3.352-2.556-7.351-2.556-11.996 0-4.659.852-8.657 2.556-11.995 1.705-3.353 4.035-5.924 6.989-7.713 2.969-1.804 6.342-2.706 10.121-2.706 3.764 0 7.123.902 10.078 2.706 2.969 1.789 5.305 4.36 7.01 7.713 1.704 3.338 2.557 7.336 2.557 11.995Zm-6.52 0c0-3.551-.575-6.541-1.726-8.97-1.136-2.443-2.699-4.289-4.688-5.539-1.974-1.265-4.211-1.897-6.711-1.897-2.514 0-4.759.632-6.733 1.897-1.975 1.25-3.537 3.096-4.688 5.539-1.136 2.429-1.704 5.419-1.704 8.97 0 3.552.568 6.549 1.704 8.992 1.151 2.429 2.713 4.276 4.688 5.54 1.974 1.25 4.219 1.875 6.733 1.875 2.5 0 4.737-.625 6.711-1.875 1.989-1.264 3.552-3.111 4.688-5.54 1.151-2.443 1.726-5.44 1.726-8.992Zm44.589-21.818h6.605v28.701c0 3.054-.717 5.76-2.152 8.117-1.434 2.344-3.451 4.191-6.051 5.54-2.599 1.335-5.646 2.003-9.14 2.003-3.481 0-6.52-.668-9.12-2.003-2.599-1.349-4.616-3.196-6.051-5.54-1.435-2.357-2.152-5.063-2.152-8.117v-28.701h6.584v28.168c0 1.974.433 3.729 1.3 5.263.88 1.534 2.123 2.741 3.728 3.622 1.605.866 3.509 1.3 5.711 1.3 2.215 0 4.126-.434 5.731-1.3 1.619-.881 2.855-2.088 3.708-3.622.866-1.534 1.299-3.289 1.299-5.263v-28.168ZM215.753 421h-6.989l15.703-43.637h7.607L247.777 421h-6.989l-12.337-35.711h-.341L215.753 421Zm1.171-17.088h22.671v5.539h-22.671v-5.539ZM255.878 421v-43.637h6.584v37.969h19.773V421h-26.357Zm42.251-43.637V421h-6.584v-43.637h6.584Zm9.236 5.668v-5.668h33.772v5.668h-13.616V421h-6.562v-37.969h-13.594Zm39.668-5.668h7.478l11.4 19.837h.468l11.4-19.837h7.478l-15.831 26.506V421h-6.562v-17.131l-15.831-26.506Z" fill="#303030"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M171.487 47.875h162.132l31.93 53.638-113.015 143.825-118.231-143.922 37.184-53.541Zm3.662 7-29.77 42.864h45.351l17.011-42.864h-32.592Zm40.123 0-17.011 42.864h50.713V54.875h-33.702Zm40.702 0v42.864h50.712l-17.011-42.864h-33.701Zm41.232 0 17.011 42.864h40.939l-25.517-42.864h-32.433Zm56.905 49.864h-39.963l-47.955 111.887 87.918-111.887ZM255.974 222.7l50.558-117.961h-50.558V222.7Zm-7-117.961h-50.559L248.974 222.7V104.739Zm-9.404 113.79-48.771-113.79h-44.707l93.478 113.79Z" fill="#000000"></path></svg></div>
+                            <div><svg class="vtl-tb-main-widget__badge-img" width="90" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500"><path d="M177.563 348v-43.637h27.059v5.668h-20.476v13.295h18.537v5.647h-18.537V348h-6.583Zm35.193 0h-6.989l15.703-43.637h7.607L244.78 348h-6.989l-12.336-35.711h-.341L212.756 348Zm1.172-17.089h22.67v5.54h-22.67v-5.54Zm62.402-15.085c-.228-2.017-1.165-3.579-2.813-4.687-1.648-1.122-3.722-1.683-6.222-1.683-1.789 0-3.338.284-4.644.852-1.307.554-2.323 1.321-3.047 2.301-.711.966-1.066 2.067-1.066 3.302 0 1.037.242 1.932.725 2.685a6.487 6.487 0 0 0 1.939 1.896c.809.498 1.676.917 2.599 1.258.923.326 1.811.596 2.664.809l4.261 1.108c1.392.341 2.819.803 4.283 1.385a17.176 17.176 0 0 1 4.069 2.301 11.031 11.031 0 0 1 3.026 3.537c.781 1.406 1.172 3.09 1.172 5.05 0 2.471-.64 4.666-1.918 6.584-1.264 1.917-3.104 3.43-5.518 4.538-2.401 1.108-5.306 1.662-8.715 1.662-3.267 0-6.094-.518-8.48-1.555s-4.254-2.508-5.604-4.411c-1.349-1.918-2.095-4.19-2.237-6.818h6.605c.128 1.577.639 2.891 1.534 3.942.909 1.037 2.067 1.811 3.473 2.322 1.421.497 2.976.746 4.666.746 1.861 0 3.516-.291 4.965-.874 1.463-.596 2.614-1.42 3.452-2.471.838-1.066 1.257-2.309 1.257-3.729 0-1.293-.37-2.351-1.108-3.175-.725-.824-1.712-1.505-2.962-2.045-1.236-.54-2.635-1.016-4.197-1.428l-5.157-1.406c-3.494-.952-6.264-2.351-8.309-4.197-2.031-1.847-3.047-4.29-3.047-7.33 0-2.514.682-4.709 2.045-6.584 1.364-1.875 3.211-3.331 5.54-4.368 2.33-1.051 4.957-1.576 7.884-1.576 2.954 0 5.561.518 7.819 1.555 2.273 1.037 4.063 2.464 5.37 4.283 1.306 1.804 1.988 3.878 2.045 6.221h-6.349Zm14.461-5.795v-5.668h33.771v5.668h-13.615V348h-6.562v-37.969h-13.594Zm-159.503 78.795c-.227-2.017-1.165-3.579-2.813-4.687-1.647-1.122-3.721-1.683-6.221-1.683-1.79 0-3.338.284-4.645.852-1.307.554-2.323 1.321-3.047 2.301-.71.966-1.065 2.067-1.065 3.302 0 1.037.241 1.932.724 2.685a6.487 6.487 0 0 0 1.939 1.896c.81.498 1.676.917 2.599 1.258.924.326 1.811.596 2.664.809l4.261 1.108c1.392.341 2.82.803 4.283 1.385a17.21 17.21 0 0 1 4.069 2.301 11.031 11.031 0 0 1 3.026 3.537c.781 1.406 1.172 3.09 1.172 5.05 0 2.471-.639 4.666-1.918 6.584-1.264 1.917-3.104 3.43-5.518 4.538-2.401 1.108-5.306 1.662-8.715 1.662-3.267 0-6.094-.518-8.48-1.555s-4.254-2.508-5.604-4.411c-1.349-1.918-2.095-4.19-2.237-6.818h6.605c.128 1.577.64 2.891 1.534 3.942.91 1.037 2.067 1.811 3.473 2.322 1.421.497 2.976.746 4.667.746 1.86 0 3.515-.291 4.964-.874 1.463-.596 2.614-1.42 3.452-2.471.838-1.066 1.257-2.309 1.257-3.729 0-1.293-.369-2.351-1.108-3.175-.724-.824-1.712-1.505-2.962-2.045-1.235-.54-2.635-1.016-4.197-1.428l-5.156-1.406c-3.495-.952-6.265-2.351-8.31-4.197-2.031-1.847-3.047-4.29-3.047-7.33 0-2.514.682-4.709 2.046-6.584 1.363-1.875 3.21-3.331 5.539-4.368 2.33-1.051 4.958-1.576 7.884-1.576 2.954 0 5.561.518 7.819 1.555 2.273 1.037 4.063 2.464 5.37 4.283 1.307 1.804 1.988 3.878 2.045 6.221h-6.349ZM147.901 421v-43.637h6.584v18.963h21.754v-18.963h6.606V421h-6.606v-19.027h-21.754V421h-6.584Zm52.915-43.637V421h-6.583v-43.637h6.583ZM212.204 421v-43.637h15.554c3.395 0 6.208.618 8.438 1.854 2.23 1.236 3.899 2.926 5.007 5.071 1.108 2.131 1.662 4.531 1.662 7.202 0 2.684-.561 5.099-1.683 7.244-1.108 2.131-2.784 3.821-5.029 5.071-2.23 1.236-5.035 1.854-8.416 1.854h-10.696v-5.583h10.1c2.144 0 3.884-.369 5.22-1.108 1.335-.753 2.315-1.775 2.94-3.068.625-1.292.938-2.763.938-4.41 0-1.648-.313-3.111-.938-4.39-.625-1.278-1.612-2.279-2.962-3.004-1.335-.724-3.096-1.087-5.284-1.087h-8.267V421h-6.584Zm40.179 0v-43.637h15.554c3.395 0 6.208.618 8.438 1.854 2.23 1.236 3.899 2.926 5.007 5.071 1.108 2.131 1.662 4.531 1.662 7.202 0 2.684-.561 5.099-1.683 7.244-1.108 2.131-2.784 3.821-5.029 5.071-2.23 1.236-5.035 1.854-8.416 1.854H257.22v-5.583h10.099c2.145 0 3.885-.369 5.221-1.108 1.335-.753 2.315-1.775 2.94-3.068.625-1.292.937-2.763.937-4.41 0-1.648-.312-3.111-.937-4.39-.625-1.278-1.612-2.279-2.962-3.004-1.335-.724-3.096-1.087-5.284-1.087h-8.267V421h-6.584Zm46.763-43.637V421h-6.584v-43.637h6.584Zm46.608 0V421h-6.051l-22.18-32.003h-.405V421h-6.584v-43.637h6.094l22.202 32.046h.405v-32.046h6.52Zm40.936 13.786c-.412-1.293-.966-2.451-1.662-3.473a10.614 10.614 0 0 0-2.451-2.642 10.285 10.285 0 0 0-3.26-1.684c-1.207-.383-2.535-.575-3.984-.575-2.457 0-4.673.632-6.648 1.896-1.974 1.265-3.537 3.118-4.687 5.562-1.136 2.428-1.705 5.404-1.705 8.927 0 3.537.576 6.527 1.726 8.97 1.151 2.443 2.727 4.297 4.73 5.561 2.003 1.265 4.283 1.897 6.84 1.897 2.372 0 4.439-.483 6.2-1.449a10.095 10.095 0 0 0 4.112-4.091c.98-1.776 1.47-3.864 1.47-6.264l1.705.319H376.59v-5.433h17.152v4.964c0 3.665-.781 6.847-2.344 9.546-1.548 2.685-3.693 4.758-6.434 6.222-2.727 1.463-5.852 2.194-9.375 2.194-3.949 0-7.415-.909-10.398-2.727-2.969-1.818-5.284-4.396-6.946-7.735-1.662-3.352-2.493-7.329-2.493-11.931 0-3.48.483-6.605 1.449-9.375.966-2.77 2.322-5.121 4.07-7.053a17.767 17.767 0 0 1 6.2-4.453c2.386-1.037 4.993-1.555 7.819-1.555 2.358 0 4.553.348 6.584 1.044 2.046.696 3.864 1.683 5.455 2.961a16.781 16.781 0 0 1 3.984 4.56c1.051 1.747 1.762 3.686 2.131 5.817h-6.754Z" fill="#303030"></path><path d="M130.561 38.594a3.5 3.5 0 0 1 3.5-3.5h32.411a18.33 18.33 0 0 1 18.183 16.008l3.048 23.873 41.871-.09a3.5 3.5 0 1 1 .015 7l-40.993.088 10.352 81.097a11.329 11.329 0 0 0 11.239 9.895h83.717a11.334 11.334 0 0 0 10.616-7.369l6.441-17.262a3.499 3.499 0 1 1 6.558 2.447l-6.441 17.262a18.333 18.333 0 0 1-17.174 11.922h-83.717a18.33 18.33 0 0 1-18.182-16.009L181.16 79.003a3.584 3.584 0 0 1-.019-.148l-3.43-26.866a11.333 11.333 0 0 0-11.239-9.895h-32.411a3.5 3.5 0 0 1-3.5-3.5Z" fill="#000000"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M294.498 198.361c-11.196 0-20.272 9.076-20.272 20.272 0 11.196 9.076 20.272 20.272 20.272 11.196 0 20.272-9.076 20.272-20.272 0-11.196-9.076-20.272-20.272-20.272Zm-13.272 20.272c0-7.33 5.942-13.272 13.272-13.272s13.272 5.942 13.272 13.272-5.942 13.272-13.272 13.272-13.272-5.942-13.272-13.272Zm-94.648 0c0-11.196 9.076-20.272 20.272-20.272 11.196 0 20.272 9.076 20.272 20.272 0 11.196-9.076 20.272-20.272 20.272-11.196 0-20.272-9.076-20.272-20.272Zm20.272-13.272c-7.33 0-13.272 5.942-13.272 13.272s5.942 13.272 13.272 13.272 13.272-5.942 13.272-13.272-5.942-13.272-13.272-13.272ZM326.597 41.144c-7.8 0-15.297 3.02-20.919 8.426l-.007.007-4.296 4.155-4.296-4.155-.007-.007a30.179 30.179 0 0 0-41.833-.005 28.235 28.235 0 0 0-.004 40.844l43.703 42.372a3.5 3.5 0 0 0 4.874 0l43.694-42.364.009-.008a28.232 28.232 0 0 0 6.457-31.53 28.245 28.245 0 0 0-6.46-9.313 30.18 30.18 0 0 0-20.915-8.422ZM310.53 54.616l.004-.004a23.177 23.177 0 0 1 32.13.004l.01.01a21.236 21.236 0 0 1 0 30.726l-.017.017-41.282 40.023-34.549-33.512-6.733-6.511-.017-.016a21.234 21.234 0 0 1 0-30.728l.01-.01a23.179 23.179 0 0 1 32.13-.003l.004.004 6.722 6.5a3.5 3.5 0 0 0 4.866 0l6.722-6.5Z" fill="#000000"></path></div>
+                        </div>
+                    </div>
+                    <div class="product-accordion">
+                        <details>
+                            <summary>
+                                Shipping &amp; Returns
+                                <span><svg width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 1.18182L7 7.18182L1 1.18182" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                            </summary>
+                            <div class="accordion__content">
+                                <ol><li>Hassle-free returns within 3 days; specific conditions apply based on products and promotions.</li><li>Issues with defective, incorrect, or damaged products must be reported within 24 hours of delivery.</li><li>Items purchased during special sales or with coupons are ineligible for returns and exchanges.</li></ol>
+                            </div>
+                        </details>
                     </div>
                 </div>`;
 
-            container.innerHTML = `<div class="product-layout">${galleryHtml}${detailsHtml}</div>`;
+            container.innerHTML = `<div class="product-layout-container">${galleryHtml}${mainDetailsHtml}${sidebarHtml}</div>`;
             
-            // Add Event Listeners after rendering
             setupGalleryListeners();
             if (product.isAvailable) {
                 setupSizeSelectorListeners();
@@ -287,30 +299,19 @@
                     `).join('')}
                 </div>`;
         }
-
+        
         // --- CART LOGIC ---
         const loadCartFromLocalStorage = () => cart = JSON.parse(localStorage.getItem('shopSphereCart') || '[]');
         const saveCartToLocalStorage = () => localStorage.setItem('shopSphereCart', JSON.stringify(cart));
-
         function handleAddToCart(productId) {
-            if (!selectedSize) {
-                showToast('Please select a size.', 'error');
-                return;
-            }
+            if (!selectedSize) { showToast('Please select a size.', 'error'); return; }
             const itemInCart = cart.find(i => i.productId === productId && i.size === selectedSize);
             if (itemInCart) { itemInCart.quantity++; } 
             else { cart.push({ productId, quantity: 1, size: selectedSize }); }
-            
-            saveCartToLocalStorage();
-            updateCartCount();
-            showToast('Item added to cart!', 'success');
+            saveCartToLocalStorage(); updateCartCount(); showToast('Item added to cart!', 'success');
         }
-
         function handleBuyNow(productId) {
-            if (!selectedSize) {
-                showToast('Please select a size.', 'error');
-                return;
-            }
+            if (!selectedSize) { showToast('Please select a size.', 'error'); return; }
             handleAddToCart(productId);
             window.location.href = 'checkout.html';
         }
