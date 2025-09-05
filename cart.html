@@ -10,86 +10,69 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- GLOBAL STYLES (Should be identical to other pages) --- */
+        /* --- GLOBAL STYLES --- */
         :root {
-            --primary-color: #4F46E5; --primary-hover: #4338CA; --primary-light: #eef2ff;
-            --secondary-color: #6B7280; --success-color: #10B981; --danger-color: #EF4444;
-            --warning-color: #F59E0B; --light-color: #F9FAFB; --dark-color: #1F2937;
+            --primary-color: #4F46E5; --primary-hover: #4338CA;
+            --secondary-color: #6B7280; --dark-color: #1F2937;
             --bg-color: #F3F4F6; --font-family: 'Inter', sans-serif; --border-radius: 0.5rem;
             --box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
         }
         *, *::before, *::after { box-sizing: border-box; }
         body { font-family: var(--font-family); margin: 0; background-color: var(--bg-color); color: var(--dark-color); }
-        .container { max-width: 1024px; /* Slightly smaller for a focused view */ margin: 0 auto; padding: 1.5rem; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
         
-        /* --- Navigation (Identical) --- */
+        /* --- Navigation --- */
         nav { background: #fff; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--box-shadow); position: sticky; top: 0; z-index: 1000; }
         .nav-left h1 { margin: 0; font-size: 1.75rem; color: var(--primary-color); cursor: pointer; }
         .nav-right { display: flex; align-items: center; gap: 1rem; }
         .nav-icon { cursor: pointer; position: relative; background: none; border: none; padding: 0.5rem; border-radius: 50%; transition: background-color 0.2s; }
         .nav-icon:hover { background-color: #e5e7eb; }
         .nav-icon svg { width: 24px; height: 24px; stroke: var(--dark-color); }
-        #cart-count { position: absolute; top: 0; right: 0; background-color: var(--danger-color); color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.7rem; font-weight: bold; }
+        #cart-count { position: absolute; top: 0; right: 0; background-color: #EF4444; color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.7rem; font-weight: bold; }
         
-        /* --- Buttons (Identical) --- */
+        /* --- Buttons --- */
         button { border: none; border-radius: var(--border-radius); cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: all 0.2s ease-in-out; padding: 0.75rem 1.5rem; }
         .btn-primary { background-color: var(--primary-color); color: white; }
         .btn-primary:hover { background-color: var(--primary-hover); }
         
-        /* --- Layout & Card (Identical) --- */
+        /* --- Layout --- */
         .page { animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .card { background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 2rem; }
+        .page-title { font-size: 2rem; font-weight: 700; margin: 0 0 2rem; }
         
-        /* --- Cart Page Specific Styles --- */
+        /* --- CART PAGE STYLES (NEW) --- */
+        .cart-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start; }
+        @media (max-width: 992px) { .cart-layout { grid-template-columns: 1fr; } }
+        
         .empty-state { text-align: center; padding: 3rem; }
-        .cart-item {
-            display: grid;
-            grid-template-columns: auto 1fr auto auto; /* Image, Details, Quantity, Price */
-            gap: 1.5rem;
-            align-items: center;
-            border-bottom: 1px solid #eee;
-            padding: 1rem 0;
-        }
-        .cart-item img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: var(--border-radius);
-        }
-        .quantity-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .quantity-controls button {
-            padding: 0.25rem 0.75rem; /* Smaller buttons */
-            background-color: var(--light-color);
-            border: 1px solid #ddd;
-            color: var(--dark-color);
-        }
-        .cart-summary {
-            text-align: right;
-            margin-top: 2rem;
-        }
+        
+        .cart-items-list { display: flex; flex-direction: column; gap: 1.5rem; }
+        .cart-item { display: flex; gap: 1.5rem; }
+        .cart-item-image img { width: 100px; height: 100px; object-fit: cover; border-radius: var(--border-radius); }
+        .cart-item-details { flex-grow: 1; }
+        .cart-item-details h4 { margin: 0 0 0.5rem; font-size: 1.1rem; }
+        .cart-item-details .size { font-size: 0.9rem; color: var(--secondary-color); margin-bottom: 1rem; }
+        .cart-item-actions { display: flex; justify-content: space-between; align-items: center; }
+        
+        .quantity-controls { display: flex; align-items: center; border: 1px solid #d1d5db; border-radius: var(--border-radius); }
+        .quantity-controls button { background: none; box-shadow: none; color: var(--dark-color); padding: 0.5rem; font-size: 1.2rem; line-height: 1; }
+        .quantity-controls .quantity { padding: 0 1rem; font-weight: 600; }
+        
+        .remove-btn { background: none; box-shadow: none; color: var(--secondary-color); font-weight: 400; font-size: 0.9rem; padding: 0.5rem; }
+        .remove-btn:hover { color: var(--danger-color); }
+        .item-total-price { font-size: 1.1rem; font-weight: 600; text-align: right; }
 
-        /* Responsive grid for mobile */
-        @media (max-width: 640px) {
-            .cart-item {
-                grid-template-columns: auto 1fr; /* Image and content */
-                grid-template-rows: auto auto; /* Two rows for content */
-            }
-            .cart-item .cart-item-details { grid-column: 2 / 3; }
-            .cart-item .quantity-controls { grid-column: 2 / 3; grid-row: 2 / 3; justify-self: start; }
-            .cart-item .item-total-price { grid-column: 2/3; grid-row: 2/3; justify-self: end; font-weight: bold;}
-        }
-
-        /* --- Toast Notifications (Identical) --- */
+        .order-summary { position: sticky; top: 100px; } /* Makes summary stick on scroll */
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 1rem; }
+        .summary-total { font-size: 1.25rem; font-weight: 700; border-top: 1px solid #e5e7eb; padding-top: 1rem; }
+        
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
-        .toast { padding: 1rem 1.5rem; margin-bottom: 1rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
-        .toast.success { background-color: var(--success-color); }
+        .toast { padding: 1rem 1.5rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
         @keyframes fadeOut { to { opacity: 0; } }
+        .toast.success { background-color: #10B981; }
+        .toast.error { background-color: #EF4444; }
     </style>
 </head>
 <body>
@@ -97,29 +80,23 @@
 
     <nav>
         <div class="nav-left">
-            <h1 onclick="window.location.href='products.html'">ShopSphere</h1>
+            <h1 onclick="window.location.href='index.html'">ShopSphere</h1>
         </div>
-        <div id="nav-right" class="nav-right">
-            <!-- Navigation buttons are rendered here by JavaScript -->
-        </div>
+        <div id="nav-right" class="nav-right"></div>
     </nav>
 
     <div class="container page">
-        <div id="cart-page" class="card">
-            <h1>Your Shopping Cart</h1>
-            <div id="cart-container">
-                <p>Loading cart...</p>
-            </div>
+        <div id="cart-container">
+            <p>Loading cart...</p>
         </div>
     </div>
     
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <script>
-        // --- CONFIG & INITIALIZATION (Identical to other pages) ---
+        // --- CONFIG & INITIALIZATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyCzqYrP1qYSiiLLgKW3z3EcwMpiG4hyF6M",
             authDomain: "e-commerce27.firebaseapp.com",
@@ -136,7 +113,7 @@
         // --- STATE MANAGEMENT ---
         let currentUser = null;
         let cart = [];
-        let allProducts = []; // Cache to store all product data
+        let allProducts = [];
 
         // --- APP ENTRY POINT ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -145,74 +122,32 @@
                 loadCartFromLocalStorage();
                 renderNav();
             });
-            // Fetch all products first to get their details, then render the cart
             fetchAllProductsAndRenderCart();
         });
-
-        // --- UI RENDERING FUNCTIONS ---
-        function renderNav() {
-            const navRight = document.getElementById('nav-right');
-            const cartIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.823-6.837A1.125 1.125 0 0018.32 5.25H5.82a1.125 1.125 0 00-1.087.835L3.72 8.25m0 0c0 .106.012.211.035.314.234 1.01 1.254 1.687 2.476 1.687h9.063c1.222 0 2.242-.677 2.476-1.687a4.5 4.5 0 00.035-.314z" /></svg>`;
-            const ordersIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h7.5M8.25 12h7.5m-7.5 5.25h7.5M3.75 6.75h.007v.008H3.75V6.75zM3.75 12h.007v.008H3.75V12zm.375 0a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM3.75 17.25h.007v.008H3.75v-.008z" /></svg>`;
-            const logoutIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" /></svg>`;
-            
-            let html = '';
-            if (currentUser) {
-                if (currentUser.email === ADMIN_EMAIL) {
-                    html += `<button title="Admin Dashboard" class="nav-icon" onclick="window.location.href='admin.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h12A2.25 2.25 0 0020.25 14.25V3m-15.75 0h15.75M3.75 3v1.5M20.25 3v1.5M3.75 6.75h15.75M3.75 9.75h15.75M3.75 12.75h15.75M3.75 15.75h15.75" /></svg></button>`;
-                } else {
-                    html += `<button title="My Orders" class="nav-icon" onclick="window.location.href='orders.html'">${ordersIcon}</button>`;
-                }
-                html += `
-                    <button title="Cart" class="nav-icon" onclick="window.location.href='cart.html'">${cartIcon}<span id="cart-count" class="hidden">0</span></button>
-                    <button title="Logout" class="nav-icon" onclick="auth.signOut()">${logoutIcon}</button>`;
-            } else {
-                html = `<button class="btn-primary" onclick="auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())">Login</button>`;
-            }
-            navRight.innerHTML = html;
-            updateCartCount();
-        }
-
-        function showToast(message, type = 'success') {
-            const toastContainer = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.textContent = message;
-            toastContainer.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-
-        // --- CART LOGIC ---
-        const loadCartFromLocalStorage = () => cart = JSON.parse(localStorage.getItem('shopSphereCart') || '[]');
-        const saveCartToLocalStorage = () => localStorage.setItem('shopSphereCart', JSON.stringify(cart));
         
-        const updateCartCount = () => {
-            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-            const el = document.getElementById('cart-count');
-            if(el) { el.textContent = count; el.classList.toggle('hidden', count === 0); }
-        };
-
+        // --- UI & DATA FETCHING ---
         async function fetchAllProductsAndRenderCart() {
             try {
                 const snapshot = await db.collection('products').get();
                 allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderCart(); // Now we can render the cart with full product info
+                renderCart();
             } catch (error) {
                 console.error("Could not fetch product details for cart:", error);
                 document.getElementById('cart-container').innerHTML = `<p>Error loading cart details.</p>`;
             }
         }
 
+        // --- CART PAGE LOGIC (UPDATED) ---
         function renderCart() {
             const container = document.getElementById('cart-container');
             loadCartFromLocalStorage();
 
             if (cart.length === 0) {
                 container.innerHTML = `
-                    <div class="empty-state">
-                        <h3>Your cart is empty.</h3>
+                    <div class="card empty-state">
+                        <h1 class="page-title">Your Cart is Empty</h1>
                         <p>Looks like you haven't added anything yet.</p>
-                        <button class="btn-primary" onclick="window.location.href='products.html'">Continue Shopping</button>
+                        <button class="btn-primary" onclick="window.location.href='index.html'">Continue Shopping</button>
                     </div>`;
                 return;
             }
@@ -220,49 +155,79 @@
             let subtotal = 0;
             const cartItemsHtml = cart.map(item => {
                 const product = allProducts.find(p => p.id === item.productId);
-                if (!product) {
-                    // This can happen if a product was deleted from the store
-                    return ''; 
-                }
+                if (!product) return '';
                 subtotal += product.price * item.quantity;
+                const imageUrl = (product.images && product.images.length > 0) ? product.images[0] : 'https://via.placeholder.com/100';
+                
                 return `
-                    <div class="cart-item">
-                        <img src="${product.imageUrl}" alt="${product.name}">
+                    <div class="cart-item" data-product-id="${product.id}" data-size="${item.size}">
+                        <div class="cart-item-image"><img src="${imageUrl}" alt="${product.name}"></div>
                         <div class="cart-item-details">
                             <h4>${product.name}</h4>
-                            <p>$${product.price.toFixed(2)}</p>
+                            <p class="size">Size: ${item.size}</p>
+                            <div class="cart-item-actions">
+                                <div class="quantity-controls">
+                                    <button class="quantity-decrease">-</button>
+                                    <span class="quantity">${item.quantity}</span>
+                                    <button class="quantity-increase">+</button>
+                                </div>
+                                <button class="remove-btn">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    Remove
+                                </button>
+                            </div>
                         </div>
-                        <div class="quantity-controls">
-                            <button onclick="updateCartQuantity('${product.id}', ${item.quantity - 1})">-</button>
-                            <span>${item.quantity}</span>
-                            <button onclick="updateCartQuantity('${product.id}', ${item.quantity + 1})">+</button>
-                        </div>
-                        <strong class="item-total-price">$${(product.price * item.quantity).toFixed(2)}</strong>
+                        <p class="item-total-price">$${(product.price * item.quantity).toFixed(2)}</p>
                     </div>`;
             }).join('');
             
+            const shipping = 5.00; // Example shipping cost
+            const tax = subtotal * 0.08; // Example 8% tax
+            const total = subtotal + shipping + tax;
+            
             container.innerHTML = `
-                ${cartItemsHtml}
-                <div class="cart-summary">
-                    <h2>Subtotal: $${subtotal.toFixed(2)}</h2>
-                    <p>Shipping & taxes calculated at checkout.</p>
-                    <button class="btn-primary" onclick="handleCheckout()">Proceed to Checkout</button>
+                <h1 class="page-title">Shopping Cart</h1>
+                <div class="cart-layout">
+                    <div class="card cart-items-list">${cartItemsHtml}</div>
+                    <div class="card order-summary">
+                        <h2>Order Summary</h2>
+                        <div class="summary-row"><span>Subtotal</span><span>$${subtotal.toFixed(2)}</span></div>
+                        <div class="summary-row"><span>Shipping</span><span>$${shipping.toFixed(2)}</span></div>
+                        <div class="summary-row"><span>Tax (Est.)</span><span>$${tax.toFixed(2)}</span></div>
+                        <div class="summary-row summary-total"><span>Estimated Total</span><span>$${total.toFixed(2)}</span></div>
+                        <button class="btn-primary" style="width:100%; margin-top:1rem;" onclick="handleCheckout()">Proceed to Checkout</button>
+                    </div>
                 </div>`;
+
+            // Add event listeners after rendering
+            addCartItemListeners();
         }
 
-        function updateCartQuantity(productId, quantity) {
-            const item = cart.find(i => i.productId === productId);
-            if (item) {
-                if (quantity <= 0) {
-                    // Remove item from cart if quantity is 0 or less
-                    cart = cart.filter(i => i.productId !== productId);
+        function addCartItemListeners() {
+            document.querySelectorAll('.cart-item').forEach(itemEl => {
+                const productId = itemEl.dataset.productId;
+                const size = itemEl.dataset.size;
+                itemEl.querySelector('.quantity-increase').addEventListener('click', () => updateCartQuantity(productId, size, 1));
+                itemEl.querySelector('.quantity-decrease').addEventListener('click', () => updateCartQuantity(productId, size, -1));
+                itemEl.querySelector('.remove-btn').addEventListener('click', () => updateCartQuantity(productId, size, 0));
+            });
+        }
+        
+        function updateCartQuantity(productId, size, change) {
+            const itemIndex = cart.findIndex(i => i.productId === productId && i.size === size);
+            if (itemIndex > -1) {
+                if (change === 0) { // Special value to remove
+                    cart.splice(itemIndex, 1);
                 } else {
-                    item.quantity = quantity;
+                    cart[itemIndex].quantity += change;
+                    if (cart[itemIndex].quantity <= 0) {
+                        cart.splice(itemIndex, 1);
+                    }
                 }
             }
             saveCartToLocalStorage();
             updateCartCount();
-            renderCart(); // Re-render the cart to show changes
+            renderCart();
         }
 
         function handleCheckout() {
@@ -270,9 +235,39 @@
                 window.location.href = 'checkout.html';
             } else {
                 showToast('Please log in to proceed to checkout.', 'error');
-                // Optional: Trigger login popup
                 auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
             }
+        }
+        
+        // --- FULL HELPER FUNCTIONS FOR COMPLETENESS ---
+        const loadCartFromLocalStorage = () => cart = JSON.parse(localStorage.getItem('shopSphereCart') || '[]');
+        const saveCartToLocalStorage = () => localStorage.setItem('shopSphereCart', JSON.stringify(cart));
+        const updateCartCount = () => {
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const el = document.getElementById('cart-count');
+            if(el) { el.textContent = count; el.classList.toggle('hidden', count === 0); }
+        };
+        function renderNav() {
+            const navRight = document.getElementById('nav-right');
+            const cartIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.823-6.837A1.125 1.125 0 0018.32 5.25H5.82a1.125 1.125 0 00-1.087.835L3.72 8.25m0 0c0 .106.012.211.035.314.234 1.01 1.254 1.687 2.476 1.687h9.063c1.222 0 2.242-.677 2.476-1.687a4.5 4.5 0 00.035-.314z" /></svg>`;
+            const ordersIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h7.5M8.25 12h7.5m-7.5 5.25h7.5M3.75 6.75h.007v.008H3.75V6.75zM3.75 12h.007v.008H3.75V12zm.375 0a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM3.75 17.25h.007v.008H3.75v-.008z" /></svg>`;
+            const logoutIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" /></svg>`;
+            let html = '';
+            if (currentUser) {
+                if (currentUser.email === ADMIN_EMAIL) { html += `<button title="Admin Dashboard" class="nav-icon" onclick="window.location.href='admin-dashboard.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h12A2.25 2.25 0 0020.25 14.25V3m-15.75 0h15.75M3.75 3v1.5M20.25 3v1.5M3.75 6.75h15.75M3.75 9.75h15.75M3.75 12.75h15.75M3.75 15.75h15.75" /></svg></button>`;
+                } else { html += `<button title="My Orders" class="nav-icon" onclick="window.location.href='orders.html'">${ordersIcon}</button>`; }
+                html += `<button title="Cart" class="nav-icon" onclick="window.location.href='cart.html'">${cartIcon}<span id="cart-count" class="hidden">0</span></button><button title="Logout" class="nav-icon" onclick="auth.signOut()">${logoutIcon}</button>`;
+            } else { html = `<button class="btn-primary" onclick="auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())">Login</button>`; }
+            navRight.innerHTML = html;
+            updateCartCount();
+        }
+        function showToast(message, type = 'success') {
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
         }
     </script>
 </body>
