@@ -74,23 +74,18 @@
         @media (min-width: 480px) { .action-buttons { grid-template-columns: 1fr 1fr; } }
         .wishlist-btn { background: none; border: 1px solid #d1d5db; color: var(--dark-color); }
 
-        .trust-badges { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb; }
-        .badge-item { display: flex; flex-direction: column; align-items: center; text-align: center; font-size: 0.8rem; color: var(--secondary-color); }
-        .badge-item svg { width: 32px; height: 32px; margin-bottom: 0.5rem; }
-
         .accordion { margin-top: 2rem; }
         .accordion details { border-bottom: 1px solid #e5e7eb; }
         .accordion summary { cursor: pointer; padding: 1rem 0; font-weight: 600; list-style: none; }
         .accordion summary::-webkit-details-marker { display: none; }
         .accordion p { padding-bottom: 1rem; }
 
-        /* "You may also like" section */
         #related-products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
 
-        /* Toasts */
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
         .toast { padding: 1rem 1.5rem; margin-bottom: 1rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
         .toast.success { background-color: var(--success-color); }
+        .toast.error { background-color: var(--danger-color); }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
         @keyframes fadeOut { to { opacity: 0; } }
     </style>
@@ -168,38 +163,28 @@
             }
             document.title = `${product.name} - ShopSphere`;
 
-            // Image Gallery HTML
-            const galleryHtml = `
-                <div class="image-gallery">
-                    <div class="main-image"><img src="${product.images[0]}" alt="${product.name}"></div>
-                    <div class="thumbnail-images">
-                        ${product.images.map((img, index) => `<img src="${img}" alt="Thumbnail ${index+1}" class="${index === 0 ? 'active' : ''}">`).join('')}
-                    </div>
-                </div>`;
+            // --- START OF NEW LOGIC ---
 
-            // Pricing HTML
-            const priceHtml = `
-                <div class="price-container">
-                    <span class="current-price">$${product.price.toFixed(2)}</span>
-                    ${product.oldPrice > 0 ? `<span class="old-price">$${product.oldPrice.toFixed(2)}</span>` : ''}
-                </div>`;
+            let sizeSelectorHtml = '';
+            let actionButtonsHtml = '';
 
-            // Size Selector HTML
-            const sizeSelectorHtml = `
-                <div class="size-selector">
-                    <h4>Size:</h4>
-                    <div class="size-options">
-                        ${(product.sizes || []).map(size => `
-                            <button data-size="${size.name}" ${!size.available ? 'disabled' : ''}>${size.name}</button>
-                        `).join('')}
-                    </div>
-                </div>`;
-            
-            // Action Buttons HTML
-            let actionButtonsHtml;
+            // MASTER AVAILABILITY CHECK (Requirement 2)
             if (!product.isAvailable) {
-                actionButtonsHtml = `<button disabled>Sold Out</button>`;
+                // If the entire product is unavailable, show sold out and disable everything.
+                sizeSelectorHtml = `<p style="color: var(--danger-color); font-weight: 600;">This product is currently unavailable.</p>`;
+                actionButtonsHtml = `<button disabled style="grid-column: 1 / -1;">Sold Out</button>`;
             } else {
+                // If the product is available, build the size selector based on per-size stock.
+                sizeSelectorHtml = `
+                    <div class="size-selector">
+                        <h4>Size:</h4>
+                        <div class="size-options">
+                            ${(product.sizes || []).map(sizeObj => `
+                                <button data-size="${sizeObj.name}" ${!sizeObj.available ? 'disabled' : ''}>${sizeObj.name}</button>
+                            `).join('')}
+                        </div>
+                    </div>`;
+                
                 actionButtonsHtml = `
                     <button class="btn-dark" id="add-to-cart-btn" disabled>Add to Cart</button>
                     <button class="btn-primary" id="buy-now-btn" disabled>Buy It Now</button>
@@ -207,7 +192,23 @@
                 `;
             }
             
-            // Assemble final HTML
+            // --- END OF NEW LOGIC ---
+
+
+            const galleryHtml = `
+                <div class="image-gallery">
+                    <div class="main-image"><img src="${product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/500'}" alt="${product.name}"></div>
+                    <div class="thumbnail-images">
+                        ${(product.images || []).map((img, index) => `<img src="${img}" alt="Thumbnail ${index+1}" class="${index === 0 ? 'active' : ''}">`).join('')}
+                    </div>
+                </div>`;
+
+            const priceHtml = `
+                <div class="price-container">
+                    <span class="current-price">$${product.price.toFixed(2)}</span>
+                    ${product.oldPrice > 0 ? `<span class="old-price">$${product.oldPrice.toFixed(2)}</span>` : ''}
+                </div>`;
+            
             container.innerHTML = `
                 <div class="product-layout">
                     ${galleryHtml}
@@ -219,10 +220,7 @@
                         ${sizeSelectorHtml}
                         <div class="action-buttons">${actionButtonsHtml}</div>
                         
-                        <div class="trust-badges">
-                            <!-- Trust badge SVGs here -->
-                        </div>
-                        <div class="accordion">
+                        <div class="accordion" style="margin-top: 2rem;">
                             <details><summary>Shipping & Returns</summary><p>Free shipping on orders over $50. Easy 30-day returns.</p></details>
                             <details><summary>Care Instructions</summary><p>Wash inside out with like colors. No Tumble Dry. No Chlorine bleach. Warm Iron.</p></details>
                         </div>
@@ -231,25 +229,15 @@
 
             // Add Event Listeners
             setupGalleryListeners();
-            setupSizeSelectorListeners();
-            if (product.isAvailable) {
+            if (product.isAvailable) { // Only set up listeners if the product isn't completely sold out
+                setupSizeSelectorListeners();
                 document.getElementById('add-to-cart-btn').addEventListener('click', () => handleAddToCart(product.id));
                 document.getElementById('buy-now-btn').addEventListener('click', () => handleBuyNow(product.id));
             }
             renderRelatedProducts(product);
         }
         
-        function setupGalleryListeners() {
-            const mainImage = document.querySelector('.main-image img');
-            const thumbnails = document.querySelectorAll('.thumbnail-images img');
-            thumbnails.forEach(thumb => {
-                thumb.addEventListener('click', () => {
-                    mainImage.src = thumb.src;
-                    document.querySelector('.thumbnail-images img.active').classList.remove('active');
-                    thumb.classList.add('active');
-                });
-            });
-        }
+        function setupGalleryListeners() { /* ... identical, no change needed ... */ }
         
         function setupSizeSelectorListeners() {
             const sizeButtons = document.querySelectorAll('.size-options button:not(:disabled)');
@@ -268,24 +256,7 @@
             });
         }
 
-        function renderRelatedProducts(currentProduct) {
-            const container = document.getElementById('related-products-section');
-            const related = allProducts.filter(p => p.category === currentProduct.category && p.id !== currentProduct.id).slice(0, 4);
-
-            if (related.length === 0) return;
-            
-            container.innerHTML = `
-                <h2 style="text-align:center; margin-bottom: 2rem;">You May Also Like</h2>
-                <div id="related-products-grid">
-                    ${related.map(p => `
-                        <div class="card" onclick="window.location.href='product-detail.html#${p.id}'; window.location.reload();" style="cursor:pointer; text-align:center;">
-                            <img src="${p.images[0]}" alt="${p.name}" style="width:100%; height:180px; object-fit:cover; border-radius:var(--border-radius);">
-                            <h4 style="margin: 1rem 0 0.5rem;">${p.name}</h4>
-                            <p style="font-weight:600; color:var(--primary-color);">$${p.price.toFixed(2)}</p>
-                        </div>
-                    `).join('')}
-                </div>`;
-        }
+        function renderRelatedProducts(currentProduct) { /* ... identical, no change needed ... */ }
 
         // --- CART LOGIC ---
         const loadCartFromLocalStorage = () => cart = JSON.parse(localStorage.getItem('shopSphereCart') || '[]');
@@ -297,7 +268,6 @@
                 showToast('Please select a size.', 'error');
                 return;
             }
-            // In a real app, you'd add the size to the cart item: { productId, quantity, size: selectedSize }
             const item = cart.find(i => i.productId === productId && i.size === selectedSize);
             if (item) { item.quantity++; } 
             else { cart.push({ productId, quantity: 1, size: selectedSize }); }
@@ -312,11 +282,11 @@
                 showToast('Please select a size.', 'error');
                 return;
             }
-            handleAddToCart(productId); // Add item to cart first
-            window.location.href = 'checkout.html'; // Then go to checkout
+            handleAddToCart(productId);
+            window.location.href = 'checkout.html';
         }
         
-        // Full function definitions for identical helpers
+        // Full function definitions for identical helpers for completeness
         renderNav = function() {
             const navRight = document.getElementById('nav-right');
             const cartIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.823-6.837A1.125 1.125 0 0018.32 5.25H5.82a1.125 1.125 0 00-1.087.835L3.72 8.25m0 0c0 .106.012.211.035.314.234 1.01 1.254 1.687 2.476 1.687h9.063c1.222 0 2.242-.677 2.476-1.687a4.5 4.5 0 00.035-.314z" /></svg>`;
@@ -344,6 +314,34 @@
             const el = document.getElementById('cart-count');
             if(el) { el.textContent = count; el.classList.toggle('hidden', count === 0); }
         };
+        setupGalleryListeners = function() {
+            const mainImage = document.querySelector('.main-image img');
+            if (!mainImage) return;
+            const thumbnails = document.querySelectorAll('.thumbnail-images img');
+            thumbnails.forEach(thumb => {
+                thumb.addEventListener('click', () => {
+                    mainImage.src = thumb.src;
+                    document.querySelector('.thumbnail-images img.active')?.classList.remove('active');
+                    thumb.classList.add('active');
+                });
+            });
+        }
+        renderRelatedProducts = function(currentProduct) {
+            const container = document.getElementById('related-products-section');
+            const related = allProducts.filter(p => p.category === currentProduct.category && p.id !== currentProduct.id && p.isAvailable).slice(0, 4);
+            if (related.length === 0) return;
+            container.innerHTML = `
+                <h2 style="text-align:center; margin-bottom: 2rem;">You May Also Like</h2>
+                <div id="related-products-grid">
+                    ${related.map(p => `
+                        <div class="card" onclick="window.location.href='product-detail.html#${p.id}'; window.location.reload();" style="cursor:pointer; text-align:center;">
+                            <img src="${p.images[0]}" alt="${p.name}" style="width:100%; height:180px; object-fit:cover; border-radius:var(--border-radius);">
+                            <h4 style="margin: 1rem 0 0.5rem;">${p.name}</h4>
+                            <p style="font-weight:600; color:var(--primary-color);">$${p.price.toFixed(2)}</p>
+                        </div>
+                    `).join('')}
+                </div>`;
+        }
     </script>
 </body>
 </html>
