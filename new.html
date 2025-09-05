@@ -7,96 +7,97 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
         /* --- GLOBAL STYLES --- */
         :root {
-            --primary-color: #4F46E5; --primary-hover: #4338CA;
-            --secondary-color: #6B7280; --dark-color: #111827;
-            --light-text: #4B5563; --border-color: #E5E7EB;
-            --bg-color: #F9FAFB; --card-bg: #FFFFFF;
-            --font-family: 'Inter', sans-serif; --border-radius: 0.5rem;
-            --box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --primary-color: #4361EE; 
+            --primary-hover: #3A53C8;
+            --secondary-color: #6B7280;
+            --dark-color: #1F2937;
+            --bg-color: #FFFFFF;
+            --light-grey: #F3F4F6;
+            --font-family: 'Inter', sans-serif;
+            --border-radius: 0.375rem; /* 6px */
+            --box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px 0 rgba(0,0,0,0.06);
+            --box-shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
         }
         *, *::before, *::after { box-sizing: border-box; }
         body { font-family: var(--font-family); margin: 0; background-color: var(--bg-color); color: var(--dark-color); }
         .container { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
         
         /* --- Navigation --- */
-        nav { background: var(--card-bg); padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--box-shadow); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border-color); }
+        nav { background: #fff; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--box-shadow); position: sticky; top: 0; z-index: 1000; }
         .nav-left h1 { margin: 0; font-size: 1.75rem; color: var(--primary-color); cursor: pointer; }
         .nav-right { display: flex; align-items: center; gap: 1rem; }
         .nav-icon { cursor: pointer; position: relative; background: none; border: none; padding: 0.5rem; border-radius: 50%; transition: background-color 0.2s; }
-        .nav-icon:hover { background-color: var(--bg-color); }
+        .nav-icon:hover { background-color: var(--light-grey); }
         .nav-icon svg { width: 24px; height: 24px; stroke: var(--dark-color); }
         #cart-count { position: absolute; top: 0; right: 0; background-color: #EF4444; color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.7rem; font-weight: bold; }
         
-        /* --- Buttons --- */
-        button { border: none; border-radius: var(--border-radius); cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: all 0.2s ease-in-out; padding: 0.85rem 1.5rem; }
-        .btn-primary { background-color: var(--primary-color); color: white; }
-        .btn-primary:hover:not(:disabled) { background-color: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); }
-        .btn-dark { background-color: var(--dark-color); color: white; }
-        .btn-dark:hover:not(:disabled) { background-color: #374151; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(17, 24, 39, 0.3); }
-        button:disabled { background-color: #d1d5db; cursor: not-allowed; color: #6b7280; }
+        /* --- PROFESSIONAL BUTTON STYLES (NEW) --- */
+        button { 
+            border: 1px solid transparent; 
+            border-radius: var(--border-radius); 
+            cursor: pointer; 
+            font-family: var(--font-family); 
+            font-weight: 600; 
+            transition: all 0.2s ease-in-out; 
+            padding: 0.75rem 1.5rem;
+            box-shadow: var(--box-shadow);
+        }
+        button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: var(--box-shadow-md); }
+        button:active:not(:disabled) { transform: translateY(0px); box-shadow: var(--box-shadow); }
         
-        /* --- Layout --- */
-        .card { background-color: var(--card-bg); border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 2rem; border: 1px solid var(--border-color); }
+        .btn-primary { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
+        .btn-primary:hover:not(:disabled) { background-color: var(--primary-hover); border-color: var(--primary-hover); }
+        
+        .btn-dark { background-color: var(--dark-color); color: white; border-color: var(--dark-color); }
+        .btn-dark:hover:not(:disabled) { background-color: #374151; border-color: #374151; }
 
+        .btn-outline { background-color: white; color: var(--dark-color); border-color: #d1d5db; }
+        .btn-outline:hover:not(:disabled) { background-color: var(--light-grey); border-color: #9ca3af; }
+
+        button:disabled { background-color: #e5e7eb; cursor: not-allowed; color: #9ca3af; box-shadow: none; }
+        
         /* --- PRODUCT DETAIL PAGE STYLES --- */
         .product-layout { display: grid; grid-template-columns: 1fr; gap: 2rem; }
         @media (min-width: 1024px) { .product-layout { grid-template-columns: 1fr 1fr; gap: 3rem; } }
 
-        /* Image Gallery */
         .image-gallery-container { display: flex; gap: 1rem; }
         .thumbnail-images { display: flex; flex-direction: column; gap: 0.75rem; }
-        .thumbnail-images img { width: 80px; height: 100px; object-fit: cover; border-radius: var(--border-radius); cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s; }
+        .thumbnail-images img { width: 80px; height: 80px; object-fit: cover; border-radius: var(--border-radius); cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s; }
         .thumbnail-images img:hover, .thumbnail-images img.active { border-color: var(--primary-color); }
         .main-image { flex: 1; }
-        .main-image img { width: 100%; border-radius: var(--border-radius); box-shadow: var(--box-shadow); }
+        .main-image img { width: 100%; border-radius: var(--border-radius); box-shadow: var(--box-shadow-md); }
         
-        /* Product Info */
-        .product-info h4 { color: var(--secondary-color); font-weight: 500; font-size: 0.9rem; margin: 0 0 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
-        .product-info h1 { font-size: 2.5rem; font-weight: 700; margin: 0 0 1rem; }
+        .product-info h4 { color: var(--secondary-color); font-weight: 400; font-size: 0.9rem; margin: 0 0 0.5rem; }
+        .product-info h1 { font-size: 2rem; margin: 0 0 1rem; }
         .price-container { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.5rem; }
-        .current-price { font-size: 2rem; font-weight: 700; color: var(--dark-color); }
+        .current-price { font-size: 1.75rem; font-weight: 700; color: var(--dark-color); }
         .old-price { font-size: 1.25rem; text-decoration: line-through; color: var(--secondary-color); }
         
-        .attributes { line-height: 1.7; font-size: 0.95rem; color: var(--light-text); }
-        .attributes strong { color: var(--dark-color); }
+        .attributes { line-height: 1.6; font-size: 0.9rem; }
+        .attributes strong { font-weight: 600; color: var(--dark-color); } /* Bolding style */
 
         .size-selector { margin: 2rem 0; }
-        .size-selector h4 { margin-bottom: 0.75rem; font-size: 1rem; font-weight: 600; }
+        .size-selector h4 { margin-bottom: 0.75rem; font-size: 1rem; }
         .size-options { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-        .size-options button { background-color: white; color: var(--dark-color); border: 1px solid var(--border-color); padding: 0.5rem 1rem; min-width: 45px; }
+        .size-options button { background-color: white; color: var(--dark-color); border: 1px solid #d1d5db; box-shadow: none; }
+        .size-options button:hover:not(:disabled) { transform: none; box-shadow: none; background-color: var(--light-grey); }
         .size-options button.selected { background-color: var(--dark-color); color: white; border-color: var(--dark-color); }
-        .size-options button:disabled { background-color: white; border: 1px dashed #d1d5db; color: #9ca3af; cursor: not-allowed; position: relative; overflow: hidden; }
+        .size-options button:disabled { background-color: white; border: 1px dashed #d1d5db; color: #9ca3af; position: relative; overflow: hidden; }
         .size-options button:disabled::after { content: ''; position: absolute; top: 50%; left: -10%; width: 120%; height: 1.5px; background: #d1d5db; transform: rotate(-20deg); }
 
         .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
-        .wishlist-btn { background: none; border: 1px solid var(--border-color); color: var(--dark-color); width: 100%; grid-column: 1 / -1; }
-        .wishlist-btn:hover { background-color: var(--bg-color); }
-        
+        .wishlist-btn { width: 100%; grid-column: 1 / -1; }
+
         /* "You may also like" section */
-        #related-products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; }
-        .related-card { background-color: var(--card-bg); border-radius: var(--border-radius); overflow: hidden; box-shadow: var(--box-shadow); transition: all 0.3s ease; cursor: pointer; }
-        .related-card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.07); }
-        .related-card-info { padding: 1rem; }
-        .related-card-info h4 { margin: 0 0 0.5rem; font-size: 1rem; }
-        .related-card-info p { margin: 0; font-weight: 600; }
+        #related-products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
 
-        /* Skeleton Loader */
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .skeleton { background-color: #e5e7eb; border-radius: var(--border-radius); animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-        .skeleton.text { height: 1em; margin-bottom: 0.5em; }
-        .skeleton.title { height: 2.5em; width: 70%; margin-bottom: 1rem; }
-        .skeleton.price { height: 2em; width: 40%; margin-bottom: 1.5rem; }
-        .skeleton.image { height: 400px; }
-        .skeleton.thumb { width: 80px; height: 100px; }
-
-        /* Toasts */
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
-        .toast { padding: 1rem 1.5rem; margin-bottom: 1rem; border-radius: var(--border-radius); color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
+        .toast { padding: 1rem 1.5rem; margin-bottom: 1rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow-md); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
         .toast.success { background-color: #10B981; }
         .toast.error { background-color: #EF4444; }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
@@ -114,8 +115,8 @@
     </nav>
 
     <div class="container page">
-        <div id="product-detail-page-content" class="card">
-            <!-- Skeleton Loader or Product Details will be rendered here -->
+        <div id="product-detail-page-content">
+            <p>Loading product details...</p>
         </div>
         <div id="related-products-section" style="margin-top: 3rem;"></div>
     </div>
@@ -146,7 +147,6 @@
 
         // --- APP ENTRY POINT ---
         document.addEventListener('DOMContentLoaded', () => {
-            renderSkeletonLoader();
             auth.onAuthStateChanged(user => {
                 currentUser = user;
                 loadCartFromLocalStorage();
@@ -156,37 +156,24 @@
         });
 
         async function fetchAllProductsThenRender() {
-            try {
-                const snapshot = await db.collection('products').get();
-                allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderProductDetails();
-            } catch (error) {
-                console.error("Error fetching products:", error);
-                document.getElementById('product-detail-page-content').innerHTML = `<p>Error loading product. Please try again.</p>`;
-            }
+            const snapshot = await db.collection('products').get();
+            allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderProductDetails();
         }
-        
-        // --- SKELETON LOADER ---
-        function renderSkeletonLoader() {
-            const container = document.getElementById('product-detail-page-content');
-            container.innerHTML = `
-                <div class="product-layout">
-                    <div class="image-gallery-container">
-                        <div class="thumbnail-images">
-                            <div class="skeleton thumb"></div><div class="skeleton thumb"></div><div class="skeleton thumb"></div>
-                        </div>
-                        <div class="main-image"><div class="skeleton image"></div></div>
-                    </div>
-                    <div class="product-info">
-                        <div class="skeleton text" style="width: 30%;"></div>
-                        <div class="skeleton title"></div>
-                        <div class="skeleton price"></div>
-                        <div class="skeleton text"></div><div class="skeleton text" style="width: 80%;"></div><div class="skeleton text" style="width: 90%;"></div>
-                    </div>
-                </div>`;
+
+        // --- NEW HELPER FUNCTION FOR DESCRIPTION FORMATTING ---
+        function formatDescription(text) {
+            if (!text) return 'No description available.';
+            // First, escape potential HTML to prevent XSS, except for our specific formatting
+            const escapedText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            
+            // Then, apply our formatting rules
+            return escapedText
+                .replace(/\*(.*?)\*/g, '<strong>$1</strong>') // Handle bolding
+                .replace(/\n/g, '<br>');                      // Handle line breaks
         }
-        
-        // --- CORE RENDERING LOGIC ---
+
+        // --- PRODUCT DETAIL LOGIC ---
         function renderProductDetails() {
             const productId = window.location.hash.substring(1);
             const container = document.getElementById('product-detail-page-content');
@@ -197,53 +184,51 @@
                 return;
             }
             document.title = `${product.name} - ShopSphere`;
-            
-            // NEW: Helper function to format the description
-            const formatDescription = (desc) => {
-                if (!desc) return 'No description available.';
-                return desc
-                    .replace(/\s*\*(.*?)\*\s*/g, '<strong>$1</strong><br>') // Bolds and adds a line break
-                    .replace(/\n/g, '<br>'); // Handles any remaining explicit newlines
-            };
+
             const formattedDescription = formatDescription(product.description);
 
-            // Dynamic HTML generation
-            const galleryHtml = `...`; // (logic below)
-            const detailsHtml = `...`; // (logic below)
-            
-            container.innerHTML = `
-                <div class="product-layout">
-                    <div class="image-gallery-container">
-                        <div class="thumbnail-images">
-                            ${(product.images || []).map((img, index) => `<img src="${img}" alt="Thumbnail ${index+1}" class="${index === 0 ? 'active' : ''}">`).join('')}
-                        </div>
-                        <div class="main-image"><img src="${product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/600'}" alt="${product.name}"></div>
+            const galleryHtml = `
+                <div class="image-gallery-container">
+                    <div class="thumbnail-images">
+                        ${(product.images || []).map((img, index) => `<img src="${img}" alt="Thumbnail ${index+1}" class="${index === 0 ? 'active' : ''}">`).join('')}
                     </div>
-                    <div class="product-info">
-                        <h4>${product.category}</h4>
-                        <h1>${product.name}</h1>
-                        <div class="price-container">
-                            <span class="current-price">$${product.price.toFixed(2)}</span>
-                            ${product.oldPrice > 0 ? `<span class="old-price">$${product.oldPrice.toFixed(2)}</span>` : ''}
-                        </div>
-                        <div class="attributes"><p>${formattedDescription}</p></div>
-                        <div class="size-selector">
-                            <h4>Size:</h4>
-                            <div class="size-options">${(product.sizes || []).map(sizeObj => `<button data-size="${sizeObj.name}" ${!sizeObj.available ? 'disabled' : ''}>${sizeObj.name}</button>`).join('')}</div>
-                        </div>
-                        <div class="action-buttons">
-                            ${product.isAvailable ? `
-                                <button class="btn-dark" id="add-to-cart-btn" disabled>Add to Cart</button>
-                                <button class="btn-primary" id="buy-now-btn" disabled>Buy It Now</button>
-                            ` : `
-                                <button class="btn-dark" disabled style="grid-column: 1 / -1;">Sold Out</button>
-                            `}
-                        </div>
-                        <button class="wishlist-btn" onclick="alert('Wishlist feature coming soon!')">Add to Wishlist</button>
-                    </div>
+                    <div class="main-image"><img src="${product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/600'}" alt="${product.name}"></div>
                 </div>`;
             
-            // Add Event Listeners
+            const detailsHtml = `
+                <div class="product-info">
+                    <h4>${product.category}</h4>
+                    <h1>${product.name}</h1>
+                    <div class="price-container">
+                        <span class="current-price">$${product.price.toFixed(2)}</span>
+                        ${product.oldPrice > 0 ? `<span class="old-price">$${product.oldPrice.toFixed(2)}</span>` : ''}
+                    </div>
+                    
+                    <div class="attributes">
+                        <p>${formattedDescription}</p>
+                    </div>
+
+                    <div class="size-selector">
+                        <h4>Size:</h4>
+                        <div class="size-options">
+                            ${(product.sizes || []).map(sizeObj => `<button data-size="${sizeObj.name}" ${!sizeObj.available ? 'disabled' : ''}>${sizeObj.name}</button>`).join('')}
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        ${product.isAvailable ? `
+                            <button class="btn-dark" id="add-to-cart-btn" disabled>Add to Cart</button>
+                            <button class="btn-primary" id="buy-now-btn" disabled>Buy It Now</button>
+                        ` : `
+                            <button class="btn-dark" disabled style="grid-column: 1 / -1;">Sold Out</button>
+                        `}
+                    </div>
+                    <button class="btn-outline wishlist-btn" onclick="alert('Wishlist feature coming soon!')">Add to Wishlist</button>
+                </div>`;
+
+            container.innerHTML = `<div class="product-layout">${galleryHtml}${detailsHtml}</div>`;
+            
+            // Add Event Listeners after rendering
             setupGalleryListeners();
             if (product.isAvailable) {
                 setupSizeSelectorListeners();
@@ -286,20 +271,15 @@
         function renderRelatedProducts(currentProduct) {
             const container = document.getElementById('related-products-section');
             const related = allProducts.filter(p => p.category === currentProduct.category && p.id !== currentProduct.id && p.isAvailable).slice(0, 4);
-            if (related.length === 0) {
-                container.innerHTML = ''; // Clear if no related products
-                return;
-            };
+            if (related.length === 0) return;
             container.innerHTML = `
-                <h2 style="text-align:center; margin: 3rem 0 2rem; font-weight: 700;">You May Also Like</h2>
+                <h2 style="text-align:center; margin: 3rem 0 2rem;">You May Also Like</h2>
                 <div id="related-products-grid">
                     ${related.map(p => `
-                        <div class="related-card" onclick="window.location.href='product-detail.html#${p.id}'; window.location.reload();">
-                            <img src="${p.images[0]}" alt="${p.name}" style="width:100%; height:250px; object-fit:cover;">
-                            <div class="related-card-info">
-                                <h4>${p.name}</h4>
-                                <p>$${p.price.toFixed(2)}</p>
-                            </div>
+                        <div onclick="window.location.href='product-detail.html#${p.id}'; window.location.reload();" style="cursor:pointer; text-align:center; background: #fff; padding:1rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow);">
+                            <img src="${p.images[0]}" alt="${p.name}" style="width:100%; height:180px; object-fit:cover; border-radius:var(--border-radius);">
+                            <h4 style="margin: 1rem 0 0.5rem; font-size: 0.9rem;">${p.name}</h4>
+                            <p style="font-weight:600; color:var(--dark-color);">$${p.price.toFixed(2)}</p>
                         </div>
                     `).join('')}
                 </div>`;
@@ -332,7 +312,7 @@
             window.location.href = 'checkout.html';
         }
         
-        // --- FULL HELPER FUNCTIONS FOR COMPLETENESS ---
+        // --- FULL HELPER FUNCTIONS ---
         function renderNav() {
             const navRight = document.getElementById('nav-right');
             const cartIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.823-6.837A1.125 1.125 0 0018.32 5.25H5.82a1.125 1.125 0 00-1.087.835L3.72 8.25m0 0c0 .106.012.211.035.314.234 1.01 1.254 1.687 2.476 1.687h9.063c1.222 0 2.242-.677 2.476-1.687a4.5 4.5 0 00.035-.314z" /></svg>`;
