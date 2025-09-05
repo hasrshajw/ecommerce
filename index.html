@@ -12,7 +12,7 @@
     <style>
         :root {
             --primary-color: #4F46E5; --primary-hover: #4338CA;
-            --secondary-color: #6B7280; --dark-color: #1F2937;
+            --secondary-color: #6B7280; --dark-color: #1F2937; --danger-color: #EF4444;
             --bg-color: #FFFFFF; --light-grey: #F3F4F6;
             --font-family: 'Inter', sans-serif; --border-radius: 0.5rem;
             --box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
@@ -27,7 +27,7 @@
         .nav-left h1 { margin: 0; font-size: 1.75rem; color: var(--primary-color); cursor: pointer; }
         .nav-right { display: flex; align-items: center; gap: 1rem; }
         .nav-icon { cursor: pointer; position: relative; background: none; border: none; padding: 0.5rem; border-radius: 50%; }
-        #cart-count { position: absolute; top: 0; right: 0; background-color: #EF4444; color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.7rem; font-weight: bold; }
+        #cart-count { position: absolute; top: 0; right: 0; background-color: var(--danger-color); color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.7rem; font-weight: bold; }
         
         /* --- Buttons --- */
         .btn { border: 1px solid transparent; border-radius: var(--border-radius); cursor: pointer; font-weight: 600; transition: all 0.2s; padding: 0.75rem 1.5rem; text-decoration: none; display: inline-block; }
@@ -43,6 +43,10 @@
         .hero-content h2 { font-size: 3.5rem; margin: 0 0 1rem; }
         .hero-content p { font-size: 1.25rem; margin: 0 0 2rem; }
 
+        /* --- Admin Panel --- */
+        #admin-panel-container { max-width: 1280px; margin: 1.5rem auto; }
+        .card { background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 2rem; }
+
         /* --- Section Styling --- */
         .section { padding: 4rem 0; }
         .section-header { text-align: center; margin-bottom: 2.5rem; }
@@ -50,18 +54,18 @@
         
         /* --- Filter Controls --- */
         .filter-controls { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; align-items: center; margin-bottom: 2.5rem; }
-        .category-filters button { background-color: #fff; color: var(--dark-color); border: 1px solid #ddd; padding: 0.6rem 1.2rem; border-radius: 99px; font-weight: 600; transition: all 0.2s; }
+        .category-filters button { background-color: #fff; color: var(--dark-color); border: 1px solid #ddd; padding: 0.6rem 1.2rem; border-radius: 99px; font-weight: 600; transition: all 0.2s; cursor: pointer; }
         .category-filters button.active { background-color: var(--dark-color); color: #fff; border-color: var(--dark-color); }
         
         /* --- Product Grid & Cards --- */
-        #product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }
+        #product-grid, #new-arrivals-grid, #top-sellers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }
         .product-card { background-color: #fff; border-radius: var(--border-radius); overflow: hidden; position: relative; transition: box-shadow 0.3s; }
         .product-card:hover { box-shadow: var(--box-shadow-lg); }
-        .product-card .image-container { position: relative; overflow: hidden; }
+        .product-card .image-container { position: relative; overflow: hidden; cursor: pointer; }
         .product-card img { width: 100%; height: 350px; object-fit: cover; transition: transform 0.3s; }
         .product-card:hover img { transform: scale(1.05); }
-        .product-card .sale-badge { position: absolute; top: 1rem; left: 1rem; background-color: var(--danger-color); color: white; padding: 0.25rem 0.75rem; font-size: 0.8rem; font-weight: 600; border-radius: var(--border-radius); }
-        .product-card .quick-view-btn { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); background-color: rgba(255,255,255,0.9); color: var(--dark-color); padding: 0.6rem 1.2rem; border-radius: 99px; opacity: 0; transition: opacity 0.3s; }
+        .product-card .sale-badge { position: absolute; top: 1rem; left: 1rem; background-color: #EF4444; color: white; padding: 0.25rem 0.75rem; font-size: 0.8rem; font-weight: 600; border-radius: var(--border-radius); }
+        .product-card .quick-view-btn { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); background-color: rgba(255,255,255,0.9); color: var(--dark-color); padding: 0.6rem 1.2rem; border-radius: 99px; opacity: 0; transition: opacity 0.3s; border: 1px solid #ddd; cursor: pointer; }
         .product-card:hover .quick-view-btn { opacity: 1; }
         .product-card .card-content { padding: 1.5rem; text-align: center; }
         .product-card h3 { margin: 0 0 0.5rem; font-size: 1.1rem; }
@@ -77,6 +81,10 @@
         .modal-image img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--border-radius) 0 0 var(--border-radius); }
         .modal-details { flex: 1; padding: 2.5rem; position: relative; overflow-y: auto; }
         .close-btn { position: absolute; top: 1rem; right: 1rem; color: #aaa; font-size: 28px; cursor: pointer; border: none; background: none; }
+        .size-options button { background-color: white; color: var(--dark-color); border: 1px solid #d1d5db; padding: 0.5rem 1rem; min-width: 45px; cursor: pointer; border-radius: var(--border-radius); }
+        .size-options button:disabled { background-color: white; border: 1px dashed #d1d5db; color: #9ca3af; position: relative; overflow: hidden; cursor: not-allowed;}
+        .size-options button:disabled::after { content: ''; position: absolute; top: 50%; left: -10%; width: 120%; height: 1.5px; background: #d1d5db; transform: rotate(-20deg); }
+        .size-options button.selected { background-color: var(--dark-color); color: white; border-color: var(--dark-color); }
         
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
         .toast { padding: 1rem 1.5rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
@@ -149,6 +157,7 @@
                 currentUser = user;
                 loadCartFromLocalStorage();
                 renderNav();
+                renderAdminPanel();
             });
             fetchProducts();
         });
@@ -156,8 +165,15 @@
         // --- DATA FETCHING ---
         async function fetchProducts() {
             try {
-                const snapshot = await db.collection('products').where('isAvailable', '==', true).orderBy('name').get();
-                products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), createdAt: doc.data().createdAt || null }));
+                const snapshot = await db.collection('products')
+                    .where('isAvailable', '==', true) // Only fetch available products
+                    .orderBy('name')
+                    .get();
+                products = snapshot.docs.map(doc => ({ 
+                    id: doc.id, 
+                    ...doc.data(), 
+                    createdAt: doc.data().createdAt || null // Ensure createdAt exists
+                }));
                 renderPageContent();
             } catch (error) {
                 console.error("Error fetching products:", error);
@@ -168,9 +184,9 @@
         // --- PAGE RENDERING ---
         function renderPageContent() {
             renderCategoryFilters();
-            renderProductGrid(products); // Initially render all available products
+            renderProductGrid(products);
             renderNewArrivals();
-            renderTopSellers(); // Demo section
+            renderTopSellers();
         }
 
         function renderCategoryFilters() {
@@ -195,7 +211,7 @@
             grid.innerHTML = productsToRender.length ? productsToRender.map(p => `
                 <div class="product-card">
                     <div class="image-container">
-                        <img src="${p.images?.[0] || ''}" alt="${p.name}" loading="lazy" onclick="window.location.href='product-detail.html#${p.id}'">
+                        <img src="${p.images?.[0] || 'https://via.placeholder.com/350'}" alt="${p.name}" loading="lazy" onclick="window.location.href='product-detail.html#${p.id}'">
                         ${p.oldPrice > p.price ? '<span class="sale-badge">SALE</span>' : ''}
                         <button class="quick-view-btn" onclick="openQuickView('${p.id}')">Quick View</button>
                     </div>
@@ -207,27 +223,25 @@
                         </div>
                     </div>
                 </div>
-            `).join('') : '<p>No products found.</p>';
+            `).join('') : '<p>No products found in this category.</p>';
         }
 
         function renderNewArrivals() {
             const container = document.getElementById('new-arrivals-section');
-            // Assuming createdAt field exists. If not, this will just show the first 8.
             const newArrivals = [...products]
                 .sort((a, b) => (b.createdAt?.toDate() || 0) - (a.createdAt?.toDate() || 0))
-                .slice(0, 8);
+                .slice(0, 4); // Show 4 for a cleaner look
             if(newArrivals.length > 0) {
-                container.innerHTML = `<div class="section-header"><h2>New Arrivals</h2></div><div id="new-arrivals-grid" class="product-grid"></div>`;
+                container.innerHTML = `<div class="section-header"><h2>New Arrivals</h2></div><div id="new-arrivals-grid"></div>`;
                 renderProductGrid(newArrivals, 'new-arrivals-grid');
             }
         }
         
         function renderTopSellers() {
             const container = document.getElementById('top-sellers-section');
-            // This is a demo. In a real app, you'd have a 'salesCount' field to sort by.
             const topSellers = [...products].sort(() => 0.5 - Math.random()).slice(0, 4);
              if(topSellers.length > 0) {
-                container.innerHTML = `<div class="section-header"><h2>Top Sellers</h2></div><div id="top-sellers-grid" class="product-grid"></div>`;
+                container.innerHTML = `<div class="section-header"><h2>Top Sellers</h2></div><div id="top-sellers-grid"></div>`;
                 renderProductGrid(topSellers, 'top-sellers-grid');
             }
         }
@@ -240,7 +254,7 @@
             const modal = document.getElementById('quick-view-modal');
             modal.innerHTML = `
                 <div class="modal-content">
-                    <div class="modal-image"><img src="${product.images?.[0] || ''}" alt="${product.name}"></div>
+                    <div class="modal-image"><img src="${product.images?.[0] || 'https://via.placeholder.com/400'}" alt="${product.name}"></div>
                     <div class="modal-details">
                         <button class="close-btn" onclick="closeQuickView()">&times;</button>
                         <h4>${product.category}</h4>
@@ -249,18 +263,17 @@
                             <span class="current-price">$${product.price.toFixed(2)}</span>
                             ${product.oldPrice > 0 ? `<span class="old-price">$${product.oldPrice.toFixed(2)}</span>` : ''}
                         </div>
-                        <div class="size-selector">
+                        <div class="size-selector" style="margin: 1.5rem 0;">
                             <h4>Size:</h4>
-                            <div class="size-options">${(product.sizes || []).map(s => `<button data-size="${s.name}" ${!s.available ? 'disabled' : ''}>${s.name}</button>`).join('')}</div>
+                            <div class="size-options" style="display:flex; gap: 0.5rem;">${(product.sizes || []).map(s => `<button data-size="${s.name}" ${!s.available ? 'disabled' : ''}>${s.name}</button>`).join('')}</div>
                         </div>
                         <button class="btn btn-primary" id="modal-add-to-cart" disabled style="width:100%;">Add to Cart</button>
-                        <a href="product-detail.html#${product.id}" style="display:block; text-align:center; margin-top:1rem; font-size:0.9rem;">View Full Details</a>
+                        <a href="product-detail.html#${product.id}" style="display:block; text-align:center; margin-top:1rem; font-size:0.9rem; color: var(--secondary-color);">View Full Details</a>
                     </div>
                 </div>
             `;
             modal.style.display = 'flex';
 
-            // Add listeners for this modal specifically
             let selectedSize = null;
             modal.querySelectorAll('.size-options button:not(:disabled)').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -283,8 +296,7 @@
         // --- CART LOGIC ---
         const loadCartFromLocalStorage = () => cart = JSON.parse(localStorage.getItem('shopSphereCart') || '[]');
         const saveCartToLocalStorage = () => localStorage.setItem('shopSphereCart', JSON.stringify(cart));
-        const updateCartCount = () => { /* ... */ };
-
+        
         function handleAddToCart(productId, size) {
             if (!size) {
                 showToast('Please select a size.', 'error');
@@ -299,7 +311,7 @@
             showToast('Item added to cart!', 'success');
         }
 
-        // --- FULL HELPER FUNCTIONS FOR COMPLETENESS ---
+        // --- FULL HELPER FUNCTIONS ---
         function renderNav() {
             const navRight = document.getElementById('nav-right');
             const cartIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.823-6.837A1.125 1.125 0 0018.32 5.25H5.82a1.125 1.125 0 00-1.087.835L3.72 8.25m0 0c0 .106.012.211.035.314.234 1.01 1.254 1.687 2.476 1.687h9.063c1.222 0 2.242-.677 2.476-1.687a4.5 4.5 0 00.035-.314z" /></svg>`;
@@ -307,13 +319,36 @@
             const logoutIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" /></svg>`;
             let html = '';
             if (currentUser) {
-                if (currentUser.email === ADMIN_EMAIL) { html += `<button title="Admin Dashboard" class="nav-icon" onclick="window.location.href='admin-dashboard.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h12A2.25 2.25 0 0020.25 14.25V3m-15.75 0h15.75M3.75 3v1.5M20.25 3v1.5M3.75 6.75h15.75M3.75 9.75h15.75M3.75 12.75h15.75M3.75 15.75h15.75" /></svg></button>`;
-                } else { html += `<button title="My Orders" class="nav-icon" onclick="window.location.href='orders.html'">${ordersIcon}</button>`; }
-                html += `<button title="Cart" class="nav-icon" onclick="window.location.href='cart.html'">${cartIcon}<span id="cart-count">0</span></button><button title="Logout" class="nav-icon" onclick="auth.signOut()">${logoutIcon}</button>`;
-            } else { html = `<a href="#" class="btn btn-primary" onclick="auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())">Login</a>`; }
+                if (currentUser.email === ADMIN_EMAIL) {
+                    html += `<button title="Admin Dashboard" class="nav-icon" onclick="window.location.href='admin-dashboard.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h12A2.25 2.25 0 0020.25 14.25V3m-15.75 0h15.75M3.75 3v1.5M20.25 3v1.5M3.75 6.75h15.75M3.75 9.75h15.75M3.75 12.75h15.75M3.75 15.75h15.75" /></svg></button>`;
+                } else {
+                    html += `<button title="My Orders" class="nav-icon" onclick="window.location.href='orders.html'">${ordersIcon}</button>`;
+                }
+                html += `
+                    <button title="Cart" class="nav-icon" onclick="window.location.href='cart.html'">${cartIcon}<span id="cart-count">0</span></button>
+                    <button title="Logout" class="nav-icon" onclick="auth.signOut()">${logoutIcon}</button>`;
+            } else {
+                html = `<button class="btn btn-primary" onclick="auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())">Login</button>`;
+            }
             navRight.innerHTML = html;
             updateCartCount();
         }
+
+        function renderAdminPanel() {
+            const panelContainer = document.getElementById('admin-panel-container');
+            if (currentUser && currentUser.email === ADMIN_EMAIL) {
+                panelContainer.innerHTML = `
+                    <div class="card">
+                        <h2>Admin Quick Actions</h2>
+                        <p>Welcome, Admin. You can manage your store from the main dashboard.</p>
+                        <a href="admin-dashboard.html" class="btn btn-primary">Go to Dashboard</a>
+                    </div>
+                `;
+            } else {
+                panelContainer.innerHTML = '';
+            }
+        }
+        
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -322,11 +357,12 @@
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         }
-        updateCartCount = function() {
+
+        function updateCartCount() {
             const count = cart.reduce((sum, item) => sum + item.quantity, 0);
             const el = document.getElementById('cart-count');
             if(el) { el.textContent = count; el.classList.toggle('hidden', count === 0); }
-        };
+        }
     </script>
 </body>
 </html>
