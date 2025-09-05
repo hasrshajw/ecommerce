@@ -13,7 +13,7 @@
         /* --- GLOBAL STYLES --- */
         :root {
             --primary-color: #4F46E5; --primary-hover: #4338CA;
-            --secondary-color: #6B7280; --dark-color: #1F2937;
+            --secondary-color: #6B7280; --dark-color: #1F2937; --success-color: #10B981;
             --bg-color: #F3F4F6; --font-family: 'Inter', sans-serif; --border-radius: 0.5rem;
             --box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
         }
@@ -32,45 +32,46 @@
         
         /* --- Buttons --- */
         button { border: none; border-radius: var(--border-radius); cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: all 0.2s ease-in-out; padding: 0.75rem 1.5rem; }
-        .btn-primary { background-color: var(--primary-color); color: white; }
-        .btn-primary:hover:not(:disabled) { background-color: var(--primary-hover); }
+        .btn-success { background-color: var(--success-color); color: white; }
+        .btn-success:hover:not(:disabled) { background-color: #059669; }
         button:disabled { background-color: #d1d5db; cursor: not-allowed; }
-        .btn-spinner { width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; display: inline-block; vertical-align: middle; margin-left: 8px; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
+        
         /* --- Layout --- */
         .page { animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .card { background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 2rem; }
         .page-title { font-size: 2rem; font-weight: 700; margin: 0 0 2rem; }
-        
+
         /* --- CHECKOUT PAGE STYLES (NEW) --- */
-        .checkout-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem; align-items: start; }
+        .checkout-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start; }
         @media (max-width: 992px) { .checkout-layout { grid-template-columns: 1fr; } }
         
         .form-group { margin-bottom: 1.5rem; }
         .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; }
         .form-group input { 
-            display: block; width: 100%; padding: 0.75rem 1rem; font-size: 0.95rem; line-height: 1.5; font-family: var(--font-family); color: var(--dark-color);
-            background-color: #fff; border: 1px solid #ced4da; border-radius: var(--border-radius); transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+            display: block; width: 100%; padding: 0.75rem 1rem; font-size: 1rem; line-height: 1.5; color: var(--dark-color);
+            background-color: #fff; border: 1px solid #ced4da; border-radius: var(--border-radius);
+            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
         }
         .form-group input:focus { border-color: var(--primary-color); outline: 0; box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25); }
-        
-        .order-summary-items { max-height: 300px; overflow-y: auto; padding-right: 1rem; margin-bottom: 1rem; }
-        .summary-item { display: flex; gap: 1rem; margin-bottom: 1rem; }
+
+        .order-summary { position: sticky; top: 100px; }
+        .summary-item-list { border-bottom: 1px solid #e5e7eb; padding-bottom: 1rem; margin-bottom: 1rem; }
+        .summary-item { display: flex; align-items: start; gap: 1rem; margin-bottom: 1rem; }
         .summary-item img { width: 64px; height: 64px; object-fit: cover; border-radius: var(--border-radius); }
         .summary-item-details { flex-grow: 1; font-size: 0.9rem; }
-        .summary-item-details p { margin: 0; }
+        .summary-item-details h5 { margin: 0 0 0.25rem; }
+        .summary-item-details p { margin: 0; color: var(--secondary-color); }
         .summary-item-price { font-weight: 600; }
         
-        .summary-row { display: flex; justify-content: space-between; margin-bottom: 1rem; }
-        .summary-total { font-size: 1.25rem; font-weight: 700; border-top: 1px solid #e5e7eb; padding-top: 1rem; }
-        
+        .summary-calculation .summary-row { display: flex; justify-content: space-between; margin-bottom: 0.75rem; }
+        .summary-total { font-size: 1.25rem; font-weight: 700; border-top: 1px solid #e5e7eb; padding-top: 1rem; margin-top: 0.25rem; }
+
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
         .toast { padding: 1rem 1.5rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
-        .toast.error { background-color: #EF4444; }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
         @keyframes fadeOut { to { opacity: 0; } }
+        .toast.error { background-color: #EF4444; }
     </style>
 </head>
 <body>
@@ -94,7 +95,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <script>
-        // --- CONFIG & INITIALIZATION ---
+        // --- CONFIG & STATE ---
         const firebaseConfig = {
             apiKey: "AIzaSyCzqYrP1qYSiiLLgKW3z3EcwMpiG4hyF6M",
             authDomain: "e-commerce27.firebaseapp.com",
@@ -108,7 +109,6 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // --- STATE MANAGEMENT ---
         let currentUser = null;
         let cart = [];
         let allProducts = [];
@@ -125,19 +125,17 @@
                     window.location.href = 'index.html';
                     return;
                 }
-                
                 fetchAllProductsAndRenderCheckout();
             });
         });
         
-        // --- UI & DATA FETCHING ---
         async function fetchAllProductsAndRenderCheckout() {
             try {
                 const snapshot = await db.collection('products').get();
                 allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderCheckout();
             } catch (error) {
-                console.error("Could not fetch product details for checkout:", error);
+                console.error("Error loading product data:", error);
                 document.getElementById('checkout-page-container').innerHTML = `<p>Error loading checkout details.</p>`;
             }
         }
@@ -163,44 +161,52 @@
                     <div class="summary-item">
                         <img src="${imageUrl}" alt="${product.name}">
                         <div class="summary-item-details">
-                            <p><strong>${product.name}</strong></p>
-                            <p>Size: ${item.size}</p>
-                            <p>Qty: ${item.quantity}</p>
+                            <h5>${product.name}</h5>
+                            <p>Size: ${item.size} | Qty: ${item.quantity}</p>
                         </div>
-                        <p class="summary-item-price">$${(product.price * item.quantity).toFixed(2)}</p>
+                        <span class="summary-item-price">$${(product.price * item.quantity).toFixed(2)}</span>
                     </div>`;
             }).join('');
             
-            const shipping = 5.00;
-            const tax = subtotal * 0.08;
+            const shipping = subtotal > 50 ? 0.00 : 5.00; // Free shipping over $50
+            const tax = subtotal * 0.08; // 8% tax
             const total = subtotal + shipping + tax;
             
             container.innerHTML = `
-                <h1 class="page-title">Checkout</h1>
                 <div class="checkout-layout">
                     <div class="card">
-                        <h2>Shipping Information</h2>
+                        <h2 class="page-title">Shipping Information</h2>
                         <form id="shipping-form">
-                            <div class="form-group"><label for="fullName">Full Name</label><input type="text" id="fullName" value="${savedAddress.fullName || currentUser.displayName || ''}" required></div>
-                            <div class="form-group"><label for="address">Address</label><input type="text" id="address" value="${savedAddress.address || ''}" placeholder="123 Main St" required></div>
-                            <div class="form-group"><label for="city">City</label><input type="text" id="city" value="${savedAddress.city || ''}" required></div>
-                            <div class="form-group"><label for="zip">ZIP Code</label><input type="text" id="zip" value="${savedAddress.zip || ''}" required></div>
+                            <div class="form-group">
+                                <label for="fullName">Full Name</label>
+                                <input type="text" id="fullName" value="${savedAddress.fullName || currentUser.displayName || ''}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <input type="text" id="address" value="${savedAddress.address || ''}" placeholder="123 Main St" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" value="${savedAddress.city || ''}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="zip">ZIP / Postal Code</label>
+                                <input type="text" id="zip" value="${savedAddress.zip || ''}" required>
+                            </div>
                         </form>
                     </div>
                     <div class="card order-summary">
                         <h2>Order Summary</h2>
-                        <div class="order-summary-items">${summaryItemsHtml}</div>
-                        <div class="summary-row"><span>Subtotal</span><span>$${subtotal.toFixed(2)}</span></div>
-                        <div class="summary-row"><span>Shipping</span><span>$${shipping.toFixed(2)}</span></div>
-                        <div class="summary-row"><span>Tax (Est.)</span><span>$${tax.toFixed(2)}</span></div>
-                        <div class="summary-row summary-total"><span>Total</span><span>$${total.toFixed(2)}</span></div>
-                        <button class="btn-primary" style="width:100%; margin-top:1rem;" id="place-order-btn">
-                            <span>Place Order (Demo Payment)</span>
-                        </button>
+                        <div class="summary-item-list">${summaryItemsHtml}</div>
+                        <div class="summary-calculation">
+                            <div class="summary-row"><span>Subtotal</span><span>$${subtotal.toFixed(2)}</span></div>
+                            <div class="summary-row"><span>Shipping</span><span>${shipping > 0 ? '$'+shipping.toFixed(2) : 'FREE'}</span></div>
+                            <div class="summary-row"><span>Tax (Est.)</span><span>$${tax.toFixed(2)}</span></div>
+                            <div class="summary-row summary-total"><span>Total</span><span>$${total.toFixed(2)}</span></div>
+                        </div>
+                        <button class="btn-success" style="width:100%; margin-top:1rem;" onclick="handlePlaceOrder()">Place Order</button>
                     </div>
                 </div>`;
-
-            document.getElementById('place-order-btn').addEventListener('click', handlePlaceOrder);
         }
 
         async function handlePlaceOrder() {
@@ -210,43 +216,46 @@
                 return;
             }
             
-            const placeOrderButton = document.getElementById('place-order-btn');
-            placeOrderButton.disabled = true;
-            placeOrderButton.innerHTML = `<span>Placing Order...</span><div class="btn-spinner"></div>`;
-
-            const shippingAddress = { fullName: form.fullName.value, address: form.address.value, city: form.city.value, zip: form.zip.value };
+            const shippingAddress = {
+                fullName: form.fullName.value, address: form.address.value,
+                city: form.city.value, zip: form.zip.value
+            };
             localStorage.setItem('shippingAddress', JSON.stringify(shippingAddress));
 
             const total = cart.reduce((sum, item) => {
                 const product = allProducts.find(p => p.id === item.productId);
                 return sum + (product ? product.price * item.quantity : 0);
-            }, 0) + 5.00 + (cart.reduce((sum, item) => {
-                const product = allProducts.find(p => p.id === item.productId);
-                return sum + (product ? product.price * item.quantity : 0);
-            }, 0) * 0.08);
+            }, 0) + 5.00 + (cart.reduce((sum, item) => sum + allProducts.find(p => p.id === item.productId).price * item.quantity, 0) * 0.08);
 
             const orderData = {
                 userId: currentUser.uid, userName: currentUser.displayName, userEmail: currentUser.email,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(), status: 'Pending',
                 shippingAddress,
                 items: cart.map(item => {
-                    const p = allProducts.find(p => p.id === item.productId);
-                    return { productId: item.productId, quantity: item.quantity, size: item.size, name: p.name, price: p.price };
+                    const product = allProducts.find(p => p.id === item.productId);
+                    return { productId: item.productId, quantity: item.quantity, size: item.size, name: product.name, price: product.price };
                 }),
                 totalPrice: total
             };
             
             try {
+                const placeOrderButton = document.querySelector('.btn-success');
+                placeOrderButton.disabled = true;
+                placeOrderButton.textContent = 'Processing...';
+
                 await db.collection('orders').add(orderData);
+                
                 cart = [];
                 saveCartToLocalStorage();
+                
                 sessionStorage.setItem('toastMessage', JSON.stringify({ message: 'Order placed successfully!', type: 'success' }));
                 window.location.href = 'orders.html';
+
             } catch (error) {
                 console.error("Error placing order:", error);
                 showToast('Failed to place order. Please try again.', 'error');
                 placeOrderButton.disabled = false;
-                placeOrderButton.innerHTML = `<span>Place Order (Demo Payment)</span>`;
+                placeOrderButton.textContent = 'Place Order';
             }
         }
         
@@ -268,12 +277,12 @@
                 if (currentUser.email === ADMIN_EMAIL) { html += `<button title="Admin Dashboard" class="nav-icon" onclick="window.location.href='admin-dashboard.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h12A2.25 2.25 0 0020.25 14.25V3m-15.75 0h15.75M3.75 3v1.5M20.25 3v1.5M3.75 6.75h15.75M3.75 9.75h15.75M3.75 12.75h15.75M3.75 15.75h15.75" /></svg></button>`;
                 } else { html += `<button title="My Orders" class="nav-icon" onclick="window.location.href='orders.html'">${ordersIcon}</button>`; }
                 html += `<button title="Cart" class="nav-icon" onclick="window.location.href='cart.html'">${cartIcon}<span id="cart-count" class="hidden">0</span></button><button title="Logout" class="nav-icon" onclick="auth.signOut()">${logoutIcon}</button>`;
-            } // No "else" because this page is guarded
+            }
             navRight.innerHTML = html;
             updateCartCount();
         }
         function showToast(message, type = 'error') {
-            const container = document.getElementById('toast-container');
+            const toastContainer = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
             toast.textContent = message;
