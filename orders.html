@@ -32,6 +32,7 @@
         button { border: none; border-radius: var(--border-radius); cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: all 0.2s ease-in-out; padding: 0.75rem 1.5rem; }
         .btn-primary { background-color: var(--primary-color); color: white; }
         .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-secondary { background-color: var(--secondary-color); color: white; }
         .badge { padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; text-transform: capitalize; }
         .badge-pending { background-color: #FEF3C7; color: #92400E; }
         .badge-shipped { background-color: #DBEAFE; color: #1E40AF; }
@@ -57,7 +58,6 @@
         .order-items-preview { display: flex; -webkit-box-orient: horizontal; }
         .order-items-preview img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid white; margin-left: -15px; }
         .order-items-preview img:first-child { margin-left: 0; }
-        .order-footer { padding: 1rem 1.5rem; border-top: 1px solid #e5e7eb; text-align: right; }
         
         /* --- Modal --- */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
@@ -88,19 +88,8 @@
 
     <div class="container page">
         <h1 class="page-title">My Order History</h1>
-        <div class="card">
-            <div class="filter-controls">
-                <input type="search" id="order-search" placeholder="Search by Order ID or Product Name...">
-                <select id="status-filter">
-                    <option value="all">All Statuses</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Shipped">Shipped</option>
-                    <option value="Delivered">Delivered</option>
-                </select>
-            </div>
-            <div id="orders-list">
-                <p>Loading your orders...</p>
-            </div>
+        <div id="orders-page-container" class="card">
+            <p>Loading your orders...</p>
         </div>
     </div>
     
@@ -153,16 +142,38 @@
         });
 
         async function loadOrdersPageData() {
-            // Fetch both products (for images) and orders
-            await Promise.all([
-                db.collection('products').get().then(snap => allProducts = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }))),
-                db.collection('orders').where('userId', '==', currentUser.uid).orderBy('createdAt', 'desc').get().then(snap => allUserOrders = snap.docs.map(doc => ({ id: doc.id, ...doc.data() })))
-            ]);
-            
-            setupEventListeners();
-            renderFilteredOrders(); // Initial render
+            renderPageSkeleton(); // Render the page structure first
+            try {
+                await Promise.all([
+                    db.collection('products').get().then(snap => allProducts = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }))),
+                    db.collection('orders').where('userId', '==', currentUser.uid).orderBy('createdAt', 'desc').get().then(snap => allUserOrders = snap.docs.map(doc => ({ id: doc.id, ...doc.data() })))
+                ]);
+                setupEventListeners(); // **FIX:** Setup listeners AFTER skeleton is rendered
+                renderFilteredOrders(); // Initial render with all data
+            } catch (error) {
+                console.error("Error loading order page data:", error);
+                document.getElementById('orders-list').innerHTML = `<div class="empty-state"><p>Could not load your orders. Please try again later.</p></div>`;
+            }
         }
 
+        function renderPageSkeleton() {
+            const container = document.getElementById('orders-page-container');
+            container.innerHTML = `
+                <div class="filter-controls">
+                    <input type="search" id="order-search" placeholder="Search by Order ID or Product Name...">
+                    <select id="status-filter">
+                        <option value="all">All Statuses</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Delivered">Delivered</option>
+                    </select>
+                </div>
+                <div id="orders-list">
+                    <p>Loading your orders...</p>
+                </div>
+            `;
+        }
+        
         function setupEventListeners() {
             document.getElementById('order-search').addEventListener('input', renderFilteredOrders);
             document.getElementById('status-filter').addEventListener('change', renderFilteredOrders);
