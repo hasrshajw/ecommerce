@@ -29,7 +29,7 @@
         .nav-icon:hover { background-color: #e5e7eb; }
         .nav-icon svg { width: 24px; height: 24px; stroke: var(--dark-color); }
         #cart-count { position: absolute; top: 0; right: 0; background-color: #EF4444; color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.7rem; font-weight: bold; }
-        
+
         /* --- Buttons --- */
         button { border: none; border-radius: var(--border-radius); cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: all 0.2s ease-in-out; padding: 0.75rem 1.5rem; }
         .btn-primary { background-color: var(--primary-color); color: white; }
@@ -77,7 +77,9 @@
         <div class="nav-left">
             <h1 onclick="window.location.href='index.html'">ShopSphere</h1>
         </div>
-        <div id="nav-right" class="nav-right"></div>
+        <div id="nav-right" class="nav-right">
+            <!-- Navigation buttons are rendered here by JavaScript -->
+        </div>
     </nav>
 
     <div class="container page">
@@ -240,14 +242,13 @@
             };
             localStorage.setItem('shippingAddress', JSON.stringify(shippingAddress));
 
-            let subtotal = 0;
-            cart.forEach(item => {
+            // Correctly calculate subtotal again for the order data
+            const subtotal = cart.reduce((sum, item) => {
                 const product = allProducts.find(p => p.id === item.productId);
-                if (product) subtotal += product.price * item.quantity;
-            });
-            const shipping = 5.00;
-            const tax = subtotal * 0.08;
-            const finalTotal = subtotal + shipping + tax; // **CORRECTED CALCULATION**
+                return sum + (product ? product.price * item.quantity : 0);
+            }, 0);
+
+            const total = subtotal + 5.00 + (subtotal * 0.08); // Subtotal + Shipping + Tax
 
             const orderData = {
                 userId: currentUser.uid, userName: currentUser.displayName, userEmail: currentUser.email,
@@ -257,7 +258,7 @@
                     const product = allProducts.find(p => p.id === item.productId);
                     return { productId: item.productId, quantity: item.quantity, size: item.size, name: product.name, price: product.price };
                 }),
-                totalPrice: finalTotal // **CORRECTED VALUE**
+                totalPrice: total
             };
             
             const confirmBtn = document.getElementById('confirm-order-btn');
@@ -278,7 +279,7 @@
             }
         }
         
-        // --- FULL HELPER FUNCTIONS ---
+        // --- FULL HELPER FUNCTIONS FOR COMPLETENESS ---
         const loadCartFromLocalStorage = () => cart = JSON.parse(localStorage.getItem('shopSphereCart') || '[]');
         const saveCartToLocalStorage = () => localStorage.setItem('shopSphereCart', JSON.stringify(cart));
         const updateCartCount = () => {
