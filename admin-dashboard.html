@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - ShopSphere</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #4F46E5; --primary-hover: #4338CA; --primary-light: #eef2ff;
+            --secondary-color: #6B7280; --success-color: #10B981; --danger-color: #EF4444;
+            --light-color: #F9FAFB; --dark-color: #1F2937;
+            --bg-color: #F3F4F6; --font-family: 'Inter', sans-serif; --border-radius: 0.5rem;
+            --box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        body { font-family: var(--font-family); margin: 0; background-color: var(--bg-color); color: var(--dark-color); }
+        .container { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
+        
+        nav { background: #fff; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--box-shadow); position: sticky; top: 0; z-index: 1000; }
+        .nav-left h1 { margin: 0; font-size: 1.75rem; color: var(--primary-color); cursor: pointer; }
+        .nav-right { display: flex; align-items: center; gap: 1rem; }
+        .nav-icon { cursor: pointer; position: relative; background: none; border: none; padding: 0.5rem; border-radius: 50%; transition: background-color 0.2s; }
+        .nav-icon:hover { background-color: #e5e7eb; }
+        .nav-icon svg { width: 24px; height: 24px; stroke: var(--dark-color); }
+        
+        button { border: none; border-radius: var(--border-radius); cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: all 0.2s ease-in-out; padding: 0.75rem 1.5rem; }
+        .btn-primary { background-color: var(--primary-color); color: white; }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-secondary { background-color: var(--secondary-color); color: white; }
+        .badge { padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; text-transform: capitalize; }
+        .badge-pending { background-color: #FEF3C7; color: #92400E; }
+        .badge-shipped { background-color: #DBEAFE; color: #1E40AF; }
+        .badge-delivered { background-color: #D1FAE5; color: #065F46; }
+
+        .page { animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 2rem; }
+
+        .admin-nav { display: flex; gap: 0.5rem; border-bottom: 1px solid #ddd; margin-bottom: 1.5rem; }
+        .admin-nav button { background: none; box-shadow: none; padding: 1rem; font-size: 1rem; border-radius: 0; border-bottom: 3px solid transparent; color: var(--secondary-color); }
+        .admin-nav button.active { border-bottom-color: var(--primary-color); color: var(--primary-color); }
+
+        .dashboard-filters { background-color: var(--light-color); padding: 1rem; border-radius: var(--border-radius); margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; }
+        .filter-group { display: flex; flex-direction: column; gap: 0.25rem; }
+        .filter-group label { font-size: 0.8rem; font-weight: 600; color: var(--secondary-color); }
+        .filter-group select, .filter-group input { padding: 0.5rem; border-radius: var(--border-radius); border: 1px solid #d1d5db; }
+        
+        #stats-period-header { margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--dark-color); }
+        #live-indicator { width: 10px; height: 10px; background-color: var(--success-color); border-radius: 50%; display: inline-block; margin-right: 8px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: linear-gradient(135deg, #ffffff, #f9fafb); padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); }
+        .stat-card h3 { margin: 0 0 0.5rem; color: var(--secondary-color); font-size: 1rem; }
+        .stat-card p { font-size: 2.25rem; font-weight: 700; margin: 0; color: var(--dark-color); }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
+        tbody tr:first-child { background-color: var(--primary-light); transition: background-color 0.5s; }
+        
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
+        .modal-content { background-color: #fefefe; margin: 5% auto; padding: 2rem; border-radius: var(--border-radius); width: 90%; max-width: 700px; animation: modalOpen 0.3s; }
+        @keyframes modalOpen { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
+        .toast { padding: 1rem 1.5rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        @keyframes fadeOut { to { opacity: 0; } }
+        .toast.success { background-color: var(--success-color); }
+        .toast.error { background-color: var(--danger-color); }
+    </style>
+</head>
+<body>
+    <div id="toast-container"></div>
+    <div id="admin-modal" class="modal"></div>
+
+    <nav>
+        <div class="nav-left">
+            <h1 onclick="window.location.href='index.html'">ShopSphere</h1>
+        </div>
+        <div id="nav-right" class="nav-right"></div>
+    </nav>
+
+    <div class="container page">
+        <div id="admin-dashboard-container" class="card">
+            <h1>Admin Dashboard</h1>
+            <div class="admin-nav">
+                <button class="active">Dashboard</button>
+                <button onclick="window.location.href='admin-products.html'">Products</button>
+            </div>
+            <div id="admin-content">
+                <div class="dashboard-filters">
+                    <div class="filter-group">
+                        <label for="month-select">Select Period</label>
+                        <select id="month-select"></select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="date-from">Custom Range From</label>
+                        <input type="date" id="date-from">
+                    </div>
+                    <div class="filter-group">
+                        <label for="date-to">To</label>
+                        <input type="date" id="date-to">
+                    </div>
+                    <button class="btn-primary" id="apply-date-filter-btn" style="align-self: flex-end;">Apply</button>
+                    <button class="btn-secondary" id="reset-filter-btn" style="align-self: flex-end;">Reset</button>
+                </div>
+
+                <h4 id="stats-period-header"></h4>
+                <div id="stats-grid-container" class="stats-grid"></div>
+                <h2>Orders <span id="live-indicator"></span><span style="font-size: 0.8rem; color: var(--secondary-color);">Live Update Active</span></h2>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead><tr><th>Date</th><th>Customer</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody id="admin-orders-table"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script>
+        // --- CONFIG & INITIALIZATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCzqYrP1qYSiiLLgKW3z3EcwMpiG4hyF6M",
+            authDomain: "e-commerce27.firebaseapp.com",
+            projectId: "e-commerce27",
+            storageBucket: "e-commerce27.firebasestorage.app",
+            messagingSenderId: "1000564724466",
+            appId: "1:1000564724466:web:55047ed3c820197733366b",
+        };
+        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // --- STATE ---
+        let currentUser = null;
+        let allProductsCount = 0;
+        let unsubscribeRealtimeListener; // To manage the live listener
+
+        // --- APP ENTRY POINT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            auth.onAuthStateChanged(user => {
+                currentUser = user;
+                renderNav();
+                if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
+                    sessionStorage.setItem('toastMessage', JSON.stringify({ message: 'Access Denied: Admin area.', type: 'error' }));
+                    window.location.href = 'index.html';
+                    return;
+                }
+                initializeDashboard();
+            });
+        });
+
+        async function initializeDashboard() {
+            const productSnapshot = await db.collection('products').get();
+            allProductsCount = productSnapshot.size;
+            populateMonthFilter();
+            setupFilterListeners();
+            updateDashboardView('today'); // Default view is now 'today'
+        }
+
+        function populateMonthFilter() {
+            const monthSelect = document.getElementById('month-select');
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const now = new Date();
+            
+            monthSelect.innerHTML = '<option value="today">Today</option><option value="currentMonth">This Month</option>';
+            for (let i = 0; i < 12; i++) {
+                const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                const year = date.getFullYear();
+                const month = date.getMonth();
+                const option = document.createElement('option');
+                option.value = `${year}-${month}`;
+                option.textContent = `${months[month]} ${year}`;
+                monthSelect.appendChild(option);
+            }
+        }
+
+        function setupFilterListeners() {
+            document.getElementById('month-select').addEventListener('change', (e) => {
+                const value = e.target.value;
+                if (value === 'today' || value === 'currentMonth') {
+                    updateDashboardView(value);
+                } else {
+                    updateDashboardView('specificMonth', value);
+                }
+                clearCustomDates();
+            });
+            document.getElementById('apply-date-filter-btn').addEventListener('click', () => {
+                const from = document.getElementById('date-from').value;
+                const to = document.getElementById('date-to').value;
+                if (from && to) {
+                    updateDashboardView('customRange', { from, to });
+                    document.getElementById('month-select').value = ''; // Deselect month dropdown
+                } else { showToast('Please select both a start and end date.', 'error'); }
+            });
+            document.getElementById('reset-filter-btn').addEventListener('click', () => {
+                document.getElementById('month-select').value = 'today';
+                clearCustomDates();
+                updateDashboardView('today');
+            });
+        }
+        
+        function clearCustomDates() {
+            document.getElementById('date-from').value = '';
+            document.getElementById('date-to').value = '';
+        }
+
+        // --- CORE DASHBOARD LOGIC ---
+        async function updateDashboardView(filterType, value) {
+            // Stop any existing real-time listener before starting a new one
+            if (unsubscribeRealtimeListener) unsubscribeRealtimeListener();
+
+            let startDate, endDate;
+            let periodHeader = '';
+            
+            const now = new Date();
+            if (filterType === 'today') {
+                startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // Start of today
+                endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59); // End of today
+                periodHeader = 'Today';
+            } else if (filterType === 'currentMonth') {
+                startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+                periodHeader = 'This Month';
+            } else if (filterType === 'specificMonth') {
+                const [year, month] = value.split('-').map(Number);
+                startDate = new Date(year, month, 1);
+                endDate = new Date(year, month + 1, 0, 23, 59, 59);
+                periodHeader = `${new Date(year, month).toLocaleString('default', { month: 'long' })} ${year}`;
+            } else if (filterType === 'customRange') {
+                startDate = new Date(value.from);
+                endDate = new Date(value.to);
+                endDate.setHours(23, 59, 59);
+                periodHeader = `${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`;
+            }
+
+            document.getElementById('stats-period-header').textContent = `Showing Stats for: ${periodHeader}`;
+            
+            // Set up the real-time listener for the selected period
+            listenForOrders(startDate, endDate);
+        }
+
+        function listenForOrders(startDate, endDate) {
+            const startTimestamp = firebase.firestore.Timestamp.fromDate(startDate);
+            const endTimestamp = firebase.firestore.Timestamp.fromDate(endDate);
+
+            const query = db.collection('orders')
+                .where('createdAt', '>=', startTimestamp)
+                .where('createdAt', '<=', endTimestamp)
+                .orderBy('createdAt', 'desc');
+
+            unsubscribeRealtimeListener = query.onSnapshot(snapshot => {
+                const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderDashboardStats(orders);
+                renderOrdersTable(orders);
+            }, error => {
+                console.error("Error with real-time listener:", error);
+                showToast("Failed to sync orders in real-time.", "error");
+            });
+        }
+
+        function renderDashboardStats(orders) {
+            const totalRevenue = orders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+            const totalOrders = orders.length;
+            document.getElementById('stats-grid-container').innerHTML = `
+                <div class="stat-card"><h3>Total Revenue</h3><p>$${totalRevenue.toFixed(2)}</p></div>
+                <div class="stat-card"><h3>Total Orders</h3><p>${totalOrders}</p></div>
+                <div class="stat-card"><h3>All Products</h3><p>${allProductsCount}</p></div>
+            `;
+        }
+
+        function renderOrdersTable(orders) {
+            const ordersTableBody = document.getElementById('admin-orders-table');
+            if (orders.length === 0) {
+                ordersTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 2rem;">No orders found for this period.</td></tr>`;
+                return;
+            }
+            ordersTableBody.innerHTML = orders.map(order => `
+                <tr>
+                    <td>${order.createdAt ? order.createdAt.toDate().toLocaleString() : 'N/A'}</td>
+                    <td>${order.userName || 'N/A'}<br><small>${order.userEmail || 'N/A'}</small></td>
+                    <td>$${(order.totalPrice || 0).toFixed(2)}</td>
+                    <td><span class="badge badge-${(order.status || 'unknown').toLowerCase()}">${order.status || 'Unknown'}</span></td>
+                    <td class="table-actions"><button class="btn-primary" onclick="showOrderDetailModal('${order.id}')">View</button></td>
+                </tr>`).join('');
+        }
+        
+        // --- MODAL & HELPERS ---
+        function showOrderDetailModal(orderId) {
+            // No need to query again, we just need to get the latest data from the listener
+            // A simple GET will be fast and ensure we have the very latest status
+            db.collection('orders').doc(orderId).get().then(doc => {
+                if (!doc.exists) { showToast("Order not found.", "error"); return; }
+                const order = { id: doc.id, ...doc.data() };
+                const modal = document.getElementById('admin-modal');
+                modal.innerHTML = `...`; // Modal HTML is the same as previous version
+                modal.style.display = 'block';
+            });
+        }
+        async function updateOrderStatus(orderId) {
+            const status = document.getElementById('order-status-select').value;
+            await db.collection('orders').doc(orderId).update({ status });
+            showToast('Order status updated!');
+            closeAdminModal();
+            // No need to manually refresh, the real-time listener will handle it!
+        }
+        
+        const closeAdminModal = () => document.getElementById('admin-modal').style.display = 'none';
+        
+        // --- FULL HELPER FUNCTIONS FOR COMPLETENESS ---
+        showOrderDetailModal = function(orderId) {
+             db.collection('orders').doc(orderId).get().then(doc => {
+                if (!doc.exists) { showToast("Order not found.", "error"); return; }
+                const order = { id: doc.id, ...doc.data() };
+                const modal = document.getElementById('admin-modal');
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <span class="close-btn" onclick="closeAdminModal()">&times;</span>
+                        <h2>Order Details (ID: ${order.id.substring(0,6)})</h2>
+                        <p><strong>Customer:</strong> ${order.userName || 'N/A'} (${order.userEmail || 'N/A'})</p>
+                        <p><strong>Shipping Address:</strong> ${order.shippingAddress.fullName}, ${order.shippingAddress.address}, ${order.shippingAddress.city}, ${order.shippingAddress.zip}</p>
+                        <h4>Items</h4>
+                        <ul>${(order.items || []).map(i => `<li>${i.quantity} x ${i.name} (Size: ${i.size}) - $${(i.price * i.quantity).toFixed(2)}</li>`).join('')}</ul>
+                        <hr><p><strong>Total: $${(order.totalPrice || 0).toFixed(2)}</strong></p>
+                        <div style="display:flex; align-items:center; gap:1rem; margin-top:1rem;">
+                            <label for="order-status-select"><strong>Update Status:</strong></label>
+                            <select id="order-status-select" style="padding:0.5rem; border-radius:var(--border-radius);">
+                                <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                                <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                            </select>
+                            <button class="btn-primary" onclick="updateOrderStatus('${order.id}')">Update</button>
+                        </div>
+                    </div>`;
+                modal.style.display = 'block';
+            });
+        }
+        renderNav = function() {
+            const navRight = document.getElementById('nav-right');
+            const logoutIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" /></svg>`;
+            if (currentUser && currentUser.email === ADMIN_EMAIL) {
+                 navRight.innerHTML = `
+                    <button title="Store View" class="nav-icon" onclick="window.location.href='index.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.25a.75.75 0 01-.75-.75v-11.25a.75.75 0 01.75-.75h19.5a.75.75 0 01.75.75v11.25a.75.75 0 01-.75.75H18M13.5 21h-3.375a.75.75 0 01-.75-.75V16.5m0 0v-4.5l-3.75-3.75a.75.75 0 010-1.06l3.75-3.75a.75.75 0 011.06 0l3.75 3.75a.75.75 0 010 1.06l-3.75 3.75m0 0H12" /></svg></button>
+                    <button title="Logout" class="nav-icon" onclick="auth.signOut()">${logoutIcon}</button>`;
+            }
+        }
+        showToast = function(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
