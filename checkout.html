@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - ShopSphere</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- GLOBAL STYLES (Should be identical to other pages) --- */
+        :root {
+            --primary-color: #4F46E5; --primary-hover: #4338CA; --primary-light: #eef2ff;
+            --secondary-color: #6B7280; --success-color: #10B981; --danger-color: #EF4444;
+            --warning-color: #F59E0B; --light-color: #F9FAFB; --dark-color: #1F2937;
+            --bg-color: #F3F4F6; --font-family: 'Inter', sans-serif; --border-radius: 0.5rem;
+            --box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        body { font-family: var(--font-family); margin: 0; background-color: var(--bg-color); color: var(--dark-color); }
+        .container { max-width: 1024px; margin: 0 auto; padding: 1.5rem; }
+        
+        /* --- Navigation (Identical) --- */
+        nav { background: #fff; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--box-shadow); position: sticky; top: 0; z-index: 1000; }
+        .nav-left h1 { margin: 0; font-size: 1.75rem; color: var(--primary-color); cursor: pointer; }
+        .nav-right { display: flex; align-items: center; gap: 1rem; }
+        .nav-icon { cursor: pointer; position: relative; background: none; border: none; padding: 0.5rem; border-radius: 50%; transition: background-color 0.2s; }
+        .nav-icon:hover { background-color: #e5e7eb; }
+        .nav-icon svg { width: 24px; height: 24px; stroke: var(--dark-color); }
+        #cart-count { position: absolute; top: 0; right: 0; background-color: var(--danger-color); color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.7rem; font-weight: bold; }
+        
+        /* --- Buttons (Identical) --- */
+        button { border: none; border-radius: var(--border-radius); cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: all 0.2s ease-in-out; padding: 0.75rem 1.5rem; }
+        .btn-primary { background-color: var(--primary-color); color: white; }
+        .btn-success { background-color: var(--success-color); color: white; }
+        .btn-success:hover { background-color: #059669; }
+        
+        /* --- Layout & Card (Identical) --- */
+        .page { animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 2rem; }
+
+        /* --- Checkout Page Specific Styles --- */
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+        .form-group input { 
+            width: 100%; 
+            padding: 0.75rem; 
+            border: 1px solid #D1D5DB; 
+            border-radius: var(--border-radius); 
+            font-size: 1rem;
+        }
+        .order-summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .checkout-grid { grid-template-columns: 1fr; }
+        }
+
+        /* --- Toast Notifications (Identical) --- */
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
+        .toast { padding: 1rem 1.5rem; margin-bottom: 1rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
+        .toast.error { background-color: var(--danger-color); }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        @keyframes fadeOut { to { opacity: 0; } }
+    </style>
+</head>
+<body>
+    <div id="toast-container"></div>
+
+    <nav>
+        <div class="nav-left">
+            <h1 onclick="window.location.href='products.html'">ShopSphere</h1>
+        </div>
+        <div id="nav-right" class="nav-right">
+            <!-- Navigation buttons are rendered here by JavaScript -->
+        </div>
+    </nav>
+
+    <div class="container page">
+        <div id="checkout-page-container">
+            <!-- Checkout content is rendered by JS -->
+            <p>Loading checkout...</p>
+        </div>
+    </div>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script>
+        // --- CONFIG & INITIALIZATION (Identical) ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCzqYrP1qYSiiLLgKW3z3EcwMpiG4hyF6M",
+            authDomain: "e-commerce27.firebaseapp.com",
+            projectId: "e-commerce27",
+            storageBucket: "e-commerce27.firebasestorage.app",
+            messagingSenderId: "1000564724466",
+            appId: "1:1000564724466:web:55047ed3c820197733366b",
+        };
+        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // --- STATE MANAGEMENT ---
+        let currentUser = null;
+        let cart = [];
+        let allProducts = [];
+
+        // --- APP ENTRY POINT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            auth.onAuthStateChanged(user => {
+                currentUser = user;
+                loadCartFromLocalStorage();
+                renderNav();
+                
+                // Authentication Guard
+                if (!currentUser) {
+                    showToast('Please log in to proceed to checkout.', 'error');
+                    // Add the toast to session storage so it appears after redirect
+                    sessionStorage.setItem('toastMessage', JSON.stringify({ message: 'Please log in to proceed to checkout.', type: 'error' }));
+                    window.location.href = 'products.html';
+                    return;
+                }
+                
+                fetchAllProductsAndRenderCheckout();
+            });
+            // Show toast message if redirected from another page
+            const toastInfo = sessionStorage.getItem('toastMessage');
+            if(toastInfo){
+                const { message, type } = JSON.parse(toastInfo);
+                showToast(message, type);
+                sessionStorage.removeItem('toastMessage');
+            }
+        });
+
+        // --- UI RENDERING FUNCTIONS (Identical Nav and Toast) ---
+        function renderNav() {
+            const navRight = document.getElementById('nav-right');
+            const cartIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.823-6.837A1.125 1.125 0 0018.32 5.25H5.82a1.125 1.125 0 00-1.087.835L3.72 8.25m0 0c0 .106.012.211.035.314.234 1.01 1.254 1.687 2.476 1.687h9.063c1.222 0 2.242-.677 2.476-1.687a4.5 4.5 0 00.035-.314z" /></svg>`;
+            const ordersIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h7.5M8.25 12h7.5m-7.5 5.25h7.5M3.75 6.75h.007v.008H3.75V6.75zM3.75 12h.007v.008H3.75V12zm.375 0a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM3.75 17.25h.007v.008H3.75v-.008z" /></svg>`;
+            const logoutIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" /></svg>`;
+            
+            let html = '';
+            if (currentUser) {
+                if (currentUser.email === ADMIN_EMAIL) {
+                    html += `<button title="Admin Dashboard" class="nav-icon" onclick="window.location.href='admin.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h12A2.25 2.25 0 0020.25 14.25V3m-15.75 0h15.75M3.75 3v1.5M20.25 3v1.5M3.75 6.75h15.75M3.75 9.75h15.75M3.75 12.75h15.75M3.75 15.75h15.75" /></svg></button>`;
+                } else {
+                    html += `<button title="My Orders" class="nav-icon" onclick="window.location.href='orders.html'">${ordersIcon}</button>`;
+                }
+                html += `
+                    <button title="Cart" class="nav-icon" onclick="window.location.href='cart.html'">${cartIcon}<span id="cart-count" class="hidden">0</span></button>
+                    <button title="Logout" class="nav-icon" onclick="auth.signOut()">${logoutIcon}</button>`;
+            } // No "else" because this page is guarded
+            navRight.innerHTML = html;
+            updateCartCount();
+        }
+
+        function showToast(message, type = 'error') {
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            toastContainer.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // --- CHECKOUT LOGIC ---
+        const loadCartFromLocalStorage = () => cart = JSON.parse(localStorage.getItem('shopSphereCart') || '[]');
+        const saveCartToLocalStorage = () => localStorage.setItem('shopSphereCart', JSON.stringify(cart));
+        const updateCartCount = () => {
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const el = document.getElementById('cart-count');
+            if (el) { el.textContent = count; el.classList.toggle('hidden', count === 0); }
+        };
+
+        async function fetchAllProductsAndRenderCheckout() {
+            try {
+                const snapshot = await db.collection('products').get();
+                allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderCheckout();
+            } catch (error) {
+                console.error("Could not fetch product details for checkout:", error);
+                document.getElementById('checkout-page-container').innerHTML = `<p>Error loading checkout details.</p>`;
+            }
+        }
+
+        function renderCheckout() {
+            loadCartFromLocalStorage();
+            if (cart.length === 0) {
+                window.location.href = 'cart.html'; // Redirect if cart is empty
+                return;
+            }
+            
+            const container = document.getElementById('checkout-page-container');
+            const savedAddress = JSON.parse(localStorage.getItem('shippingAddress') || '{}');
+            
+            let subtotal = 0;
+            const summaryItemsHtml = cart.map(item => {
+                const product = allProducts.find(p => p.id === item.productId);
+                if (!product) return '';
+                subtotal += product.price * item.quantity;
+                return `<div class="order-summary-item"><span>${item.quantity} x ${product.name}</span><strong>$${(product.price * item.quantity).toFixed(2)}</strong></div>`;
+            }).join('');
+            
+            container.innerHTML = `
+                <h1>Checkout</h1>
+                <div class="checkout-grid">
+                    <div class="card">
+                        <h2>Shipping Information</h2>
+                        <form id="shipping-form">
+                            <div class="form-group">
+                                <label for="fullName">Full Name</label>
+                                <input type="text" id="fullName" value="${savedAddress.fullName || currentUser.displayName || ''}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <input type="text" id="address" value="${savedAddress.address || ''}" placeholder="123 Main St" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" value="${savedAddress.city || ''}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="zip">ZIP Code</label>
+                                <input type="text" id="zip" value="${savedAddress.zip || ''}" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card">
+                        <h2>Order Summary</h2>
+                        ${summaryItemsHtml}
+                        <hr style="margin: 1rem 0;">
+                        <div class="order-summary-item">
+                            <span>Subtotal</span>
+                            <strong>$${subtotal.toFixed(2)}</strong>
+                        </div>
+                        <div class="order-summary-item">
+                            <span>Shipping</span>
+                            <strong>FREE</strong>
+                        </div>
+                        <hr style="margin: 1rem 0;">
+                        <div class="order-summary-item">
+                            <h3>Total</h3>
+                            <h3>$${subtotal.toFixed(2)}</h3>
+                        </div>
+                        <button class="btn-success" style="width:100%; margin-top: 1rem;" onclick="handlePlaceOrder()">Place Order (Demo Payment)</button>
+                    </div>
+                </div>`;
+        }
+
+        async function handlePlaceOrder() {
+            const form = document.getElementById('shipping-form');
+            if (!form.checkValidity()) {
+                form.reportValidity(); // Show native browser validation errors
+                return;
+            }
+            
+            const shippingAddress = {
+                fullName: form.fullName.value,
+                address: form.address.value,
+                city: form.city.value,
+                zip: form.zip.value
+            };
+            // Save address for next time
+            localStorage.setItem('shippingAddress', JSON.stringify(shippingAddress));
+
+            const total = cart.reduce((sum, item) => {
+                const product = allProducts.find(p => p.id === item.productId);
+                return sum + (product ? product.price * item.quantity : 0);
+            }, 0);
+
+            const orderData = {
+                userId: currentUser.uid,
+                userName: currentUser.displayName,
+                userEmail: currentUser.email,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                status: 'Pending', // Initial status
+                shippingAddress,
+                items: cart.map(item => {
+                    const product = allProducts.find(p => p.id === item.productId);
+                    return { 
+                        productId: item.productId,
+                        quantity: item.quantity,
+                        name: product.name,
+                        price: product.price 
+                    };
+                }),
+                totalPrice: total
+            };
+            
+            try {
+                const placeOrderButton = document.querySelector('.btn-success');
+                placeOrderButton.disabled = true;
+                placeOrderButton.textContent = 'Placing Order...';
+
+                await db.collection('orders').add(orderData);
+                
+                // Clear the cart
+                cart = [];
+                saveCartToLocalStorage();
+                
+                sessionStorage.setItem('toastMessage', JSON.stringify({ message: 'Order placed successfully!', type: 'success' }));
+                window.location.href = 'orders.html';
+
+            } catch (error) {
+                console.error("Error placing order:", error);
+                showToast('Failed to place order. Please try again.', 'error');
+                placeOrderButton.disabled = false;
+                placeOrderButton.textContent = 'Place Order (Demo Payment)';
+            }
+        }
+    </script>
+</body>
+</html>
