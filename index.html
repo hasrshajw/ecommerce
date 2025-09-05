@@ -3,128 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShopSphere - Our Products</title>
+    <title>ShopSphere - Modern Apparel for Modern Times</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- GLOBAL STYLES (Used across all pages) --- */
         :root {
-            --primary-color: #4F46E5; --primary-hover: #4338CA; --primary-light: #eef2ff;
-            --secondary-color: #6B7280; --success-color: #10B981; --danger-color: #EF4444;
-            --warning-color: #F59E0B; --light-color: #F9FAFB; --dark-color: #1F2937;
-            --bg-color: #F3F4F6; --font-family: 'Inter', sans-serif; --border-radius: 0.5rem;
+            --primary-color: #4F46E5; --primary-hover: #4338CA;
+            --secondary-color: #6B7280; --dark-color: #1F2937;
+            --bg-color: #FFFFFF; --light-grey: #F3F4F6;
+            --font-family: 'Inter', sans-serif; --border-radius: 0.5rem;
             --box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --box-shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
         }
         *, *::before, *::after { box-sizing: border-box; }
         body { font-family: var(--font-family); margin: 0; background-color: var(--bg-color); color: var(--dark-color); }
-        .container { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; }
         
         /* --- Navigation --- */
         nav { background: #fff; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--box-shadow); position: sticky; top: 0; z-index: 1000; }
         .nav-left h1 { margin: 0; font-size: 1.75rem; color: var(--primary-color); cursor: pointer; }
         .nav-right { display: flex; align-items: center; gap: 1rem; }
-        .nav-icon { cursor: pointer; position: relative; background: none; border: none; padding: 0.5rem; border-radius: 50%; transition: background-color 0.2s; }
-        .nav-icon:hover { background-color: #e5e7eb; }
-        .nav-icon svg { width: 24px; height: 24px; stroke: var(--dark-color); }
-        #cart-count { position: absolute; top: 0; right: 0; background-color: var(--danger-color); color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.7rem; font-weight: bold; }
+        .nav-icon { cursor: pointer; position: relative; background: none; border: none; padding: 0.5rem; border-radius: 50%; }
+        #cart-count { position: absolute; top: 0; right: 0; background-color: #EF4444; color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.7rem; font-weight: bold; }
         
         /* --- Buttons --- */
-        button { border: none; border-radius: var(--border-radius); cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: all 0.2s ease-in-out; padding: 0.75rem 1.5rem; }
-        .btn-primary { background-color: var(--primary-color); color: white; }
-        .btn-primary:hover { background-color: var(--primary-hover); }
-        .btn-danger { background-color: var(--danger-color); color: white; }
-        .btn-success { background-color: var(--success-color); color: white; }
+        .btn { border: 1px solid transparent; border-radius: var(--border-radius); cursor: pointer; font-weight: 600; transition: all 0.2s; padding: 0.75rem 1.5rem; text-decoration: none; display: inline-block; }
+        .btn-primary { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
+        .btn-primary:hover:not(:disabled) { background-color: var(--primary-hover); }
+        .btn-dark { background-color: var(--dark-color); color: white; border-color: var(--dark-color); }
+        .btn-light { background-color: white; color: var(--dark-color); border-color: white; }
         
-        /* --- General Layout --- */
-        .page { animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .card { background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 2rem; }
+        /* --- Hero Section --- */
+        .hero-section { position: relative; text-align: center; color: white; height: 60vh; display: flex; align-items: center; justify-content: center; background: url('https://images.unsplash.com/photo-1523381294911-8d3cead13475?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80') no-repeat center center/cover; }
+        .hero-section::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); }
+        .hero-content { position: relative; z-index: 2; }
+        .hero-content h2 { font-size: 3.5rem; margin: 0 0 1rem; }
+        .hero-content p { font-size: 1.25rem; margin: 0 0 2rem; }
 
-        /* --- Products Page Specific Styles --- */
-        .hero-section { text-align: center; padding: 4rem 1rem; background: linear-gradient(45deg, var(--primary-color), #818cf8); color: white; border-radius: var(--border-radius); margin-bottom: 2rem; }
-        .filter-controls { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; background-color: #fff; padding: 1rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); }
-        .search-bar, .sort-select { padding: 0.6rem; border: 1px solid #D1D5DB; border-radius: var(--border-radius); font-size: 1rem; }
-        #category-filters button { background-color: #fff; color: var(--dark-color); border: 1px solid #ddd; padding: 0.5rem 1rem; border-radius: var(--border-radius); }
-        #category-filters button.active { background-color: var(--primary-color); color: #fff; border-color: var(--primary-color); }
-        #product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-        .product-card { background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow); overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        /* --- Section Styling --- */
+        .section { padding: 4rem 0; }
+        .section-header { text-align: center; margin-bottom: 2.5rem; }
+        .section-header h2 { font-size: 2rem; margin: 0; }
         
-        /* --- Admin --- */
-        .admin-nav button { background: none; padding: 1rem; font-size: 1rem; border-radius: 0; border-bottom: 3px solid transparent; }
-        .admin-nav button.active { border-bottom-color: var(--primary-color); color: var(--primary-color); }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { text-align: left; padding: 0.75rem; border-bottom: 1px solid #ddd; }
-        th { background-color: var(--light-color); }
+        /* --- Filter Controls --- */
+        .filter-controls { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; align-items: center; margin-bottom: 2.5rem; }
+        .category-filters button { background-color: #fff; color: var(--dark-color); border: 1px solid #ddd; padding: 0.6rem 1.2rem; border-radius: 99px; font-weight: 600; transition: all 0.2s; }
+        .category-filters button.active { background-color: var(--dark-color); color: #fff; border-color: var(--dark-color); }
+        
+        /* --- Product Grid & Cards --- */
+        #product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }
+        .product-card { background-color: #fff; border-radius: var(--border-radius); overflow: hidden; position: relative; transition: box-shadow 0.3s; }
+        .product-card:hover { box-shadow: var(--box-shadow-lg); }
+        .product-card .image-container { position: relative; overflow: hidden; }
+        .product-card img { width: 100%; height: 350px; object-fit: cover; transition: transform 0.3s; }
+        .product-card:hover img { transform: scale(1.05); }
+        .product-card .sale-badge { position: absolute; top: 1rem; left: 1rem; background-color: var(--danger-color); color: white; padding: 0.25rem 0.75rem; font-size: 0.8rem; font-weight: 600; border-radius: var(--border-radius); }
+        .product-card .quick-view-btn { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); background-color: rgba(255,255,255,0.9); color: var(--dark-color); padding: 0.6rem 1.2rem; border-radius: 99px; opacity: 0; transition: opacity 0.3s; }
+        .product-card:hover .quick-view-btn { opacity: 1; }
+        .product-card .card-content { padding: 1.5rem; text-align: center; }
+        .product-card h3 { margin: 0 0 0.5rem; font-size: 1.1rem; }
+        .product-card .price-container { display: flex; justify-content: center; align-items: baseline; gap: 0.75rem; }
+        .product-card .current-price { color: var(--primary-color); font-weight: 600; }
+        .product-card .old-price { color: var(--secondary-color); text-decoration: line-through; font-size: 0.9rem; }
 
         /* --- Modals & Toasts --- */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
-        .modal-content { background-color: #fefefe; margin: 5% auto; padding: 2rem; border-radius: var(--border-radius); width: 90%; max-width: 700px; animation: modalOpen 0.3s; }
-        @keyframes modalOpen { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); align-items: center; justify-content: center; }
+        .modal-content { background-color: #fefefe; border-radius: var(--border-radius); width: 90%; max-width: 800px; animation: modalOpen 0.3s; box-shadow: var(--box-shadow); display: flex; max-height: 85vh; }
+        @keyframes modalOpen { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .modal-image { flex: 1; }
+        .modal-image img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--border-radius) 0 0 var(--border-radius); }
+        .modal-details { flex: 1; padding: 2.5rem; position: relative; overflow-y: auto; }
+        .close-btn { position: absolute; top: 1rem; right: 1rem; color: #aaa; font-size: 28px; cursor: pointer; border: none; background: none; }
+        
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
-        .toast { padding: 1rem 1.5rem; margin-bottom: 1rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
-        .toast.success { background-color: var(--success-color); }
-        .toast.error { background-color: var(--danger-color); }
+        .toast { padding: 1rem 1.5rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
         @keyframes fadeOut { to { opacity: 0; } }
-
-        @media (max-width: 768px) {
-            .filter-controls { flex-direction: column; align-items: stretch; }
-            .nav-left h1 { font-size: 1.25rem; }
-        }
+        .toast.success { background-color: #10B981; }
+        .toast.error { background-color: #EF4444; }
     </style>
 </head>
 <body>
     <div id="toast-container"></div>
+    <div id="quick-view-modal" class="modal"></div>
 
     <nav>
         <div class="nav-left">
-            <h1 onclick="window.location.href='products.html'">ShopSphere</h1>
+            <h1 onclick="window.location.href='index.html'">ShopSphere</h1>
         </div>
-        <div id="nav-right" class="nav-right">
-            <!-- Navigation buttons are rendered here by JavaScript -->
-        </div>
+        <div id="nav-right" class="nav-right"></div>
     </nav>
+    
+    <div id="admin-panel-container"></div>
 
-    <div class="container page">
-        <!-- Admin Panel (will be hidden or shown by JS) -->
-        <div id="admin-panel-container" class="card" style="display:none; margin-bottom: 2rem;"></div>
-
-        <!-- Products Page Content -->
-        <div id="products-page-content">
-            <div class="hero-section">
-                <h2>Find Your Next Favorite Thing</h2>
-                <p>High-quality products, curated just for you.</p>
-            </div>
-            <div class="filter-controls">
-                <input type="search" id="search-bar" class="search-bar" placeholder="Search products...">
-                <div id="category-filters"></div>
-                <select id="sort-select" class="sort-select">
-                    <option value="name-asc">Sort by Name</option>
-                    <option value="price-asc">Price: Low to High</option>
-                    <option value="price-desc">Price: High to Low</option>
-                </select>
-            </div>
-            <div id="product-grid">
-                <p>Loading products...</p>
-            </div>
+    <div class="hero-section">
+        <div class="hero-content">
+            <h2>New Season Arrivals</h2>
+            <p>Check out all the new trends for this season.</p>
+            <a href="#all-products-section" class="btn btn-light">Shop Now</a>
         </div>
     </div>
     
-    <!-- Modals for Admin functionality -->
-    <div id="admin-modal" class="modal"></div>
+    <div class="container">
+        <div id="new-arrivals-section" class="section"></div>
+        <div id="top-sellers-section" class="section"></div>
 
-    <!-- Firebase SDKs -->
+        <div id="all-products-section" class="section">
+            <div class="section-header"><h2>Our Collection</h2></div>
+            <div class="filter-controls">
+                <div id="category-filters"></div>
+            </div>
+            <div id="product-grid"><p>Loading products...</p></div>
+        </div>
+    </div>
+    
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <script>
-        // --- CONFIG & INITIALIZATION ---
+        // --- CONFIG & STATE ---
         const firebaseConfig = {
             apiKey: "AIzaSyCzqYrP1qYSiiLLgKW3z3EcwMpiG4hyF6M",
             authDomain: "e-commerce27.firebaseapp.com",
@@ -138,7 +139,6 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // --- STATE MANAGEMENT ---
         let currentUser = null;
         let products = [];
         let cart = [];
@@ -149,129 +149,184 @@
                 currentUser = user;
                 loadCartFromLocalStorage();
                 renderNav();
-                renderAdminPanel(); // Check if admin panel should be shown
             });
             fetchProducts();
         });
 
-        // --- UI RENDERING FUNCTIONS ---
-        function renderNav() {
-            const navRight = document.getElementById('nav-right');
-            const cartIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.823-6.837A1.125 1.125 0 0018.32 5.25H5.82a1.125 1.125 0 00-1.087.835L3.72 8.25m0 0c0 .106.012.211.035.314.234 1.01 1.254 1.687 2.476 1.687h9.063c1.222 0 2.242-.677 2.476-1.687a4.5 4.5 0 00.035-.314z" /></svg>`;
-            const ordersIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h7.5M8.25 12h7.5m-7.5 5.25h7.5M3.75 6.75h.007v.008H3.75V6.75zM3.75 12h.007v.008H3.75V12zm.375 0a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM3.75 17.25h.007v.008H3.75v-.008z" /></svg>`;
-            const logoutIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" /></svg>`;
-            
-            let html = '';
-            if (currentUser) {
-                // NOTE: Admin has a dedicated dashboard, not a simple orders page.
-                // We link to `admin.html` which you can ask for later.
-                if (currentUser.email === ADMIN_EMAIL) {
-                    html += `<button title="Admin Dashboard" class="nav-icon" onclick="window.location.href='admin-dashboard.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h12A2.25 2.25 0 0020.25 14.25V3m-15.75 0h15.75M3.75 3v1.5M20.25 3v1.5M3.75 6.75h15.75M3.75 9.75h15.75M3.75 12.75h15.75M3.75 15.75h15.75" /></svg></button>`;
-                } else {
-                    html += `<button title="My Orders" class="nav-icon" onclick="window.location.href='orders.html'">${ordersIcon}</button>`;
-                }
-                html += `
-                    <button title="Cart" class="nav-icon" onclick="window.location.href='cart.html'">${cartIcon}<span id="cart-count" class="hidden">0</span></button>
-                    <button title="Logout" class="nav-icon" onclick="auth.signOut()">${logoutIcon}</button>`;
-            } else {
-                html = `<button class="btn-primary" onclick="auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())">Login</button>`;
-            }
-            navRight.innerHTML = html;
-            updateCartCount();
-        }
-
-        function showToast(message, type = 'success') {
-            const toastContainer = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.textContent = message;
-            toastContainer.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-
-        // --- PRODUCT & CATALOG LOGIC ---
+        // --- DATA FETCHING ---
         async function fetchProducts() {
             try {
-                const snapshot = await db.collection('products').get();
-                products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderCategoryFilters();
-                applyFiltersAndRender();
+                const snapshot = await db.collection('products').where('isAvailable', '==', true).orderBy('name').get();
+                products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), createdAt: doc.data().createdAt || null }));
+                renderPageContent();
             } catch (error) {
                 console.error("Error fetching products:", error);
                 document.getElementById('product-grid').innerHTML = `<p>Error loading products.</p>`;
             }
         }
+        
+        // --- PAGE RENDERING ---
+        function renderPageContent() {
+            renderCategoryFilters();
+            renderProductGrid(products); // Initially render all available products
+            renderNewArrivals();
+            renderTopSellers(); // Demo section
+        }
 
         function renderCategoryFilters() {
             const categories = ['All', ...new Set(products.map(p => p.category))];
             const filtersContainer = document.getElementById('category-filters');
-            filtersContainer.innerHTML = categories.map((cat, i) => 
-                `<button data-category="${cat}" class="${i===0 ? 'active' : ''}">${cat}</button>`
-            ).join('');
+            filtersContainer.innerHTML = categories.map((cat, i) => `<button data-category="${cat}" class="${i === 0 ? 'active' : ''}">${cat}</button>`).join('');
             
             filtersContainer.querySelectorAll('button').forEach(btn => {
                 btn.addEventListener('click', e => {
                     filtersContainer.querySelector('button.active').classList.remove('active');
                     e.target.classList.add('active');
-                    applyFiltersAndRender();
+                    const category = e.target.dataset.category;
+                    const filtered = (category === 'All') ? products : products.filter(p => p.category === category);
+                    renderProductGrid(filtered);
                 });
             });
         }
-
-        function applyFiltersAndRender() {
-            let filtered = [...products];
-            const term = document.getElementById('search-bar').value.toLowerCase();
-            const sort = document.getElementById('sort-select').value;
-            const category = document.querySelector('#category-filters button.active').dataset.category;
-
-            if (category !== 'All') filtered = filtered.filter(p => p.category === category);
-            if (term) filtered = filtered.filter(p => p.name.toLowerCase().includes(term));
-            
-            filtered.sort((a,b) => {
-                if (sort === 'price-asc') return a.price - b.price;
-                if (sort === 'price-desc') return b.price - a.price;
-                return a.name.localeCompare(b.name);
-            });
-
-            const grid = document.getElementById('product-grid');
-            grid.innerHTML = filtered.length ? filtered.map(p => `
-                <div class="product-card" onclick="window.location.href='product-detail.html#${p.id}'">
-                    <img src="${p.imageUrl}" alt="${p.name}" style="width:100%; height:220px; object-fit:cover;">
-                    <div style="padding:1rem; text-align:center;">
+        
+        function renderProductGrid(productsToRender, containerId = 'product-grid') {
+            const grid = document.getElementById(containerId);
+            if (!grid) return;
+            grid.innerHTML = productsToRender.length ? productsToRender.map(p => `
+                <div class="product-card">
+                    <div class="image-container">
+                        <img src="${p.images?.[0] || ''}" alt="${p.name}" loading="lazy" onclick="window.location.href='product-detail.html#${p.id}'">
+                        ${p.oldPrice > p.price ? '<span class="sale-badge">SALE</span>' : ''}
+                        <button class="quick-view-btn" onclick="openQuickView('${p.id}')">Quick View</button>
+                    </div>
+                    <div class="card-content">
                         <h3>${p.name}</h3>
-                        <p style="color:var(--primary-color);font-weight:bold;font-size:1.5rem;">$${p.price.toFixed(2)}</p>
+                        <div class="price-container">
+                            <span class="current-price">$${p.price.toFixed(2)}</span>
+                            ${p.oldPrice > p.price ? `<span class="old-price">$${p.oldPrice.toFixed(2)}</span>` : ''}
+                        </div>
                     </div>
                 </div>
             `).join('') : '<p>No products found.</p>';
-            
-            document.getElementById('search-bar').addEventListener('input', applyFiltersAndRender);
-            document.getElementById('sort-select').addEventListener('change', applyFiltersAndRender);
+        }
+
+        function renderNewArrivals() {
+            const container = document.getElementById('new-arrivals-section');
+            // Assuming createdAt field exists. If not, this will just show the first 8.
+            const newArrivals = [...products]
+                .sort((a, b) => (b.createdAt?.toDate() || 0) - (a.createdAt?.toDate() || 0))
+                .slice(0, 8);
+            if(newArrivals.length > 0) {
+                container.innerHTML = `<div class="section-header"><h2>New Arrivals</h2></div><div id="new-arrivals-grid" class="product-grid"></div>`;
+                renderProductGrid(newArrivals, 'new-arrivals-grid');
+            }
+        }
+        
+        function renderTopSellers() {
+            const container = document.getElementById('top-sellers-section');
+            // This is a demo. In a real app, you'd have a 'salesCount' field to sort by.
+            const topSellers = [...products].sort(() => 0.5 - Math.random()).slice(0, 4);
+             if(topSellers.length > 0) {
+                container.innerHTML = `<div class="section-header"><h2>Top Sellers</h2></div><div id="top-sellers-grid" class="product-grid"></div>`;
+                renderProductGrid(topSellers, 'top-sellers-grid');
+            }
+        }
+
+        // --- QUICK VIEW MODAL ---
+        function openQuickView(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const modal = document.getElementById('quick-view-modal');
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-image"><img src="${product.images?.[0] || ''}" alt="${product.name}"></div>
+                    <div class="modal-details">
+                        <button class="close-btn" onclick="closeQuickView()">&times;</button>
+                        <h4>${product.category}</h4>
+                        <h1>${product.name}</h1>
+                        <div class="price-container">
+                            <span class="current-price">$${product.price.toFixed(2)}</span>
+                            ${product.oldPrice > 0 ? `<span class="old-price">$${product.oldPrice.toFixed(2)}</span>` : ''}
+                        </div>
+                        <div class="size-selector">
+                            <h4>Size:</h4>
+                            <div class="size-options">${(product.sizes || []).map(s => `<button data-size="${s.name}" ${!s.available ? 'disabled' : ''}>${s.name}</button>`).join('')}</div>
+                        </div>
+                        <button class="btn btn-primary" id="modal-add-to-cart" disabled style="width:100%;">Add to Cart</button>
+                        <a href="product-detail.html#${product.id}" style="display:block; text-align:center; margin-top:1rem; font-size:0.9rem;">View Full Details</a>
+                    </div>
+                </div>
+            `;
+            modal.style.display = 'flex';
+
+            // Add listeners for this modal specifically
+            let selectedSize = null;
+            modal.querySelectorAll('.size-options button:not(:disabled)').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    modal.querySelector('.size-options button.selected')?.classList.remove('selected');
+                    btn.classList.add('selected');
+                    selectedSize = btn.dataset.size;
+                    modal.querySelector('#modal-add-to-cart').disabled = false;
+                });
+            });
+            modal.querySelector('#modal-add-to-cart').addEventListener('click', () => {
+                handleAddToCart(productId, selectedSize);
+                closeQuickView();
+            });
+        }
+        
+        function closeQuickView() {
+            document.getElementById('quick-view-modal').style.display = 'none';
         }
 
         // --- CART LOGIC ---
         const loadCartFromLocalStorage = () => cart = JSON.parse(localStorage.getItem('shopSphereCart') || '[]');
         const saveCartToLocalStorage = () => localStorage.setItem('shopSphereCart', JSON.stringify(cart));
-        
-        const updateCartCount = () => {
+        const updateCartCount = () => { /* ... */ };
+
+        function handleAddToCart(productId, size) {
+            if (!size) {
+                showToast('Please select a size.', 'error');
+                return;
+            }
+            const itemInCart = cart.find(i => i.productId === productId && i.size === size);
+            if (itemInCart) { itemInCart.quantity++; } 
+            else { cart.push({ productId, quantity: 1, size }); }
+            
+            saveCartToLocalStorage();
+            updateCartCount();
+            showToast('Item added to cart!', 'success');
+        }
+
+        // --- FULL HELPER FUNCTIONS FOR COMPLETENESS ---
+        function renderNav() {
+            const navRight = document.getElementById('nav-right');
+            const cartIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.823-6.837A1.125 1.125 0 0018.32 5.25H5.82a1.125 1.125 0 00-1.087.835L3.72 8.25m0 0c0 .106.012.211.035.314.234 1.01 1.254 1.687 2.476 1.687h9.063c1.222 0 2.242-.677 2.476-1.687a4.5 4.5 0 00.035-.314z" /></svg>`;
+            const ordersIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h7.5M8.25 12h7.5m-7.5 5.25h7.5M3.75 6.75h.007v.008H3.75V6.75zM3.75 12h.007v.008H3.75V12zm.375 0a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM3.75 17.25h.007v.008H3.75v-.008z" /></svg>`;
+            const logoutIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" /></svg>`;
+            let html = '';
+            if (currentUser) {
+                if (currentUser.email === ADMIN_EMAIL) { html += `<button title="Admin Dashboard" class="nav-icon" onclick="window.location.href='admin-dashboard.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h12A2.25 2.25 0 0020.25 14.25V3m-15.75 0h15.75M3.75 3v1.5M20.25 3v1.5M3.75 6.75h15.75M3.75 9.75h15.75M3.75 12.75h15.75M3.75 15.75h15.75" /></svg></button>`;
+                } else { html += `<button title="My Orders" class="nav-icon" onclick="window.location.href='orders.html'">${ordersIcon}</button>`; }
+                html += `<button title="Cart" class="nav-icon" onclick="window.location.href='cart.html'">${cartIcon}<span id="cart-count">0</span></button><button title="Logout" class="nav-icon" onclick="auth.signOut()">${logoutIcon}</button>`;
+            } else { html = `<a href="#" class="btn btn-primary" onclick="auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())">Login</a>`; }
+            navRight.innerHTML = html;
+            updateCartCount();
+        }
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        updateCartCount = function() {
             const count = cart.reduce((sum, item) => sum + item.quantity, 0);
             const el = document.getElementById('cart-count');
             if(el) { el.textContent = count; el.classList.toggle('hidden', count === 0); }
         };
-
-        // --- ADMIN LOGIC (for this page) ---
-        function renderAdminPanel() {
-            const panelContainer = document.getElementById('admin-panel-container');
-            if (currentUser && currentUser.email === ADMIN_EMAIL) {
-                panelContainer.style.display = 'block';
-                panelContainer.innerHTML = `
-                    <h2>Admin Quick Actions</h2>
-                    <p>Welcome, Admin. Manage your store from the main dashboard.</p>
-                    <button class="btn-primary" onclick="window.location.href='admin-dashboard.html'">Go to Dashboard</button>
-                `;
-            } else {
-                panelContainer.style.display = 'none';
-            }
-        }
     </script>
 </body>
 </html>
