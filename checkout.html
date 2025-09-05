@@ -27,6 +27,8 @@
         .nav-right { display: flex; align-items: center; gap: 1rem; }
         .nav-icon { cursor: pointer; position: relative; background: none; border: none; padding: 0.5rem; border-radius: 50%; transition: background-color 0.2s; }
         .nav-icon:hover { background-color: #e5e7eb; }
+        .nav-icon svg { width: 24px; height: 24px; stroke: var(--dark-color); }
+        #cart-count { position: absolute; top: 0; right: 0; background-color: #EF4444; color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.7rem; font-weight: bold; }
         
         /* --- Buttons --- */
         button { border: none; border-radius: var(--border-radius); cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: all 0.2s ease-in-out; padding: 0.75rem 1.5rem; }
@@ -238,15 +240,14 @@
             };
             localStorage.setItem('shippingAddress', JSON.stringify(shippingAddress));
 
-            // --- CORRECTED PRICE CALCULATION ---
-            const subtotal = cart.reduce((sum, item) => {
+            let subtotal = 0;
+            cart.forEach(item => {
                 const product = allProducts.find(p => p.id === item.productId);
-                return sum + (product ? product.price * item.quantity : 0);
-            }, 0);
+                if (product) subtotal += product.price * item.quantity;
+            });
             const shipping = 5.00;
             const tax = subtotal * 0.08;
-            const total = subtotal + shipping + tax;
-            // --- END OF CORRECTION ---
+            const finalTotal = subtotal + shipping + tax; // **CORRECTED CALCULATION**
 
             const orderData = {
                 userId: currentUser.uid, userName: currentUser.displayName, userEmail: currentUser.email,
@@ -256,7 +257,7 @@
                     const product = allProducts.find(p => p.id === item.productId);
                     return { productId: item.productId, quantity: item.quantity, size: item.size, name: product.name, price: product.price };
                 }),
-                totalPrice: total
+                totalPrice: finalTotal // **CORRECTED VALUE**
             };
             
             const confirmBtn = document.getElementById('confirm-order-btn');
@@ -277,11 +278,11 @@
             }
         }
         
-        // --- FULL HELPER FUNCTIONS (CORRECTED) ---
+        // --- FULL HELPER FUNCTIONS ---
         const loadCartFromLocalStorage = () => cart = JSON.parse(localStorage.getItem('shopSphereCart') || '[]');
         const saveCartToLocalStorage = () => localStorage.setItem('shopSphereCart', JSON.stringify(cart));
         const updateCartCount = () => {
-            const count = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
             const el = document.getElementById('cart-count');
             if (el) { el.textContent = count; el.classList.toggle('hidden', count === 0); }
         };
@@ -294,7 +295,7 @@
             if (currentUser) {
                 if (currentUser.email === ADMIN_EMAIL) { html += `<button title="Admin Dashboard" class="nav-icon" onclick="window.location.href='admin-dashboard.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h12A2.25 2.25 0 0020.25 14.25V3m-15.75 0h15.75M3.75 3v1.5M20.25 3v1.5M3.75 6.75h15.75M3.75 9.75h15.75M3.75 12.75h15.75M3.75 15.75h15.75" /></svg></button>`;
                 } else { html += `<button title="My Orders" class="nav-icon" onclick="window.location.href='orders.html'">${ordersIcon}</button>`; }
-                html += `<button title="Cart" class="nav-icon" onclick="window.location.href='cart.html'">${cartIcon}<span id="cart-count">0</span></button><button title="Logout" class="nav-icon" onclick="auth.signOut()">${logoutIcon}</button>`;
+                html += `<button title="Cart" class="nav-icon" onclick="window.location.href='cart.html'">${cartIcon}<span id="cart-count" class="hidden">0</span></button><button title="Logout" class="nav-icon" onclick="auth.signOut()">${logoutIcon}</button>`;
             } // No "else" because this page is guarded
             navRight.innerHTML = html;
             updateCartCount();
