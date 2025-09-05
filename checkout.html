@@ -242,22 +242,39 @@
             };
             localStorage.setItem('shippingAddress', JSON.stringify(shippingAddress));
 
-            // Correctly calculate subtotal again for the order data
             const subtotal = cart.reduce((sum, item) => {
                 const product = allProducts.find(p => p.id === item.productId);
                 return sum + (product ? product.price * item.quantity : 0);
             }, 0);
-
             const total = subtotal + 5.00 + (subtotal * 0.08); // Subtotal + Shipping + Tax
 
+            const orderItems = cart.map(item => {
+                const product = allProducts.find(p => p.id === item.productId);
+                // Handle cases where product might have been deleted but is still in cart
+                if (!product) return null; 
+                return { 
+                    productId: item.productId, 
+                    quantity: item.quantity, 
+                    size: item.size, 
+                    name: product.name, 
+                    price: product.price 
+                };
+            }).filter(item => item !== null); // Filter out any null items
+
+            if (orderItems.length !== cart.length) {
+                showToast("Some items in your cart are no longer available. Please review your cart.", "error");
+                setTimeout(() => window.location.href = 'cart.html', 3000);
+                return;
+            }
+
             const orderData = {
-                userId: currentUser.uid, userName: currentUser.displayName, userEmail: currentUser.email,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(), status: 'Pending',
+                userId: currentUser.uid, 
+                userName: currentUser.displayName, 
+                userEmail: currentUser.email,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(), 
+                status: 'Pending',
                 shippingAddress,
-                items: cart.map(item => {
-                    const product = allProducts.find(p => p.id === item.productId);
-                    return { productId: item.productId, quantity: item.quantity, size: item.size, name: product.name, price: product.price };
-                }),
+                items: orderItems,
                 totalPrice: total
             };
             
