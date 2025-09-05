@@ -7,43 +7,42 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         /* --- GLOBAL STYLES --- */
         :root {
-            --primary-color: #4361EE; /* A slightly different blue from the image for better contrast */
-            --primary-hover: #3A53C8;
-            --secondary-color: #6B7280;
-            --dark-color: #1F2937;
-            --bg-color: #FFFFFF;
-            --light-grey: #F3F4F6;
-            --font-family: 'Inter', sans-serif;
-            --border-radius: 0.25rem;
-            --box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.04);
+            --primary-color: #4F46E5; --primary-hover: #4338CA;
+            --secondary-color: #6B7280; --dark-color: #111827;
+            --light-text: #4B5563; --border-color: #E5E7EB;
+            --bg-color: #F9FAFB; --card-bg: #FFFFFF;
+            --font-family: 'Inter', sans-serif; --border-radius: 0.5rem;
+            --box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
         }
         *, *::before, *::after { box-sizing: border-box; }
         body { font-family: var(--font-family); margin: 0; background-color: var(--bg-color); color: var(--dark-color); }
         .container { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
         
         /* --- Navigation --- */
-        nav { background: #fff; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--box-shadow); position: sticky; top: 0; z-index: 1000; }
+        nav { background: var(--card-bg); padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--box-shadow); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border-color); }
         .nav-left h1 { margin: 0; font-size: 1.75rem; color: var(--primary-color); cursor: pointer; }
         .nav-right { display: flex; align-items: center; gap: 1rem; }
         .nav-icon { cursor: pointer; position: relative; background: none; border: none; padding: 0.5rem; border-radius: 50%; transition: background-color 0.2s; }
-        .nav-icon:hover { background-color: var(--light-grey); }
+        .nav-icon:hover { background-color: var(--bg-color); }
         .nav-icon svg { width: 24px; height: 24px; stroke: var(--dark-color); }
         #cart-count { position: absolute; top: 0; right: 0; background-color: #EF4444; color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.7rem; font-weight: bold; }
         
         /* --- Buttons --- */
-        button { border: none; border-radius: var(--border-radius); cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: all 0.2s ease-in-out; padding: 0.75rem 1.5rem; }
+        button { border: none; border-radius: var(--border-radius); cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: all 0.2s ease-in-out; padding: 0.85rem 1.5rem; }
         .btn-primary { background-color: var(--primary-color); color: white; }
-        .btn-primary:hover:not(:disabled) { background-color: var(--primary-hover); }
+        .btn-primary:hover:not(:disabled) { background-color: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); }
         .btn-dark { background-color: var(--dark-color); color: white; }
-        .btn-dark:hover:not(:disabled) { background-color: #374151; }
-        .btn-secondary { background-color: #6c757d; color: white; }
+        .btn-dark:hover:not(:disabled) { background-color: #374151; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(17, 24, 39, 0.3); }
         button:disabled { background-color: #d1d5db; cursor: not-allowed; color: #6b7280; }
         
+        /* --- Layout --- */
+        .card { background-color: var(--card-bg); border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 2rem; border: 1px solid var(--border-color); }
+
         /* --- PRODUCT DETAIL PAGE STYLES --- */
         .product-layout { display: grid; grid-template-columns: 1fr; gap: 2rem; }
         @media (min-width: 1024px) { .product-layout { grid-template-columns: 1fr 1fr; gap: 3rem; } }
@@ -51,41 +50,53 @@
         /* Image Gallery */
         .image-gallery-container { display: flex; gap: 1rem; }
         .thumbnail-images { display: flex; flex-direction: column; gap: 0.75rem; }
-        .thumbnail-images img { width: 80px; height: 80px; object-fit: cover; border-radius: var(--border-radius); cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s; }
+        .thumbnail-images img { width: 80px; height: 100px; object-fit: cover; border-radius: var(--border-radius); cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s; }
         .thumbnail-images img:hover, .thumbnail-images img.active { border-color: var(--primary-color); }
         .main-image { flex: 1; }
         .main-image img { width: 100%; border-radius: var(--border-radius); box-shadow: var(--box-shadow); }
         
         /* Product Info */
-        .product-info h4 { color: var(--secondary-color); font-weight: 400; font-size: 0.9rem; margin: 0 0 0.5rem; }
-        .product-info h1 { font-size: 2rem; margin: 0 0 1rem; }
+        .product-info h4 { color: var(--secondary-color); font-weight: 500; font-size: 0.9rem; margin: 0 0 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .product-info h1 { font-size: 2.5rem; font-weight: 700; margin: 0 0 1rem; }
         .price-container { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.5rem; }
-        .current-price { font-size: 1.75rem; font-weight: 700; color: var(--dark-color); }
+        .current-price { font-size: 2rem; font-weight: 700; color: var(--dark-color); }
         .old-price { font-size: 1.25rem; text-decoration: line-through; color: var(--secondary-color); }
         
-        .coupon-box { background-color: #eef2ff; padding: 1rem; border-radius: var(--border-radius); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
-        .coupon-icon { background-color: var(--primary-color); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .coupon-text p { margin: 0; font-size: 0.9rem; }
-        .coupon-code { display: inline-block; border: 1px dashed var(--primary-color); padding: 0.2rem 0.5rem; margin-top: 0.25rem; font-weight: 600; cursor: pointer; }
-
-        .attributes { line-height: 1.6; font-size: 0.9rem; }
+        .attributes { line-height: 1.7; font-size: 0.95rem; color: var(--light-text); }
+        .attributes strong { color: var(--dark-color); }
 
         .size-selector { margin: 2rem 0; }
-        .size-selector h4 { margin-bottom: 0.75rem; font-size: 1rem; }
+        .size-selector h4 { margin-bottom: 0.75rem; font-size: 1rem; font-weight: 600; }
         .size-options { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-        .size-options button { background-color: white; color: var(--dark-color); border: 1px solid #d1d5db; padding: 0.5rem 1rem; min-width: 45px; }
+        .size-options button { background-color: white; color: var(--dark-color); border: 1px solid var(--border-color); padding: 0.5rem 1rem; min-width: 45px; }
         .size-options button.selected { background-color: var(--dark-color); color: white; border-color: var(--dark-color); }
         .size-options button:disabled { background-color: white; border: 1px dashed #d1d5db; color: #9ca3af; cursor: not-allowed; position: relative; overflow: hidden; }
         .size-options button:disabled::after { content: ''; position: absolute; top: 50%; left: -10%; width: 120%; height: 1.5px; background: #d1d5db; transform: rotate(-20deg); }
 
         .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
-        .wishlist-btn { background: none; border: 1px solid var(--dark-color); color: var(--dark-color); width: 100%; grid-column: 1 / -1; }
-
+        .wishlist-btn { background: none; border: 1px solid var(--border-color); color: var(--dark-color); width: 100%; grid-column: 1 / -1; }
+        .wishlist-btn:hover { background-color: var(--bg-color); }
+        
         /* "You may also like" section */
-        #related-products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
+        #related-products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; }
+        .related-card { background-color: var(--card-bg); border-radius: var(--border-radius); overflow: hidden; box-shadow: var(--box-shadow); transition: all 0.3s ease; cursor: pointer; }
+        .related-card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.07); }
+        .related-card-info { padding: 1rem; }
+        .related-card-info h4 { margin: 0 0 0.5rem; font-size: 1rem; }
+        .related-card-info p { margin: 0; font-weight: 600; }
 
+        /* Skeleton Loader */
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .skeleton { background-color: #e5e7eb; border-radius: var(--border-radius); animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        .skeleton.text { height: 1em; margin-bottom: 0.5em; }
+        .skeleton.title { height: 2.5em; width: 70%; margin-bottom: 1rem; }
+        .skeleton.price { height: 2em; width: 40%; margin-bottom: 1.5rem; }
+        .skeleton.image { height: 400px; }
+        .skeleton.thumb { width: 80px; height: 100px; }
+
+        /* Toasts */
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
-        .toast { padding: 1rem 1.5rem; margin-bottom: 1rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
+        .toast { padding: 1rem 1.5rem; margin-bottom: 1rem; border-radius: var(--border-radius); color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
         .toast.success { background-color: #10B981; }
         .toast.error { background-color: #EF4444; }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
@@ -103,8 +114,8 @@
     </nav>
 
     <div class="container page">
-        <div id="product-detail-page-content">
-            <p>Loading product details...</p>
+        <div id="product-detail-page-content" class="card">
+            <!-- Skeleton Loader or Product Details will be rendered here -->
         </div>
         <div id="related-products-section" style="margin-top: 3rem;"></div>
     </div>
@@ -135,6 +146,7 @@
 
         // --- APP ENTRY POINT ---
         document.addEventListener('DOMContentLoaded', () => {
+            renderSkeletonLoader();
             auth.onAuthStateChanged(user => {
                 currentUser = user;
                 loadCartFromLocalStorage();
@@ -144,16 +156,37 @@
         });
 
         async function fetchAllProductsThenRender() {
-            const snapshot = await db.collection('products').get();
-            allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            renderProductDetails();
+            try {
+                const snapshot = await db.collection('products').get();
+                allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderProductDetails();
+            } catch (error) {
+                console.error("Error fetching products:", error);
+                document.getElementById('product-detail-page-content').innerHTML = `<p>Error loading product. Please try again.</p>`;
+            }
         }
-
-        // --- NAVIGATION & TOASTS ---
-        function renderNav() { /* ... identical, no change needed ... */ }
-        function showToast(message, type = 'success') { /* ... identical, no change needed ... */ }
-
-        // --- PRODUCT DETAIL LOGIC ---
+        
+        // --- SKELETON LOADER ---
+        function renderSkeletonLoader() {
+            const container = document.getElementById('product-detail-page-content');
+            container.innerHTML = `
+                <div class="product-layout">
+                    <div class="image-gallery-container">
+                        <div class="thumbnail-images">
+                            <div class="skeleton thumb"></div><div class="skeleton thumb"></div><div class="skeleton thumb"></div>
+                        </div>
+                        <div class="main-image"><div class="skeleton image"></div></div>
+                    </div>
+                    <div class="product-info">
+                        <div class="skeleton text" style="width: 30%;"></div>
+                        <div class="skeleton title"></div>
+                        <div class="skeleton price"></div>
+                        <div class="skeleton text"></div><div class="skeleton text" style="width: 80%;"></div><div class="skeleton text" style="width: 90%;"></div>
+                    </div>
+                </div>`;
+        }
+        
+        // --- CORE RENDERING LOGIC ---
         function renderProductDetails() {
             const productId = window.location.hash.substring(1);
             const container = document.getElementById('product-detail-page-content');
@@ -164,69 +197,52 @@
                 return;
             }
             document.title = `${product.name} - ShopSphere`;
-
-            // --- START OF UPDATED LOGIC ---
-
-            // 1. Format the description
-            let formattedDescription = '';
-            if (product.description) {
-                formattedDescription = product.description
-                    .replace(/\*(.*?)\*/g, '<strong>$1</strong>') // Handle bolding
-                    .replace(/\n/g, '<br>');                      // Handle line breaks
-            } else {
-                formattedDescription = 'No description available.';
-            }
-
-            // 2. Build the rest of the page, including the formatted description
-            const galleryHtml = `
-                <div class="image-gallery-container">
-                    <div class="thumbnail-images">
-                        ${(product.images || []).map((img, index) => `<img src="${img}" alt="Thumbnail ${index+1}" class="${index === 0 ? 'active' : ''}">`).join('')}
-                    </div>
-                    <div class="main-image"><img src="${product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/600'}" alt="${product.name}"></div>
-                </div>`;
             
-            const detailsHtml = `
-                <div class="product-info">
-                    <h4>ShopSphere Collection</h4>
-                    <h1>${product.name}</h1>
-                    <div class="price-container">
-                        <span class="current-price">$${product.price.toFixed(2)}</span>
-                        ${product.oldPrice > 0 ? `<span class="old-price">$${product.oldPrice.toFixed(2)}</span>` : ''}
-                    </div>
-                    
-                    <div class="coupon-box">
-                        <div class="coupon-icon">...</div>
-                        <div class="coupon-text"><p><strong>250 FLAT OFF</strong> on Shopping of 2500</p><span class="coupon-code" onclick="copyCode('LOVE250')">LOVE250</span></div>
-                    </div>
-                    
-                    <div class="attributes">
-                        <p>${formattedDescription}</p>
-                    </div>
+            // NEW: Helper function to format the description
+            const formatDescription = (desc) => {
+                if (!desc) return 'No description available.';
+                return desc
+                    .replace(/\s*\*(.*?)\*\s*/g, '<strong>$1</strong><br>') // Bolds and adds a line break
+                    .replace(/\n/g, '<br>'); // Handles any remaining explicit newlines
+            };
+            const formattedDescription = formatDescription(product.description);
 
-                    <div class="size-selector">
-                        <h4>Size:</h4>
-                        <div class="size-options">
-                            ${(product.sizes || []).map(sizeObj => `<button data-size="${sizeObj.name}" ${!sizeObj.available ? 'disabled' : ''}>${sizeObj.name}</button>`).join('')}
+            // Dynamic HTML generation
+            const galleryHtml = `...`; // (logic below)
+            const detailsHtml = `...`; // (logic below)
+            
+            container.innerHTML = `
+                <div class="product-layout">
+                    <div class="image-gallery-container">
+                        <div class="thumbnail-images">
+                            ${(product.images || []).map((img, index) => `<img src="${img}" alt="Thumbnail ${index+1}" class="${index === 0 ? 'active' : ''}">`).join('')}
                         </div>
+                        <div class="main-image"><img src="${product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/600'}" alt="${product.name}"></div>
                     </div>
-
-                    <div class="action-buttons">
-                        ${product.isAvailable ? `
-                            <button class="btn-secondary" id="add-to-cart-btn" disabled>Add to Cart</button>
-                            <button class="btn-primary" id="buy-now-btn" disabled>Buy It Now</button>
-                        ` : `
-                            <button class="btn-secondary" disabled>Sold Out</button>
-                            <button class="btn-dark" onclick="alert('Notify me feature coming soon!')">Notify When Available</button>
-                        `}
+                    <div class="product-info">
+                        <h4>${product.category}</h4>
+                        <h1>${product.name}</h1>
+                        <div class="price-container">
+                            <span class="current-price">$${product.price.toFixed(2)}</span>
+                            ${product.oldPrice > 0 ? `<span class="old-price">$${product.oldPrice.toFixed(2)}</span>` : ''}
+                        </div>
+                        <div class="attributes"><p>${formattedDescription}</p></div>
+                        <div class="size-selector">
+                            <h4>Size:</h4>
+                            <div class="size-options">${(product.sizes || []).map(sizeObj => `<button data-size="${sizeObj.name}" ${!sizeObj.available ? 'disabled' : ''}>${sizeObj.name}</button>`).join('')}</div>
+                        </div>
+                        <div class="action-buttons">
+                            ${product.isAvailable ? `
+                                <button class="btn-dark" id="add-to-cart-btn" disabled>Add to Cart</button>
+                                <button class="btn-primary" id="buy-now-btn" disabled>Buy It Now</button>
+                            ` : `
+                                <button class="btn-dark" disabled style="grid-column: 1 / -1;">Sold Out</button>
+                            `}
+                        </div>
+                        <button class="wishlist-btn" onclick="alert('Wishlist feature coming soon!')">Add to Wishlist</button>
                     </div>
-                    <button class="wishlist-btn" onclick="alert('Wishlist feature coming soon!')">Add to Wishlist</button>
                 </div>`;
-
-            container.innerHTML = `<div class="product-layout">${galleryHtml}${detailsHtml}</div>`;
             
-            // --- END OF UPDATED LOGIC ---
-
             // Add Event Listeners
             setupGalleryListeners();
             if (product.isAvailable) {
@@ -270,24 +286,23 @@
         function renderRelatedProducts(currentProduct) {
             const container = document.getElementById('related-products-section');
             const related = allProducts.filter(p => p.category === currentProduct.category && p.id !== currentProduct.id && p.isAvailable).slice(0, 4);
-            if (related.length === 0) return;
+            if (related.length === 0) {
+                container.innerHTML = ''; // Clear if no related products
+                return;
+            };
             container.innerHTML = `
-                <h2 style="text-align:center; margin: 3rem 0 2rem;">You May Also Like</h2>
+                <h2 style="text-align:center; margin: 3rem 0 2rem; font-weight: 700;">You May Also Like</h2>
                 <div id="related-products-grid">
                     ${related.map(p => `
-                        <div class="card" onclick="window.location.href='product-detail.html#${p.id}'; window.location.reload();" style="cursor:pointer; text-align:center; padding:1rem;">
-                            <img src="${p.images[0]}" alt="${p.name}" style="width:100%; height:180px; object-fit:cover; border-radius:var(--border-radius);">
-                            <h4 style="margin: 1rem 0 0.5rem; font-size: 0.9rem;">${p.name}</h4>
-                            <p style="font-weight:600; color:var(--dark-color);">$${p.price.toFixed(2)}</p>
+                        <div class="related-card" onclick="window.location.href='product-detail.html#${p.id}'; window.location.reload();">
+                            <img src="${p.images[0]}" alt="${p.name}" style="width:100%; height:250px; object-fit:cover;">
+                            <div class="related-card-info">
+                                <h4>${p.name}</h4>
+                                <p>$${p.price.toFixed(2)}</p>
+                            </div>
                         </div>
                     `).join('')}
                 </div>`;
-        }
-
-        function copyCode(code) {
-            navigator.clipboard.writeText(code).then(() => {
-                showToast(`Copied code: ${code}`);
-            });
         }
 
         // --- CART LOGIC ---
