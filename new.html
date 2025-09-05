@@ -36,7 +36,7 @@
         .nav-icon svg { width: 24px; height: 24px; stroke: var(--dark-color); }
         #cart-count { position: absolute; top: 0; right: 0; background-color: #EF4444; color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.7rem; font-weight: bold; }
         
-        /* --- PROFESSIONAL BUTTON STYLES (NEW) --- */
+        /* --- PROFESSIONAL BUTTON STYLES --- */
         button { 
             border: 1px solid transparent; 
             border-radius: var(--border-radius); 
@@ -79,7 +79,7 @@
         .old-price { font-size: 1.25rem; text-decoration: line-through; color: var(--secondary-color); }
         
         .attributes { line-height: 1.6; font-size: 0.9rem; }
-        .attributes strong { font-weight: 600; color: var(--dark-color); } /* Bolding style */
+        .attributes strong { font-weight: 600; color: var(--dark-color); }
 
         .size-selector { margin: 2rem 0; }
         .size-selector h4 { margin-bottom: 0.75rem; font-size: 1rem; }
@@ -93,7 +93,6 @@
         .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
         .wishlist-btn { width: 100%; grid-column: 1 / -1; }
 
-        /* "You may also like" section */
         #related-products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
 
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
@@ -160,17 +159,20 @@
             allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             renderProductDetails();
         }
-
-        // --- NEW HELPER FUNCTION FOR DESCRIPTION FORMATTING ---
+        
+        // --- HELPER FUNCTION FOR DESCRIPTION FORMATTING (FIXED) ---
         function formatDescription(text) {
             if (!text) return 'No description available.';
-            // First, escape potential HTML to prevent XSS, except for our specific formatting
-            const escapedText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            const escapedText = text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
             
-            // Then, apply our formatting rules
             return escapedText
-                .replace(/\*(.*?)\*/g, '<strong>$1</strong>') // Handle bolding
-                .replace(/\n/g, '<br>');                      // Handle line breaks
+                .replace(/\*(.*?)\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
         }
 
         // --- PRODUCT DETAIL LOGIC ---
@@ -214,16 +216,17 @@
                             ${(product.sizes || []).map(sizeObj => `<button data-size="${sizeObj.name}" ${!sizeObj.available ? 'disabled' : ''}>${sizeObj.name}</button>`).join('')}
                         </div>
                     </div>
-
+                    
+                    <!-- Button container with corrected structure -->
                     <div class="action-buttons">
                         ${product.isAvailable ? `
                             <button class="btn-dark" id="add-to-cart-btn" disabled>Add to Cart</button>
                             <button class="btn-primary" id="buy-now-btn" disabled>Buy It Now</button>
+                            <button class="btn-outline wishlist-btn" onclick="alert('Wishlist feature coming soon!')">Add to Wishlist</button>
                         ` : `
                             <button class="btn-dark" disabled style="grid-column: 1 / -1;">Sold Out</button>
                         `}
                     </div>
-                    <button class="btn-outline wishlist-btn" onclick="alert('Wishlist feature coming soon!')">Add to Wishlist</button>
                 </div>`;
 
             container.innerHTML = `<div class="product-layout">${galleryHtml}${detailsHtml}</div>`;
@@ -232,8 +235,8 @@
             setupGalleryListeners();
             if (product.isAvailable) {
                 setupSizeSelectorListeners();
-                document.getElementById('add-to-cart-btn').addEventListener('click', () => handleAddToCart(product.id));
-                document.getElementById('buy-now-btn').addEventListener('click', () => handleBuyNow(product.id));
+                document.getElementById('add-to-cart-btn')?.addEventListener('click', () => handleAddToCart(product.id));
+                document.getElementById('buy-now-btn')?.addEventListener('click', () => handleBuyNow(product.id));
             }
             renderRelatedProducts(product);
         }
@@ -276,7 +279,7 @@
                 <h2 style="text-align:center; margin: 3rem 0 2rem;">You May Also Like</h2>
                 <div id="related-products-grid">
                     ${related.map(p => `
-                        <div onclick="window.location.href='product-detail.html#${p.id}'; window.location.reload();" style="cursor:pointer; text-align:center; background: #fff; padding:1rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow);">
+                        <div onclick="window.location.href='product-detail.html#${p.id}'" style="cursor:pointer; text-align:center; background: #fff; padding:1rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow);">
                             <img src="${p.images[0]}" alt="${p.name}" style="width:100%; height:180px; object-fit:cover; border-radius:var(--border-radius);">
                             <h4 style="margin: 1rem 0 0.5rem; font-size: 0.9rem;">${p.name}</h4>
                             <p style="font-weight:600; color:var(--dark-color);">$${p.price.toFixed(2)}</p>
@@ -312,7 +315,7 @@
             window.location.href = 'checkout.html';
         }
         
-        // --- FULL HELPER FUNCTIONS ---
+        // --- FULL HELPER FUNCTIONS FOR COMPLETENESS ---
         function renderNav() {
             const navRight = document.getElementById('nav-right');
             const cartIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.823-6.837A1.125 1.125 0 0018.32 5.25H5.82a1.125 1.125 0 00-1.087.835L3.72 8.25m0 0c0 .106.012.211.035.314.234 1.01 1.254 1.687 2.476 1.687h9.063c1.222 0 2.242-.677 2.476-1.687a4.5 4.5 0 00.035-.314z" /></svg>`;
