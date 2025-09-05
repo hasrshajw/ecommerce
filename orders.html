@@ -37,6 +37,7 @@
         .badge-pending { background-color: #FEF3C7; color: #92400E; }
         .badge-shipped { background-color: #DBEAFE; color: #1E40AF; }
         .badge-delivered { background-color: #D1FAE5; color: #065F46; }
+        .badge-unknown { background-color: #e5e7eb; color: #4b5563; }
 
         /* --- Layout --- */
         .page { animation: fadeIn 0.5s; }
@@ -142,14 +143,14 @@
         });
 
         async function loadOrdersPageData() {
-            renderPageSkeleton(); // Render the page structure first
+            renderPageSkeleton();
             try {
                 await Promise.all([
                     db.collection('products').get().then(snap => allProducts = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }))),
                     db.collection('orders').where('userId', '==', currentUser.uid).orderBy('createdAt', 'desc').get().then(snap => allUserOrders = snap.docs.map(doc => ({ id: doc.id, ...doc.data() })))
                 ]);
-                setupEventListeners(); // **FIX:** Setup listeners AFTER skeleton is rendered
-                renderFilteredOrders(); // Initial render with all data
+                setupEventListeners();
+                renderFilteredOrders();
             } catch (error) {
                 console.error("Error loading order page data:", error);
                 document.getElementById('orders-list').innerHTML = `<div class="empty-state"><p>Could not load your orders. Please try again later.</p></div>`;
@@ -179,7 +180,7 @@
             document.getElementById('status-filter').addEventListener('change', renderFilteredOrders);
         }
 
-        // --- RENDERING LOGIC ---
+        // --- RENDERING LOGIC (CORRECTED) ---
         function renderFilteredOrders() {
             const container = document.getElementById('orders-list');
             const searchTerm = document.getElementById('order-search').value.toLowerCase();
@@ -194,7 +195,7 @@
             if (searchTerm) {
                 filteredOrders = filteredOrders.filter(order => {
                     const orderIdMatch = order.id.toLowerCase().includes(searchTerm);
-                    const productMatch = order.items.some(item => item.name.toLowerCase().includes(searchTerm));
+                    const productMatch = (order.items || []).some(item => (item.name || '').toLowerCase().includes(searchTerm));
                     return orderIdMatch || productMatch;
                 });
             }
@@ -212,13 +213,16 @@
                     return `<img src="${imageUrl}" alt="${item.name}">`;
                 }).join('');
 
+                // **FIX:** Safely handle the status property
+                const status = order.status || 'Unknown';
+
                 return `
                     <div class="order-card">
                         <div class="order-header">
                             <div class="order-header-item"><span>ORDER PLACED</span><br><strong>${date}</strong></div>
                             <div class="order-header-item"><span>TOTAL</span><br><strong>$${(order.totalPrice || 0).toFixed(2)}</strong></div>
                             <div class="order-header-item"><span>ORDER #</span><br><strong>${order.id.toUpperCase().substring(0, 8)}</strong></div>
-                            <div class="order-header-item"><span class="badge badge-${order.status.toLowerCase()}">${order.status}</span></div>
+                            <div class="order-header-item"><span class="badge badge-${status.toLowerCase()}">${status}</span></div>
                         </div>
                         <div class="order-body">
                             <div class="order-items-preview">${itemImagesHtml}</div>
