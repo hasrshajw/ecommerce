@@ -28,7 +28,7 @@
         .admin-nav button { background: none; box-shadow: none; padding: 1rem; font-size: 1rem; border-radius: 0; border-bottom: 3px solid transparent; color: var(--secondary-color); }
         .admin-nav button.active { border-bottom-color: var(--primary-color); color: var(--primary-color); }
         .category-list { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
-        .category-item { background-color: var(--light-color); padding: 1rem 1.5rem; border-radius: var(--border-radius); cursor: pointer; transition: background-color 0.2s, transform 0.1s; font-weight: 600; }
+        .category-item { background-color: var(--light-color); padding: 1rem 1.5rem; border-radius: var(--border-radius); cursor: pointer; transition: background-color 0.2s, transform 0.1s; font-weight: 600; display: flex; justify-content: space-between; align-items: center; min-width: 200px; flex: 1 1 auto; }
         .category-item:hover { background-color: #e5e7eb; transform: translateY(-2px); }
         .category-actions { display: flex; gap: 0.5rem; align-items: center; }
         #new-category-form input { padding: 0.75rem; border: 1px solid #ced4da; border-radius: var(--border-radius); font-size: 0.95rem; width: 250px; }
@@ -54,7 +54,7 @@
             <div class="admin-nav">
                 <button onclick="window.location.href='admin-dashboard.html'">Dashboard</button>
                 <button class="active">Categories</button>
-                <button onclick="window.location.href='admin-products.html'">Products</button>
+                <button onclick="window.location.href='manage-products.html'">Products</button>
             </div>
             <div id="admin-content">
                 <h3>Create New Category</h3>
@@ -152,8 +152,7 @@
         }
 
         async function deleteCategoryPrompt(category) {
-            const hasProducts = allCategories.some(cat => cat === category);
-            if (!confirm(`Are you sure you want to delete the category "${category}"? If products exist in this category, they will be hidden or their category field will be cleared on next product refresh. Proceed?`)) return;
+            if (!confirm(`Are you sure you want to delete the category "${category}"? This will clear the category field for any associated products.`)) return;
             
             try {
                 const productSnapshot = await db.collection('products').where('category', '==', category).get();
