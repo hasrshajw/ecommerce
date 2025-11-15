@@ -65,19 +65,14 @@
         .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid #e5e7eb; }
         .modal-header h2 { margin: 0; font-size: 1.25rem; }
         .close-btn { color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer; background: none; border: none; padding: 0; }
-        #product-form { padding: 1.5rem; max-height: 70vh; overflow-y: auto; }
         .modal-footer { display: flex; justify-content: flex-end; gap: 1rem; padding: 1.5rem; border-top: 1px solid #e5e7eb; background-color: var(--light-color); }
-
         .form-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
         @media (min-width: 768px) { .form-grid { grid-template-columns: 1fr 1fr; } }
-
         fieldset { border: 1px solid #e5e7eb; border-radius: var(--border-radius); padding: 1.5rem; margin: 0 0 1.5rem; }
         legend { font-weight: 600; padding: 0 0.5rem; font-size: 0.9rem; color: var(--dark-color); }
-        
         .form-group { margin-bottom: 1.5rem; }
         .form-group:last-child { margin-bottom: 0; }
         .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; }
-        
         .form-group input[type="text"], .form-group input[type="number"], .form-group input[type="url"], .form-group textarea, .form-group select {
             display: block; width: 100%; padding: 0.75rem 1rem; font-size: 0.95rem; line-height: 1.5; font-family: var(--font-family); color: var(--dark-color);
             background-color: #fff; background-clip: padding-box; border: 1px solid #ced4da; border-radius: var(--border-radius);
@@ -89,11 +84,9 @@
             box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
         }
         .form-group textarea { resize: vertical; min-height: 120px; }
-        
         .image-list-item { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.75rem; }
         .image-list-item .remove-image-btn { flex-shrink: 0; background: none; box-shadow: none; padding: 0.5rem; color: var(--danger-color); border: 1px solid transparent; }
         .image-list-item .remove-image-btn:hover { background-color: var(--light-color); border-color: #d1d5db; }
-        
         .size-item-row { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; border-bottom: 1px solid #f3f4f6; }
         
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
@@ -205,6 +198,10 @@
                     <h2>All Products</h2>
                     <button class="btn-success" onclick="openProductForm()">Add New Product</button>
                 </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem; gap:1rem;">
+                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap;" id="category-filters"></div>
+                    <button class="btn-secondary" onclick="openCategoryForm()">+ New Category</button>
+                </div>
                 <div style="overflow-x:auto;">
                     <table>
                         <thead><tr><th>Product Name</th><th>Category</th><th>Price</th><th>Available</th><th>Actions</th></tr></thead>
@@ -215,6 +212,10 @@
         </div>
     </div>
     
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCzqYrP1qYSiiLLgKW3z3EcwMpiG4hyF6M",
@@ -231,6 +232,8 @@
 
         let currentUser = null;
         let allProducts = [];
+        let allCategories = [];
+        let currentFilterCategory = 'All';
 
         document.addEventListener('DOMContentLoaded', () => {
             auth.onAuthStateChanged(user => {
@@ -241,7 +244,7 @@
                     window.location.href = 'index.html';
                     return;
                 }
-                loadProductsData();
+                loadAdminData();
             });
             const toastInfo = sessionStorage.getItem('toastMessage');
             if(toastInfo){
@@ -251,8 +254,10 @@
             }
         });
 
-        async function loadProductsData() {
+        async function loadAdminData() {
             await fetchAllProducts();
+            await fetchAllCategories();
+            renderCategoryFilters();
             renderProductsTable();
         }
 
@@ -261,18 +266,46 @@
             allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         }
         
+        async function fetchAllCategories() {
+            const snapshot = await db.collection('categories').orderBy('name').get();
+            allCategories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        }
+
+        function renderCategoryFilters() {
+            const filtersContainer = document.getElementById('category-filters');
+            const categoriesList = ['All', ...allCategories.map(c => c.name)];
+            
+            filtersContainer.innerHTML = categoriesList.map(catName => `<button data-category="${catName}" class="${catName === currentFilterCategory ? 'active' : ''}">${catName}</button>`).join('');
+            
+            filtersContainer.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('click', e => {
+                    currentFilterCategory = e.target.dataset.category;
+                    document.querySelectorAll('#category-filters button.active').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    renderProductsTable();
+                });
+            });
+        }
+        
         function renderProductsTable() {
             const tableBody = document.getElementById('admin-products-table');
-            if (allProducts.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 2rem;">No products found. Click 'Add New Product' to start.</td></tr>`;
+            let productsToRender = allProducts;
+            
+            if (currentFilterCategory !== 'All') {
+                productsToRender = allProducts.filter(p => p.category === currentFilterCategory);
+            }
+
+            if (productsToRender.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 2rem;">No products found in this category.</td></tr>`;
                 return;
             }
-            tableBody.innerHTML = allProducts.map(p => {
+            
+            tableBody.innerHTML = productsToRender.map(p => {
                 const imageUrl = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/50';
                 return `
                 <tr>
                     <td><div class="product-name-cell" style="display:flex; align-items:center; gap:1rem;"><img src="${imageUrl}" alt="${p.name}"><span>${p.name}</span></div></td>
-                    <td>${p.category}</td>
+                    <td>${p.category || 'N/A'}</td>
                     <td>$${(p.price || 0).toFixed(2)}</td>
                     <td><input type="checkbox" class="availability-toggle" data-id="${p.id}" ${p.isAvailable ? 'checked' : ''}></td>
                     <td class="table-actions">
@@ -281,6 +314,7 @@
                     </td>
                 </tr>`;
             }).join('');
+            
             document.querySelectorAll('.availability-toggle').forEach(toggle => {
                 toggle.addEventListener('change', async (e) => {
                     await updateProductAvailability(e.target.dataset.id, e.target.checked, e);
@@ -347,11 +381,16 @@
                                     }).join('')}</div>
                                 </fieldset>
                                 <fieldset>
-                                    <legend>Status & Ratings</legend>
+                                    <legend>Status & Other Details</legend>
                                     <div class="form-group"><label for="isAvailable">Product Available for Sale</label><input type="checkbox" id="isAvailable" ${product?.isAvailable ? 'checked' : ''}></div>
                                     <div class="form-group"><label for="isBestSeller">Mark as Best Seller</label><input type="checkbox" id="isBestSeller" ${product?.isBestSeller ? 'checked' : ''}></div>
                                     <div class="form-group"><label for="rating">Average Rating (0-5)</label><input type="number" id="rating" step="0.1" min="0" max="5" value="${product?.rating||'4.5'}"></div>
                                     <div class="form-group"><label for="ratingCount">Total Ratings Count</label><input type="number" id="ratingCount" value="${product?.ratingCount||'100'}"></div>
+                                </fieldset>
+                                <fieldset>
+                                    <legend>Colors (Name/Preview URL)</legend>
+                                    <div id="color-list"></div>
+                                    <button type="button" class="btn-secondary" id="add-color-btn" style="padding:0.5rem 1rem; margin-top:0.5rem; width:100%; box-shadow:none;">Add Color Variant</button>
                                 </fieldset>
                             </div>
                         </div>
@@ -393,16 +432,38 @@
             const existingImages = product?.images || [''];
             existingImages.forEach((url, index) => createImageInput(url, index === 0));
             addImageBtn.onclick = () => createImageInput();
-
+            
+            const colorListContainer = modal.querySelector('#color-list');
+            const addColorBtn = modal.querySelector('#add-color-btn');
+            const createColorInput = (name = '', previewUrl = '') => {
+                const div = document.createElement('div');
+                div.className = 'image-list-item';
+                div.innerHTML = `
+                    <div class="form-group" style="flex-grow:1; margin:0;">
+                        <input type="text" class="color-name-input" value="${name}" placeholder="Color Name (e.g., Pink)" required>
+                    </div>
+                    <div class="form-group" style="flex-grow:1; margin:0;">
+                        <input type="url" class="color-preview-input" value="${previewUrl}" placeholder="Preview Image URL" required>
+                    </div>
+                    <button type="button" class="remove-image-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+                `;
+                div.querySelector('.remove-image-btn').onclick = () => div.remove();
+                colorListContainer.appendChild(div);
+            };
+            const existingColors = product?.colors || { 'Pink': { previewImage: 'https://via.placeholder.com/60x80?text=Pink' } };
+            Object.keys(existingColors).forEach(name => createColorInput(name, existingColors[name].previewImage));
+            addColorBtn.onclick = () => createColorInput();
+            
             modal.querySelector('#save-product-btn').onclick = () => document.getElementById('product-form').requestSubmit();
             modal.querySelector('#product-form').addEventListener('submit', async e => {
                 e.preventDefault();
                 let category = categorySelect.value;
                 if (category === '--new--') category = newCategoryInput.value.trim();
                 if (!category) { showToast('Category is required.', 'error'); return; }
+                
                 const images = [...imageListContainer.querySelectorAll('.image-url-input')].map(input => input.value.trim()).filter(Boolean);
                 if (images.length === 0) { showToast('At least one image URL is required.', 'error'); return; }
-                
+
                 const sizes = [];
                 modal.querySelectorAll('.size-item-row').forEach(row => {
                     if (row.querySelector('.size-offered-checkbox').checked) {
@@ -410,9 +471,18 @@
                     }
                 });
                 
+                const colors = {};
+                modal.querySelectorAll('#color-list .image-list-item').forEach(item => {
+                    const name = item.querySelector('.color-name-input').value.trim();
+                    const previewUrl = item.querySelector('.color-preview-input').value.trim();
+                    if (name && previewUrl) {
+                        colors[name] = { previewImage: previewUrl };
+                    }
+                });
+                
                 const data = {
                     name: modal.querySelector('#name').value, category, price: parseFloat(modal.querySelector('#price').value), oldPrice: parseFloat(modal.querySelector('#oldPrice').value) || 0,
-                    images, sizes, description: modal.querySelector('#description').value, isAvailable: modal.querySelector('#isAvailable').checked, isBestSeller: modal.querySelector('#isBestSeller').checked, rating: parseFloat(modal.querySelector('#rating').value), ratingCount: parseInt(modal.querySelector('#ratingCount').value)
+                    images, sizes, description: modal.querySelector('#description').value, isAvailable: modal.querySelector('#isAvailable').checked, isBestSeller: modal.querySelector('#isBestSeller').checked, rating: parseFloat(modal.querySelector('#rating').value), ratingCount: parseInt(modal.querySelector('#ratingCount').value), colors
                 };
                 
                 try {
@@ -420,7 +490,7 @@
                     else await db.collection('products').add(data);
                     showToast(`Product ${productId ? 'updated' : 'added'}!`, 'success');
                     closeAdminModal();
-                    await loadProductsData();
+                    await loadAdminData();
                 } catch(error) { showToast("Error saving product", "error"); console.error(error); }
             });
         }
@@ -430,11 +500,52 @@
                 try {
                     await db.collection('products').doc(productId).delete();
                     showToast('Product deleted!', 'success');
-                    await loadProductsData();
+                    await loadAdminData();
                 } catch(error) { showToast("Error deleting product", "error"); }
             }
         }
-        const closeAdminModal = () => document.getElementById('admin-modal').style.display = 'none';
+        
+        function openCategoryForm() {
+            const modal = document.getElementById('admin-modal');
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Add New Category</h2>
+                        <button class="close-btn" onclick="closeAdminModal()">&times;</button>
+                    </div>
+                    <form id="category-form" style="padding: 1.5rem;">
+                        <div class="form-group"><label for="category-name">Category Name</label><input type="text" id="category-name" required placeholder="e.g., Sarees, Lehengas"></div>
+                        <div class="form-group"><label for="category-image">Category Image Link</label><input type="url" id="category-image" required placeholder="Image URL (for index.html category icon)"></div>
+                        <div class="form-group"><label for="category-link">Category Link URL (for index.html)</label><input type="url" id="category-link" placeholder="/category/sarees"></div>
+                        <div class="form-group"><label for="category-order">Display Order (Number)</label><input type="number" id="category-order" value="${allCategories.length + 1}" min="1"></div>
+                    </form>
+                    <div class="modal-footer">
+                        <button class="btn-secondary" onclick="closeAdminModal()">Cancel</button>
+                        <button class="btn-primary" id="save-category-btn">Save Category</button>
+                    </div>
+                </div>`;
+            modal.style.display = 'flex';
+
+            modal.querySelector('#save-category-btn').onclick = () => document.getElementById('category-form').requestSubmit();
+            modal.querySelector('#category-form').addEventListener('submit', async e => {
+                e.preventDefault();
+                const data = {
+                    name: modal.querySelector('#category-name').value.trim(),
+                    image: modal.querySelector('#category-image').value.trim(),
+                    link: modal.querySelector('#category-link').value.trim() || `/shop?category=${encodeURIComponent(modal.querySelector('#category-name').value.trim())}`,
+                    order: parseInt(modal.querySelector('#category-order').value) || allCategories.length + 1
+                };
+                
+                try {
+                    await db.collection('categories').add(data);
+                    showToast('Category added!', 'success');
+                    closeAdminModal();
+                    await loadAdminData();
+                } catch(error) { showToast("Error saving category", "error"); console.error(error); }
+            });
+        }
+        
+        function closeAdminModal() { document.getElementById('admin-modal').style.display = 'none'; }
         
         function renderNav() {
             const navRight = document.getElementById('nav-right');
