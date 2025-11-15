@@ -71,7 +71,7 @@
 
         /* Color Variants Styles */
         .color-variant-card { border: 1px solid #e5e7eb; border-radius: var(--border-radius); padding: 1.5rem; margin-bottom: 1rem; background: #fafafa; }
-        .color-variant-header { display: flex; justify-content: between; align-items: center; margin-bottom: 1rem; }
+        .color-variant-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
         .color-variant-title { font-weight: 600; font-size: 1.1rem; }
         .color-variant-actions { display: flex; gap: 0.5rem; }
         .color-preview { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #e5e7eb; }
@@ -79,7 +79,7 @@
         /* Modal Styles */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 2000; }
         .modal { background: white; border-radius: var(--border-radius); padding: 2rem; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; }
-        .modal-header { display: flex; justify-content: between; align-items: center; margin-bottom: 1.5rem; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
         .modal-title { font-size: 1.25rem; font-weight: 600; margin: 0; }
         .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; padding: 0; width: 30px; height: 30px; }
         .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
@@ -119,8 +119,8 @@
                             <input type="text" id="color-name" required placeholder="e.g., Red, Blue, Black">
                         </div>
                         <div class="form-group">
-                            <label for="color-hex">Color Code (Hex)</label>
-                            <input type="text" id="color-hex" required placeholder="#ff0000" pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$">
+                            <label for="color-link">Color Image Link</label>
+                            <input type="url" id="color-link" required placeholder="https://example.com/color-image.jpg">
                         </div>
                     </div>
                     <div class="form-column">
@@ -172,7 +172,7 @@
         let currentUser = null;
         let allCategories = [];
         const SIZES_LIST = ['S', 'M', 'L', 'XL', '2XL'];
-        let currentColorEditing = null; // Track which color variant is being edited
+        let currentColorEditingIndex = null; // Track which color variant is being edited
 
         document.addEventListener('DOMContentLoaded', () => {
             auth.onAuthStateChanged(user => {
@@ -251,6 +251,9 @@
                 </div>
             `).join('');
 
+            // Store color variants in dataset for easy access
+            container.dataset.colorVariants = JSON.stringify(product.colorVariants || []);
+
             // Render color variants section
             const colorVariantsHtml = renderColorVariantsSection(product.colorVariants || []);
 
@@ -309,7 +312,7 @@
                 <div class="color-variant-card" data-color-index="${index}">
                     <div class="color-variant-header">
                         <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div class="color-preview" style="background-color: ${variant.hex};"></div>
+                            <div class="color-preview" style="background-color: ${variant.hex || '#e5e7eb'};"></div>
                             <div>
                                 <div class="color-variant-title">${variant.name}</div>
                                 <div style="font-size: 0.875rem; color: var(--secondary-color);">
@@ -326,8 +329,8 @@
             `).join('');
         }
 
-        function openColorModal(colorVariant = null) {
-            currentColorEditing = colorVariant;
+        function openColorModal(colorVariant = null, index = null) {
+            currentColorEditingIndex = index;
             const modal = document.getElementById('color-variant-modal');
             const title = document.getElementById('color-modal-title');
             
@@ -335,7 +338,7 @@
                 title.textContent = 'Edit Color Variant';
                 // Populate form with existing data
                 document.getElementById('color-name').value = colorVariant.name;
-                document.getElementById('color-hex').value = colorVariant.hex;
+                document.getElementById('color-link').value = colorVariant.hex || '';
                 
                 // Populate sizes
                 renderModalSizes(colorVariant.sizes || []);
@@ -372,7 +375,7 @@
 
         function closeColorModal() {
             document.getElementById('color-variant-modal').style.display = 'none';
-            currentColorEditing = null;
+            currentColorEditingIndex = null;
         }
 
         function renderModalSizes(existingSizes = []) {
@@ -460,11 +463,11 @@
         function saveColorVariant() {
             const form = document.getElementById('color-variant-form');
             const colorName = document.getElementById('color-name').value;
-            const colorHex = document.getElementById('color-hex').value;
+            const colorLink = document.getElementById('color-link').value;
             
-            // Validate hex color
-            if (!/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(colorHex)) {
-                showToast('Please enter a valid hex color code.', 'error');
+            // Validate URL
+            if (!isValidUrl(colorLink)) {
+                showToast('Please enter a valid URL for the color image.', 'error');
                 return;
             }
 
@@ -491,34 +494,50 @@
 
             const colorVariant = {
                 name: colorName,
-                hex: colorHex,
+                hex: colorLink, // Now storing the link instead of hex color
                 sizes: sizes,
                 images: colorImages
             };
 
-            // Get current color variants
+            // Get current color variants from the container dataset
             const container = document.getElementById('product-form-content');
             let colorVariants = JSON.parse(container.dataset.colorVariants || '[]');
 
-            if (currentColorEditing !== null) {
+            if (currentColorEditingIndex !== null) {
                 // Editing existing variant
-                colorVariants[currentColorEditing] = colorVariant;
+                colorVariants[currentColorEditingIndex] = colorVariant;
             } else {
                 // Adding new variant
                 colorVariants.push(colorVariant);
             }
 
-            // Update the UI
+            // Update the dataset
             container.dataset.colorVariants = JSON.stringify(colorVariants);
-            const colorVariantsSection = container.querySelector('fieldset legend:contains("Color Variants")').closest('fieldset');
-            colorVariantsSection.innerHTML = `
-                <legend>Color Variants</legend>
-                ${renderColorVariantsSection(colorVariants)}
-                <button type="button" class="btn-primary btn-sm" onclick="openColorModal()" style="margin-top:1rem;">+ Add Color Variant</button>
-            `;
+
+            // Find and update the color variants section
+            const colorVariantsFieldset = Array.from(container.querySelectorAll('fieldset')).find(fieldset => 
+                fieldset.querySelector('legend') && fieldset.querySelector('legend').textContent === 'Color Variants'
+            );
+
+            if (colorVariantsFieldset) {
+                colorVariantsFieldset.innerHTML = `
+                    <legend>Color Variants</legend>
+                    ${renderColorVariantsSection(colorVariants)}
+                    <button type="button" class="btn-primary btn-sm" onclick="openColorModal()" style="margin-top:1rem;">+ Add Color Variant</button>
+                `;
+            }
 
             closeColorModal();
-            showToast(`Color variant ${currentColorEditing !== null ? 'updated' : 'added'} successfully!`, 'success');
+            showToast(`Color variant ${currentColorEditingIndex !== null ? 'updated' : 'added'} successfully!`, 'success');
+        }
+
+        function isValidUrl(string) {
+            try {
+                new URL(string);
+                return true;
+            } catch (_) {
+                return false;
+            }
         }
 
         function editColorVariant(index) {
@@ -536,14 +555,21 @@
             let colorVariants = JSON.parse(container.dataset.colorVariants || '[]');
             colorVariants.splice(index, 1);
 
-            // Update the UI
+            // Update the dataset
             container.dataset.colorVariants = JSON.stringify(colorVariants);
-            const colorVariantsSection = container.querySelector('fieldset legend:contains("Color Variants")').closest('fieldset');
-            colorVariantsSection.innerHTML = `
-                <legend>Color Variants</legend>
-                ${renderColorVariantsSection(colorVariants)}
-                <button type="button" class="btn-primary btn-sm" onclick="openColorModal()" style="margin-top:1rem;">+ Add Color Variant</button>
-            `;
+
+            // Find and update the color variants section
+            const colorVariantsFieldset = Array.from(container.querySelectorAll('fieldset')).find(fieldset => 
+                fieldset.querySelector('legend') && fieldset.querySelector('legend').textContent === 'Color Variants'
+            );
+
+            if (colorVariantsFieldset) {
+                colorVariantsFieldset.innerHTML = `
+                    <legend>Color Variants</legend>
+                    ${renderColorVariantsSection(colorVariants)}
+                    <button type="button" class="btn-primary btn-sm" onclick="openColorModal()" style="margin-top:1rem;">+ Add Color Variant</button>
+                `;
+            }
 
             showToast('Color variant removed successfully!', 'success');
         }
