@@ -21,7 +21,6 @@
         .btn-primary { background-color: var(--primary-color); color: white; }
         .btn-primary:hover { background-color: var(--primary-hover); }
         .btn-secondary { background-color: var(--secondary-color); color: white; }
-        .btn-success { background-color: var(--success-color); color: white; }
         .page { animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .card { background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 2rem; }
@@ -171,15 +170,29 @@
                 if (defaultCategory && !categories.includes(defaultCategory)) categories.unshift(defaultCategory);
                 
                 populateCategorySelect(categories);
+                setupDynamicListeners(); 
 
                 if (currentProductId) {
                     const product = allProducts.find(p => p.id === currentProductId);
                     if (product) populateForm(product);
-                } else if (defaultCategory) {
+                } else {
+                    const emptyProduct = { isAvailable: true, images: [''], sizes: SIZES.map(s => ({ name: s, available: true })) };
+                    populateForm(emptyProduct);
                     document.getElementById('category-select').value = defaultCategory;
-                    document.getElementById('isAvailable').checked = true;
+                    if (defaultCategory) {
+                        const newCategoryOption = document.createElement('option');
+                        newCategoryOption.value = defaultCategory;
+                        newCategoryOption.textContent = defaultCategory;
+                        newCategoryOption.selected = true;
+                        const newCatInput = document.getElementById('new-category-input');
+                        const select = document.getElementById('category-select');
+                        const newCatPlaceholder = select.querySelector('option[value="--new--"]');
+                        select.insertBefore(newOption, newCatPlaceholder);
+                        select.value = defaultCategory;
+                    }
                 }
-                setupDynamicListeners();
+                // Re-run listeners that depend on dynamically created content (sizes/images)
+                setupDynamicListeners(); 
             } catch(error) {
                 showToast("Error loading initial data.", "error");
                 console.error(error);
@@ -195,14 +208,6 @@
                 option.textContent = cat;
                 select.appendChild(option);
             });
-            if (defaultCategory && !select.value) {
-                const newOption = document.createElement('option');
-                newOption.value = defaultCategory;
-                newOption.textContent = defaultCategory;
-                newOption.selected = true;
-                select.insertBefore(newOption, select.querySelector('option[value="--new--"]'));
-                select.value = defaultCategory;
-            }
         }
 
         function populateForm(product) {
@@ -215,14 +220,17 @@
             
             const imageList = document.getElementById('image-list');
             imageList.innerHTML = '';
-            (product.images || ['']).forEach((url, index) => createImageInput(url, index === 0));
+            (product.images && product.images.length > 0 ? product.images : ['']).forEach((url, index) => createImageInput(url, index === 0));
             
             const sizesList = document.getElementById('sizes-list');
             sizesList.innerHTML = SIZES.map(size => {
                 const sizeData = product.sizes?.find(s => s.name === size);
                 const isOffered = !!sizeData;
                 const isAvailable = sizeData?.available ?? false;
-                return `<div class="size-item-row" data-size-name="${size}"><label style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;"><input type="checkbox" class="size-offered-checkbox" ${isOffered ? 'checked' : ''} style="width:20px;height:20px;"><span>${size}</span></label><div class="size-controls" style="display:flex;align-items:center;gap:1rem;"><label style="font-size:0.9rem;">In Stock:</label><input type="checkbox" class="availability-toggle size-availability-toggle" ${isAvailable ? 'checked' : ''} ${!isOffered ? 'disabled' : ''}></div></div>`;
+                return `<div class="size-item-row" data-size-name="${size}">
+                            <label style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;"><input type="checkbox" class="size-offered-checkbox" ${isOffered ? 'checked' : ''} style="width:20px;height:20px;"><span>${size}</span></label>
+                            <div class="size-controls" style="display:flex;align-items:center;gap:1rem;"><label style="font-size:0.9rem;">In Stock:</label><input type="checkbox" class="availability-toggle size-availability-toggle" ${isAvailable ? 'checked' : ''} ${!isOffered ? 'disabled' : ''}></div>
+                        </div>`;
             }).join('');
         }
 
@@ -237,19 +245,20 @@
         }
 
         function setupDynamicListeners() {
-            const categorySelect = document.getElementById('category-select');
-            const newCategoryInput = document.getElementById('new-category-input');
-            categorySelect.addEventListener('change', () => {
-                newCategoryInput.style.display = categorySelect.value === '--new--' ? 'block' : 'none';
-                if (categorySelect.value !== '--new--') newCategoryInput.value = '';
-            });
             document.getElementById('add-image-btn').onclick = () => createImageInput();
+            document.getElementById('category-select').onchange = () => {
+                const select = document.getElementById('category-select');
+                const newCategoryInput = document.getElementById('new-category-input');
+                newCategoryInput.style.display = select.value === '--new--' ? 'block' : 'none';
+                if (select.value !== '--new--') newCategoryInput.value = '';
+            };
+
             document.querySelectorAll('.size-offered-checkbox').forEach(cb => {
-                cb.addEventListener('change', (e) => {
+                cb.onchange = (e) => {
                     const toggle = e.target.closest('.size-item-row').querySelector('.size-availability-toggle');
                     toggle.disabled = !e.target.checked;
                     if (!e.target.checked) toggle.checked = false;
-                });
+                };
             });
         }
 
