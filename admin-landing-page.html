@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page Manager - ShopSphere Admin</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #4F46E5; --primary-hover: #4338CA; --primary-light: #eef2ff;
+            --secondary-color: #6B7280; --success-color: #10B981; --danger-color: #EF4444;
+            --light-color: #F9FAFB; --dark-color: #1F2937;
+            --bg-color: #F3F4F6; --font-family: 'Inter', sans-serif; --border-radius: 0.5rem;
+            --box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        body { font-family: var(--font-family); margin: 0; background-color: var(--bg-color); color: var(--dark-color); }
+        .container { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
+        
+        .promo-banner { background: var(--danger-color); color: var(--white); padding: 0.5rem; position: fixed; top: 0; left: 0; width: 100%; z-index: 1100; overflow: hidden; }
+        .promo-text { display: inline-block; white-space: nowrap; animation: scroll-text 15s linear infinite; font-size: 0.875rem; font-weight: 500; }
+        @keyframes scroll-text { 0% { transform: translateX(100vw); } 100% { transform: translateX(-100%); } }
+
+        nav { background: #fff; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--box-shadow); position: sticky; top: 32px; z-index: 1000; }
+        .nav-left h1 { margin: 0; font-size: 1.75rem; color: var(--primary-color); cursor: pointer; }
+        .nav-right { display: flex; align-items: center; gap: 1rem; }
+        .nav-icon { cursor: pointer; position: relative; background: none; border: none; padding: 0.5rem; border-radius: 50%; transition: background-color 0.2s; }
+        .nav-icon:hover { background-color: #e5e7eb; }
+        #cart-count { position: absolute; top: 0; right: 0; background-color: #EF4444; color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.7rem; font-weight: bold; }
+        
+        button { border: none; border-radius: var(--border-radius); cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: all 0.2s ease-in-out; padding: 0.75rem 1.5rem; }
+        .btn-primary { background-color: var(--primary-color); color: white; }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-secondary { background-color: var(--secondary-color); color: white; }
+        .btn-success { background-color: var(--success-color); color: white; }
+        
+        .page { animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 2rem; }
+
+        .admin-nav { display: flex; gap: 0.5rem; border-bottom: 1px solid #ddd; margin-bottom: 1.5rem; }
+        .admin-nav button { background: none; box-shadow: none; padding: 1rem; font-size: 1rem; border-radius: 0; border-bottom: 3px solid transparent; color: var(--secondary-color); }
+        .admin-nav button.active { border-bottom-color: var(--primary-color); color: var(--primary-color); }
+
+        .form-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+        @media (min-width: 768px) { .form-grid { grid-template-columns: 1fr 1fr; } }
+
+        fieldset { border: 1px solid #e5e7eb; border-radius: var(--border-radius); padding: 1.5rem; margin: 0 0 1.5rem; }
+        legend { font-weight: 600; padding: 0 0.5rem; font-size: 0.9rem; color: var(--dark-color); }
+        
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .form-group input[type="text"], .form-group input[type="url"], .form-group input[type="number"] {
+            display: block; width: 100%; padding: 0.75rem 1rem; font-size: 0.95rem; line-height: 1.5; font-family: var(--font-family); color: var(--dark-color);
+            background-color: #fff; background-clip: padding-box; border: 1px solid #ced4da; border-radius: var(--border-radius);
+            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        }
+        .form-group input:focus {
+            border-color: var(--primary-color); outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+        }
+
+        .list-management { margin-top: 2rem; }
+        .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .list-item { display: flex; align-items: center; gap: 1rem; padding: 0.75rem; border-bottom: 1px solid #e5e7eb; }
+        .list-item:nth-child(odd) { background-color: var(--light-color); }
+        .list-item-content { flex-grow: 1; }
+        .list-item-content strong { font-size: 0.9rem; }
+        .list-item-content small { display: block; font-size: 0.8rem; color: var(--secondary-color); }
+        .product-select-item { display: flex; align-items: center; gap: 0.5rem; }
+
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
+        .toast { padding: 1rem 1.5rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
+        .toast.success { background-color: var(--success-color); }
+        .toast.error { background-color: var(--danger-color); }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        @keyframes fadeOut { to { opacity: 0; } }
+    </style>
+</head>
+<body>
+    <div id="toast-container"></div>
+    <div id="admin-modal" class="modal"></div>
+    <div class="promo-banner">
+        <div class="promo-text" id="promo-text">
+            Admin Panel: Landing Page Manager
+        </div>
+    </div>
+
+    <nav>
+        <div class="nav-container">
+            <div class="desktop-nav">
+                <div class="nav-left" onclick="window.location.href='index.html'">
+                    <h1>ShopSphere</h1>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="shop.html">Shop</a>
+                    <a href="index.html#category-section">Categories</a>
+                    <a href="/deals">Deals</a>
+                </div>
+                <div class="nav-search" id="desktopSearch">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.3-4.3"></path>
+                    </svg>
+                    <input type="text" placeholder="Search products...">
+                </div>
+                <div class="nav-icons">
+                    <button class="nav-icon" id="desktopSearchBtn" aria-label="Search">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.3-4.3"></path>
+                        </svg>
+                    </button>
+                    <button class="nav-icon" onclick="window.location.href='/wishlist'" aria-label="Wishlist">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </button>
+                    <button class="nav-icon" id="desktopCartBtn" aria-label="Shopping cart">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        <span id="cart-count">0</span>
+                    </button>
+                </div>
+            </div>
+            <div class="mobile-nav">
+                <div class="mobile-nav-left">
+                    <button class="hamburger" id="mobileMenuBtn" aria-label="Menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+                <div class="mobile-nav-center">
+                    <div class="mobile-logo" onclick="window.location.href='index.html'">
+                        <img src="http://photography.wixo.in/yellow.png" alt="Shop Logo">
+                    </div>
+                </div>
+                <div class="mobile-nav-right">
+                    <button class="nav-icon" id="mobileSearchBtn" aria-label="Search">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.3-4.3"></path>
+                        </svg>
+                    </button>
+                    <button class="nav-icon" onclick="window.location.href='/wishlist'" aria-label="Wishlist">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </button>
+                    <button class="nav-icon" id="mobileCartBtn" aria-label="Shopping cart">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        <span id="cart-count">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div id="mobile-overlay-placeholder"></div>
+
+    <div class="container page">
+        <div id="admin-landing-page-container" class="card">
+            <h1>Landing Page Manager</h1>
+            <div class="admin-nav">
+                <button onclick="window.location.href='admin-dashboard.html'">Dashboard</button>
+                <button class="active">Landing Page</button>
+                <button onclick="window.location.href='admin-products.html'">Products</button>
+            </div>
+            <div id="lp-content">
+                <h2 style="margin-bottom: 1.5rem;">Hero Carousel (Slides)</h2>
+                <fieldset>
+                    <legend>Hero Slides Management</legend>
+                    <div id="hero-list"></div>
+                    <button type="button" class="btn-secondary" id="add-hero-btn" style="padding:0.5rem 1rem; margin-top:1rem; box-shadow:none;">+ Add Hero Slide</button>
+                </fieldset>
+
+                <h2 style="margin-top: 2rem; margin-bottom: 1.5rem;">Categories Management</h2>
+                <fieldset>
+                    <legend>Manage Category Display</legend>
+                    <div id="category-list"></div>
+                    <button type="button" class="btn-secondary" id="add-category-btn" style="padding:0.5rem 1rem; margin-top:1rem; box-shadow:none;">+ Add Category Item</button>
+                </fieldset>
+
+                <h2 style="margin-top: 2rem; margin-bottom: 1.5rem;">Best Sellers Selection</h2>
+                <fieldset>
+                    <legend>Select Best Selling Products</legend>
+                    <div id="bestsellers-list"></div>
+                    <p style="font-size:0.8rem; margin-top:1rem;">Products marked as 'Best Seller' in the 'Manage Products' section will appear here.</p>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCzqYrP1qYSiiLLgKW3z3EcwMpiG4hyF6M",
+            authDomain: "e-commerce27.firebaseapp.com",
+            projectId: "e-commerce27",
+            storageBucket: "e-commerce27.firebasestorage.app",
+            messagingSenderId: "1000564724466",
+            appId: "1:1000564724466:web:55047ed3c820197733366b",
+        };
+        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentUser = null;
+        let allProducts = [];
+        let heroSlides = [];
+        let landingPageCategories = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            auth.onAuthStateChanged(user => {
+                currentUser = user;
+                renderNav();
+                if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
+                    sessionStorage.setItem('toastMessage', JSON.stringify({ message: 'Access Denied: Landing Page Manager.', type: 'error' }));
+                    window.location.href = 'index.html';
+                    return;
+                }
+                loadLandingPageData();
+            });
+            const toastInfo = sessionStorage.getItem('toastMessage');
+            if(toastInfo){
+                const { message, type } = JSON.parse(toastInfo);
+                showToast(message, type);
+                sessionStorage.removeItem('toastMessage');
+            }
+        });
+
+        async function loadLandingPageData() {
+            try {
+                await Promise.all([
+                    db.collection('products').get().then(snap => allProducts = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }))),
+                    db.collection('heroSlides').orderBy('order', 'asc').get().then(snap => heroSlides = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }))),
+                    db.collection('categories').orderBy('order', 'asc').get().then(snap => landingPageCategories = snap.docs.map(doc => ({ id: doc.id, ...doc.data() })))
+                ]);
+                
+                renderHeroManager();
+                renderCategoryManager();
+                renderBestSellersManager();
+            } catch (error) {
+                console.error("Error loading landing page data:", error);
+                showToast("Failed to load all landing page data.", "error");
+            }
+        }
+        
+        function renderHeroManager() {
+            const listContainer = document.getElementById('hero-list');
+            listContainer.innerHTML = heroSlides.map(slide => `
+                <div class="list-item" data-id="${slide.id}">
+                    <div class="list-item-content">
+                        <strong>Slide #${slide.order || 'N/A'}</strong>
+                        <small>Desktop: ${slide.desktopImage ? slide.desktopImage.substring(0, 40) + '...' : 'URL Missing'}</small>
+                    </div>
+                    <div class="list-actions" style="display:flex; gap:0.5rem;">
+                        <button class="btn-primary" onclick="openHeroForm('${slide.id}', '${slide.desktopImage}', '${slide.mobileImage || ''}', '${slide.link || ''}', ${slide.order || ''})">Edit</button>
+                        <button class="btn-danger" onclick="deleteHeroSlide('${slide.id}', ${slide.order})">Delete</button>
+                    </div>
+                </div>
+            `).join('') + `<div class="list-item" style="background:none;"><button class="btn-success" onclick="openHeroForm()">+ Add New Slide</button></div>`;
+            document.getElementById('add-hero-btn').onclick = () => openHeroForm();
+        }
+        
+        function openHeroForm(id = '', desktopImage = '', mobileImage = '', link = '', order = '') {
+            const modal = document.getElementById('admin-modal');
+            const nextOrder = heroSlides.length > 0 ? Math.max(...heroSlides.map(s => s.order || 0)) + 1 : 1;
+            
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>${id ? 'Edit' : 'Add'} Hero Slide</h2>
+                        <button class="close-btn" onclick="closeAdminModal()">&times;</button>
+                    </div>
+                    <form id="hero-form" style="padding: 1.5rem;">
+                        <div class="form-group"><label for="hero-desktop-image">Desktop Image URL</label><input type="url" id="hero-desktop-image" value="${desktopImage}" required></div>
+                        <div class="form-group"><label for="hero-mobile-image">Mobile Image URL</label><input type="url" id="hero-mobile-image" value="${mobileImage}"></div>
+                        <div class="form-group"><label for="hero-link">Link URL</label><input type="url" id="hero-link" value="${link}"></div>
+                        <div class="form-group"><label for="hero-order">Display Order</label><input type="number" id="hero-order" value="${order || nextOrder}" min="1" required></div>
+                    </form>
+                    <div class="modal-footer">
+                        <button class="btn-secondary" onclick="closeAdminModal()">Cancel</button>
+                        <button class="btn-primary" id="save-hero-btn">Save Slide</button>
+                    </div>
+                </div>`;
+            modal.style.display = 'flex';
+            
+            modal.querySelector('#save-hero-btn').onclick = () => document.getElementById('hero-form').requestSubmit();
+            modal.querySelector('#hero-form').addEventListener('submit', async e => {
+                e.preventDefault();
+                const data = {
+                    desktopImage: modal.querySelector('#hero-desktop-image').value.trim(),
+                    mobileImage: modal.querySelector('#hero-mobile-image').value.trim(),
+                    link: modal.querySelector('#hero-link').value.trim(),
+                    order: parseInt(modal.querySelector('#hero-order').value)
+                };
+                try {
+                    if (id) await db.collection('heroSlides').doc(id).update(data);
+                    else await db.collection('heroSlides').add(data);
+                    showToast(`Hero Slide ${id ? 'updated' : 'added'}!`, 'success');
+                    closeAdminModal();
+                    loadLandingPageData();
+                } catch(error) { showToast("Error saving hero slide", "error"); console.error(error); }
+            });
+        }
+
+        async function deleteHeroSlide(id, order) {
+            if (confirm(`Are you sure you want to delete Hero Slide #${order}?`)) {
+                try {
+                    await db.collection('heroSlides').doc(id).delete();
+                    showToast('Hero Slide deleted!', 'success');
+                    loadLandingPageData();
+                } catch(error) { showToast("Error deleting slide", "error"); }
+            }
+        }
+
+        function renderCategoryManager() {
+            const listContainer = document.getElementById('category-list');
+            listContainer.innerHTML = landingPageCategories.map(cat => `
+                <div class="list-item" data-id="${cat.id}">
+                    <div class="list-item-content">
+                        <strong>${cat.name || 'N/A'}</strong>
+                        <small>Order: ${cat.order || 'N/A'} | Link: ${cat.link || 'N/A'}</small>
+                    </div>
+                    <div class="list-actions" style="display:flex; gap:0.5rem;">
+                        <button class="btn-primary" onclick="openCategoryForm('${cat.id}', '${cat.name || ''}', '${cat.image || ''}', '${cat.link || ''}', ${cat.order || ''})">Edit</button>
+                        <button class="btn-danger" onclick="deleteCategory('${cat.id}')">Delete</button>
+                    </div>
+                </div>
+            `).join('') + `<div class="list-item" style="background:none;"><button class="btn-success" onclick="openCategoryForm()">+ Add New Category</button></div>`;
+            document.getElementById('add-category-btn').onclick = () => openCategoryForm();
+        }
+
+        function openCategoryForm(id = '', name = '', image = '', link = '', order = '') {
+            const modal = document.getElementById('admin-modal');
+            const nextOrder = landingPageCategories.length > 0 ? Math.max(...landingPageCategories.map(c => c.order || 0)) + 1 : 1;
+            
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>${id ? 'Edit' : 'Add'} Category Item</h2>
+                        <button class="close-btn" onclick="closeAdminModal()">&times;</button>
+                    </div>
+                    <form id="category-form" style="padding: 1.5rem;">
+                        <div class="form-group"><label for="category-name">Category Name</label><input type="text" id="category-name" value="${name}" required placeholder="e.g., Sarees"></div>
+                        <div class="form-group"><label for="category-image">Desktop Image URL</label><input type="url" id="category-image" value="${image}" required placeholder="Image URL"></div>
+                        <div class="form-group"><label for="category-link">Link URL</label><input type="url" id="category-link" value="${link}" placeholder="/shop?category=sarees"></div>
+                        <div class="form-group"><label for="category-order">Display Order</label><input type="number" id="category-order" value="${order || nextOrder}" min="1"></div>
+                    </form>
+                    <div class="modal-footer">
+                        <button class="btn-secondary" onclick="closeAdminModal()">Cancel</button>
+                        <button class="btn-primary" id="save-category-btn">Save Category</button>
+                    </div>
+                </div>`;
+            modal.style.display = 'flex';
+
+            modal.querySelector('#save-category-btn').onclick = () => document.getElementById('category-form').requestSubmit();
+            modal.querySelector('#category-form').addEventListener('submit', async e => {
+                e.preventDefault();
+                const data = {
+                    name: modal.querySelector('#category-name').value.trim(),
+                    desktopImage: modal.querySelector('#category-image').value.trim(),
+                    link: modal.querySelector('#category-link').value.trim(),
+                    order: parseInt(modal.querySelector('#category-order').value)
+                };
+                try {
+                    if (id) await db.collection('categories').doc(id).update(data);
+                    else await db.collection('categories').add(data);
+                    showToast(`Category ${id ? 'updated' : 'added'}!`, 'success');
+                    closeAdminModal();
+                    loadLandingPageData();
+                } catch(error) { showToast("Error saving category", "error"); console.error(error); }
+            });
+        }
+        
+        async function deleteCategory(id) {
+            if (confirm('Are you sure you want to delete this category item?')) {
+                try {
+                    await db.collection('categories').doc(id).delete();
+                    showToast('Category item deleted!', 'success');
+                    loadLandingPageData();
+                } catch(error) { showToast("Error deleting category", "error"); }
+            }
+        }
+        
+        function renderBestSellersManager() {
+            const container = document.getElementById('bestsellers-list');
+            container.innerHTML = allProducts.map(p => `
+                <div class="product-select-item">
+                    <input type="checkbox" id="best-seller-${p.id}" data-id="${p.id}" class="best-seller-toggle" ${p.isBestSeller ? 'checked' : ''}>
+                    <label for="best-seller-${p.id}">${p.name} (${p.category || 'N/A'})</label>
+                </div>
+            `).join('');
+            
+            document.querySelectorAll('.best-seller-toggle').forEach(toggle => {
+                toggle.addEventListener('change', async (e) => {
+                    await updateBestSellerStatus(e.target.dataset.id, e.target.checked);
+                });
+            });
+        }
+        
+        async function updateBestSellerStatus(productId, isBestSeller) {
+            try {
+                await db.collection('products').doc(productId).update({ isBestSeller: isBestSeller });
+                showToast('Best Seller status updated!', 'success');
+            } catch (error) {
+                console.error("Error updating best seller status:", error);
+                showToast("Failed to update best seller status", "error");
+                const product = allProducts.find(p => p.id === productId);
+                if(product) product.isBestSeller = !isBestSeller;
+                document.getElementById(`best-seller-${productId}`).checked = !isBestSeller;
+            }
+        }
+
+        function closeAdminModal() { document.getElementById('admin-modal').style.display = 'none'; }
+        
+        function renderNav() {
+            const navRight = document.getElementById('nav-right');
+            const logoutIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" /></svg>`;
+            if (currentUser && currentUser.email === ADMIN_EMAIL) {
+                 navRight.innerHTML = `<button title="Store View" class="nav-icon" onclick="window.location.href='index.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.25a.75.75 0 01-.75-.75v-11.25a.75.75 0 01.75-.75h19.5a.75.75 0 01.75.75v11.25a.75.75 0 01-.75.75H18M13.5 21h-3.375a.75.75 0 01-.75-.75V16.5m0 0v-4.5l-3.75-3.75a.75.75 0 010-1.06l3.75-3.75a.75.75 0 011.06 0l3.75 3.75a.75.75 0 010 1.06l-3.75 3.75m0 0H12" /></svg></button><button title="Logout" class="nav-icon" onclick="auth.signOut()">${logoutIcon}</button>`;
+            }
+        }
+        
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
