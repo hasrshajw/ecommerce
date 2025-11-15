@@ -33,14 +33,7 @@
         .btn-danger { background-color: var(--danger-color); color: white; }
         .page { animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .card { background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 0; }
-        .modal { display: flex; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); align-items: center; justify-content: center; }
-        .modal-content { background-color: #fefefe; border-radius: var(--border-radius); width: 90%; max-width: 800px; animation: modalOpen 0.3s; box-shadow: var(--box-shadow); display: flex; max-height: 95vh; }
-        @keyframes modalOpen { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        .modal-image { flex: 1; display: flex; justify-content: center; align-items: center; padding: 2rem; background-color: #f9fafb; }
-        .modal-image img { max-width: 100%; max-height: 70vh; border-radius: var(--border-radius); object-fit: contain; }
-        .modal-details { flex: 1; padding: 2.5rem; position: relative; overflow-y: auto; max-height: 85vh; }
-        .close-btn { position: absolute; top: 1rem; right: 1rem; color: #aaa; font-size: 28px; cursor: pointer; border: none; background: none; }
+        .card { background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 2rem; }
         .form-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
         @media (min-width: 768px) { .form-grid { grid-template-columns: 1fr 1fr; } }
         fieldset { border: 1px solid #e5e7eb; border-radius: var(--border-radius); padding: 1.5rem; margin: 0 0 1.5rem; }
@@ -67,7 +60,7 @@
         .availability-toggle:checked { background-color: var(--success-color); }
         .availability-toggle:checked::before { transform: translateX(18px); }
         .availability-toggle:disabled { background-color: #e5e7eb; cursor: not-allowed; }
-        .modal-footer { display: flex; justify-content: flex-end; gap: 1rem; padding: 1.5rem; border-top: 1px solid #e5e7eb; background-color: var(--light-color); }
+        .form-actions { display: flex; justify-content: flex-end; gap: 1rem; padding: 1.5rem; border-top: 1px solid #e5e7eb; background-color: var(--light-color); }
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
         .toast { padding: 1rem 1.5rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
@@ -78,7 +71,6 @@
 </head>
 <body>
     <div id="toast-container"></div>
-    <div id="product-modal" class="modal"></div>
 
     <nav>
         <div class="nav-left"><h1 onclick="window.location.href='index.html'">ShopSphere</h1></div>
@@ -88,6 +80,9 @@
     <div class="container page">
         <div id="product-editor-container" class="card">
             <h1 id="editor-title">Loading Product Editor...</h1>
+            <div id="product-form-content">
+                <p>Loading product data...</p>
+            </div>
         </div>
     </div>
     
@@ -138,7 +133,7 @@
                 document.getElementById('editor-title').textContent = 'Add New Product';
                 loadCategoriesAndRenderForm({ category: decodeURIComponent(categoryForCreation) });
             } else {
-                document.getElementById('product-editor-container').innerHTML = `<p style="padding:2rem;">Invalid request. Must provide a product ID or a category for creation.</p>`;
+                document.getElementById('product-form-content').innerHTML = `<p>Invalid request. Must provide a product ID or a category for creation.</p>`;
             }
         }
 
@@ -174,7 +169,7 @@
         }
 
         function renderProductForm(product) {
-            const container = document.getElementById('product-editor-container');
+            const container = document.getElementById('product-form-content');
             const isEditing = !!product.id;
             const categoryForCreation = new URLSearchParams(window.location.search).get('category');
             const categoryFromUrl = categoryForCreation ? decodeURIComponent(categoryForCreation) : product.category;
@@ -205,51 +200,44 @@
             }).join('');
 
             container.innerHTML = `
-                <div class="modal-content" style="display:block; max-height:none; max-width:100%;">
-                    <div style="display:flex;">
-                        <div class="modal-image"><img id="product-preview-img" src="${product.images?.[0] || 'https://via.placeholder.com/400x400?text=No+Image'}" alt="${product.name || 'Product'}"></div>
-                        <div class="modal-details">
-                            <form id="product-form">
-                                <div class="form-grid">
-                                    <div class="form-column">
-                                        <fieldset>
-                                            <legend>Core Details</legend>
-                                            <div class="form-group"><label for="name">Product Name</label><input type="text" id="name" value="${product.name||''}" required placeholder="Product Name"></div>
-                                            <div class="form-group">
-                                                <label for="category">Category</label>
-                                                <select id="category-select"><option value="">Select a category...</option>${categorySelectOptions}<option value="--new--">-- Create New Category --</option></select>
-                                                <input type="text" id="new-category-input" placeholder="Enter new category name" style="display:none; margin-top:0.5rem;">
-                                            </div>
-                                        </fieldset>
-                                        <fieldset>
-                                            <legend>Pricing</legend>
-                                            <div class="form-group"><label for="price">Current Price ($)</label><input type="number" id="price" step="0.01" value="${product.price||''}" required placeholder="19.99"></div>
-                                            <div class="form-group"><label for="oldPrice">Old Price ($)</label><input type="number" id="oldPrice" step="0.01" value="${product.oldPrice||0}" placeholder="24.99"></div>
-                                        </fieldset>
-                                    </div>
-                                    <div class="form-column">
-                                        <fieldset>
-                                            <legend>Inventory & Sizes</legend>
-                                            <div id="sizes-list">${sizesHtml}</div>
-                                        </fieldset>
-                                        <fieldset>
-                                            <legend>Images</legend>
-                                            <div id="image-list">${existingImagesHtml}</div>
-                                            <button type="button" class="btn-secondary" id="add-image-btn" style="padding:0.5rem 1rem; margin-top:0.5rem; width:100%; box-shadow:none;">Add Image URL</button>
-                                        </fieldset>
-                                    </div>
+                <form id="product-form">
+                    <div class="form-grid">
+                        <div class="form-column">
+                            <fieldset>
+                                <legend>Core Details</legend>
+                                <div class="form-group"><label for="name">Product Name</label><input type="text" id="name" value="${product.name||''}" required placeholder="Product Name"></div>
+                                <div class="form-group">
+                                    <label for="category">Category</label>
+                                    <select id="category-select"><option value="">Select a category...</option>${categorySelectOptions}<option value="--new--">-- Create New Category --</option></select>
+                                    <input type="text" id="new-category-input" placeholder="Enter new category name" style="display:none; margin-top:0.5rem;">
                                 </div>
-                                <fieldset>
-                                    <legend>Description</legend>
-                                    <div class="form-group"><textarea id="description" rows="5" placeholder="Product details">${product.description||''}</textarea></div>
-                                </fieldset>
-                            </form>
-                            <div class="modal-footer">
-                                <button class="btn-secondary" onclick="window.history.back()">Cancel</button>
-                                <button class="btn-primary" id="save-product-btn">${isEditing ? 'Save Changes' : 'Create Product'}</button>
-                            </div>
+                            </fieldset>
+                            <fieldset>
+                                <legend>Pricing</legend>
+                                <div class="form-group"><label for="price">Current Price ($)</label><input type="number" id="price" step="0.01" value="${product.price||''}" required placeholder="19.99"></div>
+                                <div class="form-group"><label for="oldPrice">Old Price ($)</label><input type="number" id="oldPrice" step="0.01" value="${product.oldPrice||0}" placeholder="24.99"></div>
+                            </fieldset>
+                        </div>
+                        <div class="form-column">
+                            <fieldset>
+                                <legend>Inventory & Sizes</legend>
+                                <div id="sizes-list">${sizesHtml}</div>
+                            </fieldset>
+                            <fieldset>
+                                <legend>Images</legend>
+                                <div id="image-list">${existingImagesHtml}</div>
+                                <button type="button" class="btn-secondary" id="add-image-btn" style="padding:0.5rem 1rem; margin-top:0.5rem; width:100%; box-shadow:none;">Add Image URL</button>
+                            </fieldset>
                         </div>
                     </div>
+                    <fieldset>
+                        <legend>Description</legend>
+                        <div class="form-group"><textarea id="description" rows="5" placeholder="Product details">${product.description||''}</textarea></div>
+                    </fieldset>
+                </form>
+                <div class="form-actions">
+                    <button class="btn-secondary" onclick="window.history.back()">Cancel</button>
+                    <button class="btn-primary" id="save-product-btn">${isEditing ? 'Save Changes' : 'Create Product'}</button>
                 </div>
             `;
             
@@ -257,7 +245,7 @@
         }
         
         function setupProductFormListeners(productId, categoryForCreation) {
-            const container = document.getElementById('product-editor-container');
+            const container = document.getElementById('product-form-content');
             const categorySelect = container.querySelector('#category-select');
             const newCategoryInput = container.querySelector('#new-category-input');
             
