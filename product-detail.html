@@ -348,6 +348,28 @@ buyNowBtn.onclick = () => {
 wishlistBtnDesktop.addEventListener('click', toggleWishlist);
 wishlistBtnMobile.addEventListener('click', toggleWishlist);
 
+function renderThumbnails() {
+    thumbsContainer.innerHTML = "";
+    imageList.forEach((src, i) => {
+        const img = document.createElement("img");
+        img.src = src;
+        img.dataset.index = i;
+        if (i === currentIndex) img.classList.add("active");
+        img.onclick = () => goToIndex(i);
+        thumbsContainer.appendChild(img);
+    });
+}
+
+function renderDots() {
+    dotsContainer.innerHTML = "";
+    imageList.forEach((_, i) => {
+        const dot = document.createElement("div");
+        dot.className = "dot" + (i === currentIndex ? " active" : "");
+        dot.onclick = () => goToIndex(i);
+        dotsContainer.appendChild(dot);
+    });
+}
+
 function updateUI() {
     mainImage.src = imageList[currentIndex];
     mobileMain.src = imageList[currentIndex];
@@ -357,6 +379,12 @@ function updateUI() {
     [...dotsContainer.children].forEach((d, i) => {
         d.classList.toggle("active", i === currentIndex);
     });
+}
+
+function goToIndex(i) {
+    if (i < 0 || i >= imageList.length) return;
+    currentIndex = i;
+    updateUI();
 }
 
 let startX = 0, startTime = 0, isDragging = false;
@@ -392,18 +420,15 @@ document.addEventListener("touchmove", e => {
 
 function renderNav() {
     const navRight = document.querySelector('nav .nav-right');
-    const cartIconHtml = `<button class="nav-icon" onclick="window.location.href='cart.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.823-6.837A1.125 1.125 0 0018.32 5.25H5.82a1.125 1.125 0 00-1.087.835L3.72 8.25m0 0c0 .106.012.211.035.314.234 1.01 1.254 1.687 2.476 1.687h9.063c1.222 0 2.242-.677 2.476-1.687a4.5 4.5 0 00.035-.314z" /></svg><span id="cart-count">0</span></button>`;
-    const loginButtonHtml = `<button class="btn btn-primary" onclick="auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())">Login</button>`;
-    const logoutButtonHtml = `<button class="btn btn-secondary" onclick="auth.signOut()">Logout</button>`;
-    
+    const logoutIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" /></svg>`;
     if (currentUser) {
-        let userActions = `<span style="margin-right: 1rem; font-weight: 600; color: var(--primary)">Welcome, ${currentUser.displayName ? currentUser.displayName.split(' ')[0] : 'User'}</span>`;
+        let userActions = `<span style="margin-right: 1rem; font-weight: 600; color: var(--primary-color)">Welcome, ${currentUser.displayName ? currentUser.displayName.split(' ')[0] : 'User'}</span>`;
         if (currentUser.email === ADMIN_EMAIL) {
             userActions += `<button class="btn btn-primary" onclick="window.location.href='admin-dashboard.html'">Admin</button>`;
         }
-        navRight.innerHTML = userActions + cartIconHtml + logoutButtonHtml;
+        navRight.innerHTML = userActions + `<button class="nav-icon" onclick="window.location.href='cart.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.823-6.837A1.125 1.125 0 0018.32 5.25H5.82a1.125 1.125 0 00-1.087.835L3.72 8.25m0 0c0 .106.012.211.035.314.234 1.01 1.254 1.687 2.476 1.687h9.063c1.222 0 2.242-.677 2.476-1.687a4.5 4.5 0 00.035-.314z" /></svg><span id="cart-count">0</span></button>` + logoutButtonHtml;
     } else {
-        navRight.innerHTML = cartIconHtml + loginButtonHtml;
+        navRight.innerHTML = `<button class="nav-icon" onclick="window.location.href='cart.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.823-6.837A1.125 1.125 0 0018.32 5.25H5.82a1.125 1.125 0 00-1.087.835L3.72 8.25m0 0c0 .106.012.211.035.314.234 1.01 1.254 1.687 2.476 1.687h9.063c1.222 0 2.242-.677 2.476-1.687a4.5 4.5 0 00.035-.314z" /></svg><span id="cart-count">0</span></button>` + loginButtonHtml;
     }
     updateCartCount();
 }
