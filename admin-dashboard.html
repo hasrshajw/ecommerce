@@ -66,18 +66,10 @@
         table { width: 100%; border-collapse: collapse; }
         th, td { text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
         th { background-color: var(--light-color); font-size: 0.9rem; }
-        tbody tr:first-child { background-color: var(--primary-light); transition: background-color 0.5s; }
         .table-actions button { padding: 0.5rem 1rem; margin-right: 0.5rem; }
-        .product-name-cell img { width: 50px; height: 50px; border-radius: var(--border-radius); object-fit: cover; }
         
-        .availability-toggle { appearance: none; width: 40px; height: 22px; background-color: #ccc; border-radius: 99px; position: relative; cursor: pointer; transition: background-color 0.2s; }
-        .availability-toggle::before { content: ''; position: absolute; width: 18px; height: 18px; border-radius: 50%; background-color: white; top: 2px; left: 2px; transition: transform 0.2s; }
-        .availability-toggle:checked { background-color: var(--success-color); }
-        .availability-toggle:checked::before { transform: translateX(18px); }
-        .availability-toggle:disabled { background-color: #e5e7eb; cursor: not-allowed; }
-
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
-        .modal-content { background-color: #fefefe; margin: 5% auto; padding: 2rem; border-radius: var(--border-radius); width: 90%; max-width: 700px; animation: modalOpen 0.3s; }
+        .modal-content { background-color: #fefefe; margin: 5% auto; padding: 2rem; border-radius: var(--border-radius); width: 90%; max-width: 700px; animation: modalOpen 0.3s; box-shadow: var(--box-shadow); }
         @keyframes modalOpen { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
         .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
@@ -100,8 +92,8 @@
     <nav>
         <div class="nav-container">
             <div class="desktop-nav">
-                <div class="nav-logo" onclick="window.location.href='index.html'">
-                    <img src="http://photography.wixo.in/yellow.png" alt="Shop Logo">
+                <div class="nav-left" onclick="window.location.href='index.html'">
+                    <h1>ShopSphere</h1>
                 </div>
                 <div class="nav-links">
                     <a href="index.html">Home</a>
@@ -175,45 +167,38 @@
             </div>
         </div>
     </nav>
+    <div id="mobile-overlay-placeholder"></div>
 
     <div class="container page">
-        <div id="admin-dashboard-container" class="card">
-            <h1>Admin Dashboard</h1>
+        <div id="admin-products-container" class="card">
+            <h1>Manage Products</h1>
             <div class="admin-nav">
-                <button class="active">Dashboard</button>
-                <button onclick="window.location.href='admin-products.html'">Products</button>
+                <button onclick="window.location.href='admin-dashboard.html'">Dashboard</button>
+                <button class="active">Products</button>
             </div>
             <div id="admin-content">
-                <div class="dashboard-filters">
-                    <div class="filter-group">
-                        <label for="month-select">Select Period</label>
-                        <select id="month-select"></select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="date-from">Custom Range From</label>
-                        <input type="date" id="date-from">
-                    </div>
-                    <div class="filter-group">
-                        <label for="date-to">To</label>
-                        <input type="date" id="date-to">
-                    </div>
-                    <button class="btn-primary" id="apply-date-filter-btn" style="align-self: flex-end;">Apply</button>
-                    <button class="btn-secondary" id="reset-filter-btn" style="align-self: flex-end;">Reset</button>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem;">
+                    <h2>All Products</h2>
+                    <button class="btn-success" onclick="openProductForm()">Add New Product</button>
                 </div>
-
-                <h4 id="stats-period-header"></h4>
-                <div id="stats-grid-container" class="stats-grid"></div>
-                <h2>Orders <span id="live-indicator"></span><span style="font-size: 0.8rem; color: var(--secondary-color);">Live Update Active</span></h2>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem; gap:1rem;">
+                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap;" id="category-filters"></div>
+                    <button class="btn-secondary" onclick="openCategoryForm()">+ New Category</button>
+                </div>
                 <div style="overflow-x:auto;">
                     <table>
-                        <thead><tr><th>Date</th><th>Customer</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
-                        <tbody id="admin-orders-table"></tbody>
+                        <thead><tr><th>Product Name</th><th>Category</th><th>Price</th><th>Available</th><th>Actions</th></tr></thead>
+                        <tbody id="admin-products-table"></tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
     
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCzqYrP1qYSiiLLgKW3z3EcwMpiG4hyF6M",
@@ -229,9 +214,9 @@
         const db = firebase.firestore();
 
         let currentUser = null;
-        let allProductsCount = 0;
-        let unsubscribeRealtimeListener; 
         let allProducts = [];
+        let allCategories = [];
+        let currentFilterCategory = 'All';
 
         document.addEventListener('DOMContentLoaded', () => {
             auth.onAuthStateChanged(user => {
@@ -242,9 +227,8 @@
                     window.location.href = 'index.html';
                     return;
                 }
-                initializeDashboard();
+                loadAdminData();
             });
-            
             const toastInfo = sessionStorage.getItem('toastMessage');
             if(toastInfo){
                 const { message, type } = JSON.parse(toastInfo);
@@ -253,187 +237,297 @@
             }
         });
 
-        async function initializeDashboard() {
-            const productSnapshot = await db.collection('products').get();
-            allProductsCount = productSnapshot.size;
-            await fetchAllProductsForContext();
-            populateMonthFilter();
-            setupFilterListeners();
-            updateDashboardView('today');
+        async function loadAdminData() {
+            await fetchAllProducts();
+            await fetchAllCategories();
+            renderCategoryFilters();
+            renderProductsTable();
         }
-        
-        async function fetchAllProductsForContext() {
-            const snapshot = await db.collection('products').get();
+
+        async function fetchAllProducts() {
+            const snapshot = await db.collection('products').orderBy('name').get();
             allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         }
-
-        function populateMonthFilter() {
-            const monthSelect = document.getElementById('month-select');
-            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            const now = new Date();
-            
-            monthSelect.innerHTML = '<option value="today">Today</option><option value="currentMonth">This Month</option>';
-            for (let i = 0; i < 12; i++) {
-                const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
-                const year = date.getFullYear();
-                const month = date.getMonth();
-                const option = document.createElement('option');
-                option.value = `${year}-${month}`;
-                option.textContent = `${months[month]} ${year}`;
-                monthSelect.appendChild(option);
-            }
+        
+        async function fetchAllCategories() {
+            const snapshot = await db.collection('categories').orderBy('name').get();
+            allCategories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         }
 
-        function setupFilterListeners() {
-            document.getElementById('month-select').addEventListener('change', (e) => {
-                const value = e.target.value;
-                if (value === 'today' || value === 'currentMonth') {
-                    updateDashboardView(value);
-                } else {
-                    updateDashboardView('specificMonth', value);
-                }
-                clearCustomDates();
-            });
-            document.getElementById('apply-date-filter-btn').addEventListener('click', () => {
-                const from = document.getElementById('date-from').value;
-                const to = document.getElementById('date-to').value;
-                if (from && to) {
-                    updateDashboardView('customRange', { from, to });
-                    document.getElementById('month-select').value = '';
-                } else { showToast('Please select both a start and end date.', 'error'); }
-            });
-            document.getElementById('reset-filter-btn').addEventListener('click', () => {
-                document.getElementById('month-select').value = 'today';
-                clearCustomDates();
-                updateDashboardView('today');
+        function renderCategoryFilters() {
+            const filtersContainer = document.getElementById('category-filters');
+            const categoriesList = ['All', ...allCategories.map(c => c.name)];
+            
+            filtersContainer.innerHTML = categoriesList.map(catName => `<button data-category="${catName}" class="${catName === currentFilterCategory ? 'active' : ''}">${catName}</button>`).join('');
+            
+            filtersContainer.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('click', e => {
+                    currentFilterCategory = e.target.dataset.category;
+                    document.querySelectorAll('#category-filters button.active').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    renderProductsTable();
+                });
             });
         }
         
-        function clearCustomDates() {
-            document.getElementById('date-from').value = '';
-            document.getElementById('date-to').value = '';
-        }
-
-        async function updateDashboardView(filterType, value) {
-            if (unsubscribeRealtimeListener) unsubscribeRealtimeListener();
-
-            let startDate, endDate;
-            let periodHeader = '';
+        function renderProductsTable() {
+            const tableBody = document.getElementById('admin-products-table');
+            let productsToRender = allProducts;
             
-            const now = new Date();
-            if (filterType === 'today') {
-                startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-                endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
-                periodHeader = 'Today';
-            } else if (filterType === 'currentMonth') {
-                startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-                endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
-                periodHeader = 'This Month';
-            } else if (filterType === 'specificMonth') {
-                const [year, month] = value.split('-').map(Number);
-                startDate = new Date(year, month, 1);
-                endDate = new Date(year, month + 1, 0, 23, 59, 59);
-                periodHeader = `${new Date(year, month).toLocaleString('default', { month: 'long' })} ${year}`;
-            } else if (filterType === 'customRange') {
-                startDate = new Date(value.from);
-                endDate = new Date(value.to);
-                endDate.setHours(23, 59, 59);
-                periodHeader = `${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`;
+            if (currentFilterCategory !== 'All') {
+                productsToRender = allProducts.filter(p => p.category === currentFilterCategory);
             }
 
-            document.getElementById('stats-period-header').textContent = `Showing Stats for: ${periodHeader}`;
-            
-            listenForOrders(startDate, endDate);
-        }
-
-        function listenForOrders(startDate, endDate) {
-            const startTimestamp = firebase.firestore.Timestamp.fromDate(startDate);
-            const endTimestamp = firebase.firestore.Timestamp.fromDate(endDate);
-
-            const query = db.collection('orders')
-                .where('createdAt', '>=', startTimestamp)
-                .where('createdAt', '<=', endTimestamp)
-                .orderBy('createdAt', 'desc');
-
-            unsubscribeRealtimeListener = query.onSnapshot(snapshot => {
-                const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderDashboardStats(orders);
-                renderOrdersTable(orders);
-            }, error => {
-                console.error("Error with real-time listener:", error);
-                showToast("Failed to sync orders in real-time.", "error");
-            });
-        }
-
-        function renderDashboardStats(orders) {
-            const totalRevenue = orders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
-            const totalOrders = orders.length;
-            document.getElementById('stats-grid-container').innerHTML = `
-                <div class="stat-card"><h3>Total Revenue</h3><p>$${totalRevenue.toFixed(2)}</p></div>
-                <div class="stat-card"><h3>Total Orders</h3><p>${totalOrders}</p></div>
-                <div class="stat-card"><h3>All Products</h3><p>${allProductsCount}</p></div>
-            `;
-        }
-
-        function renderOrdersTable(orders) {
-            const ordersTableBody = document.getElementById('admin-orders-table');
-            if (orders.length === 0) {
-                ordersTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 2rem;">No orders found for this period.</td></tr>`;
+            if (productsToRender.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 2rem;">No products found in this category.</td></tr>`;
                 return;
             }
-            ordersTableBody.innerHTML = orders.map(order => `
+            
+            tableBody.innerHTML = productsToRender.map(p => {
+                const imageUrl = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/50';
+                return `
                 <tr>
-                    <td>${order.createdAt ? order.createdAt.toDate().toLocaleString() : 'N/A'}</td>
-                    <td>${order.userName || 'N/A'}<br><small>${order.userEmail || 'N/A'}</small></td>
-                    <td>$${(order.totalPrice || 0).toFixed(2)}</td>
-                    <td><span class="badge badge-${(order.status || 'unknown').toLowerCase()}">${order.status || 'Unknown'}</span></td>
-                    <td class="table-actions"><button class="btn-primary" onclick="showOrderDetailModal('${order.id}')">View</button></td>
-                </tr>`).join('');
+                    <td><div class="product-name-cell" style="display:flex; align-items:center; gap:1rem;"><img src="${imageUrl}" alt="${p.name}"><span>${p.name}</span></div></td>
+                    <td>${p.category || 'N/A'}</td>
+                    <td>$${(p.price || 0).toFixed(2)}</td>
+                    <td><input type="checkbox" class="availability-toggle" data-id="${p.id}" ${p.isAvailable ? 'checked' : ''}></td>
+                    <td class="table-actions">
+                        <button class="btn-primary" onclick="openProductForm('${p.id}')">Edit</button> 
+                        <button class="btn-danger" onclick="deleteProduct('${p.id}')">Delete</button>
+                    </td>
+                </tr>`;
+            }).join('');
+            
+            document.querySelectorAll('.availability-toggle').forEach(toggle => {
+                toggle.addEventListener('change', async (e) => {
+                    await updateProductAvailability(e.target.dataset.id, e.target.checked, e);
+                });
+            });
         }
         
-        function showOrderDetailModal(orderId) {
-            db.collection('orders').doc(orderId).get().then(doc => {
-                if (!doc.exists) { showToast("Order not found.", "error"); return; }
-                const order = { id: doc.id, ...doc.data() };
-                const modal = document.getElementById('admin-modal');
-                modal.innerHTML = `
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h2>Order Details (ID: ${order.id.substring(0,6)})</h2>
-                            <button class="close-btn" onclick="closeAdminModal()">&times;</button>
-                        </div>
-                        <div id="product-form" style="padding: 1.5rem;">
-                            <p><strong>Customer:</strong> ${order.userName || 'N/A'} (${order.userEmail || 'N/A'})</p>
-                            <p><strong>Shipping Address:</strong> ${order.shippingAddress.fullName}, ${order.shippingAddress.address}, ${order.shippingAddress.city}, ${order.shippingAddress.zip}</p>
-                            <h4>Items</h4>
-                            <ul>${(order.items || []).map(i => `<li>${i.quantity} x ${i.name} (Size: ${i.size}) - $${(i.price * i.quantity).toFixed(2)}</li>`).join('')}</ul>
-                            <hr><p><strong>Total: $${(order.totalPrice || 0).toFixed(2)}</strong></p>
-                            <div style="display:flex; align-items:center; gap:1rem; margin-top:1rem;">
-                                <label for="order-status-select" style="font-size:0.9rem;"><strong>Update Status:</strong></label>
-                                <select id="order-status-select" style="padding:0.75rem; border-radius:var(--border-radius); border: 1px solid #ced4da; font-size:0.95rem;">
-                                    <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
-                                    <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
-                                    <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
-                                </select>
-                                <button class="btn-primary" onclick="updateOrderStatus('${order.id}')">Update</button>
-                            </div>
-                        </div>
-                    </div>`;
-                modal.style.display = 'flex';
-            }).catch(e => showToast("Error fetching order details.", "error"));
-        }
-
-        async function updateOrderStatus(orderId) {
-            const status = document.getElementById('order-status-select').value;
+        async function updateProductAvailability(productId, isAvailable, event) {
             try {
-                await db.collection('orders').doc(orderId).update({ status });
-                showToast('Order status updated!', 'success');
-                closeAdminModal();
-            } catch(e) {
-                 showToast("Failed to update status.", "error");
+                await db.collection('products').doc(productId).update({ isAvailable: isAvailable });
+                const product = allProducts.find(p => p.id === productId);
+                if(product) product.isAvailable = isAvailable;
+                showToast('Availability updated!', 'success');
+            } catch (error) {
+                console.error("Error updating availability:", error);
+                showToast("Failed to update availability", "error");
+                if (event) event.target.checked = !isAvailable;
             }
         }
+        
+        function openProductForm(productId) {
+            const product = productId ? allProducts.find(p => p.id === productId) : { isAvailable: true, sizes: [{name:'S', available:true}, {name:'M', available:true}, {name:'L', available:true}, {name:'XL', available:true}, {name:'2XL', available:false}], colors: { 'Pink': { previewImage: 'https://via.placeholder.com/60x80?text=Pink' } } };
+            const modal = document.getElementById('admin-modal');
+            const categories = [...new Set(allProducts.map(p => p.category).filter(c => c))];
+            const SIZES = ['S', 'M', 'L', 'XL', '2XL', '3XL'];
+            
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>${product.id ? 'Edit' : 'Add'} Product</h2>
+                        <button class="close-btn" onclick="closeAdminModal()">&times;</button>
+                    </div>
+                    <form id="product-form">
+                        <div class="form-grid">
+                            <div class="form-column">
+                                <fieldset>
+                                    <legend>Core Details</legend>
+                                    <div class="form-group"><label for="name">Product Name</label><input type="text" id="name" value="${product?.name||''}" required placeholder="e.g. Classic Polo T-Shirt"></div>
+                                    <div class="form-group">
+                                        <label for="category">Category</label>
+                                        <select id="category-select"><option value="">Select a category...</option>${categories.map(cat => `<option value="${cat}" ${product?.category === cat ? 'selected' : ''}>${cat}</option>`).join('')}<option value="--new--">-- Create New Category --</option></select>
+                                        <input type="text" id="new-category-input" placeholder="Enter new category name" style="display:none; margin-top:0.5rem;">
+                                    </div>
+                                </fieldset>
+                                <fieldset>
+                                    <legend>Pricing</legend>
+                                    <div class="form-group"><label for="price">Current Price ($)</label><input type="number" id="price" step="0.01" value="${product?.price||''}" required placeholder="19.99"></div>
+                                    <div class="form-group"><label for="oldPrice">Old Price ($)</label><input type="number" id="oldPrice" step="0.01" value="${product?.oldPrice||''}" placeholder="24.99"></div>
+                                </fieldset>
+                                <fieldset>
+                                    <legend>Images</legend>
+                                    <div id="image-list"></div>
+                                    <button type="button" class="btn-secondary" id="add-image-btn" style="padding:0.5rem 1rem; margin-top:0.5rem; width:100%; box-shadow:none;">Add Image URL</button>
+                                </fieldset>
+                            </div>
+                            <div class="form-column">
+                                <fieldset>
+                                    <legend>Inventory & Sizes</legend>
+                                    <div id="sizes-list">${SIZES.map(size => {
+                                        const sizeData = product?.sizes?.find(s => s.name === size);
+                                        const isOffered = !!sizeData;
+                                        const isAvailable = sizeData?.available ?? false;
+                                        return `<div class="size-item-row" data-size-name="${size}"><label style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;"><input type="checkbox" class="size-offered-checkbox" ${isOffered ? 'checked' : ''} style="width:20px;height:20px;"><span>${size}</span></label><div class="size-controls" style="display:flex;align-items:center;gap:1rem;"><label style="font-size:0.9rem;">In Stock:</label><input type="checkbox" class="availability-toggle size-availability-toggle" ${isAvailable ? 'checked' : ''} ${!isOffered ? 'disabled' : ''}></div></div>`
+                                    }).join('')}</div>
+                                </fieldset>
+                                <fieldset>
+                                    <legend>Status & Ratings</legend>
+                                    <div class="form-group"><label for="isAvailable">Product Available for Sale</label><input type="checkbox" id="isAvailable" ${product?.isAvailable ? 'checked' : ''}></div>
+                                    <div class="form-group"><label for="isBestSeller">Mark as Best Seller</label><input type="checkbox" id="isBestSeller" ${product?.isBestSeller ? 'checked' : ''}></div>
+                                    <div class="form-group"><label for="rating">Average Rating (0-5)</label><input type="number" id="rating" step="0.1" min="0" max="5" value="${product?.rating||'4.5'}"></div>
+                                    <div class="form-group"><label for="ratingCount">Total Ratings Count</label><input type="number" id="ratingCount" value="${product?.ratingCount||'100'}"></div>
+                                </fieldset>
+                                <fieldset>
+                                    <legend>Colors (Name/Preview URL)</legend>
+                                    <div id="color-list"></div>
+                                    <button type="button" class="btn-secondary" id="add-color-btn" style="padding:0.5rem 1rem; margin-top:0.5rem; width:100%; box-shadow:none;">Add Color Variant</button>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <fieldset>
+                            <legend>Description</legend>
+                            <div class="form-group"><textarea id="description" rows="5" placeholder="Use *text* for bolding. New lines will be preserved.">${product?.description||''}</textarea></div>
+                        </fieldset>
+                    </form>
+                    <div class="modal-footer">
+                        <button class="btn-secondary" onclick="closeAdminModal()">Cancel</button>
+                        <button class="btn-primary" id="save-product-btn">Save Product</button>
+                    </div>
+                </div>`;
+            modal.style.display = 'flex';
 
+            modal.querySelectorAll('.size-offered-checkbox').forEach(cb => {
+                cb.addEventListener('change', (e) => {
+                    const toggle = e.target.closest('.size-item-row').querySelector('.size-availability-toggle');
+                    toggle.disabled = !e.target.checked;
+                    if (!e.target.checked) toggle.checked = false;
+                });
+            });
+            
+            const categorySelect = modal.querySelector('#category-select');
+            const newCategoryInput = modal.querySelector('#new-category-input');
+            categorySelect.addEventListener('change', () => { newCategoryInput.style.display = categorySelect.value === '--new--' ? 'block' : 'none'; });
+            if (categorySelect.value === '--new--') newCategoryInput.style.display = 'block';
+            
+            const imageListContainer = modal.querySelector('#image-list');
+            const addImageBtn = modal.querySelector('#add-image-btn');
+            const createImageInput = (value = '', isFirst = false) => {
+                const div = document.createElement('div');
+                div.className = 'image-list-item';
+                const removeButtonHtml = isFirst ? '' : `<button type="button" class="remove-image-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>`;
+                div.innerHTML = `<div class="form-group" style="flex-grow:1; margin:0;"><input type="url" class="image-url-input" value="${value}" placeholder="${isFirst ? 'Main Image URL' : 'Additional Image URL'}" required></div>${removeButtonHtml}`;
+                if(!isFirst) { div.querySelector('.remove-image-btn').onclick = () => div.remove(); }
+                imageListContainer.appendChild(div);
+            };
+            const existingImages = product?.images || [''];
+            existingImages.forEach((url, index) => createImageInput(url, index === 0));
+            addImageBtn.onclick = () => createImageInput();
+            
+            const colorListContainer = modal.querySelector('#color-list');
+            const addColorBtn = modal.querySelector('#add-color-btn');
+            const createColorInput = (name = '', previewUrl = '') => {
+                const div = document.createElement('div');
+                div.className = 'image-list-item';
+                div.innerHTML = `
+                    <div class="form-group" style="flex-grow:1; margin:0;">
+                        <input type="text" class="color-name-input" value="${name}" placeholder="Color Name (e.g., Pink)" required>
+                    </div>
+                    <div class="form-group" style="flex-grow:1; margin:0;">
+                        <input type="url" class="color-preview-input" value="${previewUrl}" placeholder="Preview Image URL" required>
+                    </div>
+                    <button type="button" class="remove-image-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+                `;
+                div.querySelector('.remove-image-btn').onclick = () => div.remove();
+                colorListContainer.appendChild(div);
+            };
+            const existingColors = product?.colors || { 'Pink': { previewImage: 'https://via.placeholder.com/60x80?text=Pink' } };
+            Object.keys(existingColors).forEach(name => createColorInput(name, existingColors[name].previewImage));
+            addColorBtn.onclick = () => createColorInput();
+            
+            modal.querySelector('#save-product-btn').onclick = () => document.getElementById('product-form').requestSubmit();
+            modal.querySelector('#product-form').addEventListener('submit', async e => {
+                e.preventDefault();
+                let category = categorySelect.value;
+                if (category === '--new--') category = newCategoryInput.value.trim();
+                if (!category) { showToast('Category is required.', 'error'); return; }
+                
+                const images = [...imageListContainer.querySelectorAll('.image-url-input')].map(input => input.value.trim()).filter(Boolean);
+                if (images.length === 0) { showToast('At least one image URL is required.', 'error'); return; }
+
+                const sizes = [];
+                modal.querySelectorAll('.size-item-row').forEach(row => {
+                    if (row.querySelector('.size-offered-checkbox').checked) {
+                        sizes.push({ name: row.dataset.sizeName, available: row.querySelector('.size-availability-toggle').checked });
+                    }
+                });
+                
+                const colors = {};
+                modal.querySelectorAll('#color-list .image-list-item').forEach(item => {
+                    const name = item.querySelector('.color-name-input').value.trim();
+                    const previewUrl = item.querySelector('.color-preview-input').value.trim();
+                    if (name && previewUrl) {
+                        colors[name] = { previewImage: previewUrl };
+                    }
+                });
+                
+                const data = {
+                    name: modal.querySelector('#name').value, category, price: parseFloat(modal.querySelector('#price').value), oldPrice: parseFloat(modal.querySelector('#oldPrice').value) || 0,
+                    images, sizes, description: modal.querySelector('#description').value, isAvailable: modal.querySelector('#isAvailable').checked, isBestSeller: modal.querySelector('#isBestSeller').checked, rating: parseFloat(modal.querySelector('#rating').value), ratingCount: parseInt(modal.querySelector('#ratingCount').value), colors
+                };
+                
+                try {
+                    if (productId) await db.collection('products').doc(productId).update(data);
+                    else await db.collection('products').add(data);
+                    showToast(`Product ${productId ? 'updated' : 'added'}!`, 'success');
+                    closeAdminModal();
+                    await loadAdminData();
+                } catch(error) { showToast("Error saving product", "error"); console.error(error); }
+            });
+        }
+        
+        async function deleteProduct(productId) {
+            if (confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
+                try {
+                    await db.collection('products').doc(productId).delete();
+                    showToast('Product deleted!', 'success');
+                    await loadAdminData();
+                } catch(error) { showToast("Error deleting product", "error"); }
+            }
+        }
+        
+        function openCategoryForm() {
+            const modal = document.getElementById('admin-modal');
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Add New Category</h2>
+                        <button class="close-btn" onclick="closeAdminModal()">&times;</button>
+                    </div>
+                    <form id="category-form" style="padding: 1.5rem;">
+                        <div class="form-group"><label for="category-name">Category Name</label><input type="text" id="category-name" required placeholder="e.g., Sarees, Lehengas"></div>
+                        <div class="form-group"><label for="category-image">Category Image Link</label><input type="url" id="category-image" required placeholder="Image URL (for index.html category icon)"></div>
+                        <div class="form-group"><label for="category-link">Category Link URL (for index.html)</label><input type="url" id="category-link" placeholder="/category/sarees"></div>
+                        <div class="form-group"><label for="category-order">Display Order (Number)</label><input type="number" id="category-order" value="${allCategories.length + 1}" min="1"></div>
+                    </form>
+                    <div class="modal-footer">
+                        <button class="btn-secondary" onclick="closeAdminModal()">Cancel</button>
+                        <button class="btn-primary" id="save-category-btn">Save Category</button>
+                    </div>
+                </div>`;
+            modal.style.display = 'flex';
+
+            modal.querySelector('#save-category-btn').onclick = () => document.getElementById('category-form').requestSubmit();
+            modal.querySelector('#category-form').addEventListener('submit', async e => {
+                e.preventDefault();
+                const data = {
+                    name: modal.querySelector('#category-name').value.trim(),
+                    desktopImage: modal.querySelector('#category-image').value.trim(),
+                    link: modal.querySelector('#category-link').value.trim() || `/shop?category=${encodeURIComponent(modal.querySelector('#category-name').value.trim())}`,
+                    order: parseInt(modal.querySelector('#category-order').value) || allCategories.length + 1
+                };
+                
+                try {
+                    await db.collection('categories').add(data);
+                    showToast('Category added!', 'success');
+                    closeAdminModal();
+                    await loadAdminData();
+                } catch(error) { showToast("Error saving category", "error"); console.error(error); }
+            });
+        }
+        
         function closeAdminModal() { document.getElementById('admin-modal').style.display = 'none'; }
         
         function renderNav() {
@@ -443,6 +537,7 @@
                  navRight.innerHTML = `<button title="Store View" class="nav-icon" onclick="window.location.href='index.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.25a.75.75 0 01-.75-.75v-11.25a.75.75 0 01.75-.75h19.5a.75.75 0 01.75.75v11.25a.75.75 0 01-.75.75H18M13.5 21h-3.375a.75.75 0 01-.75-.75V16.5m0 0v-4.5l-3.75-3.75a.75.75 0 010-1.06l3.75-3.75a.75.75 0 011.06 0l3.75 3.75a.75.75 0 010 1.06l-3.75 3.75m0 0H12" /></svg></button><button title="Logout" class="nav-icon" onclick="auth.signOut()">${logoutIcon}</button>`;
             }
         }
+        
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
