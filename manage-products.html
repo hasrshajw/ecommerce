@@ -21,6 +21,7 @@
         .btn-primary { background-color: var(--primary-color); color: white; }
         .btn-primary:hover { background-color: var(--primary-hover); }
         .btn-success { background-color: var(--success-color); color: white; }
+        .btn-danger { background-color: var(--danger-color); color: white; }
         .page { animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .card { background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 2rem; }
@@ -103,26 +104,50 @@
 
         function initializeProductPage() {
             const hash = window.location.hash.substring(1);
-            currentCategory = decodeURIComponent(hash);
-            if (!currentCategory) {
+            let categoryFromHash = '';
+            if (hash.includes('_new_')) {
+                const parts = hash.split('_new_');
+                currentProductId = null;
+                categoryFromHash = decodeURIComponent(parts[1] || '');
+            } else {
+                currentProductId = hash || null;
+            }
+            
+            if (currentProductId) {
+                loadProductsData().then(() => {
+                    const product = allProducts.find(p => p.id === currentProductId);
+                    if (product && product.category) {
+                        currentCategory = product.category;
+                        document.getElementById('current-category-display').textContent = currentCategory;
+                    } else {
+                        showToast("Product not found or category missing. Redirecting to category management.", 'error');
+                        setTimeout(() => window.location.href = 'manage-category.html', 2000);
+                        return;
+                    }
+                    renderProductsTable();
+                    document.getElementById('add-product-btn').onclick = () => openProductForm(null, currentCategory);
+                });
+            } else if (categoryFromHash) {
+                currentCategory = categoryFromHash;
+                document.getElementById('current-category-display').textContent = currentCategory;
+                renderProductsTable();
+                document.getElementById('add-product-btn').onclick = () => openProductForm(null, currentCategory);
+            } else {
                 showToast("Category not specified. Redirecting to category management.", 'error');
                 setTimeout(() => window.location.href = 'manage-category.html', 2000);
                 return;
             }
-            document.getElementById('current-category-display').textContent = currentCategory;
-            document.getElementById('add-product-btn').onclick = () => openProductForm(null, currentCategory);
-            loadProductsData();
+            document.getElementById('category-header').textContent = `Manage Products for: ${currentCategory}`;
         }
 
         async function loadProductsData() {
-            const snapshot = await db.collection('products').where('category', '==', currentCategory).orderBy('name').get();
+            const snapshot = await db.collection('products').where('category', '==', currentCategory).get();
             allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            renderProductsTable();
         }
         
         function renderProductsTable() {
             const tableBody = document.getElementById('admin-products-table');
-            if (allProducts.length === 0) {
+            if (allProducts.length === 0 && !currentProductId) {
                 tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 2rem;">No products found in this category. Click 'Add New Product' above.</td></tr>`;
                 return;
             }
@@ -159,8 +184,9 @@
             }
         }
 
-        function openProductForm(productId, category = currentCategory) {
-            window.location.href = `product.html#${productId || ''}${productId ? '' : `_new_${encodeURIComponent(category)}`}`;
+        function openProductForm(productId, category) {
+            const targetCategory = category || currentCategory;
+            window.location.href = `product.html#${productId || ''}${productId ? '' : `_new_${encodeURIComponent(targetCategory)}`;}`;
         }
         
         async function deleteProduct(productId) {
@@ -169,6 +195,7 @@
                     await db.collection('products').doc(productId).delete();
                     showToast('Product deleted!', 'success');
                     await loadProductsData();
+                    renderProductsTable();
                 } catch(error) { showToast("Error deleting product", "error"); }
             }
         }
