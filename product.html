@@ -174,7 +174,7 @@
         }
 
         function renderProductForm(product) {
-            const modal = document.getElementById('product-modal');
+            const container = document.getElementById('product-editor-container');
             const isEditing = !!product.id;
             const categoryForCreation = new URLSearchParams(window.location.search).get('category');
             const categoryFromUrl = categoryForCreation ? decodeURIComponent(categoryForCreation) : product.category;
@@ -204,76 +204,78 @@
                     </div>`;
             }).join('');
 
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <div class="modal-image"><img id="product-preview-img" src="${product.images?.[0] || 'https://via.placeholder.com/400x400?text=No+Image'}" alt="${product.name || 'Product'}"></div>
-                    <div class="modal-details">
-                        <button class="close-btn" onclick="closeProductModal()">&times;</button>
-                        <form id="product-form">
-                            <div class="form-grid">
-                                <div class="form-column">
-                                    <fieldset>
-                                        <legend>Core Details</legend>
-                                        <div class="form-group"><label for="name">Product Name</label><input type="text" id="name" value="${product.name||''}" required placeholder="Product Name"></div>
-                                        <div class="form-group">
-                                            <label for="category">Category</label>
-                                            <select id="category-select"><option value="">Select a category...</option>${categorySelectOptions}<option value="--new--">-- Create New Category --</option></select>
-                                            <input type="text" id="new-category-input" placeholder="Enter new category name" style="display:none; margin-top:0.5rem;">
-                                        </div>
-                                    </fieldset>
-                                    <fieldset>
-                                        <legend>Pricing</legend>
-                                        <div class="form-group"><label for="price">Current Price ($)</label><input type="number" id="price" step="0.01" value="${product.price||''}" required placeholder="19.99"></div>
-                                        <div class="form-group"><label for="oldPrice">Old Price ($)</label><input type="number" id="oldPrice" step="0.01" value="${product.oldPrice||0}" placeholder="24.99"></div>
-                                    </fieldset>
+            container.innerHTML = `
+                <div class="modal-content" style="display:block; max-height:none; max-width:100%;">
+                    <div style="display:flex;">
+                        <div class="modal-image"><img id="product-preview-img" src="${product.images?.[0] || 'https://via.placeholder.com/400x400?text=No+Image'}" alt="${product.name || 'Product'}"></div>
+                        <div class="modal-details">
+                            <form id="product-form">
+                                <div class="form-grid">
+                                    <div class="form-column">
+                                        <fieldset>
+                                            <legend>Core Details</legend>
+                                            <div class="form-group"><label for="name">Product Name</label><input type="text" id="name" value="${product.name||''}" required placeholder="Product Name"></div>
+                                            <div class="form-group">
+                                                <label for="category">Category</label>
+                                                <select id="category-select"><option value="">Select a category...</option>${categorySelectOptions}<option value="--new--">-- Create New Category --</option></select>
+                                                <input type="text" id="new-category-input" placeholder="Enter new category name" style="display:none; margin-top:0.5rem;">
+                                            </div>
+                                        </fieldset>
+                                        <fieldset>
+                                            <legend>Pricing</legend>
+                                            <div class="form-group"><label for="price">Current Price ($)</label><input type="number" id="price" step="0.01" value="${product.price||''}" required placeholder="19.99"></div>
+                                            <div class="form-group"><label for="oldPrice">Old Price ($)</label><input type="number" id="oldPrice" step="0.01" value="${product.oldPrice||0}" placeholder="24.99"></div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="form-column">
+                                        <fieldset>
+                                            <legend>Inventory & Sizes</legend>
+                                            <div id="sizes-list">${sizesHtml}</div>
+                                        </fieldset>
+                                        <fieldset>
+                                            <legend>Images</legend>
+                                            <div id="image-list">${existingImagesHtml}</div>
+                                            <button type="button" class="btn-secondary" id="add-image-btn" style="padding:0.5rem 1rem; margin-top:0.5rem; width:100%; box-shadow:none;">Add Image URL</button>
+                                        </fieldset>
+                                    </div>
                                 </div>
-                                <div class="form-column">
-                                    <fieldset>
-                                        <legend>Inventory & Sizes</legend>
-                                        <div id="sizes-list">${sizesHtml}</div>
-                                    </fieldset>
-                                    <fieldset>
-                                        <legend>Images</legend>
-                                        <div id="image-list">${existingImagesHtml}</div>
-                                        <button type="button" class="btn-secondary" id="add-image-btn" style="padding:0.5rem 1rem; margin-top:0.5rem; width:100%; box-shadow:none;">Add Image URL</button>
-                                    </fieldset>
-                                </div>
+                                <fieldset>
+                                    <legend>Description</legend>
+                                    <div class="form-group"><textarea id="description" rows="5" placeholder="Product details">${product.description||''}</textarea></div>
+                                </fieldset>
+                            </form>
+                            <div class="modal-footer">
+                                <button class="btn-secondary" onclick="window.history.back()">Cancel</button>
+                                <button class="btn-primary" id="save-product-btn">${isEditing ? 'Save Changes' : 'Create Product'}</button>
                             </div>
-                            <fieldset>
-                                <legend>Description</legend>
-                                <div class="form-group"><textarea id="description" rows="5" placeholder="Product details">${product.description||''}</textarea></div>
-                            </fieldset>
-                        </form>
-                        <div class="modal-footer">
-                            <button class="btn-secondary" onclick="closeProductModal()">Cancel</button>
-                            <button class="btn-primary" id="save-product-btn">${isEditing ? 'Save Changes' : 'Create Product'}</button>
                         </div>
                     </div>
-                </div>`;
-            modal.style.display = 'flex';
+                </div>
+            `;
+            
             setupProductFormListeners(product.id, categoryForCreation);
         }
         
         function setupProductFormListeners(productId, categoryForCreation) {
-            const modal = document.getElementById('product-modal');
-            const categorySelect = modal.querySelector('#category-select');
-            const newCategoryInput = modal.querySelector('#new-category-input');
+            const container = document.getElementById('product-editor-container');
+            const categorySelect = container.querySelector('#category-select');
+            const newCategoryInput = container.querySelector('#new-category-input');
             
             if (categorySelect.value === '--new--') newCategoryInput.style.display = 'block';
             categorySelect.addEventListener('change', () => { newCategoryInput.style.display = categorySelect.value === '--new--' ? 'block' : 'none'; });
 
-            modal.querySelector('#add-image-btn').onclick = () => {
-                const list = modal.querySelector('#image-list');
+            container.querySelector('#add-image-btn').onclick = () => {
+                const list = container.querySelector('#image-list');
                 const div = document.createElement('div');
                 div.className = 'image-list-item';
                 div.innerHTML = `<div class="form-group" style="flex-grow:1; margin:0;"><input type="url" class="image-url-input" placeholder="Additional Image URL" required></div><button type="button" class="remove-image-btn" onclick="this.parentElement.remove()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>`;
                 list.appendChild(div);
             };
             
-            modal.querySelector('#image-list').addEventListener('input', (e) => {
+            container.querySelector('#image-list').addEventListener('input', (e) => {
                 if (e.target.classList.contains('image-url-input')) {
-                    const firstInput = modal.querySelector('.image-url-input');
-                    const previewImg = modal.querySelector('#product-preview-img');
+                    const firstInput = container.querySelector('.image-url-input');
+                    const previewImg = container.querySelector('#product-preview-img');
                     if (firstInput.value) {
                         previewImg.src = firstInput.value;
                     } else if (e.target.value) {
@@ -284,19 +286,19 @@
                 }
             });
 
-            modal.querySelector('#save-product-btn').onclick = () => document.getElementById('product-form').requestSubmit();
-            modal.querySelector('#product-form').addEventListener('submit', async (e) => {
+            container.querySelector('#save-product-btn').onclick = () => document.getElementById('product-form').requestSubmit();
+            container.querySelector('#product-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const form = e.target;
                 let category = categorySelect.value;
                 if (category === '--new--') category = newCategoryInput.value.trim();
                 if (!category) { showToast('Category is required.', 'error'); return; }
                 
-                const images = [...modal.querySelectorAll('.image-url-input')].map(input => input.value.trim()).filter(Boolean);
+                const images = [...container.querySelectorAll('.image-url-input')].map(input => input.value.trim()).filter(Boolean);
                 if (images.length === 0) { showToast('At least one image URL is required.', 'error'); return; }
                 
                 const sizes = [];
-                modal.querySelectorAll('.size-row').forEach(row => {
+                container.querySelectorAll('.size-row').forEach(row => {
                     if (row.querySelector('.size-offered-checkbox').checked) {
                         sizes.push({ name: row.dataset.sizeName, available: row.querySelector('.size-availability-toggle').checked });
                     }
@@ -322,18 +324,12 @@
                         await db.collection('products').add(productData);
                         showToast('Product created successfully!', 'success');
                     }
-                    closeProductModal();
-                    const redirectCategory = categoryForCreation ? encodeURIComponent(categoryForCreation) : (product.category ? encodeURIComponent(product.category) : '');
-                    window.location.href = `manage-products.html?category=${redirectCategory}`;
+                    window.history.back();
                 } catch(error) {
                     console.error("Error saving product:", error);
                     showToast("Failed to save product.", "error");
                 }
             });
-        }
-
-        function closeProductModal() {
-            document.getElementById('product-modal').style.display = 'none';
         }
         
         function renderNav() {
