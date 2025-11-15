@@ -33,7 +33,7 @@
         .btn-danger { background-color: var(--danger-color); color: white; }
         .page { animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .card { background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 2rem; }
+        .card { background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 0; }
         .form-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
         @media (min-width: 768px) { .form-grid { grid-template-columns: 1fr 1fr; } }
         fieldset { border: 1px solid #e5e7eb; border-radius: var(--border-radius); padding: 1.5rem; margin: 0 0 1.5rem; }
@@ -320,6 +320,20 @@
                     console.error("Error saving product:", error);
                     showToast("Failed to save product.", "error");
                 }
+            });
+
+            // --- Added logic to link checkboxes ---
+            container.querySelectorAll('.size-offered-checkbox').forEach(cb => {
+                cb.addEventListener('change', (e) => {
+                    const row = e.target.closest('.size-row');
+                    const toggle = row.querySelector('.size-availability-toggle');
+                    
+                    // 1. Manage toggle state based on size checkbox
+                    toggle.disabled = !e.target.checked;
+                    if (!e.target.checked) {
+                        toggle.checked = false; // Uncheck stock toggle if size is no longer offered
+                    }
+                });
             });
         }
         
