@@ -300,9 +300,12 @@
                     images: images,
                     sizes: sizes,
                     description: form.description.value,
-                    isAvailable: sizes.some(s => s.available),
-                    createdAt: productId ? undefined : firebase.firestore.FieldValue.serverTimestamp()
+                    isAvailable: sizes.some(s => s.available)
                 };
+
+                if (!productId) {
+                    productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                }
 
                 try {
                     if (productId) {
