@@ -1,14 +1,23 @@
+<!-- manage-products.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Products - ShopSphere Admin</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --primary-color: #4F46E5; --primary-hover: #4338CA; --secondary-color: #6B7280; --success-color: #10B981; --danger-color: #EF4444; --light-color: #F9FAFB; --dark-color: #1F2937; --bg-color: #F3F4F6; --font-family: 'Inter', sans-serif; --border-radius: 0.5rem; --box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); }
+        :root {
+            --primary-color: #4F46E5; --primary-hover: #4338CA; --primary-light: #eef2ff;
+            --secondary-color: #6B7280; --success-color: #10B981; --danger-color: #EF4444;
+            --light-color: #F9FAFB; --dark-color: #1F2937;
+            --bg-color: #F3F4F6; --font-family: 'Inter', sans-serif; --border-radius: 0.5rem;
+            --box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+        }
         *, *::before, *::after { box-sizing: border-box; }
         body { font-family: var(--font-family); margin: 0; background-color: var(--bg-color); color: var(--dark-color); }
         .container { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
@@ -31,13 +40,12 @@
         table { width: 100%; border-collapse: collapse; }
         th, td { text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
         th { background-color: var(--light-color); font-size: 0.9rem; }
-        .table-actions button { padding: 0.5rem 1rem; margin-right: 0.5rem; font-size: 0.9rem; }
-        .product-name-cell img { width: 50px; height: 50px; border-radius: var(--border-radius); object-fit: cover; margin-right: 1rem; }
+        .table-actions button { padding: 0.5rem 1rem; margin-right: 0.5rem; }
+        .product-name-cell img { width: 50px; height: 50px; border-radius: var(--border-radius); object-fit: cover; }
         .availability-toggle { appearance: none; width: 40px; height: 22px; background-color: #ccc; border-radius: 99px; position: relative; cursor: pointer; transition: background-color 0.2s; }
         .availability-toggle::before { content: ''; position: absolute; width: 18px; height: 18px; border-radius: 50%; background-color: white; top: 2px; left: 2px; transition: transform 0.2s; }
         .availability-toggle:checked { background-color: var(--success-color); }
         .availability-toggle:checked::before { transform: translateX(18px); }
-        .availability-toggle:disabled { background-color: #e5e7eb; cursor: not-allowed; }
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
         .toast { padding: 1rem 1.5rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
@@ -49,45 +57,53 @@
 <body>
     <div id="toast-container"></div>
     <nav>
-        <div class="nav-left">
-            <h1 onclick="window.location.href='index.html'">ShopSphere</h1>
-        </div>
+        <div class="nav-left"><h1 onclick="window.location.href='index.html'">ShopSphere</h1></div>
         <div id="nav-right" class="nav-right"></div>
     </nav>
+
     <div class="container page">
-        <div id="admin-products-container" class="card">
-            <h1 id="category-header">Manage Products</h1>
+        <div id="manage-products-container" class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem;">
+                <h1 id="products-page-title">Products</h1>
+                <button class="btn-success" id="add-product-btn">Add Product</button>
+            </div>
             <div class="admin-nav">
                 <button onclick="window.location.href='admin-dashboard.html'">Dashboard</button>
-                <button onclick="window.location.href='manage-category.html'">Categories</button>
+                <button class="active" onclick="window.location.href='manage-category.html'">Categories</button>
                 <button class="active">Products</button>
             </div>
-            <div id="admin-content">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem;">
-                    <h2>Products in <span id="current-category-display"></span></h2>
-                    <button class="btn-success" id="add-product-btn">Add New Product</button>
-                </div>
+            <div id="products-content">
                 <div style="overflow-x:auto;">
                     <table>
-                        <thead><tr><th>Product Name</th><th>Price</th><th>Available</th><th>Actions</th></tr></thead>
-                        <tbody id="admin-products-table"></tbody>
+                        <thead><tr><th>Product Name</th><th>Price</th><th>Category</th><th>Available</th><th>Actions</th></tr></thead>
+                        <tbody id="admin-products-table"><tr><td>Loading products for category...</td></tr></tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+    
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyCzqYrP1qYSiiLLgKW3z3EcwMpiG4hyF6M", authDomain: "e-commerce27.firebaseapp.com", projectId: "e-commerce27", storageBucket: "e-commerce27.firebasestorage.app", messagingSenderId: "1000564724466", appId: "1:1000564724466:web:55047ed3c820197733366b", };
+        const firebaseConfig = {
+            apiKey: "AIzaSyCzqYrP1qYSiiLLgKW3z3EcwMpiG4hyF6M",
+            authDomain: "e-commerce27.firebaseapp.com",
+            projectId: "e-commerce27",
+            storageBucket: "e-commerce27.firebasestorage.app",
+            messagingSenderId: "1000564724466",
+            appId: "1:1000564724466:web:55047ed3c820197733366b",
+        };
         const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+
         let currentUser = null;
         let allProducts = [];
-        let currentCategory = '';
+        let currentCategory = null;
 
         document.addEventListener('DOMContentLoaded', () => {
             auth.onAuthStateChanged(user => {
@@ -98,72 +114,62 @@
                     window.location.href = 'index.html';
                     return;
                 }
-                initializeProductPage();
+                initializePage();
             });
         });
 
-        function initializeProductPage() {
-            const hash = window.location.hash.substring(1);
-            let categoryFromHash = '';
-            if (hash.includes('_new_')) {
-                const parts = hash.split('_new_');
-                currentProductId = null;
-                categoryFromHash = decodeURIComponent(parts[1] || '');
-            } else {
-                currentProductId = hash || null;
-            }
+        function initializePage() {
+            const params = new URLSearchParams(window.location.search);
+            currentCategory = params.get('category');
             
-            if (currentProductId) {
-                loadProductsData().then(() => {
-                    const product = allProducts.find(p => p.id === currentProductId);
-                    if (product && product.category) {
-                        currentCategory = product.category;
-                        document.getElementById('current-category-display').textContent = currentCategory;
-                    } else {
-                        showToast("Product not found or category missing. Redirecting to category management.", 'error');
-                        setTimeout(() => window.location.href = 'manage-category.html', 2000);
-                        return;
-                    }
-                    renderProductsTable();
-                    document.getElementById('add-product-btn').onclick = () => openProductForm(null, currentCategory);
-                });
-            } else if (categoryFromHash) {
-                currentCategory = categoryFromHash;
-                document.getElementById('current-category-display').textContent = currentCategory;
-                renderProductsTable();
-                document.getElementById('add-product-btn').onclick = () => openProductForm(null, currentCategory);
+            if (!currentCategory) {
+                document.getElementById('products-page-title').textContent = "All Products";
+                document.getElementById('add-product-btn').onclick = () => window.location.href = 'product.html?action=create&category=Uncategorized';
             } else {
-                showToast("Category not specified. Redirecting to category management.", 'error');
-                setTimeout(() => window.location.href = 'manage-category.html', 2000);
-                return;
+                document.getElementById('products-page-title').textContent = `Products in: ${decodeURIComponent(currentCategory)}`;
+                document.getElementById('add-product-btn').onclick = () => window.location.href = `product.html?action=create&category=${encodeURIComponent(currentCategory)}`;
             }
-            document.getElementById('category-header').textContent = `Manage Products for: ${currentCategory}`;
+
+            loadAndRenderProducts();
         }
 
-        async function loadProductsData() {
-            const snapshot = await db.collection('products').where('category', '==', currentCategory).get();
-            allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        async function loadAndRenderProducts() {
+            try {
+                const snapshot = await db.collection('products').orderBy('name').get();
+                allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                
+                let filteredProducts = allProducts;
+                if (currentCategory) {
+                    filteredProducts = allProducts.filter(p => p.category === decodeURIComponent(currentCategory));
+                }
+                renderProductsTable(filteredProducts);
+            } catch (error) {
+                console.error("Error loading products:", error);
+                showToast("Failed to load products.", "error");
+            }
         }
-        
-        function renderProductsTable() {
+
+        function renderProductsTable(productsToRender) {
             const tableBody = document.getElementById('admin-products-table');
-            if (allProducts.length === 0 && !currentProductId) {
-                tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 2rem;">No products found in this category. Click 'Add New Product' above.</td></tr>`;
+            if (productsToRender.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 2rem;">No products found for this category.</td></tr>`;
                 return;
             }
-            tableBody.innerHTML = allProducts.map(p => {
+            tableBody.innerHTML = productsToRender.map(p => {
                 const imageUrl = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/50';
                 return `
                 <tr>
-                    <td><div class="product-name-cell" style="display:flex; align-items:center;"><img src="${imageUrl}" alt="${p.name}"><span>${p.name}</span></div></td>
+                    <td><div class="product-name-cell" style="display:flex; align-items:center; gap:1rem;"><img src="${imageUrl}" alt="${p.name}"><span>${p.name}</span></div></td>
                     <td>$${(p.price || 0).toFixed(2)}</td>
+                    <td>${p.category || 'Uncategorized'}</td>
                     <td><input type="checkbox" class="availability-toggle" data-id="${p.id}" ${p.isAvailable ? 'checked' : ''}></td>
                     <td class="table-actions">
-                        <button class="btn-primary" onclick="openProductForm('${p.id}')">Edit</button> 
+                        <button class="btn-primary" onclick="editProduct('${p.id}')">Edit</button> 
                         <button class="btn-danger" onclick="deleteProduct('${p.id}')">Delete</button>
                     </td>
                 </tr>`;
             }).join('');
+
             document.querySelectorAll('.availability-toggle').forEach(toggle => {
                 toggle.addEventListener('change', async (e) => {
                     await updateProductAvailability(e.target.dataset.id, e.target.checked, e);
@@ -184,27 +190,25 @@
             }
         }
 
-        function openProductForm(productId, category) {
-            const targetCategory = category || currentCategory;
-            window.location.href = `product.html#${productId || ''}${productId ? '' : `_new_${encodeURIComponent(targetCategory)}`;}`;
+        function editProduct(productId) {
+            window.location.href = `product.html?id=${productId}`;
         }
-        
+
         async function deleteProduct(productId) {
-            if (confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
+            if (confirm('Are you sure you want to delete this product?')) {
                 try {
                     await db.collection('products').doc(productId).delete();
                     showToast('Product deleted!', 'success');
-                    await loadProductsData();
-                    renderProductsTable();
+                    await loadAndRenderProducts();
                 } catch(error) { showToast("Error deleting product", "error"); }
             }
         }
-
+        
         function renderNav() {
             const navRight = document.getElementById('nav-right');
             const logoutIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" /></svg>`;
             if (currentUser && currentUser.email === ADMIN_EMAIL) {
-                 navRight.innerHTML = `<button title="Admin Dashboard" class="nav-icon" onclick="window.location.href='admin-dashboard.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h12A2.25 2.25 0 0020.25 14.25V3m-15.75 0h15.75M3.75 3v1.5M20.25 3v1.5M3.75 6.75h15.75M3.75 9.75h15.75M3.75 12.75h15.75M3.75 15.75h15.75" /></svg></button><button title="Logout" class="nav-icon" onclick="auth.signOut()">${logoutIcon}</button>`;
+                 navRight.innerHTML = `<button title="Category Management" class="nav-icon" onclick="window.location.href='manage-category.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg></button><button title="Logout" class="nav-icon" onclick="auth.signOut()">${logoutIcon}</button>`;
             }
         }
         function showToast(message, type = 'success') {
