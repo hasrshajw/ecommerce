@@ -1,14 +1,23 @@
+<!-- manage-category.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Categories - ShopSphere Admin</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --primary-color: #4F46E5; --primary-hover: #4338CA; --secondary-color: #6B7280; --success-color: #10B981; --danger-color: #EF4444; --light-color: #F9FAFB; --dark-color: #1F2937; --bg-color: #F3F4F6; --font-family: 'Inter', sans-serif; --border-radius: 0.5rem; --box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); }
+        :root {
+            --primary-color: #4F46E5; --primary-hover: #4338CA;
+            --secondary-color: #6B7280; --success-color: #10B981; --danger-color: #EF4444;
+            --light-color: #F9FAFB; --dark-color: #1F2937;
+            --bg-color: #F3F4F6; --font-family: 'Inter', sans-serif; --border-radius: 0.5rem;
+            --box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+        }
         *, *::before, *::after { box-sizing: border-box; }
         body { font-family: var(--font-family); margin: 0; background-color: var(--bg-color); color: var(--dark-color); }
         .container { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
@@ -21,17 +30,21 @@
         .btn-primary { background-color: var(--primary-color); color: white; }
         .btn-primary:hover { background-color: var(--primary-hover); }
         .btn-success { background-color: var(--success-color); color: white; }
+        .btn-danger { background-color: var(--danger-color); color: white; }
         .page { animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .card { background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 2rem; }
         .admin-nav { display: flex; gap: 0.5rem; border-bottom: 1px solid #ddd; margin-bottom: 1.5rem; }
         .admin-nav button { background: none; box-shadow: none; padding: 1rem; font-size: 1rem; border-radius: 0; border-bottom: 3px solid transparent; color: var(--secondary-color); }
         .admin-nav button.active { border-bottom-color: var(--primary-color); color: var(--primary-color); }
-        .category-list { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
-        .category-item { background-color: var(--light-color); padding: 1rem 1.5rem; border-radius: var(--border-radius); cursor: pointer; transition: background-color 0.2s, transform 0.1s; font-weight: 600; display: flex; justify-content: space-between; align-items: center; min-width: 200px; flex: 1 1 auto; }
-        .category-item:hover { background-color: #e5e7eb; transform: translateY(-2px); }
-        .category-actions { display: flex; gap: 0.5rem; align-items: center; }
-        #new-category-form input { padding: 0.75rem; border: 1px solid #ced4da; border-radius: var(--border-radius); font-size: 0.95rem; width: 250px; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .form-group input { width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: var(--border-radius); font-size: 1rem; }
+        .category-list { list-style: none; padding: 0; }
+        .category-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #e5e7eb; }
+        .category-item:last-child { border-bottom: none; }
+        .category-item span { flex-grow: 1; cursor: pointer; font-weight: 600; }
+        .category-item button { padding: 0.5rem 1rem; font-size: 0.8rem; }
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
         .toast { padding: 1rem 1.5rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
@@ -43,39 +56,50 @@
 <body>
     <div id="toast-container"></div>
     <nav>
-        <div class="nav-left">
-            <h1 onclick="window.location.href='index.html'">ShopSphere</h1>
-        </div>
+        <div class="nav-left"><h1 onclick="window.location.href='index.html'">ShopSphere</h1></div>
         <div id="nav-right" class="nav-right"></div>
     </nav>
+
     <div class="container page">
-        <div id="category-management-container" class="card">
-            <h1>Manage Categories</h1>
+        <div id="manage-category-container" class="card">
+            <h1>Category Management</h1>
             <div class="admin-nav">
+                <button class="active">Manage Categories</button>
                 <button onclick="window.location.href='admin-dashboard.html'">Dashboard</button>
-                <button class="active">Categories</button>
-                <button onclick="window.location.href='manage-products.html'">Products</button>
             </div>
-            <div id="admin-content">
-                <h3>Create New Category</h3>
-                <form id="new-category-form" style="margin-bottom:2rem; display:flex; gap:1rem; align-items:center;">
-                    <input type="text" id="category-name-input" placeholder="New Category Name" required>
-                    <button type="submit" class="btn-success">Add Category</button>
-                </form>
-                <h3>Existing Categories</h3>
-                <div id="category-list" class="category-list"></div>
+            <div id="category-content">
+                <div class="form-group" style="max-width: 400px;">
+                    <label for="new-category-name">New Category Name</label>
+                    <input type="text" id="new-category-name" placeholder="Enter new category name" required>
+                </div>
+                <button class="btn-success" id="add-category-btn" style="margin-bottom: 2rem;">Add Category</button>
+                
+                <h2>Existing Categories</h2>
+                <ul id="category-list" class="category-list">
+                    <li>Loading categories...</li>
+                </ul>
             </div>
         </div>
     </div>
+    
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyCzqYrP1qYSiiLLgKW3z3EcwMpiG4hyF6M", authDomain: "e-commerce27.firebaseapp.com", projectId: "e-commerce27", storageBucket: "e-commerce27.firebasestorage.app", messagingSenderId: "1000564724466", appId: "1:1000564724466:web:55047ed3c820197733366b", };
+        const firebaseConfig = {
+            apiKey: "AIzaSyCzqYrP1qYSiiLLgKW3z3EcwMpiG4hyF6M",
+            authDomain: "e-commerce27.firebaseapp.com",
+            projectId: "e-commerce27",
+            storageBucket: "e-commerce27.firebasestorage.app",
+            messagingSenderId: "1000564724466",
+            appId: "1:1000564724466:web:55047ed3c820197733366b",
+        };
         const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+
         let currentUser = null;
         let allCategories = [];
 
@@ -88,92 +112,81 @@
                     window.location.href = 'index.html';
                     return;
                 }
-                initializeCategoryPage();
+                loadCategories();
             });
         });
 
-        async function initializeCategoryPage() {
-            await fetchCategories();
-            document.getElementById('new-category-form').addEventListener('submit', handleAddCategory);
-        }
-
-        async function fetchCategories() {
-            const snapshot = await db.collection('products').get();
-            const categories = new Set();
-            snapshot.docs.forEach(doc => {
-                const data = doc.data();
-                if (data.category) categories.add(data.category);
-            });
-            allCategories = Array.from(categories).sort();
-            renderCategories();
+        async function loadCategories() {
+            try {
+                const snapshot = await db.collection('categories').orderBy('name').get();
+                allCategories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderCategories();
+            } catch (error) {
+                console.error("Error loading categories:", error);
+                showToast("Failed to load categories.", "error");
+            }
         }
 
         function renderCategories() {
-            const listContainer = document.getElementById('category-list');
+            const list = document.getElementById('category-list');
             if (allCategories.length === 0) {
-                listContainer.innerHTML = '<p>No categories found. Create one above.</p>';
+                list.innerHTML = `<li>No categories found. Add one above.</li>`;
                 return;
             }
-            listContainer.innerHTML = allCategories.map(cat => `
-                <div class="category-item" data-category="${cat}">
-                    <div style="flex-grow:1;" onclick="navigateToProducts('${cat}')">${cat}</div>
-                    <div class="category-actions">
-                        <button class="btn-primary" onclick="navigateToProducts('${cat}')" style="padding: 0.5rem 1rem; font-size:0.8rem;">Manage Products</button>
-                        <button class="btn-danger" style="padding: 0.5rem 1rem; font-size:0.8rem;" onclick="deleteCategoryPrompt('${cat}')">Delete</button>
+            list.innerHTML = allCategories.map(cat => `
+                <li class="category-item">
+                    <span onclick="navigateToProducts('${cat.name}')">${cat.name}</span>
+                    <div>
+                        <button class="btn-danger" onclick="deleteCategory('${cat.id}', '${cat.name}')" style="margin-left: 0.5rem;">Delete</button>
                     </div>
-                </div>
+                </li>
             `).join('');
         }
-        
-        function navigateToProducts(category) {
-            window.location.href = `manage-products.html#${encodeURIComponent(category)}`;
-        }
 
-        async function handleAddCategory(e) {
-            e.preventDefault();
-            const input = document.getElementById('category-name-input');
-            const newCategory = input.value.trim();
-            if (!newCategory) return;
-            
-            if (allCategories.includes(newCategory)) {
-                showToast('Category already exists.', 'error');
+        document.getElementById('add-category-btn').addEventListener('click', async () => {
+            const nameInput = document.getElementById('new-category-name');
+            const name = nameInput.value.trim();
+            if (!name) {
+                showToast('Category name cannot be empty.', 'error');
                 return;
             }
-
+            if (allCategories.some(c => c.name.toLowerCase() === name.toLowerCase())) {
+                 showToast('Category already exists.', 'error');
+                return;
+            }
             try {
-                await db.collection('products').add({ name: newCategory + ' Placeholder', category: newCategory, price: 0.01, isAvailable: false, description: 'Placeholder for a new category.', sizes: [], createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-                input.value = '';
+                await db.collection('categories').add({ name: name, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
                 showToast('Category created successfully!', 'success');
-                await fetchCategories();
-            } catch(error) {
-                showToast('Failed to create category.', 'error');
-                console.error(error);
+                nameInput.value = '';
+                await loadCategories();
+            } catch (error) {
+                console.error("Error adding category:", error);
+                showToast("Failed to add category.", "error");
             }
+        });
+
+        function navigateToProducts(categoryName) {
+            window.location.href = `manage-products.html?category=${encodeURIComponent(categoryName)}`;
         }
 
-        async function deleteCategoryPrompt(category) {
-            if (!confirm(`Are you sure you want to delete the category "${category}"? This will clear the category field for any associated products.`)) return;
-            
-            try {
-                const productSnapshot = await db.collection('products').where('category', '==', category).get();
-                const batch = db.batch();
-                productSnapshot.docs.forEach(doc => {
-                    batch.update(doc.ref, { category: '' });
-                });
-                await batch.commit();
-                showToast(`Category "${category}" cleared from all products.`, 'success');
-                await fetchCategories();
-            } catch(error) {
-                showToast('Failed to delete category.', 'error');
-                console.error(error);
+        async function deleteCategory(id, name) {
+            if (confirm(`Are you sure you want to delete category "${name}"? This will NOT delete associated products.`)) {
+                try {
+                    await db.collection('categories').doc(id).delete();
+                    showToast(`Category "${name}" deleted!`, 'success');
+                    await loadCategories();
+                } catch (error) {
+                    console.error("Error deleting category:", error);
+                    showToast("Failed to delete category.", "error");
+                }
             }
         }
-
+        
         function renderNav() {
             const navRight = document.getElementById('nav-right');
             const logoutIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" /></svg>`;
             if (currentUser && currentUser.email === ADMIN_EMAIL) {
-                 navRight.innerHTML = `<button title="Store View" class="nav-icon" onclick="window.location.href='index.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.25a.75.75 0 01-.75-.75v-11.25a.75.75 0 01.75-.75h19.5a.75.75 0 01.75.75v11.25a.75.75 0 01-.75-.75H18M13.5 21h-3.375a.75.75 0 01-.75-.75V16.5m0 0v-4.5l-3.75-3.75a.75.75 0 010-1.06l3.75-3.75a.75.75 0 011.06 0l3.75 3.75a.75.75 0 010 1.06l-3.75 3.75m0 0H12" /></svg></button><button title="Logout" class="nav-icon" onclick="auth.signOut()">${logoutIcon}</button>`;
+                 navRight.innerHTML = `<button title="Admin Dashboard" class="nav-icon" onclick="window.location.href='admin-dashboard.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h12A2.25 2.25 0 0020.25 14.25V3m-15.75 0h15.75M3.75 3v1.5M20.25 3v1.5M3.75 6.75h15.75M3.75 9.75h15.75M3.75 12.75h15.75M3.75 15.75h15.75" /></svg></button><button title="Logout" class="nav-icon" onclick="auth.signOut()">${logoutIcon}</button>`;
             }
         }
         function showToast(message, type = 'success') {
