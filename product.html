@@ -21,6 +21,7 @@
         .btn-primary { background-color: var(--primary-color); color: white; }
         .btn-primary:hover { background-color: var(--primary-hover); }
         .btn-secondary { background-color: var(--secondary-color); color: white; }
+        .btn-success { background-color: var(--success-color); color: white; }
         .page { animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .card { background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 2rem; }
@@ -178,6 +179,7 @@
                     document.getElementById('category-select').value = defaultCategory;
                     document.getElementById('isAvailable').checked = true;
                 }
+                setupDynamicListeners();
             } catch(error) {
                 showToast("Error loading initial data.", "error");
                 console.error(error);
@@ -191,7 +193,6 @@
                 const option = document.createElement('option');
                 option.value = cat;
                 option.textContent = cat;
-                if (cat === defaultCategory) option.selected = true;
                 select.appendChild(option);
             });
             if (defaultCategory && !select.value) {
@@ -221,13 +222,7 @@
                 const sizeData = product.sizes?.find(s => s.name === size);
                 const isOffered = !!sizeData;
                 const isAvailable = sizeData?.available ?? false;
-                return `<div class="size-item-row" data-size-name="${size}">
-                            <label style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;"><input type="checkbox" class="size-offered-checkbox" ${isOffered ? 'checked' : ''} style="width:20px;height:20px;"><span>${size}</span></label>
-                            <div class="size-controls" style="display:flex;align-items:center;gap:1rem;">
-                                <label style="font-size:0.9rem;">In Stock:</label>
-                                <input type="checkbox" class="availability-toggle size-availability-toggle" ${isAvailable ? 'checked' : ''} ${!isOffered ? 'disabled' : ''}>
-                            </div>
-                        </div>`;
+                return `<div class="size-item-row" data-size-name="${size}"><label style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;"><input type="checkbox" class="size-offered-checkbox" ${isOffered ? 'checked' : ''} style="width:20px;height:20px;"><span>${size}</span></label><div class="size-controls" style="display:flex;align-items:center;gap:1rem;"><label style="font-size:0.9rem;">In Stock:</label><input type="checkbox" class="availability-toggle size-availability-toggle" ${isAvailable ? 'checked' : ''} ${!isOffered ? 'disabled' : ''}></div></div>`;
             }).join('');
         }
 
@@ -338,10 +333,6 @@
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         }
-
-        window.onload = () => {
-            setupDynamicListeners();
-        };
     </script>
 </body>
 </html>
