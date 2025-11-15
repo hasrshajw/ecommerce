@@ -21,12 +21,16 @@
         body { font-family: var(--font-family); margin: 0; background-color: var(--bg-color); color: var(--dark-color); }
         .container { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
         
-        nav { background: #fff; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--box-shadow); position: sticky; top: 0; z-index: 1000; }
+        .promo-banner { background: var(--danger-color); color: var(--white); padding: 0.5rem; position: fixed; top: 0; left: 0; width: 100%; z-index: 1100; overflow: hidden; }
+        .promo-text { display: inline-block; white-space: nowrap; animation: scroll-text 15s linear infinite; font-size: 0.875rem; font-weight: 500; }
+        @keyframes scroll-text { 0% { transform: translateX(100vw); } 100% { transform: translateX(-100%); } }
+
+        nav { background: #fff; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--box-shadow); position: sticky; top: 32px; z-index: 1000; }
         .nav-left h1 { margin: 0; font-size: 1.75rem; color: var(--primary-color); cursor: pointer; }
         .nav-right { display: flex; align-items: center; gap: 1rem; }
         .nav-icon { cursor: pointer; position: relative; background: none; border: none; padding: 0.5rem; border-radius: 50%; transition: background-color 0.2s; }
         .nav-icon:hover { background-color: #e5e7eb; }
-        .nav-icon svg { width: 24px; height: 24px; stroke: var(--dark-color); }
+        #cart-count { position: absolute; top: 0; right: 0; background-color: #EF4444; color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.7rem; font-weight: bold; }
         
         button { border: none; border-radius: var(--border-radius); cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: all 0.2s ease-in-out; padding: 0.75rem 1.5rem; }
         .btn-primary { background-color: var(--primary-color); color: white; }
@@ -61,8 +65,17 @@
         
         table { width: 100%; border-collapse: collapse; }
         th, td { text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
+        th { background-color: var(--light-color); font-size: 0.9rem; }
         tbody tr:first-child { background-color: var(--primary-light); transition: background-color 0.5s; }
+        .table-actions button { padding: 0.5rem 1rem; margin-right: 0.5rem; }
+        .product-name-cell img { width: 50px; height: 50px; border-radius: var(--border-radius); object-fit: cover; }
         
+        .availability-toggle { appearance: none; width: 40px; height: 22px; background-color: #ccc; border-radius: 99px; position: relative; cursor: pointer; transition: background-color 0.2s; }
+        .availability-toggle::before { content: ''; position: absolute; width: 18px; height: 18px; border-radius: 50%; background-color: white; top: 2px; left: 2px; transition: transform 0.2s; }
+        .availability-toggle:checked { background-color: var(--success-color); }
+        .availability-toggle:checked::before { transform: translateX(18px); }
+        .availability-toggle:disabled { background-color: #e5e7eb; cursor: not-allowed; }
+
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
         .modal-content { background-color: #fefefe; margin: 5% auto; padding: 2rem; border-radius: var(--border-radius); width: 90%; max-width: 700px; animation: modalOpen 0.3s; }
         @keyframes modalOpen { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
@@ -78,12 +91,89 @@
 <body>
     <div id="toast-container"></div>
     <div id="admin-modal" class="modal"></div>
+    <div class="promo-banner">
+        <div class="promo-text" id="promo-text">
+            Admin Panel: Secure Area. Use Navigation for Store View.
+        </div>
+    </div>
 
     <nav>
-        <div class="nav-left">
-            <h1 onclick="window.location.href='index.html'">ShopSphere</h1>
+        <div class="nav-container">
+            <div class="desktop-nav">
+                <div class="nav-logo" onclick="window.location.href='index.html'">
+                    <img src="http://photography.wixo.in/yellow.png" alt="Shop Logo">
+                </div>
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="shop.html">Shop</a>
+                    <a href="index.html#category-section">Categories</a>
+                    <a href="/deals">Deals</a>
+                </div>
+                <div class="nav-search" id="desktopSearch">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.3-4.3"></path>
+                    </svg>
+                    <input type="text" placeholder="Search products...">
+                </div>
+                <div class="nav-icons">
+                    <button class="nav-icon" id="desktopSearchBtn" aria-label="Search">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.3-4.3"></path>
+                        </svg>
+                    </button>
+                    <button class="nav-icon" onclick="window.location.href='/wishlist'" aria-label="Wishlist">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </button>
+                    <button class="nav-icon" id="desktopCartBtn" aria-label="Shopping cart">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        <span id="cart-count">0</span>
+                    </button>
+                </div>
+            </div>
+            <div class="mobile-nav">
+                <div class="mobile-nav-left">
+                    <button class="hamburger" id="mobileMenuBtn" aria-label="Menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+                <div class="mobile-nav-center">
+                    <div class="mobile-logo" onclick="window.location.href='index.html'">
+                        <img src="http://photography.wixo.in/yellow.png" alt="Shop Logo">
+                    </div>
+                </div>
+                <div class="mobile-nav-right">
+                    <button class="nav-icon" id="mobileSearchBtn" aria-label="Search">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.3-4.3"></path>
+                        </svg>
+                    </button>
+                    <button class="nav-icon" onclick="window.location.href='/wishlist'" aria-label="Wishlist">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </button>
+                    <button class="nav-icon" id="mobileCartBtn" aria-label="Shopping cart">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        <span id="cart-count">0</span>
+                    </button>
+                </div>
+            </div>
         </div>
-        <div id="nav-right" class="nav-right"></div>
     </nav>
 
     <div class="container page">
@@ -124,12 +214,7 @@
         </div>
     </div>
     
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-
     <script>
-        // --- CONFIG & INITIALIZATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyCzqYrP1qYSiiLLgKW3z3EcwMpiG4hyF6M",
             authDomain: "e-commerce27.firebaseapp.com",
@@ -143,12 +228,11 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // --- STATE ---
         let currentUser = null;
         let allProductsCount = 0;
-        let unsubscribeRealtimeListener; // To manage the live listener
+        let unsubscribeRealtimeListener; 
+        let allProducts = [];
 
-        // --- APP ENTRY POINT ---
         document.addEventListener('DOMContentLoaded', () => {
             auth.onAuthStateChanged(user => {
                 currentUser = user;
@@ -160,14 +244,27 @@
                 }
                 initializeDashboard();
             });
+            
+            const toastInfo = sessionStorage.getItem('toastMessage');
+            if(toastInfo){
+                const { message, type } = JSON.parse(toastInfo);
+                showToast(message, type);
+                sessionStorage.removeItem('toastMessage');
+            }
         });
 
         async function initializeDashboard() {
             const productSnapshot = await db.collection('products').get();
             allProductsCount = productSnapshot.size;
+            await fetchAllProductsForContext();
             populateMonthFilter();
             setupFilterListeners();
-            updateDashboardView('today'); // Default view is now 'today'
+            updateDashboardView('today');
+        }
+        
+        async function fetchAllProductsForContext() {
+            const snapshot = await db.collection('products').get();
+            allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         }
 
         function populateMonthFilter() {
@@ -202,7 +299,7 @@
                 const to = document.getElementById('date-to').value;
                 if (from && to) {
                     updateDashboardView('customRange', { from, to });
-                    document.getElementById('month-select').value = ''; // Deselect month dropdown
+                    document.getElementById('month-select').value = '';
                 } else { showToast('Please select both a start and end date.', 'error'); }
             });
             document.getElementById('reset-filter-btn').addEventListener('click', () => {
@@ -217,9 +314,7 @@
             document.getElementById('date-to').value = '';
         }
 
-        // --- CORE DASHBOARD LOGIC ---
         async function updateDashboardView(filterType, value) {
-            // Stop any existing real-time listener before starting a new one
             if (unsubscribeRealtimeListener) unsubscribeRealtimeListener();
 
             let startDate, endDate;
@@ -227,8 +322,8 @@
             
             const now = new Date();
             if (filterType === 'today') {
-                startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // Start of today
-                endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59); // End of today
+                startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
                 periodHeader = 'Today';
             } else if (filterType === 'currentMonth') {
                 startDate = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -248,7 +343,6 @@
 
             document.getElementById('stats-period-header').textContent = `Showing Stats for: ${periodHeader}`;
             
-            // Set up the real-time listener for the selected period
             listenForOrders(startDate, endDate);
         }
 
@@ -297,66 +391,59 @@
                 </tr>`).join('');
         }
         
-        // --- MODAL & HELPERS ---
         function showOrderDetailModal(orderId) {
-            // No need to query again, we just need to get the latest data from the listener
-            // A simple GET will be fast and ensure we have the very latest status
             db.collection('orders').doc(orderId).get().then(doc => {
-                if (!doc.exists) { showToast("Order not found.", "error"); return; }
-                const order = { id: doc.id, ...doc.data() };
-                const modal = document.getElementById('admin-modal');
-                modal.innerHTML = `...`; // Modal HTML is the same as previous version
-                modal.style.display = 'block';
-            });
-        }
-        async function updateOrderStatus(orderId) {
-            const status = document.getElementById('order-status-select').value;
-            await db.collection('orders').doc(orderId).update({ status });
-            showToast('Order status updated!');
-            closeAdminModal();
-            // No need to manually refresh, the real-time listener will handle it!
-        }
-        
-        const closeAdminModal = () => document.getElementById('admin-modal').style.display = 'none';
-        
-        // --- FULL HELPER FUNCTIONS FOR COMPLETENESS ---
-        showOrderDetailModal = function(orderId) {
-             db.collection('orders').doc(orderId).get().then(doc => {
                 if (!doc.exists) { showToast("Order not found.", "error"); return; }
                 const order = { id: doc.id, ...doc.data() };
                 const modal = document.getElementById('admin-modal');
                 modal.innerHTML = `
                     <div class="modal-content">
-                        <span class="close-btn" onclick="closeAdminModal()">&times;</span>
-                        <h2>Order Details (ID: ${order.id.substring(0,6)})</h2>
-                        <p><strong>Customer:</strong> ${order.userName || 'N/A'} (${order.userEmail || 'N/A'})</p>
-                        <p><strong>Shipping Address:</strong> ${order.shippingAddress.fullName}, ${order.shippingAddress.address}, ${order.shippingAddress.city}, ${order.shippingAddress.zip}</p>
-                        <h4>Items</h4>
-                        <ul>${(order.items || []).map(i => `<li>${i.quantity} x ${i.name} (Size: ${i.size}) - $${(i.price * i.quantity).toFixed(2)}</li>`).join('')}</ul>
-                        <hr><p><strong>Total: $${(order.totalPrice || 0).toFixed(2)}</strong></p>
-                        <div style="display:flex; align-items:center; gap:1rem; margin-top:1rem;">
-                            <label for="order-status-select"><strong>Update Status:</strong></label>
-                            <select id="order-status-select" style="padding:0.5rem; border-radius:var(--border-radius);">
-                                <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
-                                <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
-                                <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
-                            </select>
-                            <button class="btn-primary" onclick="updateOrderStatus('${order.id}')">Update</button>
+                        <div class="modal-header">
+                            <h2>Order Details (ID: ${order.id.substring(0,6)})</h2>
+                            <button class="close-btn" onclick="closeAdminModal()">&times;</button>
+                        </div>
+                        <div id="product-form" style="padding: 1.5rem;">
+                            <p><strong>Customer:</strong> ${order.userName || 'N/A'} (${order.userEmail || 'N/A'})</p>
+                            <p><strong>Shipping Address:</strong> ${order.shippingAddress.fullName}, ${order.shippingAddress.address}, ${order.shippingAddress.city}, ${order.shippingAddress.zip}</p>
+                            <h4>Items</h4>
+                            <ul>${(order.items || []).map(i => `<li>${i.quantity} x ${i.name} (Size: ${i.size}) - $${(i.price * i.quantity).toFixed(2)}</li>`).join('')}</ul>
+                            <hr><p><strong>Total: $${(order.totalPrice || 0).toFixed(2)}</strong></p>
+                            <div style="display:flex; align-items:center; gap:1rem; margin-top:1rem;">
+                                <label for="order-status-select" style="font-size:0.9rem;"><strong>Update Status:</strong></label>
+                                <select id="order-status-select" style="padding:0.75rem; border-radius:var(--border-radius); border: 1px solid #ced4da; font-size:0.95rem;">
+                                    <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                    <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                                    <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                                </select>
+                                <button class="btn-primary" onclick="updateOrderStatus('${order.id}')">Update</button>
+                            </div>
                         </div>
                     </div>`;
-                modal.style.display = 'block';
-            });
+                modal.style.display = 'flex';
+            }).catch(e => showToast("Error fetching order details.", "error"));
         }
-        renderNav = function() {
+
+        async function updateOrderStatus(orderId) {
+            const status = document.getElementById('order-status-select').value;
+            try {
+                await db.collection('orders').doc(orderId).update({ status });
+                showToast('Order status updated!', 'success');
+                closeAdminModal();
+            } catch(e) {
+                 showToast("Failed to update status.", "error");
+            }
+        }
+
+        function closeAdminModal() { document.getElementById('admin-modal').style.display = 'none'; }
+        
+        function renderNav() {
             const navRight = document.getElementById('nav-right');
             const logoutIcon = `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" /></svg>`;
             if (currentUser && currentUser.email === ADMIN_EMAIL) {
-                 navRight.innerHTML = `
-                    <button title="Store View" class="nav-icon" onclick="window.location.href='index.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.25a.75.75 0 01-.75-.75v-11.25a.75.75 0 01.75-.75h19.5a.75.75 0 01.75.75v11.25a.75.75 0 01-.75.75H18M13.5 21h-3.375a.75.75 0 01-.75-.75V16.5m0 0v-4.5l-3.75-3.75a.75.75 0 010-1.06l3.75-3.75a.75.75 0 011.06 0l3.75 3.75a.75.75 0 010 1.06l-3.75 3.75m0 0H12" /></svg></button>
-                    <button title="Logout" class="nav-icon" onclick="auth.signOut()">${logoutIcon}</button>`;
+                 navRight.innerHTML = `<button title="Store View" class="nav-icon" onclick="window.location.href='index.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.25a.75.75 0 01-.75-.75v-11.25a.75.75 0 01.75-.75h19.5a.75.75 0 01.75.75v11.25a.75.75 0 01-.75.75H18M13.5 21h-3.375a.75.75 0 01-.75-.75V16.5m0 0v-4.5l-3.75-3.75a.75.75 0 010-1.06l3.75-3.75a.75.75 0 011.06 0l3.75 3.75a.75.75 0 010 1.06l-3.75 3.75m0 0H12" /></svg></button><button title="Logout" class="nav-icon" onclick="auth.signOut()">${logoutIcon}</button>`;
             }
         }
-        showToast = function(message, type = 'success') {
+        function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
