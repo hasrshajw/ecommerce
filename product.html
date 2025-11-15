@@ -7,7 +7,7 @@
     <title>Product Editor - ShopSphere Admin</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -31,9 +31,10 @@
         .btn-primary:hover:not(:disabled) { background-color: var(--primary-hover); }
         .btn-secondary { background-color: var(--secondary-color); color: white; }
         .btn-danger { background-color: var(--danger-color); color: white; }
+        .btn-sm { padding: 0.5rem 1rem; font-size: 0.875rem; }
         .page { animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .card { background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 0; }
+        .card { background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 2rem; }
         .form-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
         @media (min-width: 768px) { .form-grid { grid-template-columns: 1fr 1fr; } }
         fieldset { border: 1px solid #e5e7eb; border-radius: var(--border-radius); padding: 1.5rem; margin: 0 0 1.5rem; }
@@ -60,13 +61,6 @@
         .availability-toggle:checked { background-color: var(--success-color); }
         .availability-toggle:checked::before { transform: translateX(18px); }
         .availability-toggle:disabled { background-color: #e5e7eb; cursor: not-allowed; }
-        
-        /* Color Variant Section Styles */
-        .color-variant-section { border: 1px solid #e5e7eb; border-radius: var(--border-radius); padding: 1rem; margin-bottom: 1.5rem; background-color: var(--light-color); }
-        .color-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid #d1d5db; padding-bottom: 0.5rem; }
-        .remove-color-btn { background: none; border: 1px solid var(--danger-color); color: var(--danger-color); padding: 0.3rem 0.75rem; font-size: 0.8rem; }
-        .remove-color-btn:hover { background-color: var(--danger-color); color: white; }
-
         .form-actions { display: flex; justify-content: flex-end; gap: 1rem; padding: 1.5rem; border-top: 1px solid #e5e7eb; background-color: var(--light-color); }
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
         .toast { padding: 1rem 1.5rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
@@ -74,6 +68,23 @@
         @keyframes fadeOut { to { opacity: 0; } }
         .toast.success { background-color: var(--success-color); }
         .toast.error { background-color: var(--danger-color); }
+
+        /* Color Variants Styles */
+        .color-variant-card { border: 1px solid #e5e7eb; border-radius: var(--border-radius); padding: 1.5rem; margin-bottom: 1rem; background: #fafafa; }
+        .color-variant-header { display: flex; justify-content: between; align-items: center; margin-bottom: 1rem; }
+        .color-variant-title { font-weight: 600; font-size: 1.1rem; }
+        .color-variant-actions { display: flex; gap: 0.5rem; }
+        .color-preview { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #e5e7eb; }
+        
+        /* Modal Styles */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 2000; }
+        .modal { background: white; border-radius: var(--border-radius); padding: 2rem; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: between; align-items: center; margin-bottom: 1.5rem; }
+        .modal-title { font-size: 1.25rem; font-weight: 600; margin: 0; }
+        .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; padding: 0; width: 30px; height: 30px; }
+        .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .color-images-section { margin-top: 1rem; }
+        .color-image-item { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.75rem; }
     </style>
 </head>
 <body>
@@ -90,6 +101,53 @@
             <div id="product-form-content">
                 <p>Loading product data...</p>
             </div>
+        </div>
+    </div>
+
+    <!-- Color Variant Modal -->
+    <div id="color-variant-modal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="color-modal-title">Add Color Variant</h3>
+                <button class="close-modal" onclick="closeColorModal()">&times;</button>
+            </div>
+            <form id="color-variant-form">
+                <div class="form-grid">
+                    <div class="form-column">
+                        <div class="form-group">
+                            <label for="color-name">Color Name</label>
+                            <input type="text" id="color-name" required placeholder="e.g., Red, Blue, Black">
+                        </div>
+                        <div class="form-group">
+                            <label for="color-hex">Color Code (Hex)</label>
+                            <input type="text" id="color-hex" required placeholder="#ff0000" pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$">
+                        </div>
+                    </div>
+                    <div class="form-column">
+                        <fieldset>
+                            <legend>Sizes & Stock</legend>
+                            <div id="modal-sizes-list"></div>
+                        </fieldset>
+                    </div>
+                </div>
+                
+                <fieldset>
+                    <legend>Color Specific Images</legend>
+                    <div id="modal-color-images">
+                        <div class="color-image-item">
+                            <div class="form-group" style="flex-grow:1; margin:0;">
+                                <input type="url" class="color-image-url" placeholder="Main Image URL for this color" required>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-secondary btn-sm" id="add-color-image-btn" style="margin-top:0.5rem;">Add Another Image</button>
+                </fieldset>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeColorModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Color Variant</button>
+                </div>
+            </form>
         </div>
     </div>
     
@@ -114,6 +172,7 @@
         let currentUser = null;
         let allCategories = [];
         const SIZES_LIST = ['S', 'M', 'L', 'XL', '2XL'];
+        let currentColorEditing = null; // Track which color variant is being edited
 
         document.addEventListener('DOMContentLoaded', () => {
             auth.onAuthStateChanged(user => {
@@ -192,34 +251,8 @@
                 </div>
             `).join('');
 
-            let colorVariantsHtml = '';
-            const existingVariants = product.variants || [{ colorName: 'Default', sizes: [] }];
-            
-            existingVariants.forEach((variant, colorIndex) => {
-                const sizesHtml = SIZES_LIST.map(size => {
-                    const sizeData = variant.sizes ? variant.sizes.find(s => s.name === size) : null;
-                    const isOffered = !!sizeData;
-                    const isAvailable = sizeData ? sizeData.available : false;
-                    return `
-                        <div class="size-row" data-size-name="${size}">
-                            <label style="display:flex; align-items:center; gap:0.75rem; cursor:pointer;"><input type="checkbox" class="size-offered-checkbox" ${isOffered ? 'checked' : ''} style="width:20px;height:20px;"><span>${size}</span></label>
-                            <div class="size-controls" style="display:flex; align-items:center; gap:1rem;">
-                                <label style="font-size:0.9rem;">In Stock:</label>
-                                <input type="checkbox" class="availability-toggle size-availability-toggle" ${isAvailable ? 'checked' : ''} ${!isOffered ? 'disabled' : ''}>
-                            </div>
-                        </div>`;
-                }).join('');
-
-                colorVariantsHtml += `
-                    <div class="color-variant-section" data-color-index="${colorIndex}">
-                        <div class="color-header">
-                            <div class="form-group" style="flex-grow:1; margin:0;"><input type="text" class="color-name-input" value="${variant.colorName || 'New Color'}" required placeholder="Color Name (e.g., Red)"></div>
-                            ${colorIndex > 0 ? '<button type="button" class="remove-color-btn" onclick="this.closest(\'.color-variant-section\').remove()">Remove Color</button>' : ''}
-                        </div>
-                        <div id="sizes-list-${colorIndex}">${sizesHtml}</div>
-                    </div>
-                `;
-            });
+            // Render color variants section
+            const colorVariantsHtml = renderColorVariantsSection(product.colorVariants || []);
 
             container.innerHTML = `
                 <form id="product-form">
@@ -230,7 +263,7 @@
                                 <div class="form-group"><label for="name">Product Name</label><input type="text" id="name" value="${product.name||''}" required placeholder="Product Name"></div>
                                 <div class="form-group">
                                     <label for="category">Category</label>
-                                    <select id="category-select"><option value="">Select a category...</option>${categorySelectOptions}<option value="--new--">-- Create New Category --</option></select>
+                                    <select id="category-select"><option value="">Select a category...</option>${categorySelectOptions}</select>
                                     <input type="text" id="new-category-input" placeholder="Enter new category name" style="display:none; margin-top:0.5rem;">
                                 </div>
                             </fieldset>
@@ -242,21 +275,20 @@
                         </div>
                         <div class="form-column">
                             <fieldset>
-                                <legend>Images</legend>
+                                <legend>Color Variants</legend>
+                                ${colorVariantsHtml}
+                                <button type="button" class="btn-primary btn-sm" onclick="openColorModal()" style="margin-top:1rem;">+ Add Color Variant</button>
+                            </fieldset>
+                            <fieldset>
+                                <legend>General Images</legend>
                                 <div id="image-list">${existingImagesHtml}</div>
                                 <button type="button" class="btn-secondary" id="add-image-btn" style="padding:0.5rem 1rem; margin-top:0.5rem; width:100%; box-shadow:none;">Add Image URL</button>
                             </fieldset>
-                            <fieldset>
-                                <legend>Description</legend>
-                                <div class="form-group"><textarea id="description" rows="5" placeholder="Product details">${product.description||''}</textarea></div>
-                            </fieldset>
                         </div>
                     </div>
-                    
                     <fieldset>
-                        <legend>Color Variants & Inventory</legend>
-                        <div id="color-variants-container">${colorVariantsHtml}</div>
-                        <button type="button" class="btn-secondary" id="add-color-btn" style="padding:0.5rem 1rem; margin-top:1rem; box-shadow:none;">+ Add Color Variant</button>
+                        <legend>Description</legend>
+                        <div class="form-group"><textarea id="description" rows="5" placeholder="Product details">${product.description||''}</textarea></div>
                     </fieldset>
                 </form>
                 <div class="form-actions">
@@ -267,7 +299,115 @@
             
             setupProductFormListeners(product.id, categoryForCreation);
         }
-        
+
+        function renderColorVariantsSection(colorVariants) {
+            if (colorVariants.length === 0) {
+                return '<p style="color: var(--secondary-color); font-style: italic;">No color variants added yet.</p>';
+            }
+
+            return colorVariants.map((variant, index) => `
+                <div class="color-variant-card" data-color-index="${index}">
+                    <div class="color-variant-header">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div class="color-preview" style="background-color: ${variant.hex};"></div>
+                            <div>
+                                <div class="color-variant-title">${variant.name}</div>
+                                <div style="font-size: 0.875rem; color: var(--secondary-color);">
+                                    ${variant.sizes ? variant.sizes.filter(s => s.available).length : 0} sizes in stock
+                                </div>
+                            </div>
+                        </div>
+                        <div class="color-variant-actions">
+                            <button type="button" class="btn-secondary btn-sm" onclick="editColorVariant(${index})">Edit</button>
+                            <button type="button" class="btn-danger btn-sm" onclick="removeColorVariant(${index})">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openColorModal(colorVariant = null) {
+            currentColorEditing = colorVariant;
+            const modal = document.getElementById('color-variant-modal');
+            const title = document.getElementById('color-modal-title');
+            
+            if (colorVariant) {
+                title.textContent = 'Edit Color Variant';
+                // Populate form with existing data
+                document.getElementById('color-name').value = colorVariant.name;
+                document.getElementById('color-hex').value = colorVariant.hex;
+                
+                // Populate sizes
+                renderModalSizes(colorVariant.sizes || []);
+                
+                // Populate images
+                const imagesContainer = document.getElementById('modal-color-images');
+                imagesContainer.innerHTML = (colorVariant.images || ['']).map((url, index) => `
+                    <div class="color-image-item">
+                        <div class="form-group" style="flex-grow:1; margin:0;">
+                            <input type="url" class="color-image-url" value="${url}" placeholder="${index === 0 ? 'Main Image URL for this color' : 'Additional Image URL'}" required>
+                        </div>
+                        ${index > 0 ? '<button type="button" class="remove-image-btn" onclick="this.parentElement.remove()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>' : ''}
+                    </div>
+                `).join('');
+            } else {
+                title.textContent = 'Add Color Variant';
+                // Reset form
+                document.getElementById('color-variant-form').reset();
+                renderModalSizes([]);
+                
+                // Reset images
+                const imagesContainer = document.getElementById('modal-color-images');
+                imagesContainer.innerHTML = `
+                    <div class="color-image-item">
+                        <div class="form-group" style="flex-grow:1; margin:0;">
+                            <input type="url" class="color-image-url" placeholder="Main Image URL for this color" required>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeColorModal() {
+            document.getElementById('color-variant-modal').style.display = 'none';
+            currentColorEditing = null;
+        }
+
+        function renderModalSizes(existingSizes = []) {
+            const container = document.getElementById('modal-sizes-list');
+            container.innerHTML = SIZES_LIST.map(size => {
+                const sizeData = existingSizes.find(s => s.name === size);
+                const isOffered = !!sizeData;
+                const isAvailable = sizeData ? sizeData.available : false;
+                
+                return `
+                    <div class="size-row" data-size-name="${size}">
+                        <label style="display:flex; align-items:center; gap:0.75rem; cursor:pointer;">
+                            <input type="checkbox" class="size-offered-checkbox" ${isOffered ? 'checked' : ''} style="width:20px;height:20px;">
+                            <span>${size}</span>
+                        </label>
+                        <div class="size-controls" style="display:flex; align-items:center; gap:1rem;">
+                            <label style="font-size:0.9rem;">In Stock:</label>
+                            <input type="checkbox" class="availability-toggle size-availability-toggle" ${isAvailable ? 'checked' : ''} ${!isOffered ? 'disabled' : ''}>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Add event listeners for checkboxes
+            container.querySelectorAll('.size-offered-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const toggle = this.closest('.size-row').querySelector('.size-availability-toggle');
+                    toggle.disabled = !this.checked;
+                    if (!this.checked) {
+                        toggle.checked = false;
+                    }
+                });
+            });
+        }
+
         function setupProductFormListeners(productId, categoryForCreation) {
             const container = document.getElementById('product-form-content');
             const categorySelect = container.querySelector('#category-select');
@@ -276,6 +416,7 @@
             if (categorySelect.value === '--new--') newCategoryInput.style.display = 'block';
             categorySelect.addEventListener('change', () => { newCategoryInput.style.display = categorySelect.value === '--new--' ? 'block' : 'none'; });
 
+            // Add image button for general images
             container.querySelector('#add-image-btn').onclick = () => {
                 const list = container.querySelector('#image-list');
                 const div = document.createElement('div');
@@ -283,123 +424,154 @@
                 div.innerHTML = `<div class="form-group" style="flex-grow:1; margin:0;"><input type="url" class="image-url-input" placeholder="Additional Image URL" required></div><button type="button" class="remove-image-btn" onclick="this.parentElement.remove()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>`;
                 list.appendChild(div);
             };
-            
-            container.querySelector('#image-list').addEventListener('input', (e) => {
-                if (e.target.classList.contains('image-url-input')) {
-                    const firstInput = container.querySelector('.image-url-input');
-                    const previewImg = container.querySelector('#product-preview-img');
-                    if (firstInput.value) {
-                        previewImg.src = firstInput.value;
-                    } else if (e.target.value) {
-                        previewImg.src = e.target.value;
-                    } else {
-                         previewImg.src = 'https://via.placeholder.com/400x400?text=No+Image';
-                    }
-                }
-            });
 
-            // --- Color Variant Logic ---
-            let colorIndexCounter = container.querySelectorAll('.color-variant-section').length;
-
-            const createSizeRowHtml = (sizeName, isOffered, isAvailable) => `
-                <div class="size-row" data-size-name="${sizeName}">
-                    <label style="display:flex; align-items:center; gap:0.75rem; cursor:pointer;"><input type="checkbox" class="size-offered-checkbox" ${isOffered ? 'checked' : ''} style="width:20px;height:20px;"><span>${sizeName}</span></label>
-                    <div class="size-controls" style="display:flex; align-items:center; gap:1rem;">
-                        <label style="font-size:0.9rem;">In Stock:</label>
-                        <input type="checkbox" class="availability-toggle size-availability-toggle" ${isAvailable ? 'checked' : ''} ${!isOffered ? 'disabled' : ''}>
+            // Add image button for color images in modal
+            document.getElementById('add-color-image-btn').onclick = () => {
+                const list = document.getElementById('modal-color-images');
+                const div = document.createElement('div');
+                div.className = 'color-image-item';
+                div.innerHTML = `
+                    <div class="form-group" style="flex-grow:1; margin:0;">
+                        <input type="url" class="color-image-url" placeholder="Additional Image URL" required>
                     </div>
-                </div>`;
-            
-            const createColorVariantSection = (colorName = 'New Color', sizesData = []) => {
-                const list = container.querySelector('#color-variants-container');
-                const newSection = document.createElement('div');
-                newSection.className = 'color-variant-section';
-                newSection.setAttribute('data-color-index', colorIndexCounter);
-
-                const sizesHtml = SIZES_LIST.map(size => {
-                    const sizeData = sizesData.find(s => s.name === size);
-                    const isOffered = !!sizeData;
-                    const isAvailable = sizeData ? sizeData.available : false;
-                    return createSizeRowHtml(size, isOffered, isAvailable);
-                }).join('');
-
-                newSection.innerHTML = `
-                    <div class="color-header">
-                        <div class="form-group" style="flex-grow:1; margin:0;"><input type="text" class="color-name-input" value="${colorName}" required placeholder="Color Name (e.g., Red)"></div>
-                        <button type="button" class="remove-color-btn" onclick="this.closest('.color-variant-section').remove()">Remove Color</button>
-                    </div>
-                    <div id="sizes-list-${colorIndexCounter}">${sizesHtml}</div>
+                    <button type="button" class="remove-image-btn" onclick="this.parentElement.remove()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                    </button>
                 `;
-                list.appendChild(newSection);
-                colorIndexCounter++;
-                setupEventListenersForNewSection(newSection);
+                list.appendChild(div);
             };
 
-            container.querySelector('#add-color-btn').onclick = () => createColorVariantSection();
+            // Color variant form submission
+            document.getElementById('color-variant-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveColorVariant();
+            });
 
-            // Initialize listeners for existing and newly added sections
-            container.querySelectorAll('.color-variant-section').forEach(setupEventListenersForNewSection);
-            
-            // If creating new and no existing variants (product was empty), add a default one
-            if (!isEditing && !product.variants) {
-                createColorVariantSection('Default', []);
-            }
-        }
-
-        function setupEventListenersForNewSection(sectionElement) {
-            const togglesContainer = sectionElement.querySelector('#sizes-list-' + sectionElement.getAttribute('data-color-index'));
-            if (!togglesContainer) return;
-
-            togglesContainer.querySelectorAll('.size-offered-checkbox').forEach(cb => {
-                cb.addEventListener('change', (e) => {
-                    const row = e.target.closest('.size-row');
-                    const toggle = row.querySelector('.size-availability-toggle');
-                    
-                    toggle.disabled = !e.target.checked;
-                    if (!e.target.checked) {
-                        toggle.checked = false;
-                    }
-                });
+            container.querySelector('#save-product-btn').onclick = () => document.getElementById('product-form').requestSubmit();
+            container.querySelector('#product-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await saveProduct(productId);
             });
         }
 
-
-        container.querySelector('#save-product-btn').onclick = () => document.getElementById('product-form').requestSubmit();
-        container.querySelector('#product-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const form = e.target;
-            let category = categorySelect.value;
-            if (category === '--new--') category = newCategoryInput.value.trim();
-            if (!category) { showToast('Category is required.', 'error'); return; }
+        function saveColorVariant() {
+            const form = document.getElementById('color-variant-form');
+            const colorName = document.getElementById('color-name').value;
+            const colorHex = document.getElementById('color-hex').value;
             
-            const images = [...container.querySelectorAll('.image-url-input')].map(input => input.value.trim()).filter(Boolean);
-            if (images.length === 0) { showToast('At least one image URL is required.', 'error'); return; }
-            
-            const variants = [];
-            let overallAvailable = false;
+            // Validate hex color
+            if (!/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(colorHex)) {
+                showToast('Please enter a valid hex color code.', 'error');
+                return;
+            }
 
-            container.querySelectorAll('.color-variant-section').forEach(section => {
-                const colorName = section.querySelector('.color-name-input').value.trim();
-                if (!colorName) return;
-
-                const sizes = [];
-                section.querySelectorAll('.size-row').forEach(row => {
-                    if (row.querySelector('.size-offered-checkbox').checked) {
-                        const isAvailable = row.querySelector('.size-availability-toggle').checked;
-                        sizes.push({ name: row.dataset.sizeName, available: isAvailable });
-                        if (isAvailable) overallAvailable = true;
-                    }
-                });
-
-                if (sizes.length > 0) {
-                    variants.push({ colorName, sizes });
+            // Get sizes data
+            const sizes = [];
+            document.querySelectorAll('#modal-sizes-list .size-row').forEach(row => {
+                if (row.querySelector('.size-offered-checkbox').checked) {
+                    sizes.push({
+                        name: row.dataset.sizeName,
+                        available: row.querySelector('.size-availability-toggle').checked
+                    });
                 }
             });
 
-            if (variants.length === 0) {
-                showToast('You must define at least one size for at least one color.', 'error');
+            // Get color images
+            const colorImages = [...document.querySelectorAll('.color-image-url')]
+                .map(input => input.value.trim())
+                .filter(Boolean);
+
+            if (colorImages.length === 0) {
+                showToast('At least one image URL is required for this color.', 'error');
                 return;
             }
+
+            const colorVariant = {
+                name: colorName,
+                hex: colorHex,
+                sizes: sizes,
+                images: colorImages
+            };
+
+            // Get current color variants
+            const container = document.getElementById('product-form-content');
+            let colorVariants = JSON.parse(container.dataset.colorVariants || '[]');
+
+            if (currentColorEditing !== null) {
+                // Editing existing variant
+                colorVariants[currentColorEditing] = colorVariant;
+            } else {
+                // Adding new variant
+                colorVariants.push(colorVariant);
+            }
+
+            // Update the UI
+            container.dataset.colorVariants = JSON.stringify(colorVariants);
+            const colorVariantsSection = container.querySelector('fieldset legend:contains("Color Variants")').closest('fieldset');
+            colorVariantsSection.innerHTML = `
+                <legend>Color Variants</legend>
+                ${renderColorVariantsSection(colorVariants)}
+                <button type="button" class="btn-primary btn-sm" onclick="openColorModal()" style="margin-top:1rem;">+ Add Color Variant</button>
+            `;
+
+            closeColorModal();
+            showToast(`Color variant ${currentColorEditing !== null ? 'updated' : 'added'} successfully!`, 'success');
+        }
+
+        function editColorVariant(index) {
+            const container = document.getElementById('product-form-content');
+            const colorVariants = JSON.parse(container.dataset.colorVariants || '[]');
+            if (colorVariants[index]) {
+                openColorModal(colorVariants[index], index);
+            }
+        }
+
+        function removeColorVariant(index) {
+            if (!confirm('Are you sure you want to remove this color variant?')) return;
+
+            const container = document.getElementById('product-form-content');
+            let colorVariants = JSON.parse(container.dataset.colorVariants || '[]');
+            colorVariants.splice(index, 1);
+
+            // Update the UI
+            container.dataset.colorVariants = JSON.stringify(colorVariants);
+            const colorVariantsSection = container.querySelector('fieldset legend:contains("Color Variants")').closest('fieldset');
+            colorVariantsSection.innerHTML = `
+                <legend>Color Variants</legend>
+                ${renderColorVariantsSection(colorVariants)}
+                <button type="button" class="btn-primary btn-sm" onclick="openColorModal()" style="margin-top:1rem;">+ Add Color Variant</button>
+            `;
+
+            showToast('Color variant removed successfully!', 'success');
+        }
+
+        async function saveProduct(productId) {
+            const container = document.getElementById('product-form-content');
+            const form = document.getElementById('product-form');
+            
+            let category = container.querySelector('#category-select').value;
+            if (category === '--new--') {
+                category = container.querySelector('#new-category-input').value.trim();
+            }
+            
+            if (!category) {
+                showToast('Category is required.', 'error');
+                return;
+            }
+
+            const images = [...container.querySelectorAll('.image-url-input')]
+                .map(input => input.value.trim())
+                .filter(Boolean);
+
+            if (images.length === 0) {
+                showToast('At least one general image URL is required.', 'error');
+                return;
+            }
+
+            const colorVariants = JSON.parse(container.dataset.colorVariants || '[]');
 
             const productData = {
                 name: form.name.value,
@@ -407,9 +579,11 @@
                 price: parseFloat(form.price.value),
                 oldPrice: parseFloat(form.oldPrice.value) || 0,
                 images: images,
+                colorVariants: colorVariants,
                 description: form.description.value,
-                variants: variants, // Save the new structure
-                isAvailable: overallAvailable // Derive overall availability
+                isAvailable: colorVariants.some(variant => 
+                    variant.sizes && variant.sizes.some(size => size.available)
+                ) || images.length > 0 // Fallback to general availability
             };
 
             if (!productId) {
@@ -424,7 +598,7 @@
                     await db.collection('products').add(productData);
                     showToast('Product created successfully!', 'success');
                 }
-                window.history.back();
+                setTimeout(() => window.history.back(), 1000);
             } catch(error) {
                 console.error("Error saving product:", error);
                 showToast("Failed to save product.", "error");
@@ -438,6 +612,7 @@
                  navRight.innerHTML = `<button title="Category Management" class="nav-icon" onclick="window.location.href='manage-category.html'"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg></button><button title="Logout" class="nav-icon" onclick="auth.signOut()">${logoutIcon}</button>`;
             }
         }
+
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
