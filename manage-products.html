@@ -29,69 +29,63 @@
         button { border: none; border-radius: var(--border-radius); cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: all 0.2s ease-in-out; }
         .btn-primary { background-color: var(--primary-color); color: white; padding: 0.75rem 1.5rem; }
         .btn-primary:hover { background-color: var(--primary-hover); }
-        .btn-secondary { background-color: var(--secondary-color); color: white; padding: 0.75rem 1.5rem; }
-        .btn-danger { background-color: var(--danger-color); color: white; padding: 0.75rem 1.5rem; }
+        .btn-success { background-color: var(--success-color); color: white; padding: 0.75rem 1.5rem; }
+        .btn-danger { background-color: var(--danger-color); color: white; padding: 0.5rem 1rem; font-size: 0.875rem; }
         .btn-sm { padding: 0.5rem 1rem; font-size: 0.875rem; }
-        .search-container { position: relative; margin-bottom: 2rem; max-width: 400px; }
-        .search-input { 
-            padding: 0.75rem 1rem 0.75rem 2.5rem; 
-            border: 1px solid #d1d5db; border-radius: var(--border-radius);
-            width: 100%; font-size: 0.95rem;
-            transition: all 0.2s ease-in-out;
-        }
-        .search-input:focus {
-            border-color: var(--primary-color); outline: 0;
-            box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
-        }
-        .search-icon { 
-            position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); 
-            color: var(--secondary-color); pointer-events: none;
-        }
         table { width: 100%; border-collapse: collapse; background: white; border-radius: var(--border-radius); overflow: hidden; }
         th, td { text-align: left; padding: 1rem; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
         th { background-color: var(--light-color); font-size: 0.9rem; font-weight: 600; color: var(--dark-color); }
         tbody tr { transition: background-color 0.2s; }
         tbody tr:hover { background-color: var(--light-color); }
-        .product-info { display: flex; align-items: center; gap: 1rem; }
-        .product-image { width: 50px; height: 50px; border-radius: var(--border-radius); object-fit: cover; border: 1px solid #e5e7eb; }
-        .product-details { flex: 1; }
-        .product-name { font-weight: 600; color: var(--dark-color); margin: 0 0 0.25rem 0; }
-        .product-category { font-size: 0.875rem; color: var(--secondary-color); margin: 0; }
-        .price { font-weight: 600; color: var(--dark-color); }
-        .colors-count { 
-            background: var(--primary-color); color: white; padding: 0.25rem 0.75rem; 
-            border-radius: 999px; font-size: 0.8rem; font-weight: 600; display: inline-block;
-            text-align: center; min-width: 30px;
-        }
-        .status-badge { 
-            padding: 0.375rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600;
-            text-align: center; display: inline-block; min-width: 80px;
-        }
-        .status-available { background: #d1fae5; color: #065f46; }
-        .status-unavailable { background: #fee2e2; color: #991b1b; }
         .table-actions { display: flex; gap: 0.5rem; }
-        .table-actions button { padding: 0.5rem 1rem; font-size: 0.875rem; }
+        .product-image { width: 50px; height: 50px; border-radius: var(--border-radius); object-fit: cover; border: 1px solid #e5e7eb; }
+        .availability-badge { 
+            display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.375rem 0.75rem; 
+            border-radius: 999px; font-size: 0.875rem; font-weight: 500; 
+        }
+        .availability-badge.available { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+        .availability-badge.unavailable { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+        .availability-toggle { 
+            appearance: none; width: 44px; height: 24px; background-color: #d1d5db; 
+            border-radius: 999px; position: relative; cursor: pointer; transition: all 0.2s; 
+        }
+        .availability-toggle::before { 
+            content: ''; position: absolute; width: 20px; height: 20px; border-radius: 50%; 
+            background-color: white; top: 2px; left: 2px; transition: transform 0.2s; 
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .availability-toggle:checked { background-color: var(--success-color); }
+        .availability-toggle:checked::before { transform: translateX(20px); }
+        .category-badge { 
+            background: var(--primary-light); color: var(--primary-color); padding: 0.25rem 0.75rem; 
+            border-radius: 999px; font-size: 0.8rem; font-weight: 600; 
+        }
+        .colors-count { 
+            background: #fef3c7; color: #92400e; padding: 0.25rem 0.75rem; 
+            border-radius: 999px; font-size: 0.8rem; font-weight: 600; text-align: center;
+            min-width: 40px; display: inline-block;
+        }
+        .price { font-weight: 600; color: var(--dark-color); }
         .empty-state { 
             text-align: center; padding: 3rem; color: var(--secondary-color); 
             background: var(--light-color); border-radius: var(--border-radius); 
             border: 2px dashed #d1d5db;
         }
         .empty-state h3 { margin: 0 0 0.5rem 0; color: var(--dark-color); }
-        .page-header { 
-            display: flex; justify-content: space-between; align-items: center; 
-            margin-bottom: 2rem; 
-        }
-        .category-badge { 
-            background: var(--primary-light); color: var(--primary-color); 
-            padding: 0.5rem 1rem; border-radius: var(--border-radius); 
-            font-weight: 600; font-size: 0.9rem;
-        }
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
         .toast { padding: 1rem 1.5rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
         @keyframes fadeOut { to { opacity: 0; } }
         .toast.success { background-color: var(--success-color); }
         .toast.error { background-color: var(--danger-color); }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .page-title { margin: 0; color: var(--dark-color); }
+        .back-button { 
+            display: inline-flex; align-items: center; gap: 0.5rem; 
+            background: none; border: 1px solid #d1d5db; color: var(--secondary-color);
+            padding: 0.5rem 1rem; margin-bottom: 1rem; font-size: 0.9rem;
+        }
+        .back-button:hover { background: var(--light-color); color: var(--dark-color); }
     </style>
 </head>
 <body>
@@ -101,32 +95,24 @@
     </nav>
 
     <div class="container page">
+        <button class="back-button" onclick="window.location.href='manage-category.html'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Back to Categories
+        </button>
+        
         <div id="manage-products-container" class="card">
-            <!-- Page Header -->
             <div class="page-header">
                 <div>
-                    <h1 style="margin: 0 0 0.5rem 0;">Products</h1>
-                    <div id="category-display" class="category-badge">
-                        Loading category...
-                    </div>
+                    <h1 class="page-title" id="products-page-title">Products</h1>
+                    <p id="category-subtitle" style="margin: 0.25rem 0 0 0; color: var(--secondary-color); font-size: 0.95rem;"></p>
                 </div>
-                <button class="btn-primary" id="add-product-btn">+ Add Product</button>
+                <button class="btn-success" id="add-product-btn">+ Add Product</button>
             </div>
 
-            <!-- Search Section -->
-            <div class="search-container">
-                <div class="search-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <path d="m21 21-4.3-4.3"></path>
-                    </svg>
-                </div>
-                <input type="text" id="search-products" class="search-input" placeholder="Search products...">
-            </div>
-
-            <!-- Products Table -->
             <div id="products-content">
-                <div style="overflow-x:auto; border-radius: var(--border-radius);">
+                <div style="overflow-x:auto; border-radius: var(--border-radius); border: 1px solid #e5e7eb;">
                     <table>
                         <thead>
                             <tr>
@@ -138,11 +124,7 @@
                             </tr>
                         </thead>
                         <tbody id="admin-products-table">
-                            <tr>
-                                <td colspan="5" style="text-align:center; padding: 2rem;">
-                                    Loading products...
-                                </td>
-                            </tr>
+                            <tr><td colspan="5" style="text-align:center; padding: 2rem;">Loading products...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -171,7 +153,6 @@
         let currentUser = null;
         let allProducts = [];
         let currentCategory = null;
-        let filteredProducts = [];
 
         document.addEventListener('DOMContentLoaded', () => {
             auth.onAuthStateChanged(user => {
@@ -189,29 +170,16 @@
             const params = new URLSearchParams(window.location.search);
             currentCategory = params.get('category');
             
-            // Update category display
-            const categoryDisplay = document.getElementById('category-display');
             if (!currentCategory) {
-                categoryDisplay.textContent = "All Categories";
-                categoryDisplay.style.background = 'var(--secondary-color)';
-                categoryDisplay.style.color = 'white';
+                document.getElementById('products-page-title').textContent = "All Products";
+                document.getElementById('category-subtitle').textContent = "Showing all products across all categories";
+                document.getElementById('add-product-btn').onclick = () => window.location.href = 'product.html';
             } else {
-                categoryDisplay.textContent = decodeURIComponent(currentCategory);
+                const decodedCategory = decodeURIComponent(currentCategory);
+                document.getElementById('products-page-title').textContent = decodedCategory;
+                document.getElementById('category-subtitle').textContent = `Products in ${decodedCategory} category`;
+                document.getElementById('add-product-btn').onclick = () => window.location.href = `product.html?category=${encodeURIComponent(decodedCategory)}`;
             }
-
-            // Set up add product button
-            document.getElementById('add-product-btn').onclick = () => {
-                if (currentCategory) {
-                    window.location.href = `product.html?category=${encodeURIComponent(currentCategory)}`;
-                } else {
-                    window.location.href = 'product.html';
-                }
-            };
-
-            // Set up search
-            document.getElementById('search-products').addEventListener('input', (e) => {
-                filterProducts(e.target.value.toLowerCase().trim());
-            });
 
             loadAndRenderProducts();
         }
@@ -221,11 +189,10 @@
                 const snapshot = await db.collection('products').orderBy('name').get();
                 allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
-                filteredProducts = allProducts;
+                let filteredProducts = allProducts;
                 if (currentCategory) {
                     filteredProducts = allProducts.filter(p => p.category === decodeURIComponent(currentCategory));
                 }
-                
                 renderProductsTable(filteredProducts);
             } catch (error) {
                 console.error("Error loading products:", error);
@@ -233,36 +200,17 @@
             }
         }
 
-        function filterProducts(searchTerm) {
-            if (searchTerm === '') {
-                filteredProducts = currentCategory 
-                    ? allProducts.filter(p => p.category === decodeURIComponent(currentCategory))
-                    : allProducts;
-            } else {
-                filteredProducts = allProducts.filter(p => 
-                    p.name.toLowerCase().includes(searchTerm) ||
-                    (p.category && p.category.toLowerCase().includes(searchTerm))
-                );
-                
-                if (currentCategory) {
-                    filteredProducts = filteredProducts.filter(p => p.category === decodeURIComponent(currentCategory));
-                }
-            }
-            renderProductsTable(filteredProducts);
-        }
-
         function renderProductsTable(productsToRender) {
             const tableBody = document.getElementById('admin-products-table');
-            
             if (productsToRender.length === 0) {
                 tableBody.innerHTML = `
                     <tr>
                         <td colspan="5">
                             <div class="empty-state">
                                 <h3>No Products Found</h3>
-                                <p>${currentCategory ? 'No products in this category yet.' : 'No products found matching your search.'}</p>
-                                <button class="btn-primary" onclick="document.getElementById('add-product-btn').click()" style="margin-top: 1rem;">
-                                    Add Your First Product
+                                <p>${currentCategory ? `No products in ${decodeURIComponent(currentCategory)} category yet` : 'No products created yet'}</p>
+                                <button class="btn-success" onclick="document.getElementById('add-product-btn').click()" style="margin-top: 1rem;">
+                                    + Add Your First Product
                                 </button>
                             </div>
                         </td>
@@ -273,17 +221,16 @@
             tableBody.innerHTML = productsToRender.map(product => {
                 const imageUrl = (product.images && product.images.length > 0) ? product.images[0] : 'https://via.placeholder.com/50?text=No+Image';
                 const colorsCount = product.colorVariants ? product.colorVariants.length : 0;
-                const isAvailable = product.isAvailable !== false; // Default to true if undefined
+                const isAvailable = product.isAvailable !== false; // Default to true if not set
                 
                 return `
                 <tr>
                     <td>
-                        <div class="product-info">
-                            <img src="${imageUrl}" alt="${product.name}" class="product-image" 
-                                 onerror="this.src='https://via.placeholder.com/50?text=No+Image'">
-                            <div class="product-details">
-                                <div class="product-name">${product.name}</div>
-                                <div class="product-category">${product.category || 'Uncategorized'}</div>
+                        <div style="display:flex; align-items:center; gap:1rem;">
+                            <img src="${imageUrl}" alt="${product.name}" class="product-image">
+                            <div>
+                                <div style="font-weight:600; margin-bottom:0.25rem;">${product.name}</div>
+                                <div class="category-badge">${product.category || 'Uncategorized'}</div>
                             </div>
                         </div>
                     </td>
@@ -292,22 +239,48 @@
                         <span class="colors-count">${colorsCount}</span>
                     </td>
                     <td>
-                        <span class="status-badge ${isAvailable ? 'status-available' : 'status-unavailable'}">
-                            ${isAvailable ? 'Available' : 'Out of Stock'}
-                        </span>
+                        <label class="availability-badge ${isAvailable ? 'available' : 'unavailable'}">
+                            <input type="checkbox" class="availability-toggle" data-id="${product.id}" ${isAvailable ? 'checked' : ''}>
+                            ${isAvailable ? 'Available' : 'Unavailable'}
+                        </label>
                     </td>
                     <td>
                         <div class="table-actions">
-                            <button class="btn-primary btn-sm" onclick="editProduct('${product.id}')">
-                                Edit
-                            </button>
-                            <button class="btn-danger btn-sm" onclick="deleteProduct('${product.id}', '${product.name}')">
-                                Delete
-                            </button>
+                            <button class="btn-primary btn-sm" onclick="editProduct('${product.id}')">Edit</button> 
+                            <button class="btn-danger btn-sm" onclick="deleteProduct('${product.id}', '${product.name}')">Delete</button>
                         </div>
                     </td>
                 </tr>`;
             }).join('');
+
+            // Add event listeners for availability toggles
+            document.querySelectorAll('.availability-toggle').forEach(toggle => {
+                toggle.addEventListener('change', async (e) => {
+                    await updateProductAvailability(e.target.dataset.id, e.target.checked);
+                });
+            });
+        }
+        
+        async function updateProductAvailability(productId, isAvailable) {
+            try {
+                await db.collection('products').doc(productId).update({ isAvailable: isAvailable });
+                const product = allProducts.find(p => p.id === productId);
+                if(product) product.isAvailable = isAvailable;
+                showToast('Availability updated!', 'success');
+                
+                // Update the badge text
+                const badge = document.querySelector(`.availability-toggle[data-id="${productId}"]`).closest('.availability-badge');
+                badge.textContent = isAvailable ? 'Available' : 'Unavailable';
+                badge.className = `availability-badge ${isAvailable ? 'available' : 'unavailable'}`;
+                badge.prepend(document.querySelector(`.availability-toggle[data-id="${productId}"]`));
+                
+            } catch (error) {
+                console.error("Error updating availability:", error);
+                showToast("Failed to update availability", "error");
+                // Revert the toggle
+                const toggle = document.querySelector(`.availability-toggle[data-id="${productId}"]`);
+                toggle.checked = !isAvailable;
+            }
         }
 
         function editProduct(productId) {
