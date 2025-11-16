@@ -44,6 +44,12 @@
             border-color: var(--primary-color); outline: 0;
             box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
         }
+        .image-preview { 
+            width: 80px; height: 80px; border-radius: var(--border-radius); 
+            object-fit: cover; border: 2px solid #e5e7eb; margin-top: 0.5rem;
+            display: none;
+        }
+        .image-preview.show { display: block; }
         .search-container { position: relative; margin-bottom: 2rem; max-width: 400px; }
         .search-input { 
             padding: 0.75rem 1rem 0.75rem 2.5rem; 
@@ -73,7 +79,12 @@
             display: flex; justify-content: space-between; align-items: center;
             cursor: pointer;
         }
-        .category-info { flex: 1; }
+        .category-info { flex: 1; display: flex; align-items: center; gap: 1rem; }
+        .category-image { 
+            width: 50px; height: 50px; border-radius: var(--border-radius); 
+            object-fit: cover; border: 2px solid #e5e7eb; flex-shrink: 0;
+        }
+        .category-details { flex: 1; }
         .category-name { 
             font-size: 1.1rem; font-weight: 600; color: var(--dark-color); 
             margin: 0 0 0.25rem 0; 
@@ -206,6 +217,11 @@
                     <label for="category-name">Category Name</label>
                     <input type="text" id="category-name" placeholder="Enter category name" required>
                 </div>
+                <div class="form-group">
+                    <label for="category-image">Category Image URL</label>
+                    <input type="url" id="category-image" placeholder="https://example.com/category-image.jpg">
+                    <img id="add-category-preview" class="image-preview" alt="Category image preview">
+                </div>
                 <div class="modal-actions">
                     <button type="button" class="btn-secondary" onclick="closeAddCategoryModal()">Cancel</button>
                     <button type="submit" class="btn-primary">Save Category</button>
@@ -226,6 +242,11 @@
                 <div class="form-group">
                     <label for="edit-category-name">Category Name</label>
                     <input type="text" id="edit-category-name" placeholder="Enter category name" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-category-image">Category Image URL</label>
+                    <input type="url" id="edit-category-image" placeholder="https://example.com/category-image.jpg">
+                    <img id="edit-category-preview" class="image-preview" alt="Category image preview">
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn-secondary" onclick="closeEditCategoryModal()">Cancel</button>
@@ -355,8 +376,14 @@
                         <div class="category-card">
                             <div class="category-content" onclick="navigateToProducts('${category.name}')">
                                 <div class="category-info">
-                                    <h3 class="category-name">${category.name}</h3>
-                                    <div class="category-count">${productCounts[category.name] || 0} products</div>
+                                    <img src="${category.imageUrl || 'https://via.placeholder.com/50?text=No+Image'}" 
+                                         alt="${category.name}" 
+                                         class="category-image"
+                                         onerror="this.src='https://via.placeholder.com/50?text=No+Image'">
+                                    <div class="category-details">
+                                        <h3 class="category-name">${category.name}</h3>
+                                        <div class="category-count">${productCounts[category.name] || 0} products</div>
+                                    </div>
                                 </div>
                                 <div class="category-actions">
                                     <span class="products-badge">${productCounts[category.name] || 0}</span>
@@ -369,7 +396,7 @@
                                             </svg>
                                         </button>
                                         <div class="dropdown-menu" id="menu-${category.id}">
-                                            <button class="dropdown-item edit" onclick="openEditCategoryModal('${category.id}', '${category.name}')">
+                                            <button class="dropdown-item edit" onclick="openEditCategoryModal('${category.id}', '${category.name}', '${category.imageUrl || ''}')">
                                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -419,6 +446,16 @@
                 await updateCategory();
             });
 
+            // Image preview for add category
+            document.getElementById('category-image').addEventListener('input', (e) => {
+                updateImagePreview(e.target.value, 'add-category-preview');
+            });
+
+            // Image preview for edit category
+            document.getElementById('edit-category-image').addEventListener('input', (e) => {
+                updateImagePreview(e.target.value, 'edit-category-preview');
+            });
+
             // Delete confirmation input
             document.getElementById('confirm-category-name').addEventListener('input', (e) => {
                 const confirmBtn = document.getElementById('confirm-delete-btn');
@@ -439,6 +476,25 @@
                     });
                 }
             });
+        }
+
+        function updateImagePreview(imageUrl, previewId) {
+            const preview = document.getElementById(previewId);
+            if (imageUrl && isValidUrl(imageUrl)) {
+                preview.src = imageUrl;
+                preview.classList.add('show');
+            } else {
+                preview.classList.remove('show');
+            }
+        }
+
+        function isValidUrl(string) {
+            try {
+                new URL(string);
+                return true;
+            } catch (_) {
+                return false;
+            }
         }
 
         function toggleMenu(categoryId) {
@@ -464,12 +520,22 @@
         function closeAddCategoryModal() {
             document.getElementById('add-category-modal').style.display = 'none';
             document.getElementById('add-category-form').reset();
+            document.getElementById('add-category-preview').classList.remove('show');
         }
 
-        function openEditCategoryModal(categoryId, categoryName) {
-            currentEditingCategory = { id: categoryId, name: categoryName };
+        function openEditCategoryModal(categoryId, categoryName, categoryImage = '') {
+            currentEditingCategory = { id: categoryId, name: categoryName, imageUrl: categoryImage };
             document.getElementById('edit-category-id').value = categoryId;
             document.getElementById('edit-category-name').value = categoryName;
+            document.getElementById('edit-category-image').value = categoryImage || '';
+            
+            // Update image preview if image exists
+            if (categoryImage) {
+                updateImagePreview(categoryImage, 'edit-category-preview');
+            } else {
+                document.getElementById('edit-category-preview').classList.remove('show');
+            }
+            
             document.getElementById('edit-category-modal').style.display = 'flex';
             document.getElementById('edit-category-name').focus();
         }
@@ -477,6 +543,7 @@
         function closeEditCategoryModal() {
             document.getElementById('edit-category-modal').style.display = 'none';
             document.getElementById('edit-category-form').reset();
+            document.getElementById('edit-category-preview').classList.remove('show');
             currentEditingCategory = null;
         }
 
@@ -497,7 +564,9 @@
 
         async function addCategory() {
             const nameInput = document.getElementById('category-name');
+            const imageInput = document.getElementById('category-image');
             const name = nameInput.value.trim();
+            const imageUrl = imageInput.value.trim();
             
             if (!name) {
                 showToast('Category name cannot be empty.', 'error');
@@ -509,11 +578,24 @@
                 return;
             }
 
+            // Validate image URL if provided
+            if (imageUrl && !isValidUrl(imageUrl)) {
+                showToast('Please enter a valid image URL.', 'error');
+                return;
+            }
+
             try {
-                await db.collection('categories').add({ 
+                const categoryData = { 
                     name: name, 
                     createdAt: firebase.firestore.FieldValue.serverTimestamp() 
-                });
+                };
+
+                // Add image URL if provided
+                if (imageUrl) {
+                    categoryData.imageUrl = imageUrl;
+                }
+
+                await db.collection('categories').add(categoryData);
                 
                 showToast('Category created successfully!', 'success');
                 closeAddCategoryModal();
@@ -531,7 +613,9 @@
 
         async function updateCategory() {
             const nameInput = document.getElementById('edit-category-name');
+            const imageInput = document.getElementById('edit-category-image');
             const name = nameInput.value.trim();
+            const imageUrl = imageInput.value.trim();
             const categoryId = document.getElementById('edit-category-id').value;
             
             if (!name) {
@@ -544,11 +628,22 @@
                 return;
             }
 
+            // Validate image URL if provided
+            if (imageUrl && !isValidUrl(imageUrl)) {
+                showToast('Please enter a valid image URL.', 'error');
+                return;
+            }
+
             try {
-                await db.collection('categories').doc(categoryId).update({ 
+                const updateData = { 
                     name: name,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp() 
-                });
+                };
+
+                // Update image URL (set to empty string if cleared)
+                updateData.imageUrl = imageUrl || '';
+
+                await db.collection('categories').doc(categoryId).update(updateData);
                 
                 showToast('Category updated successfully!', 'success');
                 closeEditCategoryModal();
