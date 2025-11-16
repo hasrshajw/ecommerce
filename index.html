@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-commerce Store</title>
+    <title>ShopSphere - Premium Fashion Store</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -40,6 +46,7 @@
             width: 100%;
             z-index: 1100;
             overflow: hidden;
+            cursor: pointer;
         }
 
         .promo-text {
@@ -58,7 +65,7 @@
         /* Navbar Styles */
         .navbar {
             position: fixed;
-            top: 32px; /* Adjusted to account for promo banner */
+            top: 32px;
             left: 0;
             width: 100%;
             background: var(--white);
@@ -462,7 +469,7 @@
             max-height: 800px;
             overflow: hidden;
             background-color: var(--bg-light);
-            margin-top: 110px; /* Space for promo banner + navbar */
+            margin-top: 110px;
         }
 
         .carousel {
@@ -742,6 +749,13 @@
             right: 10px;
         }
 
+        /* Responsive */
+        @media (max-width: 768px) {
+            .arrow {
+                display: flex;
+            }
+        }
+
         /* Overlay for menus */
         .overlay {
             position: fixed;
@@ -820,7 +834,6 @@
             position: relative;
             display: flex;
             flex-direction: column;
-            cursor: pointer;
         }
         
         .product-card:hover {
@@ -1060,8 +1073,8 @@
             }
         }
 
-        /* Sarees & Lehengas Sections */
-        .scroll-section {
+        /* Category Products Sections */
+        .category-products-section {
             padding: 3rem 1rem;
             max-width: 1200px;
             margin: 0 auto;
@@ -1167,7 +1180,7 @@
             border-radius: 10px;
         }
 
-        .scroll-section .arrow {
+        .category-products-section .arrow {
             display: flex;
             top: 50%;
             transform: translateY(-50%);
@@ -1195,182 +1208,49 @@
             }
         }
 
-        /* Handpicked Styles Section */
-        .handpicked-section {
+        /* Loading States */
+        .loading {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 60px;
-            padding: 60px 20px;
-            background-color: var(--white);
-            max-width: 1200px;
-            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-light);
         }
 
-        /* DESKTOP IMAGE ROWS */
-        .row-images {
-            display: flex;
-            gap: 25px;
+        .loading-spinner {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #e5e7eb;
+            border-top: 2px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
         }
 
-        .row-images img {
-            width: 240px;
-            height: 420px;
-            object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-
-        .left-up { transform: translateY(-35px); }
-        .right-up { transform: translateY(-35px); }
-
-        /* CENTER TEXT DESKTOP */
-        .center-box {
-            text-align: center;
-            max-width: 360px;
-        }
-
-        .center-box h2 {
-            font-size: 40px;
-            font-family: "Playfair Display", serif;
-            color: #0a9b9b;
-        }
-
-        .center-box h3 {
-            font-size: 40px;
-            color: #ff4b91;
-            font-family: "Playfair Display", serif;
-            margin-top: -10px;
-        }
-
-        .center-box p {
-            margin-top: 15px;
-            font-weight: 500;
-            color: #444;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #ff4b91, #ff6fb0);
-            color: white;
-            padding: 14px 35px;
-            border-radius: 30px;
-            border: none;
-            cursor: pointer;
-            margin-top: 25px;
-            font-size: 16px;
-            box-shadow: 0 4px 12px rgba(255, 75, 145, 0.4);
-            transition: 0.2s ease;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 18px rgba(255, 75, 145, 0.45);
-        }
-
-        /* MOBILE HIDDEN BY DEFAULT */
-        .mobile-row { display: none; }
-
-        /* -----------------------------------
-           📱 MOBILE VIEW — UI/UX IMPROVED
-           ----------------------------------- */
-        @media(max-width: 900px) {
-
-            .handpicked-section {
-                flex-direction: column;
-                gap: 20px;
-                padding: 30px 12px;
-            }
-
-            /* Hide desktop images on mobile */
-            .row-images {
-                display: none;
-            }
-
-            /* Mobile row of 4 small images */
-            .mobile-row {
-                display: flex;
-                justify-content: space-between;
-                width: 100%;
-                padding: 0 4px;
-                gap: 6px;
-            }
-
-            .mobile-row img {
-                width: 24%;
-                height: 110px;
-                object-fit: cover;
-                border-radius: 12px;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            }
-
-            /* IMPROVED TEXT CARD LOOK */
-            .center-box {
-                background: #ffffff;
-                padding: 20px 16px;
-                border-radius: 16px;
-                width: 100%;
-                box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-                border: 1px solid #f3f3f3;
-            }
-
-            .center-box h2 {
-                font-size: 24px;
-                color: #0a9b9b;
-                margin-bottom: 4px;
-            }
-
-            .center-box h3 {
-                font-size: 26px;
-                margin-top: 0;
-                color: #ff4b91;
-            }
-
-            .center-box p {
-                font-size: 13px;
-                color: #555;
-                margin: 8px 0 15px;
-            }
-
-            /* MODERN BUTTON */
-            .btn {
-                width: 100%;
-                padding: 13px 0;
-                font-size: 15px;
-                border-radius: 12px;
-                background: linear-gradient(135deg, #ff4b91, #ff78b2);
-                box-shadow: 0 4px 14px rgba(255, 75, 145, 0.35);
-            }
-        }
-
-        /* Overlay for menus */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1100;
-            display: none;
-        }
-
-        .overlay.active {
-            display: block;
-        }
-
-        /* Placeholder for Cart and Admin panel styling from other files if needed */
-        #cart-count { position: absolute; top: 0; right: 0; background-color: var(--red); color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.7rem; font-weight: bold; }
-        #user-info { font-weight: 600; margin-right: 1rem; }
-        #auth-btn { padding: 0.5rem 1rem; }
     </style>
 </head>
 <body>
-    <div id="toast-container"></div>
+    <!-- Firebase Configuration -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCzqYrP1qYSiiLLgKW3z3EcwMpiG4hyF6M",
+            authDomain: "e-commerce27.firebaseapp.com",
+            projectId: "e-commerce27",
+            storageBucket: "e-commerce27.firebasestorage.app",
+            messagingSenderId: "1000564724466",
+            appId: "1:1000564724466:web:55047ed3c820197733366b",
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+    </script>
+
     <!-- Promotional Banner -->
-    <div class="promo-banner">
-        <div class="promo-text" id="promo-text">
-            <!-- Dynamic Promo Text will go here -->
-        </div>
+    <div class="promo-banner" id="promoBanner" style="display: none;">
+        <div class="promo-text" id="promoText"></div>
     </div>
 
     <!-- Navbar -->
@@ -1378,14 +1258,14 @@
         <div class="nav-container">
             <!-- Desktop Nav -->
             <div class="desktop-nav">
-                <div class="nav-logo" onclick="window.location.href='index.html'">
-                    <img src="http://photography.wixo.in/yellow.png" alt="Shop Logo">
+                <div class="nav-logo">
+                    <img src="http://photography.wixo.in/yellow.png" alt="ShopSphere Logo">
                 </div>
                 <div class="nav-links">
-                    <a href="index.html">Home</a>
-                    <a href="shop.html">Shop</a> <!-- Assumed link -->
-                    <a href="#category-section">Categories</a>
-                    <a href="/deals">Deals</a>
+                    <a href="#">Home</a>
+                    <a href="#">Shop</a>
+                    <a href="#">Categories</a>
+                    <a href="#">Deals</a>
                 </div>
                 <div class="nav-search" id="desktopSearch">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -1412,7 +1292,7 @@
                             <circle cx="20" cy="21" r="1"></circle>
                             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                         </svg>
-                        <span id="cart-count">0</span>
+                        <span class="cart-count">0</span>
                     </button>
                 </div>
             </div>
@@ -1427,8 +1307,8 @@
                     </button>
                 </div>
                 <div class="mobile-nav-center">
-                    <div class="mobile-logo" onclick="window.location.href='index.html'">
-                        <img src="http://photography.wixo.in/yellow.png" alt="Shop Logo">
+                    <div class="mobile-logo">
+                        <img src="http://photography.wixo.in/yellow.png" alt="ShopSphere Logo">
                     </div>
                 </div>
                 <div class="mobile-nav-right">
@@ -1449,7 +1329,7 @@
                             <circle cx="20" cy="21" r="1"></circle>
                             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                         </svg>
-                        <span id="cart-count">0</span>
+                        <span class="cart-count">0</span>
                     </button>
                 </div>
             </div>
@@ -1487,15 +1367,15 @@
             </button>
         </div>
         
-        <div class="mobile-menu-links" id="mobile-menu-links-container">
-            <!-- Links will be populated dynamically or are here as placeholders -->
-            <a href="index.html">Home</a>
-            <a href="shop.html">Shop</a>
-            <a href="#category-section">Categories</a>
-            <a href="/deals">Deals</a>
-            <a href="/wishlist">Wishlist</a>
-            <a href="orders.html">Order History</a>
-            <a href="#" id="mobile-login-logout-link">Login</a>
+        <div class="mobile-menu-links">
+            <a href="#">Home</a>
+            <a href="#">Shop All</a>
+            <a href="#">Categories</a>
+            <a href="#">Deals</a>
+            <a href="#">New Arrivals</a>
+            <a href="#">Best Sellers</a>
+            <a href="#">My Account</a>
+            <a href="#">Order History</a>
         </div>
     </div>
 
@@ -1511,16 +1391,19 @@
             </button>
         </div>
         
-        <div class="cart-items" id="cart-sidebar-items">
-            <!-- Cart items will be populated dynamically -->
+        <div class="cart-items" id="cartItems">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                Loading cart...
+            </div>
         </div>
         
         <div class="cart-footer">
             <div class="cart-total">
                 <span>Total:</span>
-                <span id="cart-sidebar-total">$0.00</span>
+                <span id="cartTotal">$0.00</span>
             </div>
-            <button class="checkout-btn" id="sidebar-checkout-btn">Proceed to Checkout</button>
+            <button class="checkout-btn">Proceed to Checkout</button>
         </div>
     </div>
 
@@ -1530,7 +1413,10 @@
     <!-- Hero Section -->
     <section class="hero" aria-label="Featured Products">
         <div class="carousel" role="region" aria-roledescription="carousel" aria-label="Product highlights" id="heroCarousel">
-            <!-- Slides will be injected here by JS -->
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                Loading hero images...
+            </div>
         </div>
     </section>
 
@@ -1541,666 +1427,607 @@
             <div class="arrow left" id="leftArrow">&#10094;</div>
             <div class="arrow right" id="rightArrow">&#10095;</div>
 
-            <div class="category-container" id="category-container">
-                <!-- Categories will be injected here by JS -->
+            <div class="category-container" id="scrollContainer">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    Loading categories...
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Best Sellers Section -->
     <section class="bestsellers-section">
-        <!-- Heading -->
         <div class="heading-row">
             <h2>Best Sellers</h2>
-            <a href="/shop?filter=bestseller">View More</a>
+            <a href="#">View More</a>
         </div>
         
-        <!-- Product Cards -->
-        <div class="product-grid" id="best-sellers-grid">
-            <!-- Best Seller Cards will be injected here by JS -->
-        </div>
-    </section>
-
-    <!-- Sarees Section -->
-    <section class="scroll-section" id="sarees-section">
-        <div class="heading-row">
-            <h2 id="sarees-heading">Beautiful Sarees</h2>
-            <a href="/category/saree">View All</a>
-        </div>
-        <div class="scroll-container">
-            <div class="arrow left" id="sareesLeftArrow">&#10094;</div>
-            <div class="arrow right" id="sareesRightArrow">&#10095;</div>
-            <div class="scroll-products" id="sareesScroll">
-                <!-- Saree Cards will be injected here by JS -->
+        <div class="product-grid" id="bestSellersGrid">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                Loading best sellers...
             </div>
         </div>
     </section>
 
-    <!-- Lehengas Section -->
-    <section class="scroll-section" id="lehengas-section">
-        <div class="heading-row">
-            <h2 id="lehengas-heading">Stunning Lehengas</h2>
-            <a href="/category/lehenga-sets">View All</a>
-        </div>
-        <div class="scroll-container">
-            <div class="arrow left" id="lehengasLeftArrow">&#10094;</div>
-            <div class="arrow right" id="lehengasRightArrow">&#10095;</div>
-            <div class="scroll-products" id="lehengasScroll">
-                <!-- Lehenga Cards will be injected here by JS -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Handpicked Styles Section -->
-    <section class="handpicked-section">
-        <!-- Desktop Left -->
-        <div class="row-images">
-            <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0083.jpg" class="left-up">
-            <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0084.jpg">
-        </div>
-
-        <!-- Mobile 4 Images -->
-        <div class="mobile-row" id="handpicked-mobile-row">
-            <!-- Mobile images will be injected here by JS -->
-        </div>
-
-        <!-- Text & Button -->
-        <div class="center-box">
-            <h2 id="handpicked-title-1">Handpicked</h2>
-            <h3 id="handpicked-title-2">Styles, just for You!</h3>
-            <p id="handpicked-desc">BECAUSE YOU DESERVE THE BEST LOOKS!</p>
-            <button class="btn" id="handpicked-shop-btn">SHOP NOW</button>
-        </div>
-
-        <!-- Desktop Right -->
-        <div class="row-images">
-            <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0085.jpg">
-            <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0086.jpg" class="right-up">
-        </div>
-    </section>
-    
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <!-- Category Products Sections will be dynamically added here -->
+    <div id="categoryProductsContainer"></div>
 
     <script>
-        // --- CONFIG & STATE ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyCzqYrP1qYSiiLLgKW3z3EcwMpiG4hyF6M",
-            authDomain: "e-commerce27.firebaseapp.com",
-            projectId: "e-commerce27",
-            storageBucket: "e-commerce27.firebasestorage.app",
-            messagingSenderId: "1000564724466",
-            appId: "1:1000564724466:web:55047ed3c820197733366b",
-        };
-        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        let currentUser = null;
-        let products = [];
-        let heroSlides = [];
-        let categories = [];
-        let cart = [];
-
-        // --- APP ENTRY POINT ---
         document.addEventListener('DOMContentLoaded', function() {
-            auth.onAuthStateChanged(user => {
-                currentUser = user;
-                loadCartFromLocalStorage();
-                renderNav();
-                
-                const toastInfo = sessionStorage.getItem('toastMessage');
-                if(toastInfo){
-                    const { message, type } = JSON.parse(toastInfo);
-                    showToast(message, type);
-                    sessionStorage.removeItem('toastMessage');
+            // Firebase data
+            let promoBannerData = null;
+            let heroImages = [];
+            let categories = [];
+            let bestSellers = [];
+            let allProducts = [];
+
+            // Initialize the page
+            initializePage();
+
+            async function initializePage() {
+                try {
+                    await loadAllData();
+                    setupEventListeners();
+                    renderAllSections();
+                } catch (error) {
+                    console.error('Error initializing page:', error);
                 }
-            });
-            
-            // Initialize complex UI interactions first, they don't need data
-            initializeUI();
-            
-            // Then fetch data and render dynamic content
-            fetchDynamicData();
-        });
+            }
 
-        // --- DATA FETCHING (NEW) ---
-        async function fetchDynamicData() {
-            try {
-                // 1. Fetch Hero Slides (Ordered by 'order' field)
-                const heroSnapshot = await db.collection('heroSlides')
-                    .orderBy('order', 'asc')
-                    .get();
-                heroSlides = heroSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            async function loadAllData() {
+                try {
+                    // Load promo banner
+                    const promoDoc = await db.collection('landingPage').doc('promoBanner').get();
+                    if (promoDoc.exists) {
+                        promoBannerData = promoDoc.data();
+                    }
 
-                // 2. Fetch Categories (Ordered by 'order' field)
-                const categorySnapshot = await db.collection('categories')
-                    .orderBy('order', 'asc')
-                    .get();
-                categories = categorySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    // Load hero images
+                    const heroDoc = await db.collection('landingPage').doc('heroImages').get();
+                    if (heroDoc.exists) {
+                        heroImages = heroDoc.data().images || [];
+                    }
 
-                // 3. Fetch All Products (to get Best Sellers and filter all)
-                const productSnapshot = await db.collection('products')
-                    .where('isAvailable', '==', true)
-                    .get();
+                    // Load categories
+                    const categoriesSnapshot = await db.collection('categories').orderBy('name').get();
+                    categories = categoriesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                    // Load best sellers
+                    const bestSellersDoc = await db.collection('landingPage').doc('bestSellers').get();
+                    if (bestSellersDoc.exists) {
+                        bestSellers = bestSellersDoc.data().products || [];
+                    }
+
+                    // Load all products
+                    const productsSnapshot = await db.collection('products').get();
+                    allProducts = productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                } catch (error) {
+                    console.error('Error loading data:', error);
+                }
+            }
+
+            function renderAllSections() {
+                renderPromoBanner();
+                renderHeroSection();
+                renderCategories();
+                renderBestSellers();
+                renderCategoryProducts();
+            }
+
+            function renderPromoBanner() {
+                const promoBanner = document.getElementById('promoBanner');
+                const promoText = document.getElementById('promoText');
+
+                if (promoBannerData && promoBannerData.active && promoBannerData.text) {
+                    promoText.textContent = promoBannerData.text;
+                    promoBanner.style.display = 'block';
+
+                    // Make banner clickable if link exists
+                    if (promoBannerData.link) {
+                        promoBanner.addEventListener('click', () => {
+                            window.location.href = promoBannerData.link;
+                        });
+                    }
+                }
+            }
+
+            function renderHeroSection() {
+                const heroCarousel = document.getElementById('heroCarousel');
                 
-                products = productSnapshot.docs.map(doc => ({ 
-                    id: doc.id, 
-                    ...doc.data(), 
-                    createdAt: doc.data().createdAt ? doc.data().createdAt.toDate() : new Date(0) // Ensure date is usable
-                }));
+                if (heroImages.length === 0) {
+                    heroCarousel.innerHTML = `
+                        <div class="loading">
+                            <div class="loading-spinner"></div>
+                            No hero images available
+                        </div>
+                    `;
+                    return;
+                }
+
+                let heroHTML = '';
                 
-                // Render all dynamic content now that data is available
-                renderDynamicContent();
-            } catch (error) {
-                console.error("Error fetching dynamic data:", error);
-                showToast("Error loading dynamic content from server.", "error");
-            }
-        }
+                heroImages.forEach((image, index) => {
+                    heroHTML += `
+                        <div class="carousel-slide ${index === 0 ? 'active' : ''}" role="group" aria-roledescription="slide" aria-label="${index + 1} of ${heroImages.length}">
+                            <a href="${image.link || '#'}" class="slide-link">
+                                <img 
+                                    src="${image.desktop}" 
+                                    alt="Hero image ${index + 1}"
+                                    class="slide-image desktop-image"
+                                    loading="lazy"
+                                    onerror="this.src='https://via.placeholder.com/1920x800?text=Hero+Image'"
+                                >
+                                <img 
+                                    src="${image.mobile}" 
+                                    alt="Hero image ${index + 1}"
+                                    class="slide-image mobile-image"
+                                    loading="lazy"
+                                    onerror="this.src='https://via.placeholder.com/600x800?text=Hero+Image'"
+                                >
+                            </a>
+                        </div>
+                    `;
+                });
 
-        function renderDynamicContent() {
-            renderHeroCarousel();
-            renderCategories();
-            renderBestSellers();
-            // Assuming Sarees and Lehengas sections need to be populated with specific categories
-            renderScrollSection('sareesScroll', 'sarees-section', 'Beautiful Sarees', 'Saree');
-            renderScrollSection('lehengasScroll', 'lehengas-section', 'Stunning Lehengas', 'Lehenga Sets');
-            renderHandpickedSection();
-            setupScrollArrowLogic(); // Setup scrolling for horizontal sections
-        }
-        
-        // --- DYNAMIC RENDERING FUNCTIONS ---
-
-        function renderHeroCarousel() {
-            const carousel = document.getElementById('heroCarousel');
-            if (!carousel) return;
-
-            carousel.innerHTML = heroSlides.map((slide, index) => `
-                <div class="carousel-slide ${index === 0 ? 'active' : ''}" role="group" aria-roledescription="slide" aria-label="${index + 1} of ${heroSlides.length}">
-                    <a href="${slide.link || '#'}" class="slide-link">
-                        <img 
-                            src="${slide.desktopImage || 'https://via.placeholder.com/1920x800?text=Desktop+Image'}" 
-                            alt="Featured Slide ${index + 1}"
-                            class="slide-image desktop-image"
-                            loading="lazy"
-                        >
-                        <img 
-                            src="${slide.mobileImage || 'https://via.placeholder.com/750x1164?text=Mobile+Image'}" 
-                            alt="Featured Slide ${index + 1}"
-                            class="slide-image mobile-image"
-                            loading="lazy"
-                        >
-                    </a>
-                </div>
-            `).join('');
-            
-            // Re-initialize carousel JS after rendering new slides
-            initializeCarousel();
-        }
-        
-        function renderCategories() {
-            const container = document.getElementById('category-container');
-            if (!container) return;
-
-            container.innerHTML = categories.map(cat => `
-                <div class="category">
-                    <a href="${cat.link || '/shop?category=' + encodeURIComponent(cat.name)}" class="category-link">
-                        <img src="${cat.desktopImage || 'https://via.placeholder.com/120'}" alt="${cat.name}" loading="lazy">
-                        <span>${cat.name || 'Category Name'}</span>
-                    </a>
-                </div>
-            `).join('');
-            
-            // Re-initialize scroll arrow logic for categories
-            setupScrollArrowLogic();
-        }
-
-        function renderBestSellers() {
-            const grid = document.getElementById('best-sellers-grid');
-            const bestSellers = products.filter(p => p.isBestSeller === true).slice(0, 4); // Take top 4 best sellers
-            if (!grid) return;
-            
-            grid.innerHTML = bestSellers.length ? bestSellers.map(p => renderProductCardHTML(p)).join('') : '<p style="grid-column:1/-1; text-align:center;">No Best Sellers set up in Admin.</p>';
-
-            // Attach event listeners for the new cards
-            wishlistButtonsSetup();
-            productCardClickSetup();
-        }
-        
-        function renderScrollSection(containerId, sectionId, headingText, categoryFilter) {
-            const section = document.getElementById(sectionId);
-            if (!section) return;
-            
-            const filteredProducts = products.filter(p => p.category === categoryFilter).slice(0, 10); // Up to 10 items
-            const container = document.getElementById(containerId);
-            
-            if (filteredProducts.length === 0) {
-                section.style.display = 'none';
-                return;
-            }
-            section.style.display = 'block'; // Ensure section is visible if products exist
-            
-            if (container) {
-                container.innerHTML = filteredProducts.map(p => renderScrollProductHTML(p)).join('');
-            }
-        }
-        
-        function renderHandpickedSection() {
-            const mobileRow = document.getElementById('handpicked-mobile-row');
-            if (!mobileRow) return;
-            
-            // Use the first 4 products as placeholders for the mobile row if dynamic data is not set up for this specific section
-            const handpickedMobile = products.slice(0, 4);
-            
-            mobileRow.innerHTML = handpickedMobile.map(p => `
-                <img src="${p.images?.[0] || 'https://via.placeholder.com/110'}" alt="${p.name}" loading="lazy">
-            `).join('');
-        }
-
-
-        // --- HTML TEMPLATE HELPERS ---
-        
-        function renderProductCardHTML(p) {
-            // Simplified for Best Sellers Grid, matching the new design's structure
-            const isSale = p.oldPrice > p.price && p.oldPrice > 0;
-            const isNew = p.createdAt && (new Date() - p.createdAt < (30 * 24 * 60 * 60 * 1000)); // New in last 30 days
-            
-            // Dummy rating/stock data for now, as this is not in the original template
-            const rating = (p.rating || 4.5).toFixed(1);
-            const stockCount = p.stockCount || 10;
-            const stockClass = stockCount > 5 ? 'in-stock' : 'low-stock';
-
-            return `
-                <div class="product-card" data-product-id="${p.id}">
-                    <div class="image-container">
-                        <img src="${p.images?.[0] || 'https://via.placeholder.com/350'}" alt="${p.name}" class="product-image" loading="lazy">
-                        ${isSale ? '<div class="badge sale">SALE</div>' : ''}
-                        ${isNew ? '<div class="badge new">NEW</div>' : ''}
-                        <button class="wishlist-btn" data-product-id="${p.id}">
-                            <i class="far fa-heart"></i>
+                // Add navigation controls
+                heroHTML += `
+                    <div class="carousel-nav">
+                        <button class="carousel-button prev" aria-label="Previous slide">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                            </svg>
+                        </button>
+                        <button class="carousel-button next" aria-label="Next slide">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                            </svg>
                         </button>
                     </div>
-                    <div class="product-info">
-                        <div class="product-title">${p.name}</div>
-                        <div class="product-price">
-                            <span class="current-price">₹${p.price.toFixed(2)}</span>
-                            ${isSale ? `<span class="original-price">₹${p.oldPrice.toFixed(2)}</span>` : ''}
-                            ${isSale ? `<span class="discount">${Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100)}% OFF</span>` : ''}
-                        </div>
-                        <div class="rating">
-                            <div class="stars">${'&#9733;'.repeat(Math.floor(rating))}${ '&#9734;'.repeat(5 - Math.floor(rating))}</div>
-                            <span class="rating-count">${rating} (${Math.floor(p.ratingCount || 100)})</span>
-                        </div>
-                        <div class="stock ${stockClass}">
-                            <i class="fas fa-check-circle"></i>
-                            ${stockCount} in stock
-                        </div>
+
+                    <div class="carousel-controls">
+                        ${heroImages.map((_, index) => `
+                            <button class="carousel-indicator ${index === 0 ? 'active' : ''}" aria-label="Show slide ${index + 1}"></button>
+                        `).join('')}
                     </div>
-                </div>
-            `;
-        }
-        
-        function renderScrollProductHTML(p) {
-            const isSale = p.oldPrice > p.price && p.oldPrice > 0;
-            const isNew = p.createdAt && (new Date() - p.createdAt < (30 * 24 * 60 * 60 * 1000)); 
+                `;
 
-            return `
-                <div class="scroll-product" onclick="window.location.href='product-detail.html#${p.id}'">
-                    <div class="scroll-image-container">
-                        <img src="${p.images?.[0] || 'https://via.placeholder.com/350'}" alt="${p.name}" class="scroll-product-image">
-                        ${isSale ? '<div class="badge sale">SALE</div>' : ''}
-                        ${isNew ? '<div class="badge new">NEW</div>' : ''}
-                    </div>
-                    <div class="scroll-product-info">
-                        <div class="scroll-product-title">${p.name}</div>
-                        <div class="scroll-product-price">
-                            <span class="scroll-current-price">₹${p.price.toFixed(2)}</span>
-                            ${isSale ? `<span class="scroll-original-price">₹${p.oldPrice.toFixed(2)}</span>` : ''}
-                            ${isSale ? `<span class="scroll-discount">${Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100)}% OFF</span>` : ''}
+                heroCarousel.innerHTML = heroHTML;
+                initializeCarousel();
+            }
+
+            function renderCategories() {
+                const scrollContainer = document.getElementById('scrollContainer');
+                
+                if (categories.length === 0) {
+                    scrollContainer.innerHTML = `
+                        <div class="loading">
+                            <div class="loading-spinner"></div>
+                            No categories available
                         </div>
+                    `;
+                    return;
+                }
+
+                const categoriesHTML = categories.map(category => `
+                    <div class="category">
+                        <a href="/products?category=${encodeURIComponent(category.name)}" class="category-link">
+                            <img src="${category.imageUrl || 'https://via.placeholder.com/120?text=Category'}" 
+                                 alt="${category.name}" 
+                                 loading="lazy"
+                                 onerror="this.src='https://via.placeholder.com/120?text=Category'">
+                            <span>${category.name}</span>
+                        </a>
                     </div>
-                </div>
-            `;
-        }
+                `).join('');
 
-        function renderHandpickedSection() {
-            const mobileRow = document.getElementById('handpicked-mobile-row');
-            const handpickedBtn = document.getElementById('handpicked-shop-btn');
-            if (!mobileRow || !handpickedBtn) return;
+                scrollContainer.innerHTML = categoriesHTML;
+                initializeCategoryScroll();
+            }
 
-            const handpickedProducts = products.slice(0, 4); // Use first 4 products as placeholders
-            
-            mobileRow.innerHTML = handpickedProducts.map(p => `
-                <img src="${p.images?.[0] || 'https://via.placeholder.com/110'}" alt="${p.name}" loading="lazy">
-            `).join('');
-            
-            handpickedBtn.onclick = () => alert('Navigating to Handpicked Collection (Link set to #)...');
-        }
+            function renderBestSellers() {
+                const bestSellersGrid = document.getElementById('bestSellersGrid');
+                
+                if (bestSellers.length === 0) {
+                    bestSellersGrid.innerHTML = `
+                        <div class="loading" style="grid-column: 1 / -1;">
+                            <div class="loading-spinner"></div>
+                            No best sellers available
+                        </div>
+                    `;
+                    return;
+                }
 
-        // --- UI & INTERACTION LOGIC ---
+                const bestSellersHTML = bestSellers.map(product => {
+                    const imageUrl = product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/300x400?text=Product';
+                    const oldPrice = product.oldPrice || product.price * 1.3;
+                    const discount = Math.round(((oldPrice - product.price) / oldPrice) * 100);
+                    
+                    return `
+                        <div class="product-card" data-product-id="${product.id}">
+                            <div class="image-container">
+                                <img src="${imageUrl}" alt="${product.name}" class="product-image"
+                                     onerror="this.src='https://via.placeholder.com/300x400?text=Product'">
+                                ${discount > 0 ? `<div class="badge sale">${discount}% OFF</div>` : ''}
+                                <button class="wishlist-btn">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-title">${product.name}</div>
+                                <div class="product-price">
+                                    <span class="current-price">$${product.price.toFixed(2)}</span>
+                                    ${oldPrice > product.price ? `<span class="original-price">$${oldPrice.toFixed(2)}</span>` : ''}
+                                </div>
+                                <div class="rating">
+                                    <div class="stars">${getRandomStars()}</div>
+                                    <span class="rating-count">${getRandomRating()}</span>
+                                </div>
+                                <div class="stock in-stock">
+                                    <i class="fas fa-check-circle"></i>
+                                    In stock
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
 
-        function initializeUI() {
-            // Setup Overlay/Menu/Search/Cart Listeners
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const closeMenu = document.getElementById('closeMenu');
-            const mobileMenu = document.getElementById('mobileMenu');
-            const mobileSearchBtn = document.getElementById('mobileSearchBtn');
-            const desktopSearchBtn = document.getElementById('desktopSearchBtn');
-            const closeSearch = document.getElementById('closeSearch');
-            const searchOverlay = document.getElementById('searchOverlay');
-            const mobileCartBtn = document.getElementById('mobileCartBtn');
-            const desktopCartBtn = document.getElementById('desktopCartBtn');
-            const closeCart = document.getElementById('closeCart');
-            const cartSidebar = document.getElementById('cartSidebar');
-            const overlay = document.getElementById('overlay');
+                bestSellersGrid.innerHTML = bestSellersHTML;
+                initializeProductInteractions();
+            }
 
-            // Menu
-            const openMobileMenu = () => { mobileMenu.classList.add('active'); overlay.classList.add('active'); document.body.style.overflow = 'hidden'; };
-            const closeMobileMenu = () => { mobileMenu.classList.remove('active'); overlay.classList.remove('active'); document.body.style.overflow = ''; };
-            mobileMenuBtn.addEventListener('click', openMobileMenu);
-            closeMenu.addEventListener('click', closeMobileMenu);
-
-            // Search
-            const openSearch = () => { searchOverlay.style.display = 'flex'; document.body.style.overflow = 'hidden'; };
-            const closeSearchOverlay = () => { searchOverlay.style.display = 'none'; document.body.style.overflow = ''; };
-            mobileSearchBtn.addEventListener('click', openSearch);
-            desktopSearchBtn.addEventListener('click', openSearch);
-            closeSearch.addEventListener('click', closeSearchOverlay);
-
-            // Cart
-            const openCart = () => { cartSidebar.classList.add('active'); overlay.classList.add('active'); document.body.style.overflow = 'hidden'; };
-            const closeCartSidebar = () => { cartSidebar.classList.remove('active'); overlay.classList.remove('active'); document.body.style.overflow = ''; };
-            mobileCartBtn.addEventListener('click', openCart);
-            desktopCartBtn.addEventListener('click', openCart);
-            closeCart.addEventListener('click', closeCartSidebar);
-
-            // Close all overlays on overlay click
-            overlay.addEventListener('click', function() {
-                closeMobileMenu();
-                closeCartSidebar();
-                closeSearchOverlay();
-            });
-            
-            // Carousel Initialization
-            initializeCarousel();
-            
-            // Setup dynamic scroll section arrow visibility logic
-            setupScrollArrowLogic();
-            window.addEventListener('resize', setupScrollArrowLogic);
-        }
-
-        function initializeCarousel() {
-            const slides = Array.from(document.querySelectorAll('.carousel-slide'));
-            const indicators = Array.from(document.querySelectorAll('.carousel-indicator'));
-            const prevButton = document.querySelector('.carousel-button.prev');
-            const nextButton = document.querySelector('.carousel-button.next');
-            
-            let currentIndex = 0;
-            let autoScrollInterval;
-            let isTransitioning = false;
-            const transitionDuration = 800;
-            const autoScrollDelay = 5000;
-            
-            function updateCarouselState() {
-                slides.forEach((slide, index) => {
-                    slide.classList.remove('active', 'prev', 'next');
-                    if (index === currentIndex) {
-                        slide.classList.add('active');
-                    } else if (index === (currentIndex - 1 + slides.length) % slides.length) {
-                        slide.classList.add('prev');
-                    } else if (index === (currentIndex + 1) % slides.length) {
-                        slide.classList.add('next');
+            function renderCategoryProducts() {
+                const container = document.getElementById('categoryProductsContainer');
+                
+                // Group products by category
+                const productsByCategory = {};
+                allProducts.forEach(product => {
+                    if (product.category) {
+                        if (!productsByCategory[product.category]) {
+                            productsByCategory[product.category] = [];
+                        }
+                        productsByCategory[product.category].push(product);
                     }
                 });
+
+                // Create sections for each category with products
+                let categorySectionsHTML = '';
+                
+                Object.keys(productsByCategory).forEach(categoryName => {
+                    const categoryProducts = productsByCategory[categoryName];
+                    if (categoryProducts.length > 0) {
+                        categorySectionsHTML += `
+                            <section class="category-products-section">
+                                <div class="heading-row">
+                                    <h2>${categoryName}</h2>
+                                    <a href="/products?category=${encodeURIComponent(categoryName)}">View All</a>
+                                </div>
+                                <div class="scroll-container">
+                                    <div class="arrow left">&#10094;</div>
+                                    <div class="arrow right">&#10095;</div>
+                                    <div class="scroll-products">
+                                        ${categoryProducts.map(product => {
+                                            const imageUrl = product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/300x400?text=Product';
+                                            const oldPrice = product.oldPrice || product.price * 1.3;
+                                            const discount = Math.round(((oldPrice - product.price) / oldPrice) * 100);
+                                            
+                                            return `
+                                                <div class="scroll-product" data-product-id="${product.id}">
+                                                    <div class="scroll-image-container">
+                                                        <img src="${imageUrl}" alt="${product.name}" class="scroll-product-image"
+                                                             onerror="this.src='https://via.placeholder.com/300x400?text=Product'">
+                                                        ${discount > 0 ? `<div class="badge sale">${discount}% OFF</div>` : ''}
+                                                    </div>
+                                                    <div class="scroll-product-info">
+                                                        <div class="scroll-product-title">${product.name}</div>
+                                                        <div class="scroll-product-price">
+                                                            <span class="scroll-current-price">$${product.price.toFixed(2)}</span>
+                                                            ${oldPrice > product.price ? `<span class="scroll-original-price">$${oldPrice.toFixed(2)}</span>` : ''}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                </div>
+                            </section>
+                        `;
+                    }
+                });
+
+                container.innerHTML = categorySectionsHTML;
+                initializeScrollSections();
+                initializeProductInteractions();
+            }
+
+            // Helper functions
+            function getRandomStars() {
+                const ratings = ['★★★★★', '★★★★☆', '★★★☆☆'];
+                return ratings[Math.floor(Math.random() * ratings.length)];
+            }
+
+            function getRandomRating() {
+                return (4 + Math.random()).toFixed(1) + ' (' + Math.floor(Math.random() * 100 + 50) + ')';
+            }
+
+            // Carousel functionality
+            function initializeCarousel() {
+                const slides = Array.from(document.querySelectorAll('.carousel-slide'));
+                const indicators = Array.from(document.querySelectorAll('.carousel-indicator'));
+                const prevButton = document.querySelector('.carousel-button.prev');
+                const nextButton = document.querySelector('.carousel-button.next');
+                
+                let currentIndex = 0;
+                let autoScrollInterval;
+                let isTransitioning = false;
+                const transitionDuration = 800;
+                const autoScrollDelay = 5000;
+                
+                function updateCarousel() {
+                    slides.forEach((slide, index) => {
+                        slide.classList.remove('active', 'prev', 'next');
+                        
+                        if (index === currentIndex) {
+                            slide.classList.add('active');
+                        } else if (index === (currentIndex - 1 + slides.length) % slides.length) {
+                            slide.classList.add('prev');
+                        } else if (index === (currentIndex + 1) % slides.length) {
+                            slide.classList.add('next');
+                        }
+                    });
+                    
+                    indicators.forEach((indicator, index) => {
+                        indicator.classList.toggle('active', index === currentIndex);
+                        
+                        if (index === currentIndex) {
+                            indicator.style.animation = 'none';
+                            void indicator.offsetWidth;
+                            indicator.style.animation = `loading ${autoScrollDelay}ms linear`;
+                        }
+                    });
+                }
+                
+                function goToSlide(index) {
+                    if (isTransitioning || index === currentIndex) return;
+                    
+                    isTransitioning = true;
+                    currentIndex = index;
+                    updateCarousel();
+                    
+                    setTimeout(() => {
+                        isTransitioning = false;
+                    }, transitionDuration);
+                }
+                
+                function nextSlide() {
+                    goToSlide((currentIndex + 1) % slides.length);
+                }
+                
+                function prevSlide() {
+                    goToSlide((currentIndex - 1 + slides.length) % slides.length);
+                }
+                
+                function startAutoScroll() {
+                    stopAutoScroll();
+                    autoScrollInterval = setInterval(nextSlide, autoScrollDelay);
+                }
+                
+                function stopAutoScroll() {
+                    clearInterval(autoScrollInterval);
+                }
+                
+                prevButton.addEventListener('click', prevSlide);
+                nextButton.addEventListener('click', nextSlide);
                 
                 indicators.forEach((indicator, index) => {
-                    indicator.classList.toggle('active', index === currentIndex);
-                    if (index === currentIndex) {
-                        indicator.style.animation = 'none';
-                        void indicator.offsetWidth; // Trigger reflow
-                        indicator.style.animation = `loading ${autoScrollDelay}ms linear`;
+                    indicator.addEventListener('click', () => goToSlide(index));
+                });
+                
+                const carousel = document.querySelector('.carousel');
+                carousel.addEventListener('mouseenter', stopAutoScroll);
+                carousel.addEventListener('mouseleave', startAutoScroll);
+                
+                let touchStartX = 0;
+                let touchEndX = 0;
+                
+                carousel.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, { passive: true });
+                
+                carousel.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    const diff = touchStartX - touchEndX;
+                    
+                    if (Math.abs(diff) > 50) {
+                        if (diff > 0) nextSlide();
+                        else prevSlide();
                     }
-                });
+                }, { passive: true });
                 
-                slides.forEach((slide, index) => {
-                    slide.setAttribute('aria-label', `${index + 1} of ${slides.length}`);
-                });
+                updateCarousel();
+                startAutoScroll();
             }
-            
-            function goToSlide(index) {
-                if (isTransitioning || index === currentIndex) return;
-                
-                isTransitioning = true;
-                currentIndex = index;
-                updateCarouselState();
-                
-                setTimeout(() => {
-                    isTransitioning = false;
-                }, transitionDuration);
-            }
-            
-            function nextSlide() { goToSlide((currentIndex + 1) % slides.length); }
-            function prevSlide() { goToSlide((currentIndex - 1 + slides.length) % slides.length); }
-            
-            function startAutoScroll() {
-                stopAutoScroll();
-                autoScrollInterval = setInterval(nextSlide, autoScrollDelay);
-            }
-            
-            function stopAutoScroll() {
-                clearInterval(autoScrollInterval);
-            }
-            
-            // Event Listeners for Carousel
-            prevButton.onclick = prevSlide;
-            nextButton.onclick = nextSlide;
-            indicators.forEach((indicator, index) => {
-                indicator.addEventListener('click', () => goToSlide(index));
-            });
-            
-            const carouselEl = document.querySelector('.carousel');
-            carouselEl.addEventListener('mouseenter', stopAutoScroll);
-            carouselEl.addEventListener('mouseleave', startAutoScroll);
-            carouselEl.addEventListener('focusin', stopAutoScroll);
-            carouselEl.addEventListener('focusout', startAutoScroll);
-            
-            let touchStartX = 0;
-            carouselEl.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
-            carouselEl.addEventListener('touchend', (e) => {
-                const touchEndX = e.changedTouches[0].screenX;
-                if (Math.abs(touchStartX - touchEndX) > 50) {
-                    if (touchStartX > touchEndX) nextSlide();
-                    else prevSlide();
-                }
-            }, { passive: true });
-            
-            updateCarouselState();
-            startAutoScroll();
-        }
-        
-        function setupScrollArrowLogic() {
-            document.querySelectorAll('.scroll-section').forEach(section => {
-                const container = section.querySelector('.scroll-products');
-                const leftArrow = section.querySelector('.arrow.left');
-                const rightArrow = section.querySelector('.arrow.right');
 
-                if (!container || !leftArrow || !rightArrow) return;
+            function initializeCategoryScroll() {
+                const scrollContainer = document.getElementById('scrollContainer');
+                const leftArrow = document.getElementById('leftArrow');
+                const rightArrow = document.getElementById('rightArrow');
 
                 function updateArrowVisibility() {
                     if (window.innerWidth <= 768) {
-                        leftArrow.style.display = container.scrollLeft <= 10 ? 'none' : 'flex';
-                        rightArrow.style.display = (container.scrollLeft + container.clientWidth >= container.scrollWidth - 10) ? 'none' : 'flex';
+                        if (scrollContainer.scrollLeft <= 10) {
+                            leftArrow.style.display = 'none';
+                        } else {
+                            leftArrow.style.display = 'flex';
+                        }
+                        
+                        if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 10) {
+                            rightArrow.style.display = 'none';
+                        } else {
+                            rightArrow.style.display = 'flex';
+                        }
                     } else {
                         leftArrow.style.display = 'none';
                         rightArrow.style.display = 'none';
                     }
                 }
 
-                leftArrow.onclick = () => container.scrollBy({ left: -300, behavior: 'smooth' });
-                rightArrow.onclick = () => container.scrollBy({ left: 300, behavior: 'smooth' });
-                
-                container.addEventListener('scroll', updateArrowVisibility);
+                rightArrow.addEventListener('click', () => {
+                    scrollContainer.scrollBy({ left: 200, behavior: 'smooth' });
+                    setTimeout(updateArrowVisibility, 300);
+                });
+
+                leftArrow.addEventListener('click', () => {
+                    scrollContainer.scrollBy({ left: -200, behavior: 'smooth' });
+                    setTimeout(updateArrowVisibility, 300);
+                });
+
+                scrollContainer.addEventListener('scroll', updateArrowVisibility);
                 window.addEventListener('resize', updateArrowVisibility);
-                updateArrowVisibility(); // Initial check
-            });
-        }
+                updateArrowVisibility();
+            }
 
-        function wishlistButtonsSetup() {
-            document.querySelectorAll('.wishlist-btn').forEach(button => {
-                // Remove old listeners to prevent duplicates
-                button.onclick = null; 
-                button.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const icon = this.querySelector('i');
-                    const productId = this.dataset.productId;
+            function initializeScrollSections() {
+                const scrollSections = document.querySelectorAll('.category-products-section');
+                
+                scrollSections.forEach(section => {
+                    const scrollContainer = section.querySelector('.scroll-products');
+                    const leftArrow = section.querySelector('.arrow.left');
+                    const rightArrow = section.querySelector('.arrow.right');
                     
-                    if (icon.classList.contains('far')) {
-                        icon.classList.remove('far');
-                        icon.classList.add('fas', 'active');
-                        this.classList.add('active');
-                        // Assume function to add to wishlist in state/storage
-                        showToast(`Added Product ${productId} to Wishlist!`, 'success');
-                    } else {
-                        icon.classList.remove('fas', 'active');
-                        icon.classList.add('far');
-                        this.classList.remove('active');
-                        // Assume function to remove from wishlist in state/storage
-                        showToast(`Removed Product ${productId} from Wishlist.`, 'error');
+                    function updateArrows() {
+                        if (scrollContainer.scrollLeft <= 10) {
+                            leftArrow.style.display = 'none';
+                        } else {
+                            leftArrow.style.display = 'flex';
+                        }
+                        
+                        if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 10) {
+                            rightArrow.style.display = 'none';
+                        } else {
+                            rightArrow.style.display = 'flex';
+                        }
                     }
+                    
+                    rightArrow.addEventListener('click', () => {
+                        scrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
+                        setTimeout(updateArrows, 300);
+                    });
+                    
+                    leftArrow.addEventListener('click', () => {
+                        scrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
+                        setTimeout(updateArrows, 300);
+                    });
+                    
+                    scrollContainer.addEventListener('scroll', updateArrows);
+                    updateArrows();
                 });
-            });
-        }
-
-        function productCardClickSetup() {
-            document.querySelectorAll('.product-card').forEach(card => {
-                card.removeEventListener('click', handleProductCardClick); // Prevent duplicates
-                card.addEventListener('click', handleProductCardClick);
-            });
-        }
-        
-        function handleProductCardClick(event) {
-            // Check if the click target was a button (like wishlist or quick view)
-            if (event.target.closest('.wishlist-btn') || event.target.closest('.quick-view-btn')) {
-                return; // Don't navigate if an action button was clicked
             }
-            const productId = this.dataset.productId;
-            if (productId) {
-                window.location.href = `product-detail.html#${productId}`;
-            }
-        }
 
-        // --- CART LOGIC (Adapted for Sidebar) ---
-        const loadCartFromLocalStorage = () => cart = JSON.parse(localStorage.getItem('shopSphereCart') || '[]');
-        const saveCartToLocalStorage = () => localStorage.setItem('shopSphereCart', JSON.stringify(cart));
-        
-        function updateCartCount() {
-            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-            const el = document.getElementById('cart-count');
-            if(el) { 
-                el.textContent = count; 
-                el.style.display = count > 0 ? 'block' : 'none';
-            }
-            renderCartSidebar(); // Update sidebar content
-        }
-        
-        function renderCartSidebar() {
-            const itemsContainer = document.getElementById('cart-sidebar-items');
-            const totalSpan = document.getElementById('cart-sidebar-total');
-            
-            if (!itemsContainer || !totalSpan) return;
-
-            let sidebarSubtotal = 0;
-            
-            const sidebarItemsHtml = cart.map(item => {
-                const product = products.find(p => p.id === item.productId);
-                const imageUrl = product?.images?.[0] || 'https://via.placeholder.com/80';
-                
-                if (!product) return `<p>Item ID ${item.productId} Not Found</p>`;
-                
-                sidebarSubtotal += product.price * item.quantity;
-                
-                return `
-                    <div class="cart-item" data-product-id="${product.id}" data-size="${item.size}">
-                        <img src="${imageUrl}" alt="${product.name}">
-                        <div class="cart-item-details">
-                            <div class="cart-item-title">${product.name}</div>
-                            <div class="cart-item-price">$${product.price.toFixed(2)} x ${item.quantity}</div>
-                        </div>
-                        <button class="remove-btn" data-product-id="${product.id}" data-size="${item.size}" style="background:none; border:none; color:var(--text-light); cursor:pointer; font-size:1.2rem;">&times;</button>
-                    </div>`;
-            }).join('');
-            
-            itemsContainer.innerHTML = sidebarItemsHtml;
-            totalSpan.textContent = `$${sidebarSubtotal.toFixed(2)}`;
-
-            // Attach remove button listeners
-            itemsContainer.querySelectorAll('.remove-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const productId = this.dataset.productId;
-                    const size = this.dataset.size;
-                    updateCartQuantity(productId, size, 0); // 0 means remove
+            function initializeProductInteractions() {
+                // Wishlist functionality
+                const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+                wishlistButtons.forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const icon = this.querySelector('i');
+                        if (icon.classList.contains('far')) {
+                            icon.classList.remove('far');
+                            icon.classList.add('fas', 'active');
+                            this.classList.add('active');
+                        } else {
+                            icon.classList.remove('fas', 'active');
+                            icon.classList.add('far');
+                            this.classList.remove('active');
+                        }
+                    });
                 });
-            });
-        }
-        
-        function updateCartQuantity(productId, size, change) {
-            const itemIndex = cart.findIndex(i => i.productId === productId && i.size === size);
-            if (itemIndex > -1) {
-                if (change === 0 || cart[itemIndex].quantity + change <= 0) { 
-                    cart.splice(itemIndex, 1);
-                } else {
-                    cart[itemIndex].quantity += change;
+                
+                // Product click functionality
+                const productCards = document.querySelectorAll('.product-card, .scroll-product');
+                productCards.forEach(card => {
+                    card.addEventListener('click', function() {
+                        const productId = this.getAttribute('data-product-id');
+                        if (productId) {
+                            window.location.href = `/product.html?id=${productId}`;
+                        }
+                    });
+                });
+            }
+
+            // Navigation functionality
+            function setupEventListeners() {
+                const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+                const closeMenu = document.getElementById('closeMenu');
+                const mobileMenu = document.getElementById('mobileMenu');
+                const mobileSearchBtn = document.getElementById('mobileSearchBtn');
+                const desktopSearchBtn = document.getElementById('desktopSearchBtn');
+                const closeSearch = document.getElementById('closeSearch');
+                const searchOverlay = document.getElementById('searchOverlay');
+                const mobileCartBtn = document.getElementById('mobileCartBtn');
+                const desktopCartBtn = document.getElementById('desktopCartBtn');
+                const closeCart = document.getElementById('closeCart');
+                const cartSidebar = document.getElementById('cartSidebar');
+                const overlay = document.getElementById('overlay');
+
+                // Mobile menu functionality
+                function openMobileMenu() {
+                    mobileMenu.classList.add('active');
+                    overlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
                 }
-            }
-            saveCartToLocalStorage();
-            updateCartCount(); // This now calls renderCartSidebar()
-        }
 
-        // --- FINAL HELPER FUNCTIONS ---
-        function renderNav() {
-            const navRight = document.getElementById('nav-right');
-            const userInfo = document.getElementById('user-info');
-            const authBtn = document.getElementById('auth-btn');
-            const mobileLoginLink = document.getElementById('mobile-login-logout-link');
+                function closeMobileMenu() {
+                    mobileMenu.classList.remove('active');
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
 
-            if (currentUser) {
-                userInfo.textContent = `Welcome, ${currentUser.displayName ? currentUser.displayName.split(' ')[0] : 'User'}`;
-                userInfo.style.display = 'inline';
-                authBtn.textContent = 'Logout';
-                authBtn.className = 'btn btn-secondary';
-                mobileLoginLink.textContent = 'Logout';
-                mobileLoginLink.onclick = () => auth.signOut();
-                authBtn.onclick = () => auth.signOut();
-            } else {
-                userInfo.textContent = '';
-                userInfo.style.display = 'none';
-                authBtn.textContent = 'Login';
-                authBtn.className = 'btn btn-primary';
-                mobileLoginLink.textContent = 'Login / Register';
-                mobileLoginLink.onclick = () => auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-                authBtn.onclick = () => auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-            }
-        }
+                mobileMenuBtn.addEventListener('click', openMobileMenu);
+                closeMenu.addEventListener('click', closeMobileMenu);
 
-        function showToast(message, type = 'error') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.textContent = message;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-        
-        document.getElementById('sidebar-checkout-btn').onclick = () => {
-            if (currentUser) {
-                window.location.href = 'checkout.html';
-            } else {
-                showToast('Please log in to checkout.', 'error');
-                // Optionally trigger login/cart sidebar close here
+                // Search functionality
+                function openSearch() {
+                    searchOverlay.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }
+
+                function closeSearchOverlay() {
+                    searchOverlay.style.display = 'none';
+                    document.body.style.overflow = '';
+                }
+
+                mobileSearchBtn.addEventListener('click', openSearch);
+                desktopSearchBtn.addEventListener('click', openSearch);
+                closeSearch.addEventListener('click', closeSearchOverlay);
+
+                // Cart functionality
+                function openCart() {
+                    cartSidebar.classList.add('active');
+                    overlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+
+                function closeCartSidebar() {
+                    cartSidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+
+                mobileCartBtn.addEventListener('click', openCart);
+                desktopCartBtn.addEventListener('click', openCart);
+                closeCart.addEventListener('click', closeCartSidebar);
+
+                // Close overlays when clicking on overlay
+                overlay.addEventListener('click', function() {
+                    closeMobileMenu();
+                    closeCartSidebar();
+                    closeSearchOverlay();
+                });
             }
-        };
+        });
     </script>
 </body>
 </html>
