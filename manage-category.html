@@ -14,7 +14,7 @@
         :root {
             --primary-color: #4F46E5; --primary-hover: #4338CA;
             --secondary-color: #6B7280; --success-color: #10B981; --danger-color: #EF4444;
-            --light-color: #F9FAFB; --dark-color: #1F2937;
+            --warning-color: #F59E0B; --light-color: #F9FAFB; --dark-color: #1F2937;
             --bg-color: #F3F4F6; --font-family: 'Inter', sans-serif; --border-radius: 0.5rem;
             --box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
         }
@@ -31,12 +31,8 @@
         .btn-primary:hover { background-color: var(--primary-hover); }
         .btn-secondary { background-color: var(--secondary-color); color: white; padding: 0.75rem 1.5rem; }
         .btn-danger { background-color: var(--danger-color); color: white; padding: 0.75rem 1.5rem; }
-        .btn-danger:hover { background-color: #dc2626; }
-        .btn-outline { background: transparent; border: 1px solid #d1d5db; color: var(--dark-color); padding: 0.75rem 1.5rem; }
-        .btn-outline:hover { background-color: #f9fafb; border-color: var(--primary-color); }
+        .btn-warning { background-color: var(--warning-color); color: white; padding: 0.75rem 1.5rem; }
         .btn-sm { padding: 0.5rem 1rem; font-size: 0.875rem; }
-        .btn-icon { padding: 0.5rem; background: none; border: none; border-radius: 50%; color: var(--secondary-color); }
-        .btn-icon:hover { background-color: #f3f4f6; color: var(--dark-color); }
         .form-group { margin-bottom: 1.5rem; }
         .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; }
         .form-group input { 
@@ -48,23 +44,22 @@
             border-color: var(--primary-color); outline: 0;
             box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
         }
-        .search-container { 
-            position: relative; margin-bottom: 2rem; max-width: 400px; 
-            background: white; border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow); border: 1px solid #e5e7eb;
-        }
+        .search-container { position: relative; margin-bottom: 2rem; max-width: 400px; }
         .search-input { 
-            width: 100%; padding: 0.75rem 1rem 0.75rem 3rem; 
-            border: none; background: transparent; font-size: 0.95rem;
-            border-radius: var(--border-radius);
+            padding: 0.75rem 1rem 0.75rem 2.5rem; 
+            border: 1px solid #d1d5db; border-radius: var(--border-radius);
+            width: 100%; font-size: 0.95rem;
+            transition: all 0.2s ease-in-out;
         }
-        .search-input:focus { outline: none; }
-        .search-input::placeholder { color: var(--secondary-color); }
+        .search-input:focus {
+            border-color: var(--primary-color); outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+        }
         .search-icon { 
-            position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); 
+            position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); 
             color: var(--secondary-color); pointer-events: none;
         }
-        .categories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .categories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
         .category-card { 
             background: white; border-radius: var(--border-radius); padding: 1.5rem; 
             box-shadow: var(--box-shadow); border: 1px solid #e5e7eb;
@@ -74,32 +69,48 @@
             transform: translateY(-2px); 
             box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
         }
-        .category-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
-        .category-name { font-size: 1.25rem; font-weight: 600; color: var(--dark-color); margin: 0; cursor: pointer; }
-        .category-name:hover { color: var(--primary-color); }
+        .category-content { 
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer;
+        }
+        .category-info { flex: 1; }
+        .category-name { 
+            font-size: 1.1rem; font-weight: 600; color: var(--dark-color); 
+            margin: 0 0 0.25rem 0; 
+        }
         .category-count { 
+            color: var(--secondary-color); font-size: 0.875rem; font-weight: 500;
+        }
+        .category-actions { display: flex; align-items: center; gap: 0.75rem; }
+        .products-badge { 
             background: var(--primary-color); color: white; padding: 0.25rem 0.75rem; 
-            border-radius: 999px; font-size: 0.875rem; font-weight: 600;
+            border-radius: 999px; font-size: 0.8rem; font-weight: 600; min-width: 60px;
+            text-align: center;
         }
-        .category-description { color: var(--secondary-color); font-size: 0.95rem; line-height: 1.5; margin-bottom: 1rem; }
-        .category-actions { position: absolute; top: 1rem; right: 1rem; }
-        .menu-dropdown { position: relative; }
-        .menu-content { 
-            position: absolute; top: 100%; right: 0; background: white; 
+        .menu-button { 
+            background: none; border: none; padding: 0.5rem; border-radius: 50%;
+            cursor: pointer; color: var(--secondary-color); position: relative;
+            transition: all 0.2s ease-in-out;
+        }
+        .menu-button:hover { 
+            background-color: var(--light-color); color: var(--dark-color);
+        }
+        .dropdown-menu {
+            position: absolute; top: 100%; right: 0; background: white;
             border-radius: var(--border-radius); box-shadow: var(--box-shadow);
-            border: 1px solid #e5e7eb; padding: 0.5rem; min-width: 150px; z-index: 10;
-            display: none;
+            border: 1px solid #e5e7eb; padding: 0.5rem; z-index: 100;
+            min-width: 150px; display: none;
         }
-        .menu-content.show { display: block; }
-        .menu-item { 
-            display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; 
-            border: none; background: none; width: 100%; text-align: left;
-            border-radius: 0.375rem; color: var(--dark-color); font-size: 0.875rem;
-            cursor: pointer; transition: background-color 0.2s;
+        .dropdown-menu.show { display: block; }
+        .dropdown-item { 
+            display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem;
+            background: none; border: none; width: 100%; text-align: left;
+            border-radius: 0.375rem; cursor: pointer; color: var(--dark-color);
+            font-size: 0.9rem; transition: background-color 0.2s;
         }
-        .menu-item:hover { background-color: #f9fafb; }
-        .menu-item.edit { color: var(--primary-color); }
-        .menu-item.delete { color: var(--danger-color); }
+        .dropdown-item:hover { background-color: var(--light-color); }
+        .dropdown-item.edit { color: var(--primary-color); }
+        .dropdown-item.delete { color: var(--danger-color); }
         .empty-state { 
             text-align: center; padding: 3rem; color: var(--secondary-color); 
             background: var(--light-color); border-radius: var(--border-radius); 
@@ -117,17 +128,33 @@
         }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
         .modal-title { font-size: 1.25rem; font-weight: 600; margin: 0; }
-        .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; padding: 0; color: var(--secondary-color); }
+        .close-modal { 
+            background: none; border: none; font-size: 1.5rem; cursor: pointer; 
+            padding: 0; color: var(--secondary-color); width: 30px; height: 30px;
+            display: flex; align-items: center; justify-content: center;
+        }
         .close-modal:hover { color: var(--dark-color); }
         .modal-actions { display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem; }
-        .warning-text { color: var(--danger-color); font-size: 0.875rem; margin-top: 0.5rem; }
-        .confirmation-text { color: var(--secondary-color); font-size: 0.9rem; margin-bottom: 1rem; }
+        .danger-zone { 
+            background: #fef2f2; border: 1px solid #fecaca; border-radius: var(--border-radius);
+            padding: 1.5rem; margin-top: 1.5rem;
+        }
+        .danger-zone h4 { color: var(--danger-color); margin: 0 0 1rem 0; }
+        .warning-text { color: var(--danger-color); font-size: 0.9rem; margin-bottom: 1rem; }
+        .confirmation-input { 
+            border: 1px solid var(--danger-color); background: #fff;
+        }
+        .confirmation-input:focus {
+            border-color: var(--danger-color);
+            box-shadow: 0 0 0 0.2rem rgba(239, 68, 68, 0.25);
+        }
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
         .toast { padding: 1rem 1.5rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
         @keyframes fadeOut { to { opacity: 0; } }
         .toast.success { background-color: var(--success-color); }
         .toast.error { background-color: var(--danger-color); }
+        .toast.warning { background-color: var(--warning-color); }
     </style>
 </head>
 <body>
@@ -180,7 +207,7 @@
                     <input type="text" id="category-name" placeholder="Enter category name" required>
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn-outline" onclick="closeAddCategoryModal()">Cancel</button>
+                    <button type="button" class="btn-secondary" onclick="closeAddCategoryModal()">Cancel</button>
                     <button type="submit" class="btn-primary">Save Category</button>
                 </div>
             </form>
@@ -201,35 +228,39 @@
                     <input type="text" id="edit-category-name" placeholder="Enter category name" required>
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn-outline" onclick="closeEditCategoryModal()">Cancel</button>
+                    <button type="button" class="btn-secondary" onclick="closeEditCategoryModal()">Cancel</button>
                     <button type="submit" class="btn-primary">Update Category</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
+    <!-- Delete Category Modal -->
     <div id="delete-category-modal" class="modal-overlay" style="display: none;">
         <div class="modal">
             <div class="modal-header">
                 <h3 class="modal-title" style="color: var(--danger-color);">Delete Category</h3>
                 <button class="close-modal" onclick="closeDeleteCategoryModal()">&times;</button>
             </div>
-            <div class="form-group">
-                <p class="confirmation-text" id="delete-confirmation-text">
-                    This action cannot be undone. This will permanently delete the category.
+            <div class="danger-zone">
+                <h4>⚠️ Danger Zone</h4>
+                <p class="warning-text">
+                    You are about to delete the category "<strong id="delete-category-name"></strong>". 
+                    This action cannot be undone.
                 </p>
-                <p class="confirmation-text">
-                    To confirm, please type the category name: <strong id="delete-category-name-display"></strong>
-                </p>
-                <input type="text" id="delete-confirmation-input" placeholder="Enter category name to confirm" required>
-                <p class="warning-text" id="delete-warning-text" style="display: none;">
-                    Category name does not match
-                </p>
+                <div class="form-group">
+                    <label for="confirm-category-name">
+                        Type the category name to confirm deletion:
+                    </label>
+                    <input type="text" id="confirm-category-name" class="confirmation-input" 
+                           placeholder="Enter category name to confirm">
+                </div>
             </div>
             <div class="modal-actions">
-                <button type="button" class="btn-outline" onclick="closeDeleteCategoryModal()">Cancel</button>
-                <button type="button" class="btn-danger" id="confirm-delete-btn" disabled>Delete Category</button>
+                <button type="button" class="btn-secondary" onclick="closeDeleteCategoryModal()">Cancel</button>
+                <button type="button" class="btn-danger" id="confirm-delete-btn" disabled>
+                    Delete Category
+                </button>
             </div>
         </div>
     </div>
@@ -275,18 +306,6 @@
             await loadProductCounts();
             renderCategories();
             setupEventListeners();
-            setupGlobalClickHandler();
-        }
-
-        function setupGlobalClickHandler() {
-            document.addEventListener('click', (e) => {
-                // Close all dropdowns when clicking outside
-                if (!e.target.closest('.menu-dropdown')) {
-                    document.querySelectorAll('.menu-content').forEach(menu => {
-                        menu.classList.remove('show');
-                    });
-                }
-            });
         }
 
         async function loadCategories() {
@@ -334,59 +353,44 @@
                 <div class="categories-grid">
                     ${categoriesToRender.map(category => `
                         <div class="category-card">
-                            <div class="category-actions">
-                                <div class="menu-dropdown">
-                                    <button class="btn-icon" onclick="toggleMenu('menu-${category.id}')">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <circle cx="12" cy="12" r="1"></circle>
-                                            <circle cx="12" cy="5" r="1"></circle>
-                                            <circle cx="12" cy="19" r="1"></circle>
-                                        </svg>
-                                    </button>
-                                    <div class="menu-content" id="menu-${category.id}">
-                                        <button class="menu-item edit" onclick="openEditCategoryModal('${category.id}', '${category.name.replace(/'/g, "\\'")}')">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            <div class="category-content" onclick="navigateToProducts('${category.name}')">
+                                <div class="category-info">
+                                    <h3 class="category-name">${category.name}</h3>
+                                    <div class="category-count">${productCounts[category.name] || 0} products</div>
+                                </div>
+                                <div class="category-actions">
+                                    <span class="products-badge">${productCounts[category.name] || 0}</span>
+                                    <div class="menu-container" style="position: relative;">
+                                        <button class="menu-button" onclick="event.stopPropagation(); toggleMenu('${category.id}')">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                                <circle cx="12" cy="6" r="2"></circle>
+                                                <circle cx="12" cy="12" r="2"></circle>
+                                                <circle cx="12" cy="18" r="2"></circle>
                                             </svg>
-                                            Edit
                                         </button>
-                                        <button class="menu-item delete" onclick="openDeleteCategoryModal('${category.id}', '${category.name.replace(/'/g, "\\'")}')">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path d="M3 6h18"></path>
-                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                            </svg>
-                                            Delete
-                                        </button>
+                                        <div class="dropdown-menu" id="menu-${category.id}">
+                                            <button class="dropdown-item edit" onclick="openEditCategoryModal('${category.id}', '${category.name}')">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                                </svg>
+                                                Edit
+                                            </button>
+                                            <button class="dropdown-item delete" onclick="openDeleteCategoryModal('${category.id}', '${category.name}')">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                                    <path d="M3 6h18"></path>
+                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                </svg>
+                                                Delete
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="category-header">
-                                <h3 class="category-name" onclick="navigateToProducts('${category.name}')">${category.name}</h3>
-                                <span class="category-count">${productCounts[category.name] || 0} products</span>
-                            </div>
-                            <p class="category-description">
-                                Manage ${productCounts[category.name] || 0} products in this category
-                            </p>
                         </div>
                     `).join('')}
                 </div>
             `;
-        }
-
-        function toggleMenu(menuId) {
-            const menu = document.getElementById(menuId);
-            const isShowing = menu.classList.contains('show');
-            
-            // Close all other menus
-            document.querySelectorAll('.menu-content').forEach(m => {
-                m.classList.remove('show');
-            });
-            
-            // Toggle current menu
-            if (!isShowing) {
-                menu.classList.add('show');
-            }
         }
 
         function setupEventListeners() {
@@ -416,24 +420,40 @@
             });
 
             // Delete confirmation input
-            document.getElementById('delete-confirmation-input').addEventListener('input', (e) => {
-                const confirmButton = document.getElementById('confirm-delete-btn');
-                const warningText = document.getElementById('delete-warning-text');
-                const expectedName = document.getElementById('delete-category-name-display').textContent;
-                
-                if (e.target.value === expectedName) {
-                    confirmButton.disabled = false;
-                    warningText.style.display = 'none';
-                } else {
-                    confirmButton.disabled = true;
-                    warningText.style.display = 'block';
-                }
+            document.getElementById('confirm-category-name').addEventListener('input', (e) => {
+                const confirmBtn = document.getElementById('confirm-delete-btn');
+                const categoryName = document.getElementById('delete-category-name').textContent;
+                confirmBtn.disabled = e.target.value !== categoryName;
             });
 
             // Confirm delete button
             document.getElementById('confirm-delete-btn').addEventListener('click', async () => {
                 await deleteCategory();
             });
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.menu-container')) {
+                    document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                        menu.classList.remove('show');
+                    });
+                }
+            });
+        }
+
+        function toggleMenu(categoryId) {
+            const menu = document.getElementById(`menu-${categoryId}`);
+            const isVisible = menu.classList.contains('show');
+            
+            // Close all other menus
+            document.querySelectorAll('.dropdown-menu').forEach(m => {
+                m.classList.remove('show');
+            });
+            
+            // Toggle current menu
+            if (!isVisible) {
+                menu.classList.add('show');
+            }
         }
 
         function openAddCategoryModal() {
@@ -462,17 +482,16 @@
 
         function openDeleteCategoryModal(categoryId, categoryName) {
             currentDeletingCategory = { id: categoryId, name: categoryName };
-            document.getElementById('delete-category-name-display').textContent = categoryName;
-            document.getElementById('delete-confirmation-input').value = '';
+            document.getElementById('delete-category-name').textContent = categoryName;
+            document.getElementById('confirm-category-name').value = '';
             document.getElementById('confirm-delete-btn').disabled = true;
-            document.getElementById('delete-warning-text').style.display = 'none';
             document.getElementById('delete-category-modal').style.display = 'flex';
-            document.getElementById('delete-confirmation-input').focus();
+            document.getElementById('confirm-category-name').focus();
         }
 
         function closeDeleteCategoryModal() {
             document.getElementById('delete-category-modal').style.display = 'none';
-            document.getElementById('delete-confirmation-input').value = '';
+            document.getElementById('confirm-category-name').value = '';
             currentDeletingCategory = null;
         }
 
