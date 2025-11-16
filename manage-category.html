@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Categories - ShopSphere Admin</title>
+    <title>Category Management - ShopSphere Admin</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,8 +21,6 @@
         *, *::before, *::after { box-sizing: border-box; }
         body { font-family: var(--font-family); margin: 0; background-color: var(--bg-color); color: var(--dark-color); }
         .container { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
-        nav { background: #fff; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--box-shadow); position: sticky; top: 0; z-index: 1000; }
-        .nav-left h1 { margin: 0; font-size: 1.75rem; color: var(--primary-color); cursor: pointer; }
         .page { animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .card { background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 2rem; }
@@ -31,75 +29,105 @@
         .btn-primary:hover { background-color: var(--primary-hover); }
         .btn-danger { background-color: var(--danger-color); color: white; }
         .btn-sm { padding: 0.5rem 1rem; font-size: 0.875rem; }
-        .search-section { margin-bottom: 2rem; }
-        .search-box { position: relative; max-width: 400px; }
-        .search-box input { width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid #d1d5db; border-radius: var(--border-radius); font-size: 1rem; }
-        .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--secondary-color); }
-        .categories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
-        .category-card { background: white; border: 1px solid #e5e7eb; border-radius: var(--border-radius); padding: 1.5rem; transition: all 0.2s ease-in-out; }
+        
+        /* Header Styles */
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb; }
+        .page-title { font-size: 1.875rem; font-weight: 700; color: var(--dark-color); margin: 0; }
+        
+        /* Search Styles */
+        .search-container { margin-bottom: 2rem; }
+        .search-input { width: 100%; max-width: 400px; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: var(--border-radius); font-size: 1rem; transition: border-color 0.2s; }
+        .search-input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+        
+        /* Categories Grid */
+        .categories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .category-card { background: white; border: 1px solid #e5e7eb; border-radius: var(--border-radius); padding: 1.5rem; transition: all 0.2s; }
         .category-card:hover { box-shadow: var(--box-shadow); transform: translateY(-2px); }
         .category-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
         .category-name { font-size: 1.25rem; font-weight: 600; color: var(--dark-color); margin: 0; cursor: pointer; }
         .category-name:hover { color: var(--primary-color); }
-        .product-count { background: var(--primary-color); color: white; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.875rem; font-weight: 600; }
-        .category-actions { display: flex; gap: 0.5rem; margin-top: 1rem; }
-        .add-category-section { background: var(--light-color); padding: 1.5rem; border-radius: var(--border-radius); margin-bottom: 2rem; }
-        .form-group { margin-bottom: 1rem; }
+        .product-count { background: var(--primary-color); color: white; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; }
+        .category-actions { display: flex; gap: 0.5rem; }
+        
+        /* Add Category Button */
+        .add-category-btn { display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; max-width: 400px; margin: 2rem auto; padding: 1rem 1.5rem; background: var(--light-color); border: 2px dashed #d1d5db; color: var(--secondary-color); font-size: 1rem; }
+        .add-category-btn:hover { background: #f8fafc; border-color: var(--primary-color); color: var(--primary-color); }
+        
+        /* Modal Styles */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 2000; }
+        .modal { background: white; border-radius: var(--border-radius); padding: 2rem; max-width: 500px; width: 90%; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .modal-title { font-size: 1.5rem; font-weight: 600; margin: 0; }
+        .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; padding: 0; width: 30px; height: 30px; color: var(--secondary-color); }
+        .form-group { margin-bottom: 1.5rem; }
         .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; }
-        .form-group input { width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: var(--border-radius); font-size: 1rem; }
+        .form-group input { width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: var(--border-radius); font-size: 1rem; transition: border-color 0.2s; }
+        .form-group input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
+        
+        /* Empty State */
+        .empty-state { text-align: center; padding: 3rem 2rem; color: var(--secondary-color); }
+        .empty-state h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+        
+        /* Toast Styles */
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
         .toast { padding: 1rem 1.5rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
         @keyframes fadeOut { to { opacity: 0; } }
         .toast.success { background-color: var(--success-color); }
         .toast.error { background-color: var(--danger-color); }
-        .empty-state { text-align: center; padding: 3rem; color: var(--secondary-color); }
-        .empty-state svg { margin-bottom: 1rem; opacity: 0.5; }
     </style>
 </head>
 <body>
     <div id="toast-container"></div>
-    <nav>
-        <div class="nav-left"><h1>ShopSphere</h1></div>
-    </nav>
 
     <div class="container page">
         <div id="manage-category-container" class="card">
-            <h1 style="margin-bottom: 2rem;">Category Management</h1>
-            
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Category Management</h1>
+            </div>
+
             <!-- Search Section -->
-            <div class="search-section">
-                <div class="search-box">
-                    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <path d="m21 21-4.3-4.3"></path>
-                    </svg>
-                    <input type="text" id="search-categories" placeholder="Search categories...">
+            <div class="search-container">
+                <input type="text" class="search-input" id="search-categories" placeholder="Search categories...">
+            </div>
+
+            <!-- Categories Grid -->
+            <div id="categories-content">
+                <h2 style="margin-bottom: 1.5rem; font-size: 1.5rem; color: var(--dark-color);">Existing Categories</h2>
+                <div id="categories-grid" class="categories-grid">
+                    <div>Loading categories...</div>
                 </div>
             </div>
 
-            <!-- Add Category Section -->
-            <div class="add-category-section">
-                <h3 style="margin-top: 0; margin-bottom: 1rem;">Add New Category</h3>
-                <div class="form-group" style="max-width: 400px; margin-bottom: 1rem;">
-                    <input type="text" id="new-category-name" placeholder="Enter new category name" required>
-                </div>
-                <button class="btn-primary" id="add-category-btn">Add Category</button>
-            </div>
+            <!-- Add Category Button -->
+            <button class="add-category-btn" onclick="openAddCategoryModal()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14m-7-7h14"/>
+                </svg>
+                Add New Category
+            </button>
+        </div>
+    </div>
 
-            <!-- Existing Categories -->
-            <h2>Existing Categories</h2>
-            <div id="categories-container">
-                <div id="category-list" class="categories-grid">
-                    <div class="empty-state">
-                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
-                        </svg>
-                        <p>No categories found. Add your first category above.</p>
-                    </div>
-                </div>
+    <!-- Add Category Modal -->
+    <div id="add-category-modal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Category</h3>
+                <button class="close-modal" onclick="closeAddCategoryModal()">&times;</button>
             </div>
+            <form id="add-category-form">
+                <div class="form-group">
+                    <label for="category-name">Category Name</label>
+                    <input type="text" id="category-name" placeholder="Enter category name" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeAddCategoryModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Category</button>
+                </div>
+            </form>
         </div>
     </div>
     
@@ -123,7 +151,7 @@
 
         let currentUser = null;
         let allCategories = [];
-        let categoryProductCounts = {};
+        let productCounts = {};
 
         document.addEventListener('DOMContentLoaded', () => {
             auth.onAuthStateChanged(user => {
@@ -133,35 +161,23 @@
                     window.location.href = 'index.html';
                     return;
                 }
-                loadCategories();
-                setupEventListeners();
+                initializePage();
             });
         });
 
-        function setupEventListeners() {
-            // Add category button
-            document.getElementById('add-category-btn').addEventListener('click', addCategory);
-            
-            // Enter key support for adding category
-            document.getElementById('new-category-name').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    addCategory();
-                }
-            });
-            
-            // Search functionality
-            document.getElementById('search-categories').addEventListener('input', (e) => {
-                filterCategories(e.target.value);
-            });
+        async function initializePage() {
+            await loadCategories();
+            await loadProductCounts();
+            setupEventListeners();
         }
 
         async function loadCategories() {
             try {
                 const snapshot = await db.collection('categories').orderBy('name').get();
-                allCategories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                
-                // Load product counts for each category
-                await loadProductCounts();
+                allCategories = snapshot.docs.map(doc => ({ 
+                    id: doc.id, 
+                    ...doc.data() 
+                }));
                 renderCategories();
             } catch (error) {
                 console.error("Error loading categories:", error);
@@ -172,70 +188,77 @@
         async function loadProductCounts() {
             try {
                 const productsSnapshot = await db.collection('products').get();
-                categoryProductCounts = {};
+                productCounts = {};
                 
                 productsSnapshot.docs.forEach(doc => {
                     const product = doc.data();
                     if (product.category) {
-                        categoryProductCounts[product.category] = (categoryProductCounts[product.category] || 0) + 1;
+                        productCounts[product.category] = (productCounts[product.category] || 0) + 1;
                     }
                 });
+                
+                renderCategories();
             } catch (error) {
                 console.error("Error loading product counts:", error);
             }
         }
 
-        function renderCategories(filteredCategories = null) {
-            const categoriesToRender = filteredCategories || allCategories;
-            const container = document.getElementById('category-list');
+        function renderCategories() {
+            const grid = document.getElementById('categories-grid');
+            const searchTerm = document.getElementById('search-categories').value.toLowerCase();
             
-            if (categoriesToRender.length === 0) {
-                container.innerHTML = `
+            const filteredCategories = allCategories.filter(cat => 
+                cat.name.toLowerCase().includes(searchTerm)
+            );
+
+            if (filteredCategories.length === 0) {
+                grid.innerHTML = `
                     <div class="empty-state">
-                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
-                        </svg>
-                        <p>No categories found matching your search.</p>
+                        <h3>No categories found</h3>
+                        <p>${searchTerm ? 'Try adjusting your search' : 'Get started by adding your first category'}</p>
                     </div>
                 `;
                 return;
             }
 
-            container.innerHTML = categoriesToRender.map(cat => {
-                const productCount = categoryProductCounts[cat.name] || 0;
-                const productText = productCount === 1 ? '1 product' : `${productCount} products`;
-                
-                return `
-                    <div class="category-card">
-                        <div class="category-header">
-                            <h3 class="category-name" onclick="navigateToProducts('${cat.name}')">${cat.name}</h3>
-                            <span class="product-count">${productCount}</span>
-                        </div>
-                        <p style="color: var(--secondary-color); margin: 0; font-size: 0.9rem;">${productText} in this category</p>
-                        <div class="category-actions">
-                            <button class="btn-primary btn-sm" onclick="navigateToProducts('${cat.name}')">View Products</button>
-                            <button class="btn-danger btn-sm" onclick="deleteCategory('${cat.id}', '${cat.name}')">Delete</button>
-                        </div>
+            grid.innerHTML = filteredCategories.map(cat => `
+                <div class="category-card">
+                    <div class="category-header">
+                        <h3 class="category-name" onclick="navigateToProducts('${cat.name}')">${cat.name}</h3>
+                        <span class="product-count">${productCounts[cat.name] || 0} products</span>
                     </div>
-                `;
-            }).join('');
+                    <div class="category-actions">
+                        <button class="btn-danger btn-sm" onclick="deleteCategory('${cat.id}', '${cat.name}')">
+                            Delete Category
+                        </button>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function filterCategories(searchTerm) {
-            if (!searchTerm) {
-                renderCategories();
-                return;
-            }
+        function setupEventListeners() {
+            // Search functionality
+            document.getElementById('search-categories').addEventListener('input', renderCategories);
             
-            const filtered = allCategories.filter(cat => 
-                cat.name.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-            renderCategories(filtered);
+            // Add category form submission
+            document.getElementById('add-category-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await addCategory();
+            });
+        }
+
+        function openAddCategoryModal() {
+            document.getElementById('add-category-modal').style.display = 'flex';
+            document.getElementById('category-name').focus();
+        }
+
+        function closeAddCategoryModal() {
+            document.getElementById('add-category-modal').style.display = 'none';
+            document.getElementById('add-category-form').reset();
         }
 
         async function addCategory() {
-            const nameInput = document.getElementById('new-category-name');
+            const nameInput = document.getElementById('category-name');
             const name = nameInput.value.trim();
             
             if (!name) {
@@ -255,8 +278,9 @@
                 });
                 
                 showToast('Category created successfully!', 'success');
-                nameInput.value = '';
+                closeAddCategoryModal();
                 await loadCategories();
+                await loadProductCounts();
                 
             } catch (error) {
                 console.error("Error adding category:", error);
@@ -264,28 +288,27 @@
             }
         }
 
-        function navigateToProducts(categoryName) {
-            window.location.href = `product.html?category=${encodeURIComponent(categoryName)}`;
-        }
-
         async function deleteCategory(id, name) {
-            const productCount = categoryProductCounts[name] || 0;
-            let message = `Are you sure you want to delete category "${name}"?`;
-            
-            if (productCount > 0) {
-                message += `\n\nThis category contains ${productCount} product(s). Deleting it will NOT delete the associated products, but they will no longer be associated with this category.`;
-            }
+            const productCount = productCounts[name] || 0;
+            const message = productCount > 0 
+                ? `Are you sure you want to delete category "${name}"? This category has ${productCount} product(s). The products will NOT be deleted, but they will lose their category association.`
+                : `Are you sure you want to delete category "${name}"?`;
             
             if (confirm(message)) {
                 try {
                     await db.collection('categories').doc(id).delete();
                     showToast(`Category "${name}" deleted!`, 'success');
                     await loadCategories();
+                    await loadProductCounts();
                 } catch (error) {
                     console.error("Error deleting category:", error);
                     showToast("Failed to delete category.", "error");
                 }
             }
+        }
+
+        function navigateToProducts(categoryName) {
+            window.location.href = `product.html?category=${encodeURIComponent(categoryName)}`;
         }
 
         function showToast(message, type = 'success') {
