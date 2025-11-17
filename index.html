@@ -96,6 +96,7 @@
             margin-right: 2rem;
             display: flex;
             align-items: center;
+            cursor: pointer;
         }
 
         .nav-logo img {
@@ -204,6 +205,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
         }
 
         .mobile-logo img {
@@ -346,6 +348,20 @@
 
         .mobile-menu-links a:hover {
             color: var(--primary);
+        }
+
+        .mobile-menu-about {
+            margin-top: auto;
+            padding-top: 2rem;
+            border-top: 1px solid var(--bg-light);
+        }
+
+        .mobile-menu-about a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            display: block;
+            padding: 0.75rem 0;
         }
 
         /* Cart Sidebar */
@@ -834,6 +850,7 @@
             position: relative;
             display: flex;
             flex-direction: column;
+            cursor: pointer;
         }
         
         .product-card:hover {
@@ -1106,6 +1123,7 @@
             overflow: hidden;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .scroll-product:hover {
@@ -1231,22 +1249,21 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+
+        .empty-state h3 {
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
     </style>
 </head>
 <body>
-    <!-- Firebase Configuration -->
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCzqYrP1qYSiiLLgKW3z3EcwMpiG4hyF6M",
-            authDomain: "e-commerce27.firebaseapp.com",
-            projectId: "e-commerce27",
-            storageBucket: "e-commerce27.firebasestorage.app",
-            messagingSenderId: "1000564724466",
-            appId: "1:1000564724466:web:55047ed3c820197733366b",
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-    </script>
+    <div id="toast-container"></div>
 
     <!-- Promotional Banner -->
     <div class="promo-banner" id="promoBanner" style="display: none;">
@@ -1258,10 +1275,10 @@
         <div class="nav-container">
             <!-- Desktop Nav -->
             <div class="desktop-nav">
-                <div class="nav-logo">
-                    <img src="http://photography.wixo.in/yellow.png" alt="ShopSphere Logo">
+                <div class="nav-logo" onclick="window.location.href='index.html'">
+                    <span>ShopSphere</span>
                 </div>
-                <div class="nav-links">
+                <div class="nav-links" id="desktopNavLinks">
                     <a href="#">Home</a>
                     <a href="#">Shop</a>
                     <a href="#">Categories</a>
@@ -1292,7 +1309,7 @@
                             <circle cx="20" cy="21" r="1"></circle>
                             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                         </svg>
-                        <span class="cart-count">0</span>
+                        <span class="cart-count" id="cartCount">0</span>
                     </button>
                 </div>
             </div>
@@ -1307,8 +1324,8 @@
                     </button>
                 </div>
                 <div class="mobile-nav-center">
-                    <div class="mobile-logo">
-                        <img src="http://photography.wixo.in/yellow.png" alt="ShopSphere Logo">
+                    <div class="mobile-logo" onclick="window.location.href='index.html'">
+                        <span>ShopSphere</span>
                     </div>
                 </div>
                 <div class="mobile-nav-right">
@@ -1329,7 +1346,7 @@
                             <circle cx="20" cy="21" r="1"></circle>
                             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                         </svg>
-                        <span class="cart-count">0</span>
+                        <span class="cart-count" id="mobileCartCount">0</span>
                     </button>
                 </div>
             </div>
@@ -1367,15 +1384,16 @@
             </button>
         </div>
         
-        <div class="mobile-menu-links">
-            <a href="#">Home</a>
-            <a href="#">Shop All</a>
-            <a href="#">Categories</a>
-            <a href="#">Deals</a>
-            <a href="#">New Arrivals</a>
-            <a href="#">Best Sellers</a>
-            <a href="#">My Account</a>
-            <a href="#">Order History</a>
+        <div class="mobile-menu-links" id="mobileMenuLinks">
+            <!-- Categories will be loaded here -->
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                Loading categories...
+            </div>
+        </div>
+        
+        <div class="mobile-menu-about">
+            <a href="/about">About Us</a>
         </div>
     </div>
 
@@ -1392,13 +1410,13 @@
         </div>
         
         <div class="cart-items" id="cartItems">
-            <div class="loading">
-                <div class="loading-spinner"></div>
-                Loading cart...
+            <div class="empty-state">
+                <h3>Your cart is empty</h3>
+                <p>Add some products to get started</p>
             </div>
         </div>
         
-        <div class="cart-footer">
+        <div class="cart-footer" id="cartFooter" style="display: none;">
             <div class="cart-total">
                 <span>Total:</span>
                 <span id="cartTotal">$0.00</span>
@@ -1427,7 +1445,7 @@
             <div class="arrow left" id="leftArrow">&#10094;</div>
             <div class="arrow right" id="rightArrow">&#10095;</div>
 
-            <div class="category-container" id="scrollContainer">
+            <div class="category-container" id="categoryContainer">
                 <div class="loading">
                     <div class="loading-spinner"></div>
                     Loading categories...
@@ -1440,7 +1458,7 @@
     <section class="bestsellers-section">
         <div class="heading-row">
             <h2>Best Sellers</h2>
-            <a href="#">View More</a>
+            <a href="#" id="viewAllBestSellers">View More</a>
         </div>
         
         <div class="product-grid" id="bestSellersGrid">
@@ -1451,453 +1469,593 @@
         </div>
     </section>
 
-    <!-- Category Products Sections will be dynamically added here -->
-    <div id="categoryProductsContainer"></div>
+    <!-- Category Products Sections -->
+    <div id="categoryProductsSections">
+        <!-- Category sections will be dynamically added here -->
+    </div>
 
     <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCzqYrP1qYSiiLLgKW3z3EcwMpiG4hyF6M",
+            authDomain: "e-commerce27.firebaseapp.com",
+            projectId: "e-commerce27",
+            storageBucket: "e-commerce27.firebasestorage.app",
+            messagingSenderId: "1000564724466",
+            appId: "1:1000564724466:web:55047ed3c820197733366b",
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Global variables
+        let cart = [];
+        let categories = [];
+        let products = [];
+
+        // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
-            // Firebase data
-            let promoBannerData = null;
-            let heroImages = [];
-            let categories = [];
-            let bestSellers = [];
-            let allProducts = [];
+            initializeNavigation();
+            loadLandingPageData();
+            loadCartFromStorage();
+        });
 
-            // Initialize the page
-            initializePage();
+        // Navigation functionality
+        function initializeNavigation() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const closeMenu = document.getElementById('closeMenu');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileSearchBtn = document.getElementById('mobileSearchBtn');
+            const desktopSearchBtn = document.getElementById('desktopSearchBtn');
+            const closeSearch = document.getElementById('closeSearch');
+            const searchOverlay = document.getElementById('searchOverlay');
+            const mobileCartBtn = document.getElementById('mobileCartBtn');
+            const desktopCartBtn = document.getElementById('desktopCartBtn');
+            const closeCart = document.getElementById('closeCart');
+            const cartSidebar = document.getElementById('cartSidebar');
+            const overlay = document.getElementById('overlay');
 
-            async function initializePage() {
-                try {
-                    await loadAllData();
-                    setupEventListeners();
-                    renderAllSections();
-                } catch (error) {
-                    console.error('Error initializing page:', error);
-                }
+            // Mobile menu functionality
+            function openMobileMenu() {
+                mobileMenu.classList.add('active');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
             }
 
-            async function loadAllData() {
-                try {
-                    // Load promo banner
-                    const promoDoc = await db.collection('landingPage').doc('promoBanner').get();
-                    if (promoDoc.exists) {
-                        promoBannerData = promoDoc.data();
+            function closeMobileMenu() {
+                mobileMenu.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            mobileMenuBtn.addEventListener('click', openMobileMenu);
+            closeMenu.addEventListener('click', closeMobileMenu);
+
+            // Search functionality
+            function openSearch() {
+                searchOverlay.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeSearchOverlay() {
+                searchOverlay.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+
+            mobileSearchBtn.addEventListener('click', openSearch);
+            desktopSearchBtn.addEventListener('click', openSearch);
+            closeSearch.addEventListener('click', closeSearchOverlay);
+
+            // Cart functionality
+            function openCart() {
+                cartSidebar.classList.add('active');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                renderCart();
+            }
+
+            function closeCartSidebar() {
+                cartSidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            mobileCartBtn.addEventListener('click', openCart);
+            desktopCartBtn.addEventListener('click', openCart);
+            closeCart.addEventListener('click', closeCartSidebar);
+
+            // Close overlays when clicking on overlay
+            overlay.addEventListener('click', function() {
+                closeMobileMenu();
+                closeCartSidebar();
+                closeSearchOverlay();
+            });
+
+            // Search functionality
+            const searchInput = document.querySelector('.search-input input');
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const query = this.value.trim();
+                    if (query) {
+                        window.location.href = `search.html?q=${encodeURIComponent(query)}`;
                     }
-
-                    // Load hero images
-                    const heroDoc = await db.collection('landingPage').doc('heroImages').get();
-                    if (heroDoc.exists) {
-                        heroImages = heroDoc.data().images || [];
-                    }
-
-                    // Load categories
-                    const categoriesSnapshot = await db.collection('categories').orderBy('name').get();
-                    categories = categoriesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-                    // Load best sellers
-                    const bestSellersDoc = await db.collection('landingPage').doc('bestSellers').get();
-                    if (bestSellersDoc.exists) {
-                        bestSellers = bestSellersDoc.data().products || [];
-                    }
-
-                    // Load all products
-                    const productsSnapshot = await db.collection('products').get();
-                    allProducts = productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-                } catch (error) {
-                    console.error('Error loading data:', error);
                 }
-            }
+            });
+        }
 
-            function renderAllSections() {
-                renderPromoBanner();
-                renderHeroSection();
-                renderCategories();
-                renderBestSellers();
-                renderCategoryProducts();
-            }
-
-            function renderPromoBanner() {
-                const promoBanner = document.getElementById('promoBanner');
-                const promoText = document.getElementById('promoText');
-
-                if (promoBannerData && promoBannerData.active && promoBannerData.text) {
-                    promoText.textContent = promoBannerData.text;
-                    promoBanner.style.display = 'block';
-
-                    // Make banner clickable if link exists
-                    if (promoBannerData.link) {
-                        promoBanner.addEventListener('click', () => {
-                            window.location.href = promoBannerData.link;
-                        });
-                    }
-                }
-            }
-
-            function renderHeroSection() {
-                const heroCarousel = document.getElementById('heroCarousel');
+        // Load landing page data from Firebase
+        async function loadLandingPageData() {
+            try {
+                await Promise.all([
+                    loadPromoBanner(),
+                    loadHeroImages(),
+                    loadCategories(),
+                    loadBestSellers(),
+                    loadAllProducts()
+                ]);
                 
-                if (heroImages.length === 0) {
-                    heroCarousel.innerHTML = `
-                        <div class="loading">
-                            <div class="loading-spinner"></div>
-                            No hero images available
-                        </div>
-                    `;
-                    return;
-                }
-
-                let heroHTML = '';
+                // After loading all data, create category sections
+                createCategorySections();
                 
-                heroImages.forEach((image, index) => {
-                    heroHTML += `
-                        <div class="carousel-slide ${index === 0 ? 'active' : ''}" role="group" aria-roledescription="slide" aria-label="${index + 1} of ${heroImages.length}">
-                            <a href="${image.link || '#'}" class="slide-link">
-                                <img 
-                                    src="${image.desktop}" 
-                                    alt="Hero image ${index + 1}"
-                                    class="slide-image desktop-image"
-                                    loading="lazy"
-                                    onerror="this.src='https://via.placeholder.com/1920x800?text=Hero+Image'"
-                                >
-                                <img 
-                                    src="${image.mobile}" 
-                                    alt="Hero image ${index + 1}"
-                                    class="slide-image mobile-image"
-                                    loading="lazy"
-                                    onerror="this.src='https://via.placeholder.com/600x800?text=Hero+Image'"
-                                >
-                            </a>
-                        </div>
-                    `;
-                });
-
-                // Add navigation controls
-                heroHTML += `
-                    <div class="carousel-nav">
-                        <button class="carousel-button prev" aria-label="Previous slide">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-                            </svg>
-                        </button>
-                        <button class="carousel-button next" aria-label="Next slide">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div class="carousel-controls">
-                        ${heroImages.map((_, index) => `
-                            <button class="carousel-indicator ${index === 0 ? 'active' : ''}" aria-label="Show slide ${index + 1}"></button>
-                        `).join('')}
-                    </div>
-                `;
-
-                heroCarousel.innerHTML = heroHTML;
-                initializeCarousel();
+            } catch (error) {
+                console.error("Error loading landing page data:", error);
+                showError("Failed to load page content");
             }
+        }
 
-            function renderCategories() {
-                const scrollContainer = document.getElementById('scrollContainer');
-                
-                if (categories.length === 0) {
-                    scrollContainer.innerHTML = `
-                        <div class="loading">
-                            <div class="loading-spinner"></div>
-                            No categories available
-                        </div>
-                    `;
-                    return;
-                }
-
-                const categoriesHTML = categories.map(category => `
-                    <div class="category">
-                        <a href="/products?category=${encodeURIComponent(category.name)}" class="category-link">
-                            <img src="${category.imageUrl || 'https://via.placeholder.com/120?text=Category'}" 
-                                 alt="${category.name}" 
-                                 loading="lazy"
-                                 onerror="this.src='https://via.placeholder.com/120?text=Category'">
-                            <span>${category.name}</span>
-                        </a>
-                    </div>
-                `).join('');
-
-                scrollContainer.innerHTML = categoriesHTML;
-                initializeCategoryScroll();
-            }
-
-            function renderBestSellers() {
-                const bestSellersGrid = document.getElementById('bestSellersGrid');
-                
-                if (bestSellers.length === 0) {
-                    bestSellersGrid.innerHTML = `
-                        <div class="loading" style="grid-column: 1 / -1;">
-                            <div class="loading-spinner"></div>
-                            No best sellers available
-                        </div>
-                    `;
-                    return;
-                }
-
-                const bestSellersHTML = bestSellers.map(product => {
-                    const imageUrl = product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/300x400?text=Product';
-                    const oldPrice = product.oldPrice || product.price * 1.3;
-                    const discount = Math.round(((oldPrice - product.price) / oldPrice) * 100);
-                    
-                    return `
-                        <div class="product-card" data-product-id="${product.id}">
-                            <div class="image-container">
-                                <img src="${imageUrl}" alt="${product.name}" class="product-image"
-                                     onerror="this.src='https://via.placeholder.com/300x400?text=Product'">
-                                ${discount > 0 ? `<div class="badge sale">${discount}% OFF</div>` : ''}
-                                <button class="wishlist-btn">
-                                    <i class="far fa-heart"></i>
-                                </button>
-                            </div>
-                            <div class="product-info">
-                                <div class="product-title">${product.name}</div>
-                                <div class="product-price">
-                                    <span class="current-price">$${product.price.toFixed(2)}</span>
-                                    ${oldPrice > product.price ? `<span class="original-price">$${oldPrice.toFixed(2)}</span>` : ''}
-                                </div>
-                                <div class="rating">
-                                    <div class="stars">${getRandomStars()}</div>
-                                    <span class="rating-count">${getRandomRating()}</span>
-                                </div>
-                                <div class="stock in-stock">
-                                    <i class="fas fa-check-circle"></i>
-                                    In stock
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-                bestSellersGrid.innerHTML = bestSellersHTML;
-                initializeProductInteractions();
-            }
-
-            function renderCategoryProducts() {
-                const container = document.getElementById('categoryProductsContainer');
-                
-                // Group products by category
-                const productsByCategory = {};
-                allProducts.forEach(product => {
-                    if (product.category) {
-                        if (!productsByCategory[product.category]) {
-                            productsByCategory[product.category] = [];
+        // Load promo banner
+        async function loadPromoBanner() {
+            try {
+                const doc = await db.collection('landingPage').doc('promoBanner').get();
+                if (doc.exists) {
+                    const promoData = doc.data();
+                    if (promoData.active && promoData.text) {
+                        const promoBanner = document.getElementById('promoBanner');
+                        const promoText = document.getElementById('promoText');
+                        
+                        promoText.textContent = promoData.text;
+                        promoBanner.style.display = 'block';
+                        
+                        // Make banner clickable if link exists
+                        if (promoData.link) {
+                            promoBanner.addEventListener('click', function() {
+                                window.location.href = promoData.link;
+                            });
                         }
-                        productsByCategory[product.category].push(product);
                     }
-                });
+                }
+            } catch (error) {
+                console.error("Error loading promo banner:", error);
+            }
+        }
 
-                // Create sections for each category with products
-                let categorySectionsHTML = '';
+        // Load hero images
+        async function loadHeroImages() {
+            try {
+                const doc = await db.collection('landingPage').doc('heroImages').get();
+                const carousel = document.getElementById('heroCarousel');
                 
-                Object.keys(productsByCategory).forEach(categoryName => {
-                    const categoryProducts = productsByCategory[categoryName];
-                    if (categoryProducts.length > 0) {
-                        categorySectionsHTML += `
-                            <section class="category-products-section">
-                                <div class="heading-row">
-                                    <h2>${categoryName}</h2>
-                                    <a href="/products?category=${encodeURIComponent(categoryName)}">View All</a>
-                                </div>
-                                <div class="scroll-container">
-                                    <div class="arrow left">&#10094;</div>
-                                    <div class="arrow right">&#10095;</div>
-                                    <div class="scroll-products">
-                                        ${categoryProducts.map(product => {
-                                            const imageUrl = product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/300x400?text=Product';
-                                            const oldPrice = product.oldPrice || product.price * 1.3;
-                                            const discount = Math.round(((oldPrice - product.price) / oldPrice) * 100);
-                                            
-                                            return `
-                                                <div class="scroll-product" data-product-id="${product.id}">
-                                                    <div class="scroll-image-container">
-                                                        <img src="${imageUrl}" alt="${product.name}" class="scroll-product-image"
-                                                             onerror="this.src='https://via.placeholder.com/300x400?text=Product'">
-                                                        ${discount > 0 ? `<div class="badge sale">${discount}% OFF</div>` : ''}
-                                                    </div>
-                                                    <div class="scroll-product-info">
-                                                        <div class="scroll-product-title">${product.name}</div>
-                                                        <div class="scroll-product-price">
-                                                            <span class="scroll-current-price">$${product.price.toFixed(2)}</span>
-                                                            ${oldPrice > product.price ? `<span class="scroll-original-price">$${oldPrice.toFixed(2)}</span>` : ''}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            `;
-                                        }).join('')}
-                                    </div>
-                                </div>
-                            </section>
+                if (doc.exists) {
+                    const heroData = doc.data();
+                    const images = heroData.images || [];
+                    
+                    if (images.length > 0) {
+                        carousel.innerHTML = '';
+                        
+                        // Create slides
+                        images.forEach((image, index) => {
+                            const slide = document.createElement('div');
+                            slide.className = `carousel-slide ${index === 0 ? 'active' : ''}`;
+                            slide.setAttribute('role', 'group');
+                            slide.setAttribute('aria-roledescription', 'slide');
+                            slide.setAttribute('aria-label', `${index + 1} of ${images.length}`);
+                            
+                            const link = document.createElement('a');
+                            link.className = 'slide-link';
+                            link.href = image.link || '#';
+                            
+                            // Desktop image
+                            const desktopImg = document.createElement('img');
+                            desktopImg.src = image.desktop;
+                            desktopImg.alt = `Hero image ${index + 1}`;
+                            desktopImg.className = 'slide-image desktop-image';
+                            desktopImg.loading = 'lazy';
+                            
+                            // Mobile image
+                            const mobileImg = document.createElement('img');
+                            mobileImg.src = image.mobile || image.desktop;
+                            mobileImg.alt = `Hero image ${index + 1}`;
+                            mobileImg.className = 'slide-image mobile-image';
+                            mobileImg.loading = 'lazy';
+                            
+                            link.appendChild(desktopImg);
+                            link.appendChild(mobileImg);
+                            slide.appendChild(link);
+                            carousel.appendChild(slide);
+                        });
+                        
+                        // Add navigation controls if there are multiple images
+                        if (images.length > 1) {
+                            addCarouselControls(carousel, images.length);
+                        }
+                        
+                        initializeCarousel();
+                    } else {
+                        carousel.innerHTML = `
+                            <div class="empty-state">
+                                <h3>No Hero Images</h3>
+                                <p>Check back soon for featured products</p>
+                            </div>
                         `;
                     }
+                } else {
+                    carousel.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No Hero Images</h3>
+                            <p>Check back soon for featured products</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error("Error loading hero images:", error);
+                document.getElementById('heroCarousel').innerHTML = `
+                    <div class="empty-state">
+                        <h3>Error Loading Images</h3>
+                        <p>Please try refreshing the page</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Add carousel controls
+        function addCarouselControls(carousel, slideCount) {
+            // Navigation buttons
+            const nav = document.createElement('div');
+            nav.className = 'carousel-nav';
+            
+            const prevButton = document.createElement('button');
+            prevButton.className = 'carousel-button prev';
+            prevButton.setAttribute('aria-label', 'Previous slide');
+            prevButton.innerHTML = `
+                <svg viewBox="0 0 24 24">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                </svg>
+            `;
+            
+            const nextButton = document.createElement('button');
+            nextButton.className = 'carousel-button next';
+            nextButton.setAttribute('aria-label', 'Next slide');
+            nextButton.innerHTML = `
+                <svg viewBox="0 0 24 24">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                </svg>
+            `;
+            
+            nav.appendChild(prevButton);
+            nav.appendChild(nextButton);
+            carousel.appendChild(nav);
+            
+            // Indicators
+            const controls = document.createElement('div');
+            controls.className = 'carousel-controls';
+            
+            for (let i = 0; i < slideCount; i++) {
+                const indicator = document.createElement('button');
+                indicator.className = `carousel-indicator ${i === 0 ? 'active' : ''}`;
+                indicator.setAttribute('aria-label', `Show slide ${i + 1}`);
+                controls.appendChild(indicator);
+            }
+            
+            carousel.appendChild(controls);
+        }
+
+        // Initialize carousel functionality
+        function initializeCarousel() {
+            const slides = Array.from(document.querySelectorAll('.carousel-slide'));
+            const indicators = Array.from(document.querySelectorAll('.carousel-indicator'));
+            const prevButton = document.querySelector('.carousel-button.prev');
+            const nextButton = document.querySelector('.carousel-button.next');
+            
+            if (!slides.length || !prevButton || !nextButton) return;
+            
+            let currentIndex = 0;
+            let autoScrollInterval;
+            let isTransitioning = false;
+            const transitionDuration = 800;
+            const autoScrollDelay = 5000;
+            
+            function updateCarousel() {
+                slides.forEach((slide, index) => {
+                    slide.classList.remove('active', 'prev', 'next');
+                    
+                    if (index === currentIndex) {
+                        slide.classList.add('active');
+                    } else if (index === (currentIndex - 1 + slides.length) % slides.length) {
+                        slide.classList.add('prev');
+                    } else if (index === (currentIndex + 1) % slides.length) {
+                        slide.classList.add('next');
+                    }
                 });
-
-                container.innerHTML = categorySectionsHTML;
-                initializeScrollSections();
-                initializeProductInteractions();
-            }
-
-            // Helper functions
-            function getRandomStars() {
-                const ratings = ['★★★★★', '★★★★☆', '★★★☆☆'];
-                return ratings[Math.floor(Math.random() * ratings.length)];
-            }
-
-            function getRandomRating() {
-                return (4 + Math.random()).toFixed(1) + ' (' + Math.floor(Math.random() * 100 + 50) + ')';
-            }
-
-            // Carousel functionality
-            function initializeCarousel() {
-                const slides = Array.from(document.querySelectorAll('.carousel-slide'));
-                const indicators = Array.from(document.querySelectorAll('.carousel-indicator'));
-                const prevButton = document.querySelector('.carousel-button.prev');
-                const nextButton = document.querySelector('.carousel-button.next');
-                
-                let currentIndex = 0;
-                let autoScrollInterval;
-                let isTransitioning = false;
-                const transitionDuration = 800;
-                const autoScrollDelay = 5000;
-                
-                function updateCarousel() {
-                    slides.forEach((slide, index) => {
-                        slide.classList.remove('active', 'prev', 'next');
-                        
-                        if (index === currentIndex) {
-                            slide.classList.add('active');
-                        } else if (index === (currentIndex - 1 + slides.length) % slides.length) {
-                            slide.classList.add('prev');
-                        } else if (index === (currentIndex + 1) % slides.length) {
-                            slide.classList.add('next');
-                        }
-                    });
-                    
-                    indicators.forEach((indicator, index) => {
-                        indicator.classList.toggle('active', index === currentIndex);
-                        
-                        if (index === currentIndex) {
-                            indicator.style.animation = 'none';
-                            void indicator.offsetWidth;
-                            indicator.style.animation = `loading ${autoScrollDelay}ms linear`;
-                        }
-                    });
-                }
-                
-                function goToSlide(index) {
-                    if (isTransitioning || index === currentIndex) return;
-                    
-                    isTransitioning = true;
-                    currentIndex = index;
-                    updateCarousel();
-                    
-                    setTimeout(() => {
-                        isTransitioning = false;
-                    }, transitionDuration);
-                }
-                
-                function nextSlide() {
-                    goToSlide((currentIndex + 1) % slides.length);
-                }
-                
-                function prevSlide() {
-                    goToSlide((currentIndex - 1 + slides.length) % slides.length);
-                }
-                
-                function startAutoScroll() {
-                    stopAutoScroll();
-                    autoScrollInterval = setInterval(nextSlide, autoScrollDelay);
-                }
-                
-                function stopAutoScroll() {
-                    clearInterval(autoScrollInterval);
-                }
-                
-                prevButton.addEventListener('click', prevSlide);
-                nextButton.addEventListener('click', nextSlide);
                 
                 indicators.forEach((indicator, index) => {
-                    indicator.addEventListener('click', () => goToSlide(index));
-                });
-                
-                const carousel = document.querySelector('.carousel');
-                carousel.addEventListener('mouseenter', stopAutoScroll);
-                carousel.addEventListener('mouseleave', startAutoScroll);
-                
-                let touchStartX = 0;
-                let touchEndX = 0;
-                
-                carousel.addEventListener('touchstart', (e) => {
-                    touchStartX = e.changedTouches[0].screenX;
-                }, { passive: true });
-                
-                carousel.addEventListener('touchend', (e) => {
-                    touchEndX = e.changedTouches[0].screenX;
-                    const diff = touchStartX - touchEndX;
+                    indicator.classList.toggle('active', index === currentIndex);
                     
-                    if (Math.abs(diff) > 50) {
-                        if (diff > 0) nextSlide();
-                        else prevSlide();
+                    if (index === currentIndex) {
+                        indicator.style.animation = 'none';
+                        void indicator.offsetWidth;
+                        indicator.style.animation = `loading ${autoScrollDelay}ms linear`;
                     }
-                }, { passive: true });
+                });
+            }
+            
+            function goToSlide(index) {
+                if (isTransitioning || index === currentIndex) return;
                 
+                isTransitioning = true;
+                currentIndex = index;
                 updateCarousel();
-                startAutoScroll();
+                
+                setTimeout(() => {
+                    isTransitioning = false;
+                }, transitionDuration);
             }
+            
+            function nextSlide() {
+                goToSlide((currentIndex + 1) % slides.length);
+            }
+            
+            function prevSlide() {
+                goToSlide((currentIndex - 1 + slides.length) % slides.length);
+            }
+            
+            function startAutoScroll() {
+                stopAutoScroll();
+                autoScrollInterval = setInterval(nextSlide, autoScrollDelay);
+            }
+            
+            function stopAutoScroll() {
+                clearInterval(autoScrollInterval);
+            }
+            
+            prevButton.addEventListener('click', prevSlide);
+            nextButton.addEventListener('click', nextSlide);
+            
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => goToSlide(index));
+            });
+            
+            const carousel = document.querySelector('.carousel');
+            carousel.addEventListener('mouseenter', stopAutoScroll);
+            carousel.addEventListener('mouseleave', startAutoScroll);
+            
+            updateCarousel();
+            startAutoScroll();
+        }
 
-            function initializeCategoryScroll() {
-                const scrollContainer = document.getElementById('scrollContainer');
-                const leftArrow = document.getElementById('leftArrow');
-                const rightArrow = document.getElementById('rightArrow');
+        // Load categories
+        async function loadCategories() {
+            try {
+                const snapshot = await db.collection('categories').orderBy('name').get();
+                categories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                
+                renderCategories();
+                renderMobileMenuCategories();
+            } catch (error) {
+                console.error("Error loading categories:", error);
+                document.getElementById('categoryContainer').innerHTML = `
+                    <div class="empty-state">
+                        <h3>Error Loading Categories</h3>
+                        <p>Please try refreshing the page</p>
+                    </div>
+                `;
+            }
+        }
 
-                function updateArrowVisibility() {
-                    if (window.innerWidth <= 768) {
-                        if (scrollContainer.scrollLeft <= 10) {
-                            leftArrow.style.display = 'none';
-                        } else {
-                            leftArrow.style.display = 'flex';
-                        }
-                        
-                        if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 10) {
-                            rightArrow.style.display = 'none';
-                        } else {
-                            rightArrow.style.display = 'flex';
-                        }
+        // Render categories
+        function renderCategories() {
+            const container = document.getElementById('categoryContainer');
+            
+            if (categories.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No Categories Available</h3>
+                        <p>Check back soon for new categories</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = categories.map(category => `
+                <div class="category">
+                    <a href="manage-products.html?category=${encodeURIComponent(category.name)}" class="category-link">
+                        <img src="${category.imageUrl || 'https://via.placeholder.com/120?text=No+Image'}" 
+                             alt="${category.name}" 
+                             loading="lazy"
+                             onerror="this.src='https://via.placeholder.com/120?text=Error'">
+                        <span>${category.name}</span>
+                    </a>
+                </div>
+            `).join('');
+            
+            // Initialize category scrolling on mobile
+            initializeCategoryScrolling();
+        }
+
+        // Render mobile menu categories
+        function renderMobileMenuCategories() {
+            const container = document.getElementById('mobileMenuLinks');
+            
+            if (categories.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No Categories</h3>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = categories.map(category => `
+                <a href="manage-products.html?category=${encodeURIComponent(category.name)}">${category.name}</a>
+            `).join('');
+        }
+
+        // Initialize category scrolling
+        function initializeCategoryScrolling() {
+            const scrollContainer = document.getElementById('categoryContainer');
+            const leftArrow = document.getElementById('leftArrow');
+            const rightArrow = document.getElementById('rightArrow');
+            
+            if (!scrollContainer || window.innerWidth > 768) return;
+            
+            function updateArrowVisibility() {
+                if (scrollContainer.scrollLeft <= 10) {
+                    leftArrow.style.display = 'none';
+                } else {
+                    leftArrow.style.display = 'flex';
+                }
+                
+                if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 10) {
+                    rightArrow.style.display = 'none';
+                } else {
+                    rightArrow.style.display = 'flex';
+                }
+            }
+            
+            rightArrow.addEventListener('click', () => {
+                scrollContainer.scrollBy({ left: 200, behavior: 'smooth' });
+                setTimeout(updateArrowVisibility, 300);
+            });
+            
+            leftArrow.addEventListener('click', () => {
+                scrollContainer.scrollBy({ left: -200, behavior: 'smooth' });
+                setTimeout(updateArrowVisibility, 300);
+            });
+            
+            scrollContainer.addEventListener('scroll', updateArrowVisibility);
+            updateArrowVisibility();
+            
+            // Hide arrows on desktop
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    leftArrow.style.display = 'none';
+                    rightArrow.style.display = 'none';
+                } else {
+                    updateArrowVisibility();
+                }
+            });
+        }
+
+        // Load best sellers
+        async function loadBestSellers() {
+            try {
+                const doc = await db.collection('landingPage').doc('bestSellers').get();
+                const container = document.getElementById('bestSellersGrid');
+                
+                if (doc.exists) {
+                    const bestSellersData = doc.data();
+                    const bestSellers = bestSellersData.products || [];
+                    
+                    if (bestSellers.length > 0) {
+                        renderProducts(container, bestSellers, 'bestSellers');
                     } else {
-                        leftArrow.style.display = 'none';
-                        rightArrow.style.display = 'none';
+                        container.innerHTML = `
+                            <div class="empty-state" style="grid-column: 1 / -1;">
+                                <h3>No Best Sellers</h3>
+                                <p>Check back soon for popular products</p>
+                            </div>
+                        `;
                     }
+                } else {
+                    container.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1 / -1;">
+                            <h3>No Best Sellers</h3>
+                            <p>Check back soon for popular products</p>
+                        </div>
+                    `;
                 }
-
-                rightArrow.addEventListener('click', () => {
-                    scrollContainer.scrollBy({ left: 200, behavior: 'smooth' });
-                    setTimeout(updateArrowVisibility, 300);
-                });
-
-                leftArrow.addEventListener('click', () => {
-                    scrollContainer.scrollBy({ left: -200, behavior: 'smooth' });
-                    setTimeout(updateArrowVisibility, 300);
-                });
-
-                scrollContainer.addEventListener('scroll', updateArrowVisibility);
-                window.addEventListener('resize', updateArrowVisibility);
-                updateArrowVisibility();
+            } catch (error) {
+                console.error("Error loading best sellers:", error);
+                document.getElementById('bestSellersGrid').innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <h3>Error Loading Best Sellers</h3>
+                        <p>Please try refreshing the page</p>
+                    </div>
+                `;
             }
+        }
 
-            function initializeScrollSections() {
-                const scrollSections = document.querySelectorAll('.category-products-section');
+        // Load all products
+        async function loadAllProducts() {
+            try {
+                const snapshot = await db.collection('products').get();
+                products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            } catch (error) {
+                console.error("Error loading products:", error);
+            }
+        }
+
+        // Create category sections
+        function createCategorySections() {
+            const container = document.getElementById('categoryProductsSections');
+            
+            if (categories.length === 0 || products.length === 0) return;
+            
+            container.innerHTML = categories.map(category => {
+                const categoryProducts = products.filter(product => product.category === category.name);
                 
-                scrollSections.forEach(section => {
-                    const scrollContainer = section.querySelector('.scroll-products');
-                    const leftArrow = section.querySelector('.arrow.left');
-                    const rightArrow = section.querySelector('.arrow.right');
+                if (categoryProducts.length === 0) return '';
+                
+                return `
+                    <section class="category-products-section">
+                        <div class="heading-row">
+                            <h2>${category.name}</h2>
+                            <a href="manage-products.html?category=${encodeURIComponent(category.name)}">View All</a>
+                        </div>
+                        <div class="scroll-container">
+                            <div class="arrow left" onclick="scrollCategoryLeft('${category.id}')">&#10094;</div>
+                            <div class="arrow right" onclick="scrollCategoryRight('${category.id}')">&#10095;</div>
+                            <div class="scroll-products" id="category-${category.id}">
+                                ${categoryProducts.map(product => `
+                                    <div class="scroll-product" onclick="viewProduct('${product.id}')">
+                                        <div class="scroll-image-container">
+                                            <img src="${product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/280?text=No+Image'}" 
+                                                 alt="${product.name}" 
+                                                 class="scroll-product-image"
+                                                 onerror="this.src='https://via.placeholder.com/280?text=Error'">
+                                            ${product.oldPrice && product.oldPrice > product.price ? 
+                                                `<div class="badge sale">SALE</div>` : ''}
+                                        </div>
+                                        <div class="scroll-product-info">
+                                            <div class="scroll-product-title">${product.name}</div>
+                                            <div class="scroll-product-price">
+                                                <span class="scroll-current-price">$${product.price?.toFixed(2) || '0.00'}</span>
+                                                ${product.oldPrice && product.oldPrice > product.price ? 
+                                                    `<span class="scroll-original-price">$${product.oldPrice.toFixed(2)}</span>
+                                                     <span class="scroll-discount">${Math.round((1 - product.price / product.oldPrice) * 100)}% OFF</span>` : ''}
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </section>
+                `;
+            }).join('');
+            
+            // Initialize scrolling for category sections
+            initializeCategoryProductScrolling();
+        }
+
+        // Initialize category product scrolling
+        function initializeCategoryProductScrolling() {
+            categories.forEach(category => {
+                const scrollContainer = document.getElementById(`category-${category.id}`);
+                if (scrollContainer) {
+                    const leftArrow = scrollContainer.parentElement.querySelector('.arrow.left');
+                    const rightArrow = scrollContainer.parentElement.querySelector('.arrow.right');
                     
-                    function updateArrows() {
+                    function updateArrowVisibility() {
                         if (scrollContainer.scrollLeft <= 10) {
                             leftArrow.style.display = 'none';
                         } else {
@@ -1911,123 +2069,263 @@
                         }
                     }
                     
-                    rightArrow.addEventListener('click', () => {
-                        scrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
-                        setTimeout(updateArrows, 300);
-                    });
-                    
-                    leftArrow.addEventListener('click', () => {
-                        scrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
-                        setTimeout(updateArrows, 300);
-                    });
-                    
-                    scrollContainer.addEventListener('scroll', updateArrows);
-                    updateArrows();
-                });
-            }
+                    scrollContainer.addEventListener('scroll', updateArrowVisibility);
+                    updateArrowVisibility();
+                }
+            });
+        }
 
-            function initializeProductInteractions() {
-                // Wishlist functionality
-                const wishlistButtons = document.querySelectorAll('.wishlist-btn');
-                wishlistButtons.forEach(button => {
-                    button.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const icon = this.querySelector('i');
-                        if (icon.classList.contains('far')) {
-                            icon.classList.remove('far');
-                            icon.classList.add('fas', 'active');
-                            this.classList.add('active');
-                        } else {
-                            icon.classList.remove('fas', 'active');
-                            icon.classList.add('far');
-                            this.classList.remove('active');
-                        }
-                    });
-                });
+        // Scroll functions for category products
+        function scrollCategoryLeft(categoryId) {
+            const container = document.getElementById(`category-${categoryId}`);
+            if (container) {
+                container.scrollBy({ left: -300, behavior: 'smooth' });
+            }
+        }
+
+        function scrollCategoryRight(categoryId) {
+            const container = document.getElementById(`category-${categoryId}`);
+            if (container) {
+                container.scrollBy({ left: 300, behavior: 'smooth' });
+            }
+        }
+
+        // Render products in a grid
+        function renderProducts(container, products, type) {
+            if (products.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <h3>No Products Found</h3>
+                        <p>Check back soon for new arrivals</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = products.map(product => `
+                <div class="product-card" onclick="viewProduct('${product.id}')">
+                    <div class="image-container">
+                        <img src="${product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/300?text=No+Image'}" 
+                             alt="${product.name}" 
+                             class="product-image"
+                             onerror="this.src='https://via.placeholder.com/300?text=Error'">
+                        ${product.oldPrice && product.oldPrice > product.price ? 
+                            `<div class="badge sale">SALE</div>` : ''}
+                        <button class="wishlist-btn" onclick="event.stopPropagation(); toggleWishlist('${product.id}')">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-title">${product.name}</div>
+                        <div class="product-price">
+                            <span class="current-price">$${product.price?.toFixed(2) || '0.00'}</span>
+                            ${product.oldPrice && product.oldPrice > product.price ? 
+                                `<span class="original-price">$${product.oldPrice.toFixed(2)}</span>
+                                 <span class="discount">${Math.round((1 - product.price / product.oldPrice) * 100)}% OFF</span>` : ''}
+                        </div>
+                        <div class="rating">
+                            <div class="stars">${generateRandomStars()}</div>
+                            <span class="rating-count">${generateRandomRating()}</span>
+                        </div>
+                        <div class="stock ${product.isAvailable ? 'in-stock' : 'low-stock'}">
+                            <i class="fas ${product.isAvailable ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                            ${product.isAvailable ? 'In stock' : 'Out of stock'}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Generate random stars for demo
+        function generateRandomStars() {
+            const rating = Math.random() * 2 + 3; // 3-5 stars
+            const fullStars = Math.floor(rating);
+            const halfStar = rating - fullStars >= 0.5;
+            const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+            
+            return '★'.repeat(fullStars) + (halfStar ? '½' : '') + '☆'.repeat(emptyStars);
+        }
+
+        // Generate random rating count
+        function generateRandomRating() {
+            const rating = (Math.random() * 1.5 + 3.5).toFixed(1); // 3.5-5.0
+            const count = Math.floor(Math.random() * 500 + 50); // 50-550
+            return `${rating} (${count})`;
+        }
+
+        // View product
+        function viewProduct(productId) {
+            window.location.href = `view.html?id=${productId}`;
+        }
+
+        // Toggle wishlist
+        function toggleWishlist(productId) {
+            // For demo purposes - in a real app, this would save to Firebase
+            const wishlistBtn = event.target.closest('.wishlist-btn');
+            const icon = wishlistBtn.querySelector('i');
+            
+            if (icon.classList.contains('far')) {
+                icon.classList.remove('far');
+                icon.classList.add('fas', 'active');
+                wishlistBtn.classList.add('active');
+                showToast('Added to wishlist');
+            } else {
+                icon.classList.remove('fas', 'active');
+                icon.classList.add('far');
+                wishlistBtn.classList.remove('active');
+                showToast('Removed from wishlist');
+            }
+        }
+
+        // Cart functionality
+        function loadCartFromStorage() {
+            const savedCart = localStorage.getItem('shopsphere_cart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+                updateCartCount();
+            }
+        }
+
+        function saveCartToStorage() {
+            localStorage.setItem('shopsphere_cart', JSON.stringify(cart));
+            updateCartCount();
+        }
+
+        function updateCartCount() {
+            const count = cart.reduce((total, item) => total + item.quantity, 0);
+            document.getElementById('cartCount').textContent = count;
+            document.getElementById('mobileCartCount').textContent = count;
+        }
+
+        function renderCart() {
+            const cartItems = document.getElementById('cartItems');
+            const cartFooter = document.getElementById('cartFooter');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = `
+                    <div class="empty-state">
+                        <h3>Your cart is empty</h3>
+                        <p>Add some products to get started</p>
+                    </div>
+                `;
+                cartFooter.style.display = 'none';
+                return;
+            }
+            
+            let total = 0;
+            cartItems.innerHTML = cart.map(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
                 
-                // Product click functionality
-                const productCards = document.querySelectorAll('.product-card, .scroll-product');
-                productCards.forEach(card => {
-                    card.addEventListener('click', function() {
-                        const productId = this.getAttribute('data-product-id');
-                        if (productId) {
-                            window.location.href = `/product.html?id=${productId}`;
-                        }
-                    });
+                return `
+                    <div class="cart-item">
+                        <img src="${item.image}" alt="${item.name}">
+                        <div class="cart-item-details">
+                            <div class="cart-item-title">${item.name}</div>
+                            <div class="cart-item-price">$${itemTotal.toFixed(2)}</div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+                                <button onclick="updateCartQuantity('${item.id}', ${item.quantity - 1})">-</button>
+                                <span>${item.quantity}</span>
+                                <button onclick="updateCartQuantity('${item.id}', ${item.quantity + 1})">+</button>
+                                <button onclick="removeFromCart('${item.id}')" style="margin-left: auto; color: var(--red);">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            cartTotal.textContent = `$${total.toFixed(2)}`;
+            cartFooter.style.display = 'block';
+        }
+
+        function addToCart(product) {
+            const existingItem = cart.find(item => item.id === product.id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/80?text=No+Image',
+                    quantity: 1
                 });
             }
+            
+            saveCartToStorage();
+            showToast('Added to cart');
+        }
 
-            // Navigation functionality
-            function setupEventListeners() {
-                const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-                const closeMenu = document.getElementById('closeMenu');
-                const mobileMenu = document.getElementById('mobileMenu');
-                const mobileSearchBtn = document.getElementById('mobileSearchBtn');
-                const desktopSearchBtn = document.getElementById('desktopSearchBtn');
-                const closeSearch = document.getElementById('closeSearch');
-                const searchOverlay = document.getElementById('searchOverlay');
-                const mobileCartBtn = document.getElementById('mobileCartBtn');
-                const desktopCartBtn = document.getElementById('desktopCartBtn');
-                const closeCart = document.getElementById('closeCart');
-                const cartSidebar = document.getElementById('cartSidebar');
-                const overlay = document.getElementById('overlay');
-
-                // Mobile menu functionality
-                function openMobileMenu() {
-                    mobileMenu.classList.add('active');
-                    overlay.classList.add('active');
-                    document.body.style.overflow = 'hidden';
-                }
-
-                function closeMobileMenu() {
-                    mobileMenu.classList.remove('active');
-                    overlay.classList.remove('active');
-                    document.body.style.overflow = '';
-                }
-
-                mobileMenuBtn.addEventListener('click', openMobileMenu);
-                closeMenu.addEventListener('click', closeMobileMenu);
-
-                // Search functionality
-                function openSearch() {
-                    searchOverlay.style.display = 'flex';
-                    document.body.style.overflow = 'hidden';
-                }
-
-                function closeSearchOverlay() {
-                    searchOverlay.style.display = 'none';
-                    document.body.style.overflow = '';
-                }
-
-                mobileSearchBtn.addEventListener('click', openSearch);
-                desktopSearchBtn.addEventListener('click', openSearch);
-                closeSearch.addEventListener('click', closeSearchOverlay);
-
-                // Cart functionality
-                function openCart() {
-                    cartSidebar.classList.add('active');
-                    overlay.classList.add('active');
-                    document.body.style.overflow = 'hidden';
-                }
-
-                function closeCartSidebar() {
-                    cartSidebar.classList.remove('active');
-                    overlay.classList.remove('active');
-                    document.body.style.overflow = '';
-                }
-
-                mobileCartBtn.addEventListener('click', openCart);
-                desktopCartBtn.addEventListener('click', openCart);
-                closeCart.addEventListener('click', closeCartSidebar);
-
-                // Close overlays when clicking on overlay
-                overlay.addEventListener('click', function() {
-                    closeMobileMenu();
-                    closeCartSidebar();
-                    closeSearchOverlay();
-                });
+        function updateCartQuantity(productId, newQuantity) {
+            if (newQuantity < 1) {
+                removeFromCart(productId);
+                return;
             }
-        });
+            
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity = newQuantity;
+                saveCartToStorage();
+                renderCart();
+            }
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            saveCartToStorage();
+            renderCart();
+            showToast('Removed from cart');
+        }
+
+        // Utility functions
+        function showToast(message) {
+            // Simple toast notification
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: var(--primary);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                z-index: 1300;
+                box-shadow: var(--shadow);
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 3000);
+        }
+
+        function showError(message) {
+            // Simple error notification
+            const error = document.createElement('div');
+            error.textContent = message;
+            error.style.cssText = `
+                position: fixed;
+                top: 100px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--red);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                z-index: 1300;
+                box-shadow: var(--shadow);
+            `;
+            
+            document.body.appendChild(error);
+            
+            setTimeout(() => {
+                document.body.removeChild(error);
+            }, 5000);
+        }
     </script>
 </body>
 </html>
