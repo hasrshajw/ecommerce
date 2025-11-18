@@ -69,14 +69,12 @@
         .toast.success { background-color: var(--success-color); }
         .toast.error { background-color: var(--danger-color); }
 
-        /* Color Variants Styles */
         .color-variant-card { border: 1px solid #e5e7eb; border-radius: var(--border-radius); padding: 1.5rem; margin-bottom: 1rem; background: #fafafa; }
         .color-variant-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
         .color-variant-title { font-weight: 600; font-size: 1.1rem; }
         .color-variant-actions { display: flex; gap: 0.5rem; }
         .color-preview { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #e5e7eb; }
         
-        /* Modal Styles */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 2000; }
         .modal { background: white; border-radius: var(--border-radius); padding: 2rem; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
@@ -85,6 +83,28 @@
         .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
         .color-images-section { margin-top: 1rem; }
         .color-image-item { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.75rem; }
+
+        .upload-container { margin-top: 0.5rem; }
+        .upload-btn { 
+            background: var(--light-color); border: 2px dashed #d1d5db; 
+            padding: 0.75rem; text-align: center; border-radius: var(--border-radius);
+            cursor: pointer; transition: all 0.2s; margin-bottom: 0.5rem;
+        }
+        .upload-btn:hover { border-color: var(--primary-color); background: #f0f4ff; }
+        .upload-text { color: var(--secondary-color); font-size: 0.875rem; }
+        .upload-preview { 
+            width: 100px; height: 100px; object-fit: cover; border-radius: var(--border-radius);
+            border: 2px solid #e5e7eb; margin-top: 0.5rem; display: none;
+        }
+        .upload-preview.show { display: block; }
+        .upload-actions { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+        .upload-remove { background: var(--danger-color); color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; }
+        .image-preview { 
+            width: 80px; height: 80px; border-radius: var(--border-radius); 
+            object-fit: cover; border: 2px solid #e5e7eb; margin-top: 0.5rem;
+            display: none;
+        }
+        .image-preview.show { display: block; }
     </style>
 </head>
 <body>
@@ -104,7 +124,6 @@
         </div>
     </div>
 
-    <!-- Color Variant Modal -->
     <div id="color-variant-modal" class="modal-overlay" style="display: none;">
         <div class="modal">
             <div class="modal-header">
@@ -112,7 +131,7 @@
                 <button class="close-modal" onclick="closeColorModal()">&times;</button>
             </div>
             <form id="color-variant-form">
-                <div class="form-grid">
+                <div class="modal-grid">
                     <div class="form-column">
                         <div class="form-group">
                             <label for="color-name">Color Name</label>
@@ -120,7 +139,21 @@
                         </div>
                         <div class="form-group">
                             <label for="color-link">Color Image Link</label>
-                            <input type="url" id="color-link" required placeholder="https://example.com/color-image.jpg">
+                            <input type="url" id="color-link" placeholder="https://example.com/color-image.jpg">
+                            <img id="color-link-preview" class="image-preview" alt="Color image preview">
+                        </div>
+                        <div class="form-group">
+                            <label>Or Upload Color Image</label>
+                            <div class="upload-container">
+                                <div class="upload-btn" onclick="document.getElementById('color-image-upload').click()">
+                                    <div class="upload-text">Click to upload color image</div>
+                                </div>
+                                <input type="file" id="color-image-upload" accept="image/*" style="display: none;">
+                                <img id="color-upload-preview" class="upload-preview" alt="Upload preview">
+                                <div class="upload-actions">
+                                    <button type="button" class="upload-remove" onclick="removeColorUpload()" style="display: none;">Remove</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="form-column">
@@ -136,7 +169,17 @@
                     <div id="modal-color-images">
                         <div class="color-image-item">
                             <div class="form-group" style="flex-grow:1; margin:0;">
-                                <input type="url" class="color-image-url" placeholder="Main Image URL for this color" required>
+                                <input type="url" class="color-image-url" placeholder="Main Image URL for this color">
+                                <div class="upload-container">
+                                    <div class="upload-btn" onclick="document.getElementById('color-main-image-upload').click()">
+                                        <div class="upload-text">Or upload main image</div>
+                                    </div>
+                                    <input type="file" id="color-main-image-upload" accept="image/*" style="display: none;">
+                                    <img id="color-main-upload-preview" class="upload-preview" alt="Upload preview">
+                                    <div class="upload-actions">
+                                        <button type="button" class="upload-remove" onclick="removeColorMainUpload()" style="display: none;">Remove</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -154,6 +197,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <script>
 const firebaseConfig = {
@@ -169,11 +213,15 @@ const firebaseConfig = {
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+        const storage = firebase.storage();
 
         let currentUser = null;
         let allCategories = [];
         const SIZES_LIST = ['S', 'M', 'L', 'XL', '2XL'];
-        let currentColorEditingIndex = null; // Track which color variant is being edited
+        let currentColorEditingIndex = null;
+        let colorUploadedFile = null;
+        let colorMainUploadedFile = null;
+        let uploadedFiles = {};
 
         document.addEventListener('DOMContentLoaded', () => {
             auth.onAuthStateChanged(user => {
@@ -247,15 +295,25 @@ const firebaseConfig = {
             
             const existingImagesHtml = (product.images || ['']).map((url, index) => `
                 <div class="image-list-item">
-                    <div class="form-group" style="flex-grow:1; margin:0;"><input type="url" class="image-url-input" value="${url}" placeholder="${index === 0 ? 'Main Image URL' : 'Additional Image URL'}" required></div>
+                    <div class="form-group" style="flex-grow:1; margin:0;">
+                        <input type="url" class="image-url-input" value="${url}" placeholder="${index === 0 ? 'Main Image URL' : 'Additional Image URL'}">
+                        <div class="upload-container">
+                            <div class="upload-btn" onclick="document.getElementById('image-upload-${index}').click()">
+                                <div class="upload-text">Or upload image</div>
+                            </div>
+                            <input type="file" id="image-upload-${index}" accept="image/*" style="display: none;" data-index="${index}">
+                            <img id="upload-preview-${index}" class="upload-preview" alt="Upload preview" ${url ? 'src="' + url + '" class="upload-preview show"' : ''}>
+                            <div class="upload-actions">
+                                <button type="button" class="upload-remove" onclick="removeImageUpload(${index})" style="display: ${url ? 'block' : 'none'};">Remove</button>
+                            </div>
+                        </div>
+                    </div>
                     ${index > 0 ? '<button type="button" class="remove-image-btn" onclick="this.parentElement.remove()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>' : ''}
                 </div>
             `).join('');
 
-            // Store color variants in dataset for easy access
             container.dataset.colorVariants = JSON.stringify(product.colorVariants || []);
 
-            // Render color variants section
             const colorVariantsHtml = renderColorVariantsSection(product.colorVariants || []);
 
             container.innerHTML = `
@@ -337,40 +395,59 @@ const firebaseConfig = {
             
             if (colorVariant) {
                 title.textContent = 'Edit Color Variant';
-                // Populate form with existing data
                 document.getElementById('color-name').value = colorVariant.name;
                 document.getElementById('color-link').value = colorVariant.hex || '';
+                if (colorVariant.hex) {
+                    updateImagePreview(colorVariant.hex, 'color-link-preview');
+                }
                 
-                // Populate sizes
                 renderModalSizes(colorVariant.sizes || []);
                 
-                // Populate images
                 const imagesContainer = document.getElementById('modal-color-images');
                 imagesContainer.innerHTML = (colorVariant.images || ['']).map((url, index) => `
                     <div class="color-image-item">
                         <div class="form-group" style="flex-grow:1; margin:0;">
-                            <input type="url" class="color-image-url" value="${url}" placeholder="${index === 0 ? 'Main Image URL for this color' : 'Additional Image URL'}" required>
+                            <input type="url" class="color-image-url" value="${url}" placeholder="${index === 0 ? 'Main Image URL for this color' : 'Additional Image URL'}">
+                            <div class="upload-container">
+                                <div class="upload-btn" onclick="document.getElementById('color-additional-upload-${index}').click()">
+                                    <div class="upload-text">Or upload image</div>
+                                </div>
+                                <input type="file" id="color-additional-upload-${index}" accept="image/*" style="display: none;" data-index="${index}">
+                                <img id="color-additional-preview-${index}" class="upload-preview" alt="Upload preview" ${url ? 'src="' + url + '" class="upload-preview show"' : ''}>
+                                <div class="upload-actions">
+                                    <button type="button" class="upload-remove" onclick="removeColorAdditionalUpload(${index})" style="display: ${url ? 'block' : 'none'};">Remove</button>
+                                </div>
+                            </div>
                         </div>
                         ${index > 0 ? '<button type="button" class="remove-image-btn" onclick="this.parentElement.remove()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>' : ''}
                     </div>
                 `).join('');
             } else {
                 title.textContent = 'Add Color Variant';
-                // Reset form
                 document.getElementById('color-variant-form').reset();
                 renderModalSizes([]);
                 
-                // Reset images
                 const imagesContainer = document.getElementById('modal-color-images');
                 imagesContainer.innerHTML = `
                     <div class="color-image-item">
                         <div class="form-group" style="flex-grow:1; margin:0;">
-                            <input type="url" class="color-image-url" placeholder="Main Image URL for this color" required>
+                            <input type="url" class="color-image-url" placeholder="Main Image URL for this color">
+                            <div class="upload-container">
+                                <div class="upload-btn" onclick="document.getElementById('color-main-image-upload').click()">
+                                    <div class="upload-text">Or upload main image</div>
+                                </div>
+                                <input type="file" id="color-main-image-upload" accept="image/*" style="display: none;">
+                                <img id="color-main-upload-preview" class="upload-preview" alt="Upload preview">
+                                <div class="upload-actions">
+                                    <button type="button" class="upload-remove" onclick="removeColorMainUpload()" style="display: none;">Remove</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `;
             }
             
+            removeColorUpload();
             modal.style.display = 'flex';
         }
 
@@ -400,7 +477,6 @@ const firebaseConfig = {
                 `;
             }).join('');
 
-            // Add event listeners for checkboxes
             container.querySelectorAll('.size-offered-checkbox').forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     const toggle = this.closest('.size-row').querySelector('.size-availability-toggle');
@@ -420,23 +496,51 @@ const firebaseConfig = {
             if (categorySelect.value === '--new--') newCategoryInput.style.display = 'block';
             categorySelect.addEventListener('change', () => { newCategoryInput.style.display = categorySelect.value === '--new--' ? 'block' : 'none'; });
 
-            // Add image button for general images
             container.querySelector('#add-image-btn').onclick = () => {
                 const list = container.querySelector('#image-list');
+                const index = list.children.length;
                 const div = document.createElement('div');
                 div.className = 'image-list-item';
-                div.innerHTML = `<div class="form-group" style="flex-grow:1; margin:0;"><input type="url" class="image-url-input" placeholder="Additional Image URL" required></div><button type="button" class="remove-image-btn" onclick="this.parentElement.remove()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>`;
+                div.innerHTML = `
+                    <div class="form-group" style="flex-grow:1; margin:0;">
+                        <input type="url" class="image-url-input" placeholder="Additional Image URL">
+                        <div class="upload-container">
+                            <div class="upload-btn" onclick="document.getElementById('image-upload-${index}').click()">
+                                <div class="upload-text">Or upload image</div>
+                            </div>
+                            <input type="file" id="image-upload-${index}" accept="image/*" style="display: none;" data-index="${index}">
+                            <img id="upload-preview-${index}" class="upload-preview" alt="Upload preview">
+                            <div class="upload-actions">
+                                <button type="button" class="upload-remove" onclick="removeImageUpload(${index})" style="display: none;">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="remove-image-btn" onclick="this.parentElement.remove()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>`;
                 list.appendChild(div);
+                
+                document.getElementById(`image-upload-${index}`).addEventListener('change', function(e) {
+                    handleImageUpload(e, index);
+                });
             };
 
-            // Add image button for color images in modal
             document.getElementById('add-color-image-btn').onclick = () => {
                 const list = document.getElementById('modal-color-images');
+                const index = list.children.length;
                 const div = document.createElement('div');
                 div.className = 'color-image-item';
                 div.innerHTML = `
                     <div class="form-group" style="flex-grow:1; margin:0;">
-                        <input type="url" class="color-image-url" placeholder="Additional Image URL" required>
+                        <input type="url" class="color-image-url" placeholder="Additional Image URL">
+                        <div class="upload-container">
+                            <div class="upload-btn" onclick="document.getElementById('color-additional-upload-${index}').click()">
+                                <div class="upload-text">Or upload image</div>
+                            </div>
+                            <input type="file" id="color-additional-upload-${index}" accept="image/*" style="display: none;" data-index="${index}">
+                            <img id="color-additional-preview-${index}" class="upload-preview" alt="Upload preview">
+                            <div class="upload-actions">
+                                <button type="button" class="upload-remove" onclick="removeColorAdditionalUpload(${index})" style="display: none;">Remove</button>
+                            </div>
+                        </div>
                     </div>
                     <button type="button" class="remove-image-btn" onclick="this.parentElement.remove()">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -446,12 +550,28 @@ const firebaseConfig = {
                     </button>
                 `;
                 list.appendChild(div);
+                
+                document.getElementById(`color-additional-upload-${index}`).addEventListener('change', function(e) {
+                    handleColorAdditionalUpload(e, index);
+                });
             };
 
-            // Color variant form submission
             document.getElementById('color-variant-form').addEventListener('submit', (e) => {
                 e.preventDefault();
                 saveColorVariant();
+            });
+
+            document.getElementById('color-image-upload').addEventListener('change', handleColorImageUpload);
+            document.getElementById('color-main-image-upload').addEventListener('change', handleColorMainImageUpload);
+            document.getElementById('color-link').addEventListener('input', (e) => {
+                updateImagePreview(e.target.value, 'color-link-preview');
+            });
+
+            container.querySelectorAll('input[type="file"]').forEach(input => {
+                input.addEventListener('change', function(e) {
+                    const index = this.dataset.index;
+                    handleImageUpload(e, index);
+                });
             });
 
             container.querySelector('#save-product-btn').onclick = () => document.getElementById('product-form').requestSubmit();
@@ -461,18 +581,150 @@ const firebaseConfig = {
             });
         }
 
-        function saveColorVariant() {
+        function handleImageUpload(event, index) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast("Image size should be less than 5MB", "error");
+                    return;
+                }
+                uploadedFiles[`image-${index}`] = file;
+                const preview = document.getElementById(`upload-preview-${index}`);
+                preview.src = URL.createObjectURL(file);
+                preview.classList.add('show');
+                document.querySelector(`#upload-preview-${index}`).parentElement.querySelector('.upload-remove').style.display = 'block';
+                document.querySelectorAll('.image-url-input')[index].value = '';
+            }
+        }
+
+        function handleColorImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast("Image size should be less than 5MB", "error");
+                    return;
+                }
+                colorUploadedFile = file;
+                const preview = document.getElementById('color-upload-preview');
+                preview.src = URL.createObjectURL(file);
+                preview.classList.add('show');
+                document.querySelector('#color-variant-form .upload-remove').style.display = 'block';
+                document.getElementById('color-link').value = '';
+                document.getElementById('color-link-preview').classList.remove('show');
+            }
+        }
+
+        function handleColorMainImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast("Image size should be less than 5MB", "error");
+                    return;
+                }
+                colorMainUploadedFile = file;
+                const preview = document.getElementById('color-main-upload-preview');
+                preview.src = URL.createObjectURL(file);
+                preview.classList.add('show');
+                document.querySelector('#color-main-upload-preview').parentElement.querySelector('.upload-remove').style.display = 'block';
+                document.querySelector('.color-image-url').value = '';
+            }
+        }
+
+        function handleColorAdditionalUpload(event, index) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast("Image size should be less than 5MB", "error");
+                    return;
+                }
+                uploadedFiles[`color-additional-${index}`] = file;
+                const preview = document.getElementById(`color-additional-preview-${index}`);
+                preview.src = URL.createObjectURL(file);
+                preview.classList.add('show');
+                document.querySelector(`#color-additional-preview-${index}`).parentElement.querySelector('.upload-remove').style.display = 'block';
+                document.querySelectorAll('.color-image-url')[index].value = '';
+            }
+        }
+
+        function removeImageUpload(index) {
+            delete uploadedFiles[`image-${index}`];
+            document.getElementById(`image-upload-${index}`).value = '';
+            document.getElementById(`upload-preview-${index}`).classList.remove('show');
+            document.querySelector(`#upload-preview-${index}`).parentElement.querySelector('.upload-remove').style.display = 'none';
+        }
+
+        function removeColorUpload() {
+            colorUploadedFile = null;
+            document.getElementById('color-image-upload').value = '';
+            document.getElementById('color-upload-preview').classList.remove('show');
+            document.querySelector('#color-variant-form .upload-remove').style.display = 'none';
+        }
+
+        function removeColorMainUpload() {
+            colorMainUploadedFile = null;
+            document.getElementById('color-main-image-upload').value = '';
+            document.getElementById('color-main-upload-preview').classList.remove('show');
+            document.querySelector('#color-main-upload-preview').parentElement.querySelector('.upload-remove').style.display = 'none';
+        }
+
+        function removeColorAdditionalUpload(index) {
+            delete uploadedFiles[`color-additional-${index}`];
+            document.getElementById(`color-additional-upload-${index}`).value = '';
+            document.getElementById(`color-additional-preview-${index}`).classList.remove('show');
+            document.querySelector(`#color-additional-preview-${index}`).parentElement.querySelector('.upload-remove').style.display = 'none';
+        }
+
+        async function uploadImage(file, productName, type) {
+            try {
+                const fileName = `products/${productName.toLowerCase().replace(/\s+/g, '-')}-${type}-${Date.now()}`;
+                const storageRef = storage.ref().child(fileName);
+                const snapshot = await storageRef.put(file);
+                const downloadURL = await snapshot.ref.getDownloadURL();
+                return downloadURL;
+            } catch (error) {
+                console.error("Error uploading image:", error);
+                throw new Error("Failed to upload image");
+            }
+        }
+
+        function updateImagePreview(imageUrl, previewId) {
+            const preview = document.getElementById(previewId);
+            if (imageUrl && isValidUrl(imageUrl)) {
+                preview.src = imageUrl;
+                preview.classList.add('show');
+            } else {
+                preview.classList.remove('show');
+            }
+        }
+
+        function isValidUrl(string) {
+            try {
+                new URL(string);
+                return true;
+            } catch (_) {
+                return false;
+            }
+        }
+
+        async function saveColorVariant() {
             const form = document.getElementById('color-variant-form');
             const colorName = document.getElementById('color-name').value;
             const colorLink = document.getElementById('color-link').value;
             
-            // Validate URL
-            if (!isValidUrl(colorLink)) {
-                showToast('Please enter a valid URL for the color image.', 'error');
+            let finalColorLink = colorLink;
+
+            if (colorUploadedFile) {
+                try {
+                    finalColorLink = await uploadImage(colorUploadedFile, colorName, 'color');
+                } catch (error) {
+                    showToast('Failed to upload color image. Please try again.', 'error');
+                    return;
+                }
+            } else if (colorLink && !isValidUrl(colorLink)) {
+                showToast('Please enter a valid color image URL.', 'error');
                 return;
             }
 
-            // Get sizes data
             const sizes = [];
             document.querySelectorAll('#modal-sizes-list .size-row').forEach(row => {
                 if (row.querySelector('.size-offered-checkbox').checked) {
@@ -483,10 +735,35 @@ const firebaseConfig = {
                 }
             });
 
-            // Get color images
-            const colorImages = [...document.querySelectorAll('.color-image-url')]
-                .map(input => input.value.trim())
-                .filter(Boolean);
+            const colorImages = [];
+            const colorImageInputs = document.querySelectorAll('.color-image-url');
+            
+            for (let i = 0; i < colorImageInputs.length; i++) {
+                let imageUrl = colorImageInputs[i].value.trim();
+                
+                if (i === 0 && colorMainUploadedFile) {
+                    try {
+                        imageUrl = await uploadImage(colorMainUploadedFile, colorName, 'main');
+                    } catch (error) {
+                        showToast('Failed to upload main image. Please try again.', 'error');
+                        return;
+                    }
+                } else if (uploadedFiles[`color-additional-${i}`]) {
+                    try {
+                        imageUrl = await uploadImage(uploadedFiles[`color-additional-${i}`], colorName, `additional-${i}`);
+                    } catch (error) {
+                        showToast('Failed to upload additional image. Please try again.', 'error');
+                        return;
+                    }
+                } else if (imageUrl && !isValidUrl(imageUrl)) {
+                    showToast('Please enter a valid image URL.', 'error');
+                    return;
+                }
+                
+                if (imageUrl) {
+                    colorImages.push(imageUrl);
+                }
+            }
 
             if (colorImages.length === 0) {
                 showToast('At least one image URL is required for this color.', 'error');
@@ -495,27 +772,22 @@ const firebaseConfig = {
 
             const colorVariant = {
                 name: colorName,
-                hex: colorLink, // Now storing the link instead of hex color
+                hex: finalColorLink,
                 sizes: sizes,
                 images: colorImages
             };
 
-            // Get current color variants from the container dataset
             const container = document.getElementById('product-form-content');
             let colorVariants = JSON.parse(container.dataset.colorVariants || '[]');
 
             if (currentColorEditingIndex !== null) {
-                // Editing existing variant
                 colorVariants[currentColorEditingIndex] = colorVariant;
             } else {
-                // Adding new variant
                 colorVariants.push(colorVariant);
             }
 
-            // Update the dataset
             container.dataset.colorVariants = JSON.stringify(colorVariants);
 
-            // Find and update the color variants section
             const colorVariantsFieldset = Array.from(container.querySelectorAll('fieldset')).find(fieldset => 
                 fieldset.querySelector('legend') && fieldset.querySelector('legend').textContent === 'Color Variants'
             );
@@ -530,15 +802,6 @@ const firebaseConfig = {
 
             closeColorModal();
             showToast(`Color variant ${currentColorEditingIndex !== null ? 'updated' : 'added'} successfully!`, 'success');
-        }
-
-        function isValidUrl(string) {
-            try {
-                new URL(string);
-                return true;
-            } catch (_) {
-                return false;
-            }
         }
 
         function editColorVariant(index) {
@@ -556,10 +819,8 @@ const firebaseConfig = {
             let colorVariants = JSON.parse(container.dataset.colorVariants || '[]');
             colorVariants.splice(index, 1);
 
-            // Update the dataset
             container.dataset.colorVariants = JSON.stringify(colorVariants);
 
-            // Find and update the color variants section
             const colorVariantsFieldset = Array.from(container.querySelectorAll('fieldset')).find(fieldset => 
                 fieldset.querySelector('legend') && fieldset.querySelector('legend').textContent === 'Color Variants'
             );
@@ -589,9 +850,28 @@ const firebaseConfig = {
                 return;
             }
 
-            const images = [...container.querySelectorAll('.image-url-input')]
-                .map(input => input.value.trim())
-                .filter(Boolean);
+            const images = [];
+            const imageInputs = container.querySelectorAll('.image-url-input');
+            
+            for (let i = 0; i < imageInputs.length; i++) {
+                let imageUrl = imageInputs[i].value.trim();
+                
+                if (uploadedFiles[`image-${i}`]) {
+                    try {
+                        imageUrl = await uploadImage(uploadedFiles[`image-${i}`], form.name.value, `general-${i}`);
+                    } catch (error) {
+                        showToast('Failed to upload image. Please try again.', 'error');
+                        return;
+                    }
+                } else if (imageUrl && !isValidUrl(imageUrl)) {
+                    showToast('Please enter a valid image URL.', 'error');
+                    return;
+                }
+                
+                if (imageUrl) {
+                    images.push(imageUrl);
+                }
+            }
 
             if (images.length === 0) {
                 showToast('At least one general image URL is required.', 'error');
@@ -610,7 +890,7 @@ const firebaseConfig = {
                 description: form.description.value,
                 isAvailable: colorVariants.some(variant => 
                     variant.sizes && variant.sizes.some(size => size.available)
-                ) || images.length > 0 // Fallback to general availability
+                ) || images.length > 0
             };
 
             if (!productId) {
