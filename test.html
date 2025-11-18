@@ -37,7 +37,24 @@
         /* --- Dashboard Layout for Sidebar Context --- */
         .dashboard-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; position: relative; }
         .main-area { display: flex; flex-direction: column; overflow-y: auto; }
-        .main-header { padding: 1.5rem 2.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background-color: var(--widget-bg); position: sticky; top: 0; z-index: 10; box-shadow: var(--shadow-sm); }
+        .main-header { 
+            padding: 1.5rem 2.5rem; 
+            border-bottom: 1px solid var(--border-color); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background-color: var(--widget-bg); 
+            position: sticky; 
+            top: 0; 
+            z-index: 10; 
+            box-shadow: var(--shadow-sm); 
+        }
+        
+        .nav-logo {
+            height: 36px;
+            width: auto;
+            object-fit: contain;
+        }
         
         /* --- Premium Sidebar/Navbar Styles --- */
         .sidebar { 
@@ -278,17 +295,33 @@
             .sidebar { 
                 position: fixed; 
                 top: 0; 
-                left: 0; 
+                right: 0; /* Changed from left to right */
                 height: 100%; 
                 width: 85%; 
                 max-width: 320px; 
                 z-index: 1000; 
-                transform: translateX(-100%); 
+                transform: translateX(100%); /* Changed from -100% to 100% */
                 box-shadow: var(--shadow-lg); 
                 padding: 2rem 1.25rem;
+                border-right: none;
+                border-left: 1px solid var(--border-color);
             }
             .sidebar.active { transform: translateX(0); }
-            .main-header { padding: 1.25rem 1.5rem; }
+            .main-header { 
+                padding: 1.25rem 1.5rem; 
+                justify-content: space-between;
+            }
+            
+            /* Hide desktop logo in sidebar on mobile */
+            .sidebar .logo-container {
+                display: none;
+            }
+            
+            /* Show logo in navbar on mobile */
+            .nav-logo {
+                display: block;
+                height: 32px;
+            }
             
             /* Reduce left padding for menu items on mobile */
             .main-nav a {
@@ -299,19 +332,24 @@
                 display: flex; 
                 align-items: center; 
                 justify-content: center; 
-                width: 40px; 
-                height: 40px; 
-                font-size: 1.5rem; 
+                width: 46px; /* Increased from 40px */
+                height: 46px; /* Increased from 40px */
+                font-size: 1.6rem; /* Slightly larger icon */
                 color: var(--text-primary); 
                 cursor: pointer; 
                 border: 2px solid var(--border-color); 
                 border-radius: var(--radius-md); 
                 background-color: transparent;
                 transition: var(--transition);
+                outline: none; /* Remove focus outline */
             }
             .menu-toggle:hover { 
                 background-color: var(--hover-bg);
                 border-color: var(--brand-primary);
+            }
+            .menu-toggle:active, .menu-toggle:focus {
+                background-color: var(--hover-bg);
+                border-color: var(--border-color); /* Keep border color same, not blue */
             }
             .sidebar-close-btn { 
                 display: flex; 
@@ -319,7 +357,7 @@
                 justify-content: center; 
                 position: absolute; 
                 top: 1.5rem; 
-                right: 1.25rem; 
+                left: 1.25rem; /* Changed from right to left */
                 font-size: 1.75rem; 
                 color: var(--text-secondary); 
                 cursor: pointer; 
@@ -329,8 +367,13 @@
                 width: 36px;
                 height: 36px;
                 border-radius: 50%;
+                outline: none; /* Remove focus outline */
             }
             .sidebar-close-btn:hover {
+                background-color: var(--hover-bg);
+                color: var(--text-primary);
+            }
+            .sidebar-close-btn:active, .sidebar-close-btn:focus {
                 background-color: var(--hover-bg);
                 color: var(--text-primary);
             }
@@ -339,6 +382,20 @@
             .profile-popup {
                 left: 1.25rem;
                 right: 1.25rem;
+            }
+            
+            /* Move active indicator to right side for mobile */
+            .main-nav a.active::before {
+                left: auto;
+                right: 0;
+                border-radius: 4px 0 0 4px;
+            }
+        }
+        
+        /* Desktop styles - ensure logo is hidden in navbar */
+        @media (min-width: 1025px) {
+            .nav-logo {
+                display: none;
             }
         }
     </style>
@@ -399,9 +456,11 @@
         <!-- MAIN CONTENT AREA (Minimal for context) -->
         <main class="main-area">
             <header class="main-header">
+                <!-- Logo in navbar for mobile -->
+                <img src="https://ushadesigners.com/cdn/shop/files/Usha_Designers_Logo.png?v=1750845239&width=500" alt="Usha Designers Logo" class="nav-logo">
+                
                 <!-- Menu Toggle Button for Mobile -->
                 <button class="menu-toggle" id="menu-toggle" aria-label="Open menu"><i class='bx bx-menu'></i></button>
-                <h1>Page Title</h1>
             </header>
             <div style="padding: 2rem; text-align: center;">
                 <!-- Placeholder for actual page content -->
