@@ -38,7 +38,7 @@
         .dashboard-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; position: relative; }
         .main-area { display: flex; flex-direction: column; overflow-y: auto; }
         .main-header { 
-            padding: 1.5rem 2.5rem; 
+            padding: 12px 2.5rem; 
             border-bottom: 1px solid var(--border-color); 
             display: flex; 
             justify-content: space-between; 
@@ -51,7 +51,7 @@
         }
         
         .nav-logo {
-            height: 36px;
+            height: 42px;
             width: auto;
             object-fit: contain;
         }
@@ -295,20 +295,18 @@
             .sidebar { 
                 position: fixed; 
                 top: 0; 
-                right: 0; /* Changed from left to right */
+                left: 0; 
                 height: 100%; 
                 width: 85%; 
                 max-width: 320px; 
                 z-index: 1000; 
-                transform: translateX(100%); /* Changed from -100% to 100% */
+                transform: translateX(-100%); 
                 box-shadow: var(--shadow-lg); 
                 padding: 2rem 1.25rem;
-                border-right: none;
-                border-left: 1px solid var(--border-color);
             }
             .sidebar.active { transform: translateX(0); }
             .main-header { 
-                padding: 10px 1.5rem; 
+                padding: 12px 1.5rem; 
                 justify-content: space-between;
             }
             
@@ -332,16 +330,16 @@
                 display: flex; 
                 align-items: center; 
                 justify-content: center; 
-                width: 46px; /* Increased from 40px */
-                height: 46px; /* Increased from 40px */
-                font-size: 1.6rem; /* Slightly larger icon */
+                width: 46px; 
+                height: 46px; 
+                font-size: 1.6rem; 
                 color: var(--text-primary); 
                 cursor: pointer; 
                 border: 2px solid var(--border-color); 
                 border-radius: var(--radius-md); 
                 background-color: transparent;
                 transition: var(--transition);
-                outline: none; /* Remove focus outline */
+                outline: none;
             }
             .menu-toggle:hover { 
                 background-color: var(--hover-bg);
@@ -349,7 +347,7 @@
             }
             .menu-toggle:active, .menu-toggle:focus {
                 background-color: var(--hover-bg);
-                border-color: var(--border-color); /* Keep border color same, not blue */
+                border-color: var(--border-color);
             }
             .sidebar-close-btn { 
                 display: flex; 
@@ -357,7 +355,7 @@
                 justify-content: center; 
                 position: absolute; 
                 top: 1.5rem; 
-                left: 1.25rem; /* Changed from right to left */
+                right: 1.25rem; 
                 font-size: 1.75rem; 
                 color: var(--text-secondary); 
                 cursor: pointer; 
@@ -367,7 +365,7 @@
                 width: 36px;
                 height: 36px;
                 border-radius: 50%;
-                outline: none; /* Remove focus outline */
+                outline: none;
             }
             .sidebar-close-btn:hover {
                 background-color: var(--hover-bg);
@@ -382,13 +380,6 @@
             .profile-popup {
                 left: 1.25rem;
                 right: 1.25rem;
-            }
-            
-            /* Move active indicator to right side for mobile */
-            .main-nav a.active::before {
-                left: auto;
-                right: 0;
-                border-radius: 4px 0 0 4px;
             }
         }
         
@@ -456,11 +447,11 @@
         <!-- MAIN CONTENT AREA (Minimal for context) -->
         <main class="main-area">
             <header class="main-header">
-                <!-- Logo in navbar for mobile -->
-                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Usha Designers Logo" class="nav-logo">
-                
                 <!-- Menu Toggle Button for Mobile -->
                 <button class="menu-toggle" id="menu-toggle" aria-label="Open menu"><i class='bx bx-menu'></i></button>
+                
+                <!-- Logo in navbar for mobile -->
+                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Usha Designers Logo" class="nav-logo">
             </header>
             <div style="padding: 2rem; text-align: center;">
                 <!-- Placeholder for actual page content -->
