@@ -11,7 +11,6 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     
     <style>
-        /* --- CORE VARIABLES (MATCHING DASHBOARD THEME) --- */
         :root {
             --body-bg: #F8FAFC;
             --widget-bg: #FFFFFF;
@@ -30,7 +29,7 @@
             --radius-md: 8px;
             --radius-lg: 12px;
             --radius-xl: 16px;
-            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -40,7 +39,6 @@
         ul { list-style: none; }
         input, button, select, textarea { font-family: inherit; font-size: inherit; outline: none; }
         
-        /* --- LAYOUT & SIDEBAR (IDENTICAL TO DASHBOARD) --- */
         .dashboard-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; position: relative; }
         .main-area { display: flex; flex-direction: column; overflow-y: auto; height: 100vh; background-color: var(--body-bg); }
         
@@ -73,24 +71,21 @@
         .popup-list a:hover { background-color: var(--hover-bg); }
         .popup-list a.logout { color: var(--danger-color); }
 
-        /* --- HEADER --- */
         .main-header { 
             padding: 12px 2.5rem; border-bottom: 1px solid var(--border-color); 
             display: flex; justify-content: space-between; align-items: center; 
             background-color: var(--widget-bg); position: sticky; top: 0; z-index: 10; 
-            box-shadow: var(--shadow-sm); min-height: 70px;
+            box-shadow: var(--shadow-sm); min-height: 65px;
         }
-        .nav-logo { height: 36px; display: none; }
+        .nav-logo { height: 42px; display: none; }
         .menu-toggle, .sidebar-close-btn { display: none; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .overlay.active { opacity: 1; pointer-events: auto; }
 
-        /* --- CONTENT AREA --- */
         .page-container { max-width: 1280px; margin: 0 auto; padding: 2rem; width: 100%; }
         .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
         .page-title { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); }
 
-        /* --- SEARCH BAR --- */
         .search-wrapper { position: relative; width: 100%; max-width: 400px; }
         .search-input { 
             width: 100%; padding: 0.875rem 1rem 0.875rem 2.75rem; 
@@ -101,22 +96,21 @@
         .search-input:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
         .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 1.25rem; }
 
-        /* --- CATEGORY GRID --- */
         .categories-grid { 
             display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
             gap: 1.5rem; margin-top: 1.5rem; 
+            align-items: flex-start; 
         }
         
-        /* --- NEW CARD DESIGN --- */
         .category-card { 
             background: var(--widget-bg); border-radius: var(--radius-xl); 
             border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); 
-            transition: all 0.3s ease; overflow: hidden; position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; position: relative;
             display: flex; flex-direction: column;
         }
         .category-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: #CBD5E1; }
         
-        .card-content { padding: 1.5rem; display: flex; align-items: center; gap: 1rem; cursor: pointer; position: relative; z-index: 2; }
+        .card-content { padding: 1.5rem; display: flex; align-items: center; gap: 1rem; cursor: pointer; position: relative; z-index: 2; background: var(--widget-bg); }
         .category-img { 
             width: 60px; height: 60px; border-radius: var(--radius-lg); object-fit: cover; 
             background: #F1F5F9; border: 1px solid var(--border-color);
@@ -130,36 +124,34 @@
         .card-menu-btn { 
             width: 36px; height: 36px; border-radius: 50%; border: 1px solid transparent; 
             background: transparent; color: var(--text-secondary); cursor: pointer; 
-            transition: var(--transition); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
         }
         .card-menu-btn:hover { background: var(--body-bg); color: var(--text-primary); border-color: var(--border-color); }
-        .card-menu-btn.active { background: var(--brand-primary); color: white; transform: rotate(90deg); }
+        .card-menu-btn.active { background: var(--brand-primary); color: white; transform: rotate(90deg); box-shadow: var(--shadow-md); }
 
-        /* --- REVEAL ACTIONS PANEL --- */
         .card-actions-panel { 
             background: #F8FAFC; border-top: 1px solid var(--border-color); 
-            max-height: 0; overflow: hidden; transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex; gap: 0.5rem; padding: 0 1.5rem;
+            max-height: 0; overflow: hidden; opacity: 0; transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; gap: 0.75rem; padding: 0 1.5rem;
         }
-        .card-actions-panel.open { max-height: 80px; padding: 1rem 1.5rem; }
+        .card-actions-panel.open { max-height: 80px; opacity: 1; transform: translateY(0); padding: 1rem 1.5rem; }
         
         .action-btn { 
             flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-            padding: 0.6rem; border-radius: var(--radius-md); font-size: 0.9rem; font-weight: 500; cursor: pointer; border: 1px solid transparent; transition: var(--transition);
+            padding: 0.75rem; border-radius: var(--radius-md); font-size: 0.9rem; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: var(--transition);
         }
-        .btn-edit { background: white; border-color: var(--border-color); color: var(--text-primary); }
-        .btn-edit:hover { border-color: var(--brand-primary); color: var(--brand-primary); }
-        .btn-delete { background: #FEF2F2; color: var(--danger-color); }
-        .btn-delete:hover { background: #FEE2E2; border-color: #FECACA; }
+        .btn-edit { background: white; border-color: var(--border-color); color: var(--text-primary); box-shadow: var(--shadow-sm); }
+        .btn-edit:hover { border-color: var(--brand-primary); color: var(--brand-primary); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .btn-delete { background: #FEF2F2; color: var(--danger-color); border-color: #FECACA; box-shadow: var(--shadow-sm); }
+        .btn-delete:hover { background: #FEE2E2; transform: translateY(-2px); box-shadow: var(--shadow-md); }
 
-        /* --- EMPTY STATE --- */
         .empty-state { 
             grid-column: 1 / -1; text-align: center; padding: 4rem 2rem; 
             background: white; border-radius: var(--radius-xl); border: 2px dashed var(--border-color); 
         }
         .empty-icon { font-size: 3rem; color: var(--text-secondary); margin-bottom: 1rem; display: block; }
 
-        /* --- BUTTONS --- */
         .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; font-weight: 600; border-radius: var(--radius-md); cursor: pointer; transition: var(--transition); border: none; font-size: 0.95rem; }
         .btn-primary { background: var(--brand-gradient); color: white; box-shadow: var(--shadow-md); }
         .btn-primary:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
@@ -167,7 +159,6 @@
         .btn-secondary:hover { background: #F8FAFC; border-color: #CBD5E1; }
         .btn-danger { background: var(--danger-color); color: white; }
 
-        /* --- MODALS --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 1rem; }
         .modal-content { background: white; width: 100%; max-width: 500px; border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); overflow: hidden; animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
         @keyframes modalPop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -177,13 +168,11 @@
         .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); transition: color 0.2s; }
         .close-modal:hover { color: var(--text-primary); }
 
-        /* Form Elements */
         .form-group { margin-bottom: 1.25rem; }
         .input-label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 0.5rem; }
         .form-control { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: #fff; transition: var(--transition); font-size: 0.95rem; }
         .form-control:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
         
-        /* Upload Zone */
         .upload-zone { border: 2px dashed #CBD5E1; border-radius: var(--radius-md); padding: 2rem; text-align: center; cursor: pointer; transition: var(--transition); background: #F8FAFC; }
         .upload-zone:hover { border-color: var(--brand-primary); background: #EFF6FF; }
         .preview-area { margin-top: 1rem; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); display: none; position: relative; }
@@ -199,28 +188,45 @@
 
         @media (max-width: 1024px) {
             .dashboard-container { grid-template-columns: 1fr; }
-            .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 85%; max-width: 320px; z-index: 1000; transform: translateX(-100%); box-shadow: var(--shadow-lg); padding: 2rem 1.25rem; }
+            .sidebar { 
+                position: fixed; top: 0; left: 0; height: 100%; width: 85%; max-width: 320px; 
+                z-index: 1000; transform: translateX(-100%); box-shadow: var(--shadow-lg); 
+                padding: 2rem 1.25rem;
+            }
             .sidebar.active { transform: translateX(0); }
-            .menu-toggle { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; font-size: 1.6rem; color: var(--text-primary); cursor: pointer; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white; }
-            .sidebar-close-btn { display: flex; align-items: center; justify-content: center; position: absolute; top: 1.5rem; right: 1.25rem; font-size: 1.75rem; color: var(--text-secondary); cursor: pointer; border: none; background: none; width: 36px; height: 36px; }
-            .nav-logo { display: block; }
+            .main-header { 
+                padding: 12px 1.5rem; 
+                justify-content: space-between;
+            }
+            
+            .sidebar .logo-container { display: flex; }
+            .nav-logo { display: block; height: 42px; }
+            
+            .menu-toggle { 
+                display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; 
+                font-size: 1.6rem; color: var(--text-primary); cursor: pointer; 
+                border: 2px solid var(--border-color); border-radius: var(--radius-md); background-color: transparent;
+            }
+            .sidebar-close-btn { 
+                display: flex; align-items: center; justify-content: center; position: absolute; 
+                top: 1.5rem; right: 1.25rem; font-size: 1.75rem; color: var(--text-secondary); 
+                cursor: pointer; border: none; background: none; width: 36px; height: 36px;
+            }
+            
             .page-container { padding: 1rem; padding-bottom: 80px; }
             .categories-grid { grid-template-columns: 1fr; gap: 1rem; }
             
-            /* Mobile Modal */
             .modal-overlay { align-items: flex-end; padding: 0; }
             .modal-content { width: 100%; max-width: 100%; border-radius: var(--radius-xl) var(--radius-xl) 0 0; max-height: 85vh; animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
             .modal-footer { padding-bottom: 2rem; }
             @keyframes slideUpModal { from { transform: translateY(100%); } to { transform: translateY(0); } }
         }
-        @media (min-width: 1025px) { .nav-logo { display: none; } }
     </style>
 </head>
 <body>
     <div class="overlay" id="overlay"></div>
     <div class="dashboard-container">
         
-        <!-- SIDEBAR -->
         <aside class="sidebar" id="sidebar">
             <button class="sidebar-close-btn" id="sidebar-close-btn"><i class='bx bx-x'></i></button>
             <div class="sidebar-header">
@@ -237,19 +243,17 @@
                 </ul>
             </nav>
             <div class="profile-section" id="profile-section">
-                <div class="profile-content-wrapper">
-                    <img id="sidebar-avatar" src="" class="profile-avatar">
-                    <div class="profile-details">
-                        <span class="profile-name" id="sidebar-name">Loading...</span>
-                        <span class="profile-email" id="sidebar-email">Admin</span>
-                    </div>
-                    <div class="profile-options"><i class='bx bx-chevron-down'></i></div>
+                <img id="sidebar-avatar" src="" class="profile-avatar">
+                <div class="profile-details" style="margin-left: 0.75rem;">
+                    <span class="profile-name" id="sidebar-name">Loading...</span>
+                    <span class="profile-email" id="sidebar-email">Admin</span>
                 </div>
+                <div class="profile-options" style="margin-left: auto;"><i class='bx bx-chevron-down'></i></div>
             </div>
             <div class="profile-popup" id="profile-popup">
                 <div class="popup-header">
                     <img id="popup-avatar" src="" class="profile-avatar">
-                    <div class="profile-details">
+                    <div class="profile-details" style="margin-left: 0.75rem;">
                         <span class="profile-name" id="popup-name">Loading...</span>
                         <span class="profile-email" id="popup-email">Admin</span>
                     </div>
@@ -261,7 +265,6 @@
             </div>
         </aside>
         
-        <!-- MAIN CONTENT -->
         <main class="main-area">
             <header class="main-header">
                 <button class="menu-toggle" id="menu-toggle"><i class='bx bx-menu'></i></button>
@@ -282,7 +285,6 @@
                 </div>
 
                 <div id="categories-container" class="categories-grid">
-                    <!-- Categories will be injected here -->
                     <div class="empty-state">
                         <i class='bx bx-loader-alt bx-spin empty-icon'></i>
                         <p>Loading categories...</p>
@@ -294,7 +296,6 @@
 
     <div id="toast-container"></div>
 
-    <!-- ADD/EDIT MODAL -->
     <div class="modal-overlay" id="category-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -331,7 +332,6 @@
         </div>
     </div>
 
-    <!-- DELETE CONFIRM MODAL -->
     <div class="modal-overlay" id="delete-modal">
         <div class="modal-content" style="max-width: 400px;">
             <div class="modal-header">
@@ -355,9 +355,10 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <script>
-        /* --- UI LOGIC --- */
         document.addEventListener('DOMContentLoaded', () => {
             const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menu-toggle');
+            const closeBtn = document.getElementById('sidebar-close-btn');
             const overlay = document.getElementById('overlay');
             
             const toggleMenu = () => {
@@ -365,11 +366,10 @@
                 overlay.classList.toggle('active');
             };
             
-            document.getElementById('menu-toggle')?.addEventListener('click', toggleMenu);
-            document.getElementById('sidebar-close-btn')?.addEventListener('click', toggleMenu);
-            overlay?.addEventListener('click', toggleMenu);
+            if(menuToggle) menuToggle.addEventListener('click', toggleMenu);
+            if(closeBtn) closeBtn.addEventListener('click', toggleMenu);
+            if(overlay) overlay.addEventListener('click', toggleMenu);
 
-            // Profile Popup
             const pSection = document.getElementById('profile-section');
             const pPopup = document.getElementById('profile-popup');
             pSection?.addEventListener('click', (e) => {
@@ -382,7 +382,6 @@
             });
         });
 
-        /* --- FIREBASE LOGIC --- */
         const firebaseConfig = {
             apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
             authDomain: "vastramaya---magic.firebaseapp.com",
@@ -407,7 +406,6 @@
         auth.onAuthStateChanged(user => {
             if (!user || user.email !== ADMIN_EMAIL) return window.location.href = 'index.html';
             
-            // Set Profile Info
             document.getElementById('sidebar-name').textContent = user.displayName || 'Admin';
             document.getElementById('sidebar-email').textContent = user.email;
             const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=3B82F6&color=fff`;
@@ -421,7 +419,6 @@
 
         async function loadData() {
             try {
-                // Load Product Counts
                 const pSnap = await db.collection('products').get();
                 productCounts = {};
                 pSnap.forEach(doc => {
@@ -429,7 +426,6 @@
                     if(cat) productCounts[cat] = (productCounts[cat] || 0) + 1;
                 });
 
-                // Load Categories
                 const cSnap = await db.collection('categories').orderBy('name').get();
                 categories = cSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderCategories();
@@ -474,12 +470,10 @@
             `).join('');
         }
 
-        // Toggle the "Reveal" footer
         function toggleActions(id) {
             const panel = document.getElementById(`actions-${id}`);
             const btn = document.querySelector(`#card-${id} .card-menu-btn`);
             
-            // Close others
             document.querySelectorAll('.card-actions-panel').forEach(p => {
                 if(p.id !== `actions-${id}`) p.classList.remove('open');
             });
@@ -491,19 +485,16 @@
             btn.classList.toggle('active');
         }
 
-        // Navigation
         function navigateToProducts(catName) {
             window.location.href = `manage-products.html?category=${encodeURIComponent(catName)}`;
         }
 
-        // Search
         document.getElementById('search-input').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
             const filtered = categories.filter(c => c.name.toLowerCase().includes(term));
             renderCategories(filtered);
         });
 
-        // --- MODAL LOGIC ---
         function openAddModal() {
             document.getElementById('modal-title').textContent = 'Add Category';
             document.getElementById('category-form').reset();
@@ -530,7 +521,6 @@
             }
             
             document.getElementById('category-modal').style.display = 'flex';
-            // Close action panel
             toggleActions(id); 
         }
 
@@ -539,7 +529,6 @@
             tempImageFile = null;
         }
 
-        // Image Handling in Modal
         document.getElementById('cat-file').onchange = (e) => {
             const file = e.target.files[0];
             if(file) {
@@ -556,7 +545,6 @@
             document.getElementById('cat-img-preview').src = '';
         }
 
-        // SAVE LOGIC
         document.getElementById('save-btn').onclick = async () => {
             const id = document.getElementById('cat-id').value;
             const name = document.getElementById('cat-name').value.trim();
@@ -586,7 +574,7 @@
                 }
                 
                 closeCategoryModal();
-                loadData(); // Refresh
+                loadData(); 
             } catch(e) {
                 console.error(e);
                 showToast('Failed to save', 'error');
@@ -595,7 +583,6 @@
             }
         };
 
-        // DELETE LOGIC
         function openDeleteModal(id, name) {
             categoryToDelete = id;
             document.getElementById('del-cat-name').textContent = name;
