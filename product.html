@@ -1,4 +1,3 @@
-<!-- product.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,10 +19,10 @@
         }
         *, *::before, *::after { box-sizing: border-box; }
         body { font-family: var(--font-family); margin: 0; background-color: var(--bg-color); color: var(--dark-color); }
-        .container { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
-        nav { background: #fff; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--box-shadow); position: sticky; top: 0; z-index: 1000; }
-        .nav-left h1 { margin: 0; font-size: 1.75rem; color: var(--primary-color); cursor: pointer; }
-        .nav-right { display: flex; align-items: center; gap: 1rem; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 1rem; }
+        nav { background: #fff; padding: 1rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--box-shadow); position: sticky; top: 0; z-index: 1000; }
+        .nav-left h1 { margin: 0; font-size: 1.5rem; color: var(--primary-color); cursor: pointer; }
+        .nav-right { display: flex; align-items: center; gap: 0.5rem; }
         .nav-icon { cursor: pointer; position: relative; background: none; border: none; padding: 0.5rem; border-radius: 50%; transition: background-color 0.2s; }
         .nav-icon:hover { background-color: #e5e7eb; }
         button { border: none; border-radius: var(--border-radius); cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: all 0.2s ease-in-out; padding: 0.75rem 1.5rem; }
@@ -34,15 +33,14 @@
         .btn-sm { padding: 0.5rem 1rem; font-size: 0.875rem; }
         .page { animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .card { background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 2rem; }
-        .form-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
-        @media (min-width: 768px) { .form-grid { grid-template-columns: 1fr 1fr; } }
-        fieldset { border: 1px solid #e5e7eb; border-radius: var(--border-radius); padding: 1.5rem; margin: 0 0 1.5rem; }
+        .card { background-color: #fff; border-radius: var(--border-radius); padding: 1.5rem; margin-bottom: 1rem; }
+        .form-grid { display: block; gap: 1rem; }
+        fieldset { border: 1px solid #e5e7eb; border-radius: var(--border-radius); padding: 1rem; margin: 0 0 1rem; }
         legend { font-weight: 600; padding: 0 0.5rem; font-size: 0.9rem; color: var(--dark-color); }
-        .form-group { margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; }
         .form-group input[type="text"], .form-group input[type="number"], .form-group input[type="url"], .form-group textarea, .form-group select {
-            display: block; width: 100%; padding: 0.75rem 1rem; font-size: 0.95rem; line-height: 1.5; font-family: var(--font-family); color: var(--dark-color);
+            display: block; width: 100%; padding: 0.75rem; font-size: 0.95rem; line-height: 1.5; font-family: var(--font-family); color: var(--dark-color);
             background-color: #fff; border: 1px solid #ced4da; border-radius: var(--border-radius);
             transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
         }
@@ -50,7 +48,7 @@
             border-color: var(--primary-color); outline: 0;
             box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
         }
-        .form-group textarea { resize: vertical; min-height: 120px; }
+        .form-group textarea { resize: vertical; min-height: 100px; }
         .image-list-item { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.75rem; }
         .image-list-item .remove-image-btn { flex-shrink: 0; background: none; box-shadow: none; padding: 0.5rem; color: var(--danger-color); border: 1px solid transparent; }
         .image-list-item .remove-image-btn:hover { background-color: var(--light-color); border-color: #d1d5db; }
@@ -61,7 +59,7 @@
         .availability-toggle:checked { background-color: var(--success-color); }
         .availability-toggle:checked::before { transform: translateX(18px); }
         .availability-toggle:disabled { background-color: #e5e7eb; cursor: not-allowed; }
-        .form-actions { display: flex; justify-content: flex-end; gap: 1rem; padding: 1.5rem; border-top: 1px solid #e5e7eb; background-color: var(--light-color); }
+        .form-actions { display: flex; justify-content: flex-end; gap: 1rem; padding: 1rem; border-top: 1px solid #e5e7eb; background-color: var(--light-color); flex-wrap: wrap; }
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
         .toast { padding: 1rem 1.5rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
@@ -69,18 +67,18 @@
         .toast.success { background-color: var(--success-color); }
         .toast.error { background-color: var(--danger-color); }
 
-        .color-variant-card { border: 1px solid #e5e7eb; border-radius: var(--border-radius); padding: 1.5rem; margin-bottom: 1rem; background: #fafafa; }
-        .color-variant-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .color-variant-title { font-weight: 600; font-size: 1.1rem; }
+        .color-variant-item { border: 1px solid #e5e7eb; border-radius: var(--border-radius); padding: 1rem; margin-bottom: 1rem; background: #fafafa; }
+        .color-variant-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+        .color-variant-title { font-weight: 600; font-size: 1rem; }
         .color-variant-actions { display: flex; gap: 0.5rem; }
-        .color-preview { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #e5e7eb; }
+        .color-preview { width: 25px; height: 25px; border-radius: 50%; border: 2px solid #e5e7eb; }
         
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 2000; }
-        .modal { background: white; border-radius: var(--border-radius); padding: 2rem; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        .modal-title { font-size: 1.25rem; font-weight: 600; margin: 0; }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 1rem; }
+        .modal { background: white; border-radius: var(--border-radius); padding: 1.5rem; width: 100%; max-height: 90vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .modal-title { font-size: 1.1rem; font-weight: 600; margin: 0; }
         .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; padding: 0; width: 30px; height: 30px; }
-        .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .modal-grid { display: block; gap: 1rem; }
         .color-images-section { margin-top: 1rem; }
         .color-image-item { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.75rem; }
         
@@ -93,16 +91,37 @@
         .upload-btn:hover { border-color: var(--primary-color); background: #f0f4ff; }
         .upload-text { color: var(--secondary-color); font-size: 0.875rem; }
         .upload-preview { 
-            width: 100px; height: 100px; object-fit: cover; border-radius: var(--border-radius);
+            width: 80px; height: 80px; object-fit: cover; border-radius: var(--border-radius);
             border: 2px solid #e5e7eb; margin-top: 0.5rem; display: none;
         }
         .upload-preview.show { display: block; }
         .upload-actions { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
         .upload-remove { background: var(--danger-color); color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; }
-        .uploaded-images-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 0.5rem; margin-top: 0.5rem; }
+        .uploaded-images-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 0.5rem; margin-top: 0.5rem; }
         .uploaded-image-item { position: relative; }
-        .uploaded-image-preview { width: 100px; height: 100px; object-fit: cover; border-radius: var(--border-radius); border: 2px solid #e5e7eb; }
+        .uploaded-image-preview { width: 80px; height: 80px; object-fit: cover; border-radius: var(--border-radius); border: 2px solid #e5e7eb; }
         .uploaded-image-remove { position: absolute; top: 5px; right: 5px; background: var(--danger-color); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 0.75rem; cursor: pointer; }
+
+        @media (min-width: 768px) {
+            .container { padding: 1.5rem; }
+            nav { padding: 1rem 1.5rem; }
+            .nav-left h1 { font-size: 1.75rem; }
+            .nav-right { gap: 1rem; }
+            .card { padding: 2rem; margin-bottom: 1.5rem; }
+            .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+            fieldset { padding: 1.5rem; margin: 0 0 1.5rem; }
+            .form-group { margin-bottom: 1.5rem; }
+            .form-group textarea { min-height: 120px; }
+            .form-actions { padding: 1.5rem; }
+            .modal { padding: 2rem; max-width: 600px; }
+            .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+            .upload-preview { width: 100px; height: 100px; }
+            .uploaded-image-preview { width: 100px; height: 100px; }
+            .uploaded-images-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+            .color-variant-item { padding: 1.5rem; }
+            .color-variant-header { flex-wrap: nowrap; }
+            .color-preview { width: 30px; height: 30px; }
+        }
     </style>
 </head>
 <body>
@@ -114,10 +133,12 @@
     </nav>
 
     <div class="container page">
-        <div id="product-editor-container" class="card">
-            <h1 id="editor-title">Loading Product Editor...</h1>
+        <div id="product-editor-container">
+            <div class="card">
+                <h1 id="editor-title">Loading Product Editor...</h1>
+            </div>
             <div id="product-form-content">
-                <p>Loading product data...</p>
+                <div class="card"><p>Loading product data...</p></div>
             </div>
         </div>
     </div>
@@ -245,7 +266,7 @@ const firebaseConfig = {
                 document.getElementById('editor-title').textContent = 'Add New Product';
                 loadCategoriesAndRenderForm({ category: decodeURIComponent(categoryForCreation) });
             } else {
-                document.getElementById('product-form-content').innerHTML = `<p>Invalid request. Must provide a product ID or a category for creation.</p>`;
+                document.getElementById('product-form-content').innerHTML = `<div class="card"><p>Invalid request. Must provide a product ID or a category for creation.</p></div>`;
             }
         }
 
@@ -304,48 +325,58 @@ const firebaseConfig = {
                 <form id="product-form">
                     <div class="form-grid">
                         <div class="form-column">
-                            <fieldset>
-                                <legend>Core Details</legend>
-                                <div class="form-group"><label for="name">Product Name</label><input type="text" id="name" value="${product.name||''}" required placeholder="Product Name"></div>
-                                <div class="form-group">
-                                    <label for="category">Category</label>
-                                    <select id="category-select"><option value="">Select a category...</option>${categorySelectOptions}</select>
-                                    <input type="text" id="new-category-input" placeholder="Enter new category name" style="display:none; margin-top:0.5rem;">
-                                </div>
-                            </fieldset>
-                            <fieldset>
-                                <legend>Pricing</legend>
-                                <div class="form-group"><label for="price">Current Price ($)</label><input type="number" id="price" step="0.01" value="${product.price||''}" required placeholder="19.99"></div>
-                                <div class="form-group"><label for="oldPrice">Old Price ($)</label><input type="number" id="oldPrice" step="0.01" value="${product.oldPrice||0}" placeholder="24.99"></div>
-                            </fieldset>
+                            <div class="card">
+                                <fieldset>
+                                    <legend>Core Details</legend>
+                                    <div class="form-group"><label for="name">Product Name</label><input type="text" id="name" value="${product.name||''}" required placeholder="Product Name"></div>
+                                    <div class="form-group">
+                                        <label for="category">Category</label>
+                                        <select id="category-select"><option value="">Select a category...</option>${categorySelectOptions}</select>
+                                        <input type="text" id="new-category-input" placeholder="Enter new category name" style="display:none; margin-top:0.5rem;">
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="card">
+                                <fieldset>
+                                    <legend>Pricing</legend>
+                                    <div class="form-group"><label for="price">Current Price ($)</label><input type="number" id="price" step="0.01" value="${product.price||''}" required placeholder="19.99"></div>
+                                    <div class="form-group"><label for="oldPrice">Old Price ($)</label><input type="number" id="oldPrice" step="0.01" value="${product.oldPrice||0}" placeholder="24.99"></div>
+                                </fieldset>
+                            </div>
                         </div>
                         <div class="form-column">
-                            <fieldset>
-                                <legend>Color Variants</legend>
-                                ${colorVariantsHtml}
-                                <button type="button" class="btn-primary btn-sm" onclick="openColorModal()" style="margin-top:1rem;">+ Add Color Variant</button>
-                            </fieldset>
-                            <fieldset>
-                                <legend>General Images</legend>
-                                <div class="form-group">
-                                    <label>Upload Multiple Images</label>
-                                    <div class="upload-container">
-                                        <div class="upload-btn" onclick="document.getElementById('general-images-upload').click()">
-                                            <div class="upload-text">Click to upload multiple images</div>
+                            <div class="card">
+                                <fieldset>
+                                    <legend>Color Variants</legend>
+                                    ${colorVariantsHtml}
+                                    <button type="button" class="btn-primary btn-sm" onclick="openColorModal()" style="margin-top:1rem;">+ Add Color Variant</button>
+                                </fieldset>
+                            </div>
+                            <div class="card">
+                                <fieldset>
+                                    <legend>General Images</legend>
+                                    <div class="form-group">
+                                        <label>Upload Multiple Images</label>
+                                        <div class="upload-container">
+                                            <div class="upload-btn" onclick="document.getElementById('general-images-upload').click()">
+                                                <div class="upload-text">Click to upload multiple images</div>
+                                            </div>
+                                            <input type="file" id="general-images-upload" accept="image/*" multiple style="display: none;">
                                         </div>
-                                        <input type="file" id="general-images-upload" accept="image/*" multiple style="display: none;">
                                     </div>
-                                </div>
-                                <div id="general-uploaded-images" class="uploaded-images-grid"></div>
-                                <div id="image-list">${existingImagesHtml}</div>
-                                <button type="button" class="btn-secondary" id="add-image-btn" style="padding:0.5rem 1rem; margin-top:0.5rem; width:100%; box-shadow:none;">Add Image URL</button>
-                            </fieldset>
+                                    <div id="general-uploaded-images" class="uploaded-images-grid"></div>
+                                    <div id="image-list">${existingImagesHtml}</div>
+                                    <button type="button" class="btn-secondary" id="add-image-btn" style="padding:0.5rem 1rem; margin-top:0.5rem; width:100%; box-shadow:none;">Add Image URL</button>
+                                </fieldset>
+                            </div>
                         </div>
                     </div>
-                    <fieldset>
-                        <legend>Description</legend>
-                        <div class="form-group"><textarea id="description" rows="5" placeholder="Product details">${product.description||''}</textarea></div>
-                    </fieldset>
+                    <div class="card">
+                        <fieldset>
+                            <legend>Description</legend>
+                            <div class="form-group"><textarea id="description" rows="5" placeholder="Product details">${product.description||''}</textarea></div>
+                        </fieldset>
+                    </div>
                 </form>
                 <div class="form-actions">
                     <button class="btn-secondary" onclick="window.history.back()">Cancel</button>
@@ -362,9 +393,9 @@ const firebaseConfig = {
             }
 
             return colorVariants.map((variant, index) => `
-                <div class="color-variant-card" data-color-index="${index}">
+                <div class="color-variant-item" data-color-index="${index}">
                     <div class="color-variant-header">
-                        <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
                             <div class="color-preview" style="background-color: ${variant.hex || '#e5e7eb'};"></div>
                             <div>
                                 <div class="color-variant-title">${variant.name}</div>
