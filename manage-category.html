@@ -1,4 +1,3 @@
-<!-- manage-category.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -181,6 +180,44 @@
         .upload-preview.show { display: block; }
         .upload-actions { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
         .upload-remove { background: var(--danger-color); color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0.5rem;
+            }
+            #manage-category-container.card {
+                background-color: transparent;
+                box-shadow: none;
+                padding: 0.5rem;
+            }
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .page-header button {
+                width: 100%;
+            }
+            .search-container {
+                max-width: 100%;
+                margin-bottom: 1rem;
+            }
+            .categories-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+                margin-top: 1rem;
+            }
+            .category-card {
+                border-radius: 8px;
+                padding: 1rem;
+            }
+            h1 {
+                font-size: 1.5rem !important;
+            }
+            .nav-left h1 {
+                font-size: 1.25rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -192,7 +229,7 @@
 
     <div class="container page">
         <div id="manage-category-container" class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
                 <h1 style="margin: 0;">Category Management</h1>
                 <button class="btn-primary" onclick="openAddCategoryModal()">+ Add Category</button>
             </div>
@@ -328,15 +365,15 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
-  authDomain: "vastramaya---magic.firebaseapp.com",
-  projectId: "vastramaya---magic",
-  storageBucket: "vastramaya---magic.firebasestorage.app",
-  messagingSenderId: "543460072082",
-  appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
-  measurementId: "G-E39VNDCFVE"
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
+            authDomain: "vastramaya---magic.firebaseapp.com",
+            projectId: "vastramaya---magic",
+            storageBucket: "vastramaya---magic.firebasestorage.app",
+            messagingSenderId: "543460072082",
+            appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
+            measurementId: "G-E39VNDCFVE"
+        };
         const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
