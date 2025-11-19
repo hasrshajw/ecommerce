@@ -140,6 +140,21 @@
         .btn-danger { background: #FEF2F2; color: var(--danger-color); border: 1px solid #FECACA; padding: 0.5rem 1rem; font-size: 0.875rem; }
         .btn-danger:hover { background: #FEE2E2; }
 
+        /* NEW PREMIUM ACTION BUTTONS */
+        .desktop-actions { display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem; }
+        .action-btn { 
+            display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; 
+            border-radius: 6px; font-size: 0.85rem; font-weight: 500; cursor: pointer; 
+            transition: all 0.2s; border: 1px solid transparent;
+        }
+        .action-btn i { font-size: 1.1rem; }
+        
+        .action-btn.edit { background: #EFF6FF; color: var(--brand-primary); border-color: #DBEAFE; }
+        .action-btn.edit:hover { background: var(--brand-primary); color: white; border-color: var(--brand-primary); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+        
+        .action-btn.delete { background: #FEF2F2; color: var(--danger-color); border-color: #FEE2E2; }
+        .action-btn.delete:hover { background: var(--danger-color); color: white; border-color: var(--danger-color); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+
         .search-wrapper { position: relative; width: 100%; max-width: 400px; margin-bottom: 1.5rem; }
         .search-input { 
             width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem; 
@@ -172,13 +187,6 @@
         .product-info { flex: 1; min-width: 0; }
         .product-name { font-weight: 600; color: var(--text-primary); font-size: 0.95rem; margin-bottom: 0.1rem; }
         .product-category { color: var(--text-secondary); font-size: 0.8rem; }
-
-        .status-badge { 
-            padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; 
-            font-weight: 600; display: inline-block;
-        }
-        .status-active { background: #DCFCE7; color: #166534; }
-        .status-inactive { background: #F1F5F9; color: #475569; }
 
         .availability-toggle { 
             appearance: none; width: 36px; height: 20px; background-color: #CBD5E1; 
@@ -322,11 +330,11 @@
                     <table class="products-table">
                         <thead>
                             <tr>
-                                <th style="width: 45%;">Product</th>
+                                <th style="width: 40%;">Product</th>
                                 <th class="mobile-hidden" style="width: 15%;">Price</th>
                                 <th class="mobile-hidden" style="width: 10%; text-align: center;">Colors</th>
                                 <th style="width: 15%; text-align: center;">Status</th>
-                                <th style="width: 15%; text-align: right;">Actions</th>
+                                <th style="width: 20%; text-align: right;">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="admin-products-table">
@@ -508,8 +516,8 @@
                     </td>
                     <td style="text-align: right;">
                         <div class="desktop-actions">
-                            <button class="btn-secondary" onclick="editProduct('${p.id}')">Edit</button>
-                            <button class="btn-danger" onclick="deleteProduct('${p.id}', '${p.name.replace(/'/g, "\\'")}')">Delete</button>
+                            <button class="action-btn edit" onclick="editProduct('${p.id}')"><i class='bx bx-edit-alt'></i> Edit</button>
+                            <button class="action-btn delete" onclick="deleteProduct('${p.id}', '${p.name.replace(/'/g, "\\'")}')"><i class='bx bx-trash'></i> Delete</button>
                         </div>
                         <button class="mobile-menu-btn" onclick="openMobileMenu('${p.id}')"><i class='bx bx-dots-vertical-rounded'></i></button>
                     </td>
