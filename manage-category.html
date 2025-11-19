@@ -2,369 +2,395 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Categories - ShopSphere Admin</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Manage Categories - Vastramaya</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         :root {
-            --primary-color: #4F46E5; --primary-hover: #4338CA;
-            --secondary-color: #6B7280; --success-color: #10B981; --danger-color: #EF4444;
-            --warning-color: #F59E0B; --light-color: #F9FAFB; --dark-color: #1F2937;
-            --bg-color: #F3F4F6; --font-family: 'Inter', sans-serif; --border-radius: 0.5rem;
-            --box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --body-bg: #F8FAFC;
+            --widget-bg: #FFFFFF;
+            --border-color: #F1F5F9;
+            --text-primary: #0F172A;
+            --text-secondary: #64748B;
+            --brand-primary: #3B82F6;
+            --brand-gradient: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+            --hover-bg: #F8FAFC;
+            --danger-color: #EF4444;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 24px;
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        *, *::before, *::after { box-sizing: border-box; }
-        body { font-family: var(--font-family); margin: 0; background-color: var(--bg-color); color: var(--dark-color); }
-        .container { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
-        nav { background: #fff; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--box-shadow); position: sticky; top: 0; z-index: 1000; }
-        .nav-left h1 { margin: 0; font-size: 1.75rem; color: var(--primary-color); cursor: pointer; }
-        .page { animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .card { background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 2rem; }
-        button { border: none; border-radius: var(--border-radius); cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: all 0.2s ease-in-out; }
-        .btn-primary { background-color: var(--primary-color); color: white; padding: 0.75rem 1.5rem; }
-        .btn-primary:hover { background-color: var(--primary-hover); }
-        .btn-secondary { background-color: var(--secondary-color); color: white; padding: 0.75rem 1.5rem; }
-        .btn-danger { background-color: var(--danger-color); color: white; padding: 0.75rem 1.5rem; }
-        .btn-warning { background-color: var(--warning-color); color: white; padding: 0.75rem 1.5rem; }
-        .btn-sm { padding: 0.5rem 1rem; font-size: 0.875rem; }
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; }
-        .form-group input { 
-            display: block; width: 100%; padding: 0.75rem 1rem; font-size: 0.95rem; line-height: 1.5; 
-            background-color: #fff; border: 1px solid #ced4da; border-radius: var(--border-radius);
-            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--body-bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        input, button, select, textarea { font-family: inherit; font-size: inherit; outline: none; }
+
+        .dashboard-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; position: relative; }
+        .main-area { display: flex; flex-direction: column; overflow-y: auto; height: 100vh; background-color: var(--body-bg); }
+        
+        .main-header { 
+            padding: 12px 2.5rem; 
+            border-bottom: 1px solid var(--border-color); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background-color: var(--widget-bg); 
+            position: sticky; 
+            top: 0; 
+            z-index: 10; 
+            box-shadow: var(--shadow-sm); 
+            min-height: 70px;
         }
-        .form-group input:focus {
-            border-color: var(--primary-color); outline: 0;
-            box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+        .nav-logo { height: 42px; width: auto; object-fit: contain; display: none; }
+        
+        .sidebar { 
+            background-color: var(--widget-bg); 
+            border-right: 1px solid var(--border-color); 
+            padding: 2rem 1.5rem; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            transition: transform 0.3s ease-in-out;
+            box-shadow: var(--shadow-sm);
+            z-index: 1001;
         }
-        .image-preview { 
-            width: 80px; height: 80px; border-radius: var(--border-radius); 
-            object-fit: cover; border: 2px solid #e5e7eb; margin-top: 0.5rem;
-            display: none;
+        .sidebar-header { display: flex; align-items: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); } 
+        .logo-container { display: flex; align-items: center; width: 100%; }
+        .logo-image { height: 40px; width: auto; object-fit: contain; }
+        .main-nav ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+        .main-nav a { 
+            display: flex; align-items: center; gap: 1rem; text-decoration: none; color: var(--text-secondary); 
+            font-weight: 500; padding: 0.875rem 1rem; border-radius: var(--radius-md); transition: var(--transition); position: relative;
         }
-        .image-preview.show { display: block; }
-        .search-container { position: relative; margin-bottom: 2rem; max-width: 400px; }
+        .main-nav a i { font-size: 1.375rem; color: var(--text-secondary); transition: var(--transition); width: 24px; text-align: center; }
+        .main-nav a:hover { background-color: var(--hover-bg); color: var(--text-primary); transform: translateY(-1px); } 
+        .main-nav a:hover i { color: var(--brand-primary); }
+        .main-nav a.active { 
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%); 
+            color: var(--brand-primary); font-weight: 600; box-shadow: var(--shadow-sm);
+        } 
+        .main-nav a.active i { color: var(--brand-primary); }
+        .main-nav a.active::before {
+            content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 4px; height: 60%; background: var(--brand-gradient); border-radius: 0 4px 4px 0;
+        }
+        
+        .profile-section { 
+            margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-color); 
+            display: flex; align-items: center; gap: 0.75rem; cursor: pointer; 
+            border-radius: var(--radius-md); transition: var(--transition); padding: 1rem;
+        }
+        .profile-section:hover { background-color: var(--hover-bg); }
+        .profile-content-wrapper { display: flex; align-items: center; gap: 0.75rem; width: 100%; }
+        .profile-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid var(--border-color); transition: var(--transition); }
+        .profile-section:hover .profile-avatar { border-color: var(--brand-primary); }
+        .profile-details { flex-grow: 1; min-width: 0; }
+        .profile-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; font-size: 0.9rem; }
+        .profile-email { font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+        .profile-options i { font-size: 1.25rem; color: var(--text-secondary); transition: var(--transition); }
+        .profile-section.active .profile-options i { transform: rotate(180deg); }
+        
+        .profile-popup { 
+            position: absolute; bottom: 90px; left: 1.5rem; right: 1.5rem; 
+            background-color: var(--widget-bg); border-radius: var(--radius-lg); 
+            box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); 
+            padding: 0.75rem; z-index: 100; opacity: 0; pointer-events: none; 
+            transform: translateY(10px) scale(0.95); transition: var(--transition); 
+        }
+        .profile-popup.active { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
+        .popup-header { display: flex; align-items: center; gap: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); margin-bottom: 0.5rem; }
+        .popup-list { list-style: none; } 
+        .popup-list a { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem; border-radius: var(--radius-sm); text-decoration: none; color: var(--text-primary); transition: var(--transition); cursor: pointer; }
+        .popup-list a:hover { background-color: var(--hover-bg); } 
+        .popup-list a i { font-size: 1.2rem; color: var(--text-secondary); }
+        .popup-list a.logout i { color: var(--danger-color); } 
+        .popup-list a.logout { color: var(--danger-color); }
+        
+        .menu-toggle, .sidebar-close-btn { display: none; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .overlay.active { opacity: 1; pointer-events: auto; }
+
+        .page-container { max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%; padding-bottom: 3rem; }
+        .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        .page-title { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); }
+
+        .search-container { position: relative; max-width: 400px; width: 100%; }
         .search-input { 
             padding: 0.75rem 1rem 0.75rem 2.5rem; 
-            border: 1px solid #d1d5db; border-radius: var(--border-radius);
-            width: 100%; font-size: 0.95rem;
+            border: 1px solid var(--border-color); border-radius: var(--radius-md);
+            width: 100%; font-size: 0.95rem; background: white;
             transition: all 0.2s ease-in-out;
         }
-        .search-input:focus {
-            border-color: var(--primary-color); outline: 0;
-            box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
-        }
-        .search-icon { 
-            position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); 
-            color: var(--secondary-color); pointer-events: none;
-        }
-        .categories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
-        .category-card { 
-            background: white; border-radius: var(--border-radius); padding: 1.5rem; 
-            box-shadow: var(--box-shadow); border: 1px solid #e5e7eb;
-            transition: all 0.2s ease-in-out; position: relative;
-        }
-        .category-card:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-        }
-        .category-content { 
-            display: flex; justify-content: space-between; align-items: center;
-            cursor: pointer;
-        }
-        .category-info { flex: 1; display: flex; align-items: center; gap: 1rem; }
-        .category-image { 
-            width: 50px; height: 50px; border-radius: var(--border-radius); 
-            object-fit: cover; border: 2px solid #e5e7eb; flex-shrink: 0;
-        }
-        .category-details { flex: 1; }
-        .category-name { 
-            font-size: 1.1rem; font-weight: 600; color: var(--dark-color); 
-            margin: 0 0 0.25rem 0; 
-        }
-        .category-count { 
-            color: var(--secondary-color); font-size: 0.875rem; font-weight: 500;
-        }
-        .category-actions { display: flex; align-items: center; gap: 0.75rem; }
-        .products-badge { 
-            background: var(--primary-color); color: white; padding: 0.25rem 0.75rem; 
-            border-radius: 999px; font-size: 0.8rem; font-weight: 600; min-width: 60px;
-            text-align: center;
-        }
-        .menu-button { 
-            background: none; border: none; padding: 0.5rem; border-radius: 50%;
-            cursor: pointer; color: var(--secondary-color); position: relative;
-            transition: all 0.2s ease-in-out;
-        }
-        .menu-button:hover { 
-            background-color: var(--light-color); color: var(--dark-color);
-        }
-        .dropdown-menu {
-            position: absolute; top: 100%; right: 0; background: white;
-            border-radius: var(--border-radius); box-shadow: var(--box-shadow);
-            border: 1px solid #e5e7eb; padding: 0.5rem; z-index: 100;
-            min-width: 150px; display: none;
-        }
-        .dropdown-menu.show { display: block; }
-        .dropdown-item { 
-            display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem;
-            background: none; border: none; width: 100%; text-align: left;
-            border-radius: 0.375rem; cursor: pointer; color: var(--dark-color);
-            font-size: 0.9rem; transition: background-color 0.2s;
-        }
-        .dropdown-item:hover { background-color: var(--light-color); }
-        .dropdown-item.edit { color: var(--primary-color); }
-        .dropdown-item.delete { color: var(--danger-color); }
-        .empty-state { 
-            text-align: center; padding: 3rem; color: var(--secondary-color); 
-            background: var(--light-color); border-radius: var(--border-radius); 
-            border: 2px dashed #d1d5db; grid-column: 1 / -1;
-        }
-        .empty-state h3 { margin: 0 0 0.5rem 0; color: var(--dark-color); }
-        .modal-overlay { 
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
-            background: rgba(0,0,0,0.5); display: flex; align-items: center; 
-            justify-content: center; z-index: 2000; 
-        }
-        .modal { 
-            background: white; border-radius: var(--border-radius); padding: 2rem; 
-            max-width: 500px; width: 90%; box-shadow: var(--box-shadow);
-        }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        .modal-title { font-size: 1.25rem; font-weight: 600; margin: 0; }
-        .close-modal { 
-            background: none; border: none; font-size: 1.5rem; cursor: pointer; 
-            padding: 0; color: var(--secondary-color); width: 30px; height: 30px;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .close-modal:hover { color: var(--dark-color); }
-        .modal-actions { display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem; }
-        .danger-zone { 
-            background: #fef2f2; border: 1px solid #fecaca; border-radius: var(--border-radius);
-            padding: 1.5rem; margin-top: 1.5rem;
-        }
-        .danger-zone h4 { color: var(--danger-color); margin: 0 0 1rem 0; }
-        .warning-text { color: var(--danger-color); font-size: 0.9rem; margin-bottom: 1rem; }
-        .confirmation-input { 
-            border: 1px solid var(--danger-color); background: #fff;
-        }
-        .confirmation-input:focus {
-            border-color: var(--danger-color);
-            box-shadow: 0 0 0 0.2rem rgba(239, 68, 68, 0.25);
-        }
-        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
-        .toast { padding: 1rem 1.5rem; border-radius: var(--border-radius); color: white; box-shadow: var(--box-shadow); animation: slideIn 0.3s, fadeOut 0.3s 2.7s; }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-        @keyframes fadeOut { to { opacity: 0; } }
-        .toast.success { background-color: var(--success-color); }
-        .toast.error { background-color: var(--danger-color); }
-        .toast.warning { background-color: var(--warning-color); }
-        .upload-container { margin-top: 0.5rem; }
-        .upload-btn { 
-            background: var(--light-color); border: 2px dashed #d1d5db; 
-            padding: 0.75rem; text-align: center; border-radius: var(--border-radius);
-            cursor: pointer; transition: all 0.2s; margin-bottom: 0.5rem;
-        }
-        .upload-btn:hover { border-color: var(--primary-color); background: #f0f4ff; }
-        .upload-text { color: var(--secondary-color); font-size: 0.875rem; }
-        .upload-preview { 
-            width: 100px; height: 100px; object-fit: cover; border-radius: var(--border-radius);
-            border: 2px solid #e5e7eb; margin-top: 0.5rem; display: none;
-        }
-        .upload-preview.show { display: block; }
-        .upload-actions { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
-        .upload-remove { background: var(--danger-color); color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; }
+        .search-input:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); pointer-events: none; font-size: 1.2rem; }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 0.5rem;
-            }
-            #manage-category-container.card {
-                background-color: transparent;
-                box-shadow: none;
-                padding: 0.5rem;
-            }
-            .page-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-            .page-header button {
-                width: 100%;
-            }
-            .search-container {
-                max-width: 100%;
-                margin-bottom: 1rem;
-            }
-            .categories-grid {
-                grid-template-columns: 1fr;
-                gap: 0.75rem;
-                margin-top: 1rem;
-            }
-            .category-card {
-                border-radius: 8px;
-                padding: 1rem;
-            }
-            h1 {
-                font-size: 1.5rem !important;
-            }
-            .nav-left h1 {
-                font-size: 1.25rem;
-            }
+        .categories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .category-card { 
+            background: white; border-radius: var(--radius-lg); padding: 1.5rem; 
+            box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);
+            transition: var(--transition); position: relative; display: flex; align-items: center; gap: 1rem;
         }
+        .category-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--brand-primary); }
+        .category-image { width: 56px; height: 56px; border-radius: var(--radius-md); object-fit: cover; border: 1px solid var(--border-color); flex-shrink: 0; }
+        .category-details { flex: 1; min-width: 0; }
+        .category-name { font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .category-count { color: var(--text-secondary); font-size: 0.875rem; }
+        .category-actions { position: relative; }
+        
+        .menu-button { background: transparent; border: none; padding: 0.5rem; border-radius: 50%; cursor: pointer; color: var(--text-secondary); transition: var(--transition); display: flex; align-items: center; justify-content: center; }
+        .menu-button:hover { background-color: var(--hover-bg); color: var(--text-primary); }
+        .dropdown-menu { position: absolute; top: 100%; right: 0; background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); padding: 0.5rem; z-index: 100; min-width: 160px; display: none; animation: slideUp 0.2s ease; }
+        .dropdown-menu.show { display: block; }
+        .dropdown-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; background: none; border: none; width: 100%; text-align: left; border-radius: var(--radius-sm); cursor: pointer; color: var(--text-primary); font-size: 0.9rem; transition: 0.2s; }
+        .dropdown-item:hover { background-color: var(--hover-bg); }
+        .dropdown-item.delete { color: var(--danger-color); }
+        .dropdown-item.delete:hover { background-color: #FEF2F2; }
+
+        .empty-state { text-align: center; padding: 4rem 2rem; color: var(--text-secondary); background: white; border-radius: var(--radius-lg); border: 1px dashed var(--border-color); grid-column: 1 / -1; }
+        .empty-state h3 { margin: 1rem 0 0.5rem 0; color: var(--text-primary); font-size: 1.25rem; }
+        
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; font-weight: 600; border-radius: var(--radius-md); cursor: pointer; transition: var(--transition); border: none; font-size: 0.95rem; }
+        .btn-primary { background: var(--brand-gradient); color: white; box-shadow: var(--shadow-sm); }
+        .btn-primary:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+        .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-primary); }
+        .btn-secondary:hover { background: #F8FAFC; border-color: #CBD5E1; }
+        .btn-danger { background: var(--danger-color); color: white; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 1rem; }
+        .modal-content { background: white; width: 100%; max-width: 500px; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes modalPop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #fff; }
+        .modal-body { padding: 1.5rem; overflow-y: auto; background: #F8FAFC; }
+        .modal-footer { padding: 1.25rem 1.5rem; background: white; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; }
+        .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); display: flex; }
+        
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label { display: block; font-weight: 500; margin-bottom: 0.5rem; font-size: 0.875rem; color: var(--text-secondary); }
+        .form-control { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white; transition: var(--transition); font-size: 0.95rem; }
+        .form-control:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+
+        .upload-zone { border: 2px dashed var(--border-color); border-radius: var(--radius-md); padding: 1.5rem; text-align: center; cursor: pointer; transition: var(--transition); background: white; }
+        .upload-zone:hover { border-color: var(--brand-primary); background: #F8FAFC; }
+        .preview-image { width: 100%; height: 200px; object-fit: cover; border-radius: var(--radius-md); margin-top: 1rem; display: none; border: 1px solid var(--border-color); }
+
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; pointer-events: none; display: flex; flex-direction: column; gap: 10px; }
+        .toast { padding: 1rem 1.5rem; background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); animation: slideUp 0.3s ease; display: flex; align-items: center; gap: 1rem; border-left: 4px solid var(--brand-primary); min-width: 300px; pointer-events: auto; }
+        .toast.success { border-left-color: var(--success-color); }
+        .toast.error { border-left-color: var(--danger-color); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 1024px) {
+            .dashboard-container { grid-template-columns: 1fr; }
+            .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 85%; max-width: 320px; z-index: 1000; transform: translateX(-100%); box-shadow: var(--shadow-lg); padding: 2rem 1.25rem; }
+            .sidebar.active { transform: translateX(0); }
+            .main-header { padding: 12px 1.5rem; justify-content: space-between; }
+            .nav-logo { display: block; height: 36px; }
+            .menu-toggle { display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; font-size: 1.6rem; color: var(--text-primary); cursor: pointer; border: 1px solid var(--border-color); border-radius: var(--radius-md); background-color: white; }
+            .sidebar-close-btn { display: flex; align-items: center; justify-content: center; position: absolute; top: 1.5rem; right: 1.25rem; font-size: 1.75rem; color: var(--text-secondary); cursor: pointer; border: none; background: none; width: 36px; height: 36px; }
+            .page-container { padding: 1rem; padding-bottom: 80px; }
+            .content-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .content-header button { width: 100%; }
+            .search-container { max-width: 100%; }
+            .categories-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .modal-overlay { align-items: flex-end; padding: 0; }
+            .modal-content { width: 100%; max-width: 100%; border-radius: var(--radius-xl) var(--radius-xl) 0 0; max-height: 85vh; animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+            .modal-footer { padding-bottom: 2rem; }
+            @keyframes slideUpModal { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        }
+        @media (min-width: 1025px) { .nav-logo { display: none; } }
     </style>
 </head>
 <body>
-    <div id="toast-container"></div>
-
-    <nav>
-        <div class="nav-left"><h1 onclick="window.location.href='index.html'">ShopSphere</h1></div>
-    </nav>
-
-    <div class="container page">
-        <div id="manage-category-container" class="card">
-            <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                <h1 style="margin: 0;">Category Management</h1>
-                <button class="btn-primary" onclick="openAddCategoryModal()">+ Add Category</button>
-            </div>
-
-            <div class="search-container">
-                <div class="search-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <path d="m21 21-4.3-4.3"></path>
-                    </svg>
-                </div>
-                <input type="text" id="search-categories" class="search-input" placeholder="Search categories...">
-            </div>
-
-            <h2 style="margin-bottom: 1rem; color: var(--dark-color);">Existing Categories</h2>
-            <div id="categories-container">
-                <div class="empty-state">
-                    <h3>No Categories Found</h3>
-                    <p>Get started by creating your first category</p>
-                    <button class="btn-primary" onclick="openAddCategoryModal()" style="margin-top: 1rem;">Create Category</button>
+    <div class="overlay" id="overlay"></div>
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
+            <button class="sidebar-close-btn" id="sidebar-close-btn"><i class='bx bx-x'></i></button>
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" class="logo-image">
                 </div>
             </div>
-        </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html"><i class='bx bx-home-alt'></i> Dashboard</a></li>
+                    <li><a href="#" class="active"><i class='bx bx-package'></i> Inventory</a></li>
+                    <li><a href="#"><i class='bx bx-palette'></i> Customize Site</a></li>
+                    <li><a href="#"><i class='bx bx-clipboard'></i> All Orders</a></li>
+                </ul>
+            </nav>
+            <div class="profile-section" id="profile-section">
+                <div class="profile-content-wrapper">
+                    <img id="sidebar-avatar" src="" class="profile-avatar">
+                    <div class="profile-details">
+                        <span class="profile-name" id="sidebar-name">Loading...</span>
+                        <span class="profile-email" id="sidebar-email">Admin</span>
+                    </div>
+                    <div class="profile-options"><i class='bx bx-chevron-down'></i></div>
+                </div>
+            </div>
+            <div class="profile-popup" id="profile-popup">
+                <div class="popup-header">
+                    <img id="popup-avatar" src="" class="profile-avatar">
+                    <div class="profile-details">
+                        <span class="profile-name" id="popup-name">Loading...</span>
+                        <span class="profile-email" id="popup-email">Admin</span>
+                    </div>
+                </div>
+                <ul class="popup-list">
+                    <li><a href="#"><i class='bx bx-user'></i> Profile</a></li>
+                    <li><a href="#"><i class='bx bx-cog'></i> Settings</a></li>
+                    <li><a href="#" onclick="auth.signOut()" class="logout"><i class='bx bx-log-out'></i> Logout</a></li>
+                </ul>
+            </div>
+        </aside>
+        
+        <main class="main-area">
+            <header class="main-header">
+                <button class="menu-toggle" id="menu-toggle"><i class='bx bx-menu'></i></button>
+                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" class="nav-logo">
+            </header>
+            
+            <div class="page-container">
+                <div class="content-header">
+                    <h1 class="page-title">Manage Categories</h1>
+                    <button class="btn btn-primary" onclick="openAddCategoryModal()"><i class='bx bx-plus'></i> Add Category</button>
+                </div>
+
+                <div class="search-container">
+                    <i class='bx bx-search search-icon'></i>
+                    <input type="text" id="search-categories" class="search-input" placeholder="Search categories...">
+                </div>
+
+                <div id="categories-container"></div>
+            </div>
+        </main>
     </div>
 
-    <div id="add-category-modal" class="modal-overlay" style="display: none;">
-        <div class="modal">
+    <div id="add-category-modal" class="modal-overlay">
+        <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Add New Category</h3>
-                <button class="close-modal" onclick="closeAddCategoryModal()">&times;</button>
+                <h3 style="font-size:1.25rem; font-weight:600;">Add Category</h3>
+                <button class="close-modal" onclick="closeAddCategoryModal()"><i class='bx bx-x'></i></button>
             </div>
-            <form id="add-category-form">
-                <div class="form-group">
-                    <label for="category-name">Category Name</label>
-                    <input type="text" id="category-name" placeholder="Enter category name" required>
-                </div>
-                <div class="form-group">
-                    <label for="category-image">Category Image URL</label>
-                    <input type="url" id="category-image" placeholder="https://example.com/category-image.jpg">
-                    <img id="add-category-preview" class="image-preview" alt="Category image preview">
-                </div>
-                <div class="form-group">
-                    <label>Or Upload Image</label>
-                    <div class="upload-container">
-                        <div class="upload-btn" onclick="document.getElementById('add-image-upload').click()">
-                            <div class="upload-text">Click to upload image</div>
+            <div class="modal-body">
+                <form id="add-category-form">
+                    <div class="form-group">
+                        <label>Category Name</label>
+                        <input type="text" id="category-name" class="form-control" placeholder="e.g., Summer Collection" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category Image</label>
+                        <div class="upload-zone" onclick="document.getElementById('add-image-upload').click()">
+                            <i class='bx bx-cloud-upload' style="font-size:2rem; color:var(--brand-primary);"></i>
+                            <div style="color:var(--text-secondary); margin-top:0.5rem;">Click to upload image</div>
                         </div>
                         <input type="file" id="add-image-upload" accept="image/*" style="display: none;">
-                        <img id="add-upload-preview" class="upload-preview" alt="Upload preview">
-                        <div class="upload-actions">
-                            <button type="button" class="upload-remove" onclick="removeAddUpload()" style="display: none;">Remove</button>
-                        </div>
+                        <img id="add-upload-preview" class="preview-image">
                     </div>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn-secondary" onclick="closeAddCategoryModal()">Cancel</button>
-                    <button type="submit" class="btn-primary">Save Category</button>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAddCategoryModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="addCategory()">Save Category</button>
+            </div>
         </div>
     </div>
 
-    <div id="edit-category-modal" class="modal-overlay" style="display: none;">
-        <div class="modal">
+    <div id="edit-category-modal" class="modal-overlay">
+        <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Edit Category</h3>
-                <button class="close-modal" onclick="closeEditCategoryModal()">&times;</button>
+                <h3 style="font-size:1.25rem; font-weight:600;">Edit Category</h3>
+                <button class="close-modal" onclick="closeEditCategoryModal()"><i class='bx bx-x'></i></button>
             </div>
-            <form id="edit-category-form">
-                <input type="hidden" id="edit-category-id">
-                <div class="form-group">
-                    <label for="edit-category-name">Category Name</label>
-                    <input type="text" id="edit-category-name" placeholder="Enter category name" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-category-image">Category Image URL</label>
-                    <input type="url" id="edit-category-image" placeholder="https://example.com/category-image.jpg">
-                    <img id="edit-category-preview" class="image-preview" alt="Category image preview">
-                </div>
-                <div class="form-group">
-                    <label>Or Upload New Image</label>
-                    <div class="upload-container">
-                        <div class="upload-btn" onclick="document.getElementById('edit-image-upload').click()">
-                            <div class="upload-text">Click to upload image</div>
+            <div class="modal-body">
+                <form id="edit-category-form">
+                    <input type="hidden" id="edit-category-id">
+                    <div class="form-group">
+                        <label>Category Name</label>
+                        <input type="text" id="edit-category-name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category Image</label>
+                        <div class="upload-zone" onclick="document.getElementById('edit-image-upload').click()">
+                            <i class='bx bx-cloud-upload' style="font-size:2rem; color:var(--brand-primary);"></i>
+                            <div style="color:var(--text-secondary); margin-top:0.5rem;">Click to replace image</div>
                         </div>
                         <input type="file" id="edit-image-upload" accept="image/*" style="display: none;">
-                        <img id="edit-upload-preview" class="upload-preview" alt="Upload preview">
-                        <div class="upload-actions">
-                            <button type="button" class="upload-remove" onclick="removeEditUpload()" style="display: none;">Remove</button>
-                        </div>
+                        <img id="edit-upload-preview" class="preview-image">
                     </div>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn-secondary" onclick="closeEditCategoryModal()">Cancel</button>
-                    <button type="submit" class="btn-primary">Update Category</button>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeEditCategoryModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="updateCategory()">Update</button>
+            </div>
         </div>
     </div>
 
-    <div id="delete-category-modal" class="modal-overlay" style="display: none;">
-        <div class="modal">
+    <div id="delete-category-modal" class="modal-overlay">
+        <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" style="color: var(--danger-color);">Delete Category</h3>
-                <button class="close-modal" onclick="closeDeleteCategoryModal()">&times;</button>
+                <h3 style="font-size:1.25rem; font-weight:600; color:var(--danger-color);">Delete Category</h3>
+                <button class="close-modal" onclick="closeDeleteCategoryModal()"><i class='bx bx-x'></i></button>
             </div>
-            <div class="danger-zone">
-                <h4>⚠️ Danger Zone</h4>
-                <p class="warning-text">
-                    You are about to delete the category "<strong id="delete-category-name"></strong>". 
+            <div class="modal-body">
+                <p style="color:var(--text-secondary); margin-bottom:1rem;">
+                    You are about to delete <strong id="delete-category-name" style="color:var(--text-primary);"></strong>. 
                     This action cannot be undone.
                 </p>
                 <div class="form-group">
-                    <label for="confirm-category-name">
-                        Type the category name to confirm deletion:
-                    </label>
-                    <input type="text" id="confirm-category-name" class="confirmation-input" 
-                           placeholder="Enter category name to confirm">
+                    <label>Type category name to confirm</label>
+                    <input type="text" id="confirm-category-name" class="form-control" placeholder="Enter category name">
                 </div>
             </div>
-            <div class="modal-actions">
-                <button type="button" class="btn-secondary" onclick="closeDeleteCategoryModal()">Cancel</button>
-                <button type="button" class="btn-danger" id="confirm-delete-btn" disabled>
-                    Delete Category
-                </button>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeDeleteCategoryModal()">Cancel</button>
+                <button class="btn btn-danger" id="confirm-delete-btn" onclick="deleteCategory()" disabled>Delete</button>
             </div>
         </div>
     </div>
-    
+
+    <div id="toast-container"></div>
+
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menu-toggle');
+            const closeBtn = document.getElementById('sidebar-close-btn');
+            const overlay = document.getElementById('overlay');
+            const toggleMenu = () => { sidebar.classList.toggle('active'); overlay.classList.toggle('active'); };
+            if (menuToggle) menuToggle.addEventListener('click', toggleMenu);
+            if (closeBtn) closeBtn.addEventListener('click', toggleMenu);
+            if (overlay) overlay.addEventListener('click', toggleMenu);
+
+            const profileSection = document.getElementById('profile-section');
+            const profilePopup = document.getElementById('profile-popup');
+            if (profileSection) {
+                profileSection.addEventListener('click', e => { e.stopPropagation(); profilePopup.classList.toggle('active'); profileSection.classList.toggle('active'); });
+                document.addEventListener('click', e => { if (!profileSection.contains(e.target)) { profilePopup.classList.remove('active'); profileSection.classList.remove('active'); } });
+            }
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.category-actions')) {
+                    document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('show'));
+                }
+            });
+        });
+
         const firebaseConfig = {
             apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
             authDomain: "vastramaya---magic.firebaseapp.com",
@@ -374,467 +400,201 @@
             appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
             measurementId: "G-E39VNDCFVE"
         };
-        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
         const storage = firebase.storage();
+        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
 
-        let currentUser = null;
         let allCategories = [];
         let productCounts = {};
-        let currentEditingCategory = null;
         let currentDeletingCategory = null;
         let addUploadedFile = null;
         let editUploadedFile = null;
 
-        document.addEventListener('DOMContentLoaded', () => {
-            auth.onAuthStateChanged(user => {
-                currentUser = user;
-                if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
-                    sessionStorage.setItem('toastMessage', JSON.stringify({ message: 'Access Denied: Admin area.', type: 'error' }));
-                    window.location.href = 'index.html';
-                    return;
-                }
-                initializePage();
-            });
-        });
-
-        async function initializePage() {
-            await loadCategories();
-            await loadProductCounts();
-            renderCategories();
-            setupEventListeners();
-        }
-
-        async function loadCategories() {
-            try {
-                const snapshot = await db.collection('categories').orderBy('name').get();
-                allCategories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            } catch (error) {
-                console.error("Error loading categories:", error);
-                showToast("Failed to load categories.", "error");
-            }
-        }
-
-        async function loadProductCounts() {
-            try {
-                const productsSnapshot = await db.collection('products').get();
-                productCounts = {};
-                
-                productsSnapshot.docs.forEach(doc => {
-                    const product = doc.data();
-                    if (product.category) {
-                        productCounts[product.category] = (productCounts[product.category] || 0) + 1;
-                    }
-                });
-            } catch (error) {
-                console.error("Error loading product counts:", error);
-            }
-        }
-
-        function renderCategories(filteredCategories = null) {
-            const categoriesToRender = filteredCategories || allCategories;
-            const container = document.getElementById('categories-container');
-            
-            if (categoriesToRender.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <h3>No Categories Found</h3>
-                        <p>${filteredCategories ? 'Try adjusting your search' : 'Get started by creating your first category'}</p>
-                        <button class="btn-primary" onclick="openAddCategoryModal()" style="margin-top: 1rem;">Create Category</button>
-                    </div>
-                `;
+        auth.onAuthStateChanged(user => {
+            if (!user || user.email !== ADMIN_EMAIL) {
+                window.location.href = 'index.html';
                 return;
             }
+            initUI(user);
+            loadData();
+        });
 
-            container.innerHTML = `
-                <div class="categories-grid">
-                    ${categoriesToRender.map(category => `
-                        <div class="category-card">
-                            <div class="category-content" onclick="navigateToProducts('${category.name}')">
-                                <div class="category-info">
-                                    <img src="${category.imageUrl || 'https://via.placeholder.com/50?text=No+Image'}" 
-                                         alt="${category.name}" 
-                                         class="category-image"
-                                         onerror="this.src='https://via.placeholder.com/50?text=No+Image'">
-                                    <div class="category-details">
-                                        <h3 class="category-name">${category.name}</h3>
-                                        <div class="category-count">${productCounts[category.name] || 0} products</div>
-                                    </div>
-                                </div>
-                                <div class="category-actions">
-                                    <span class="products-badge">${productCounts[category.name] || 0}</span>
-                                    <div class="menu-container" style="position: relative;">
-                                        <button class="menu-button" onclick="event.stopPropagation(); toggleMenu('${category.id}')">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                                <circle cx="12" cy="6" r="2"></circle>
-                                                <circle cx="12" cy="12" r="2"></circle>
-                                                <circle cx="12" cy="18" r="2"></circle>
-                                            </svg>
-                                        </button>
-                                        <div class="dropdown-menu" id="menu-${category.id}">
-                                            <button class="dropdown-item edit" onclick="openEditCategoryModal('${category.id}', '${category.name}', '${category.imageUrl || ''}')">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                                </svg>
-                                                Edit
-                                            </button>
-                                            <button class="dropdown-item delete" onclick="openDeleteCategoryModal('${category.id}', '${category.name}')">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                                    <path d="M3 6h18"></path>
-                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                                </svg>
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+        function initUI(user) {
+            const name = user.displayName || 'Admin';
+            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3B82F6&color=fff`;
+            document.getElementById('sidebar-name').textContent = name;
+            document.getElementById('sidebar-email').textContent = user.email;
+            document.getElementById('sidebar-avatar').src = avatar;
+            document.getElementById('popup-name').textContent = name;
+            document.getElementById('popup-email').textContent = user.email;
+            document.getElementById('popup-avatar').src = avatar;
+        }
+
+        async function loadData() {
+            try {
+                const [catSnap, prodSnap] = await Promise.all([
+                    db.collection('categories').orderBy('name').get(),
+                    db.collection('products').get()
+                ]);
+                
+                allCategories = catSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                productCounts = {};
+                prodSnap.docs.forEach(doc => {
+                    const cat = doc.data().category;
+                    if(cat) productCounts[cat] = (productCounts[cat] || 0) + 1;
+                });
+                
+                renderCategories();
+            } catch (e) { showToast('Error loading data', 'error'); }
+        }
+
+        function renderCategories(list = allCategories) {
+            const container = document.getElementById('categories-container');
+            if (list.length === 0) {
+                container.innerHTML = `<div class="empty-state"><h3>No Categories</h3><p>Get started by adding a new category.</p></div>`;
+                return;
+            }
+            container.innerHTML = `<div class="categories-grid">
+                ${list.map(c => `
+                    <div class="category-card">
+                        <img src="${c.imageUrl || 'https://via.placeholder.com/50'}" class="category-image">
+                        <div class="category-details">
+                            <div class="category-name">${c.name}</div>
+                            <div class="category-count">${productCounts[c.name] || 0} products</div>
+                        </div>
+                        <div class="category-actions">
+                            <button class="menu-button" onclick="toggleDropdown('${c.id}')"><i class='bx bx-dots-vertical-rounded'></i></button>
+                            <div class="dropdown-menu" id="menu-${c.id}">
+                                <button class="dropdown-item" onclick="openEditCategoryModal('${c.id}', '${c.name}', '${c.imageUrl||''}')"><i class='bx bx-edit'></i> Edit</button>
+                                <button class="dropdown-item delete" onclick="openDeleteCategoryModal('${c.id}', '${c.name}')"><i class='bx bx-trash'></i> Delete</button>
                             </div>
                         </div>
-                    `).join('')}
-                </div>
-            `;
+                    </div>
+                `).join('')}
+            </div>`;
         }
 
-        function setupEventListeners() {
-            document.getElementById('search-categories').addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase().trim();
-                if (searchTerm === '') {
-                    renderCategories();
-                } else {
-                    const filtered = allCategories.filter(category => 
-                        category.name.toLowerCase().includes(searchTerm)
-                    );
-                    renderCategories(filtered);
-                }
-            });
-
-            document.getElementById('add-category-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                await addCategory();
-            });
-
-            document.getElementById('edit-category-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                await updateCategory();
-            });
-
-            document.getElementById('category-image').addEventListener('input', (e) => {
-                updateImagePreview(e.target.value, 'add-category-preview');
-            });
-
-            document.getElementById('edit-category-image').addEventListener('input', (e) => {
-                updateImagePreview(e.target.value, 'edit-category-preview');
-            });
-
-            document.getElementById('confirm-category-name').addEventListener('input', (e) => {
-                const confirmBtn = document.getElementById('confirm-delete-btn');
-                const categoryName = document.getElementById('delete-category-name').textContent;
-                confirmBtn.disabled = e.target.value !== categoryName;
-            });
-
-            document.getElementById('confirm-delete-btn').addEventListener('click', async () => {
-                await deleteCategory();
-            });
-
-            document.getElementById('add-image-upload').addEventListener('change', handleAddImageUpload);
-            document.getElementById('edit-image-upload').addEventListener('change', handleEditImageUpload);
-
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.menu-container')) {
-                    document.querySelectorAll('.dropdown-menu').forEach(menu => {
-                        menu.classList.remove('show');
-                    });
-                }
-            });
+        function toggleDropdown(id) {
+            const menu = document.getElementById(`menu-${id}`);
+            document.querySelectorAll('.dropdown-menu').forEach(m => { if(m !== menu) m.classList.remove('show'); });
+            menu.classList.toggle('show');
         }
 
-        function handleAddImageUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                if (file.size > 5 * 1024 * 1024) {
-                    showToast("Image size should be less than 5MB", "error");
-                    return;
-                }
-                addUploadedFile = file;
-                const preview = document.getElementById('add-upload-preview');
-                preview.src = URL.createObjectURL(file);
-                preview.classList.add('show');
-                document.querySelector('#add-category-form .upload-remove').style.display = 'block';
-                document.getElementById('category-image').value = '';
-                document.getElementById('add-category-preview').classList.remove('show');
-            }
-        }
+        document.getElementById('search-categories').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            renderCategories(allCategories.filter(c => c.name.toLowerCase().includes(term)));
+        });
 
-        function handleEditImageUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                if (file.size > 5 * 1024 * 1024) {
-                    showToast("Image size should be less than 5MB", "error");
-                    return;
-                }
-                editUploadedFile = file;
-                const preview = document.getElementById('edit-upload-preview');
-                preview.src = URL.createObjectURL(file);
-                preview.classList.add('show');
-                document.querySelector('#edit-category-form .upload-remove').style.display = 'block';
-                document.getElementById('edit-category-image').value = '';
-                document.getElementById('edit-category-preview').classList.remove('show');
-            }
-        }
-
-        function removeAddUpload() {
-            addUploadedFile = null;
-            document.getElementById('add-image-upload').value = '';
-            document.getElementById('add-upload-preview').classList.remove('show');
-            document.querySelector('#add-category-form .upload-remove').style.display = 'none';
-        }
-
-        function removeEditUpload() {
-            editUploadedFile = null;
-            document.getElementById('edit-image-upload').value = '';
-            document.getElementById('edit-upload-preview').classList.remove('show');
-            document.querySelector('#edit-category-form .upload-remove').style.display = 'none';
-        }
-
-        async function uploadImage(file, categoryName) {
-            try {
-                const fileName = `categories/${categoryName.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`;
-                const storageRef = storage.ref().child(fileName);
-                const snapshot = await storageRef.put(file);
-                const downloadURL = await snapshot.ref.getDownloadURL();
-                return downloadURL;
-            } catch (error) {
-                console.error("Error uploading image:", error);
-                throw new Error("Failed to upload image");
-            }
-        }
-
-        function updateImagePreview(imageUrl, previewId) {
-            const preview = document.getElementById(previewId);
-            if (imageUrl && isValidUrl(imageUrl)) {
-                preview.src = imageUrl;
-                preview.classList.add('show');
-            } else {
-                preview.classList.remove('show');
-            }
-        }
-
-        function isValidUrl(string) {
-            try {
-                new URL(string);
-                return true;
-            } catch (_) {
-                return false;
-            }
-        }
-
-        function toggleMenu(categoryId) {
-            const menu = document.getElementById(`menu-${categoryId}`);
-            const isVisible = menu.classList.contains('show');
-            
-            document.querySelectorAll('.dropdown-menu').forEach(m => {
-                m.classList.remove('show');
-            });
-            
-            if (!isVisible) {
-                menu.classList.add('show');
-            }
-        }
-
+        // --- Add Modal ---
         function openAddCategoryModal() {
             document.getElementById('add-category-modal').style.display = 'flex';
-            document.getElementById('category-name').focus();
         }
-
         function closeAddCategoryModal() {
             document.getElementById('add-category-modal').style.display = 'none';
             document.getElementById('add-category-form').reset();
-            document.getElementById('add-category-preview').classList.remove('show');
-            removeAddUpload();
+            document.getElementById('add-upload-preview').style.display = 'none';
+            addUploadedFile = null;
         }
-
-        function openEditCategoryModal(categoryId, categoryName, categoryImage = '') {
-            currentEditingCategory = { id: categoryId, name: categoryName, imageUrl: categoryImage };
-            document.getElementById('edit-category-id').value = categoryId;
-            document.getElementById('edit-category-name').value = categoryName;
-            document.getElementById('edit-category-image').value = categoryImage || '';
-            
-            if (categoryImage) {
-                updateImagePreview(categoryImage, 'edit-category-preview');
-            } else {
-                document.getElementById('edit-category-preview').classList.remove('show');
+        document.getElementById('add-image-upload').onchange = e => {
+            const file = e.target.files[0];
+            if(file) {
+                addUploadedFile = file;
+                const prev = document.getElementById('add-upload-preview');
+                prev.src = URL.createObjectURL(file);
+                prev.style.display = 'block';
             }
+        };
+        async function addCategory() {
+            const name = document.getElementById('category-name').value.trim();
+            if(!name) return showToast('Name required', 'error');
+            if(allCategories.some(c => c.name.toLowerCase() === name.toLowerCase())) return showToast('Category exists', 'error');
             
-            removeEditUpload();
-            document.getElementById('edit-category-modal').style.display = 'flex';
-            document.getElementById('edit-category-name').focus();
+            try {
+                let url = '';
+                if(addUploadedFile) url = await uploadImage(addUploadedFile);
+                await db.collection('categories').add({ name, imageUrl: url, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                showToast('Category added');
+                closeAddCategoryModal();
+                loadData();
+            } catch(e) { showToast('Failed to add', 'error'); }
         }
 
+        // --- Edit Modal ---
+        function openEditCategoryModal(id, name, img) {
+            document.getElementById('edit-category-id').value = id;
+            document.getElementById('edit-category-name').value = name;
+            const prev = document.getElementById('edit-upload-preview');
+            if(img) { prev.src = img; prev.style.display = 'block'; }
+            else prev.style.display = 'none';
+            document.getElementById('edit-category-modal').style.display = 'flex';
+        }
         function closeEditCategoryModal() {
             document.getElementById('edit-category-modal').style.display = 'none';
-            document.getElementById('edit-category-form').reset();
-            document.getElementById('edit-category-preview').classList.remove('show');
-            removeEditUpload();
-            currentEditingCategory = null;
+            editUploadedFile = null;
+        }
+        document.getElementById('edit-image-upload').onchange = e => {
+            const file = e.target.files[0];
+            if(file) {
+                editUploadedFile = file;
+                const prev = document.getElementById('edit-upload-preview');
+                prev.src = URL.createObjectURL(file);
+                prev.style.display = 'block';
+            }
+        };
+        async function updateCategory() {
+            const id = document.getElementById('edit-category-id').value;
+            const name = document.getElementById('edit-category-name').value.trim();
+            if(!name) return showToast('Name required', 'error');
+            
+            try {
+                let url = document.getElementById('edit-upload-preview').src;
+                if(editUploadedFile) url = await uploadImage(editUploadedFile);
+                await db.collection('categories').doc(id).update({ name, imageUrl: url, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                showToast('Category updated');
+                closeEditCategoryModal();
+                loadData();
+            } catch(e) { showToast('Update failed', 'error'); }
         }
 
-        function openDeleteCategoryModal(categoryId, categoryName) {
-            currentDeletingCategory = { id: categoryId, name: categoryName };
-            document.getElementById('delete-category-name').textContent = categoryName;
+        // --- Delete Modal ---
+        function openDeleteCategoryModal(id, name) {
+            currentDeletingCategory = { id, name };
+            document.getElementById('delete-category-name').textContent = name;
             document.getElementById('confirm-category-name').value = '';
             document.getElementById('confirm-delete-btn').disabled = true;
             document.getElementById('delete-category-modal').style.display = 'flex';
-            document.getElementById('confirm-category-name').focus();
         }
-
         function closeDeleteCategoryModal() {
             document.getElementById('delete-category-modal').style.display = 'none';
-            document.getElementById('confirm-category-name').value = '';
             currentDeletingCategory = null;
         }
-
-        async function addCategory() {
-            const nameInput = document.getElementById('category-name');
-            const imageInput = document.getElementById('category-image');
-            const name = nameInput.value.trim();
-            const imageUrl = imageInput.value.trim();
-            
-            if (!name) {
-                showToast('Category name cannot be empty.', 'error');
-                return;
-            }
-
-            if (allCategories.some(c => c.name.toLowerCase() === name.toLowerCase())) {
-                showToast('Category already exists.', 'error');
-                return;
-            }
-
-            let finalImageUrl = imageUrl;
-
-            if (addUploadedFile) {
-                try {
-                    finalImageUrl = await uploadImage(addUploadedFile, name);
-                } catch (error) {
-                    showToast('Failed to upload image. Please try again.', 'error');
-                    return;
-                }
-            } else if (imageUrl && !isValidUrl(imageUrl)) {
-                showToast('Please enter a valid image URL.', 'error');
-                return;
-            }
-
-            try {
-                const categoryData = { 
-                    name: name, 
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp() 
-                };
-
-                if (finalImageUrl) {
-                    categoryData.imageUrl = finalImageUrl;
-                }
-
-                await db.collection('categories').add(categoryData);
-                
-                showToast('Category created successfully!', 'success');
-                closeAddCategoryModal();
-                
-                await loadCategories();
-                await loadProductCounts();
-                renderCategories();
-                
-            } catch (error) {
-                console.error("Error adding category:", error);
-                showToast("Failed to add category.", "error");
-            }
-        }
-
-        async function updateCategory() {
-            const nameInput = document.getElementById('edit-category-name');
-            const imageInput = document.getElementById('edit-category-image');
-            const name = nameInput.value.trim();
-            const imageUrl = imageInput.value.trim();
-            const categoryId = document.getElementById('edit-category-id').value;
-            
-            if (!name) {
-                showToast('Category name cannot be empty.', 'error');
-                return;
-            }
-
-            if (allCategories.some(c => c.id !== categoryId && c.name.toLowerCase() === name.toLowerCase())) {
-                showToast('Category name already exists.', 'error');
-                return;
-            }
-
-            let finalImageUrl = imageUrl;
-
-            if (editUploadedFile) {
-                try {
-                    finalImageUrl = await uploadImage(editUploadedFile, name);
-                } catch (error) {
-                    showToast('Failed to upload image. Please try again.', 'error');
-                    return;
-                }
-            } else if (imageUrl && !isValidUrl(imageUrl)) {
-                showToast('Please enter a valid image URL.', 'error');
-                return;
-            }
-
-            try {
-                const updateData = { 
-                    name: name,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp() 
-                };
-
-                updateData.imageUrl = finalImageUrl || '';
-
-                await db.collection('categories').doc(categoryId).update(updateData);
-                
-                showToast('Category updated successfully!', 'success');
-                closeEditCategoryModal();
-                
-                await loadCategories();
-                await loadProductCounts();
-                renderCategories();
-                
-            } catch (error) {
-                console.error("Error updating category:", error);
-                showToast("Failed to update category.", "error");
-            }
-        }
-
+        document.getElementById('confirm-category-name').oninput = function() {
+            document.getElementById('confirm-delete-btn').disabled = this.value !== currentDeletingCategory.name;
+        };
         async function deleteCategory() {
-            if (!currentDeletingCategory) return;
-
             try {
                 await db.collection('categories').doc(currentDeletingCategory.id).delete();
-                
-                showToast('Category deleted successfully!', 'success');
+                showToast('Category deleted');
                 closeDeleteCategoryModal();
-                
-                await loadCategories();
-                await loadProductCounts();
-                renderCategories();
-                
-            } catch (error) {
-                console.error("Error deleting category:", error);
-                showToast("Failed to delete category.", "error");
-            }
+                loadData();
+            } catch(e) { showToast('Delete failed', 'error'); }
         }
 
-        function navigateToProducts(categoryName) {
-            window.location.href = `manage-products.html?category=${encodeURIComponent(categoryName)}`;
+        async function uploadImage(file) {
+            const ref = storage.ref().child(`categories/${Date.now()}-${file.name}`);
+            await ref.put(file);
+            return await ref.getDownloadURL();
         }
 
-        function showToast(message, type = 'success') {
+        function showToast(msg, type='success') {
             const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.textContent = message;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.innerHTML = `<i class='bx ${type==='success'?'bx-check-circle':'bx-error-circle'}'></i> <span>${msg}</span>`;
+            container.appendChild(el);
+            setTimeout(() => el.remove(), 3000);
         }
     </script>
 </body>
