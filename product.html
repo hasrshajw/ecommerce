@@ -12,16 +12,15 @@
         :root {
             --body-bg: #F8FAFC;
             --widget-bg: #FFFFFF;
-            --border-color: #E2E8F0;
+            --border-color: #F1F5F9;
             --text-primary: #0F172A;
             --text-secondary: #64748B;
             --brand-primary: #3B82F6;
-            --brand-light: #EFF6FF;
             --brand-gradient: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
             --hover-bg: #F8FAFC;
             --danger-color: #EF4444;
             --success-color: #10B981;
-            --star-color: #EF4444; /* Red Stars */
+            --star-color: #EF4444; /* Red stars */
             --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
@@ -31,16 +30,13 @@
             --radius-xl: 24px;
             --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
-        /* RESET & REMOVE BLUE HIGHLIGHTS */
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        input:focus, textarea:focus, select:focus, button:focus { outline: none; }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html { scroll-behavior: smooth; }
         body { font-family: 'Inter', sans-serif; background-color: var(--body-bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; }
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
-        input, button, select, textarea { font-family: inherit; font-size: inherit; }
+        input, button, select, textarea { font-family: inherit; font-size: inherit; outline: none; }
+        button:focus, a:focus { outline: none; }
 
         /* --- DASHBOARD LAYOUT --- */
         .dashboard-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; position: relative; }
@@ -130,7 +126,7 @@
         .overlay.active { opacity: 1; pointer-events: auto; }
 
         /* --- PAGE CONTENT --- */
-        .page-container { max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%; padding-bottom: 5rem; }
+        .page-container { max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%; padding-bottom: 3rem; }
         .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
         .page-title { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); }
 
@@ -143,28 +139,45 @@
         
         .input-group { margin-bottom: 1.25rem; }
         .input-label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 0.5rem; }
-        .form-control { 
-            width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); 
-            border-radius: var(--radius-md); background: #fff; transition: var(--transition); font-size: 0.95rem;
-            -webkit-appearance: none;
-        }
-        .form-control:focus { border-color: var(--brand-primary); }
+        .form-control { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: #fff; transition: var(--transition); font-size: 0.95rem; }
+        .form-control:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
         
-        /* Updated Upload Zone - Visible State */
+        /* Updated Upload Zone - Visible Normal State */
         .upload-zone { 
-            border: 2px dashed var(--brand-primary); 
+            border: 2px dashed #CBD5E1; 
             border-radius: var(--radius-md); 
-            padding: 3rem 1rem; 
+            padding: 2rem 1rem; 
             text-align: center; 
             cursor: pointer; 
             transition: var(--transition); 
-            background: var(--brand-light);
+            background: #F8FAFC;
         }
+        .upload-zone:hover { border-color: var(--brand-primary); background: #EFF6FF; }
         
+        /* Swatch Upload Specific */
+        .swatch-upload-container {
+            width: 100px;
+            height: 100px;
+            border-radius: var(--radius-md);
+            border: 2px dashed #CBD5E1;
+            background: #F8FAFC;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+        }
+        .swatch-upload-container img {
+            width: 100%; height: 100%; object-fit: cover; display: none;
+        }
+        .swatch-upload-container i { font-size: 2rem; color: var(--text-secondary); margin-bottom: 4px; }
+        .swatch-upload-container span { font-size: 0.75rem; color: var(--text-secondary); }
+
         .cover-preview-wrapper { position: relative; width: 100%; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); }
         .cover-preview-img { width: 100%; height: auto; display: block; max-height: 400px; object-fit: cover; }
         .cover-remove-btn { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); color: var(--danger-color); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: 0.2s; }
-        .cover-remove-btn:hover { transform: scale(1.1); background: white; }
 
         .custom-select-container { position: relative; }
         .custom-select-trigger { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); cursor: pointer; background: white; }
@@ -186,25 +199,16 @@
         .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-primary); }
         .btn-sm { padding: 0.5rem 1rem; font-size: 0.875rem; }
         .btn-icon { padding: 0.5rem; background: transparent; border: none; color: var(--text-secondary); cursor: pointer; border-radius: 6px; font-size: 1.2rem; }
-
+        
         /* --- MODALS --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 1rem; }
         .modal-content { background: white; width: 100%; max-width: 600px; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
         @keyframes modalPop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #fff; flex-shrink: 0; }
-        .modal-body { padding: 1.5rem; overflow-y: auto; background: #F8FAFC; flex-grow: 1; }
-        .modal-footer { padding: 1.25rem 1.5rem; background: white; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; flex-shrink: 0; }
+        .modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #fff; }
+        .modal-body { padding: 1.5rem; overflow-y: auto; background: #F8FAFC; flex: 1; }
+        .modal-footer { padding: 1.25rem 1.5rem; background: white; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; }
 
-        /* SWATCH UPLOAD BOX */
-        .swatch-upload-box {
-            width: 80px; height: 80px; border-radius: var(--radius-md); border: 2px dashed var(--brand-primary);
-            background: var(--brand-light); display: flex; align-items: center; justify-content: center;
-            cursor: pointer; overflow: hidden; position: relative; flex-shrink: 0;
-        }
-        .swatch-upload-box img { width: 100%; height: 100%; object-fit: cover; }
-        .swatch-upload-box i { font-size: 1.5rem; color: var(--brand-primary); }
-
-        .star-rating-input { display: flex; gap: 0.5rem; font-size: 2rem; color: #E2E8F0; cursor: pointer; justify-content: center; margin: 1rem 0; }
+        .star-rating-input { display: flex; gap: 0.5rem; font-size: 2rem; color: #CBD5E1; cursor: pointer; justify-content: center; margin: 1rem 0; }
         .star-rating-input i.active { color: var(--star-color); }
         
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; pointer-events: none; display: flex; flex-direction: column; gap: 10px; }
@@ -237,40 +241,33 @@
             }
             
             /* Mobile Content */
-            .page-container { padding: 1rem; padding-bottom: 120px; /* Space for bottom content */ }
+            .page-container { padding: 1rem; padding-bottom: 80px; }
             .content-header { flex-direction: column; align-items: flex-start; }
             .content-header div { width: 100%; display: flex; gap: 0.5rem; margin-top: 0.5rem; }
             .content-header div .btn { flex: 1; }
 
             /* Layout Reordering for Mobile */
             .form-grid { display: flex; flex-direction: column; }
+            .form-col { display: contents; }
             
-            /* Order: Cover -> Details -> Pricing -> Variants -> Reviews */
+            /* Specific Order */
             #card-cover { order: 1; }
             #card-details { order: 2; }
-            #card-pricing { order: 3; }
-            #card-variants { order: 4; }
-            #card-reviews { order: 5; margin-bottom: 2rem; }
+            #card-variants { order: 3; }
+            #card-pricing { order: 4; }
+            #card-reviews { order: 10; } /* Moved to bottom */
 
-            /* Premium Mobile Bottom Sheet Modal */
-            .modal-overlay { align-items: flex-end; padding: 0; background: rgba(0,0,0,0.5); }
+            /* Premium Mobile Modal UI */
+            .modal-overlay { align-items: flex-end; padding: 0; }
             .modal-content { 
                 width: 100%; 
                 max-width: 100%; 
-                border-radius: 24px 24px 0 0 !important; 
-                height: auto;
+                border-radius: var(--radius-xl) var(--radius-xl) 0 0 !important; 
                 max-height: 85vh; 
-                animation: slideUpModal 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+                animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             }
-            /* Handle bar for sheet look */
-            .modal-header::before {
-                content: ''; position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
-                width: 40px; height: 4px; background: #E2E8F0; border-radius: 4px;
-            }
-            .modal-header { padding-top: 1.5rem; position: relative; text-align: center; justify-content: center; }
-            .modal-header h3 { flex-grow: 1; text-align: left; }
-            .modal-footer { padding-bottom: max(1.5rem, env(safe-area-inset-bottom)); }
-            
+            .modal-body { padding-bottom: 3rem; } /* Prevent scroll cut off */
+            .modal-footer { padding-bottom: 2rem; border-top: 1px solid var(--border-color); }
             @keyframes slideUpModal { from { transform: translateY(100%); } to { transform: translateY(0); } }
         }
         @media (min-width: 1025px) { .nav-logo { display: none; } }
@@ -444,16 +441,16 @@
                         <input type="text" class="form-control" id="color-name" placeholder="e.g. Midnight Blue" required>
                     </div>
                     <div class="input-group">
-                        <label class="input-label">Color Swatch (Image/Icon)</label>
+                        <label class="input-label">Color Swatch (Image)</label>
                         <div style="display:flex; gap:1rem; align-items:center;">
-                            <!-- Swatch Upload Box -->
-                            <div class="swatch-upload-box" onclick="document.getElementById('color-swatch-input').click()">
-                                <img id="swatch-preview" style="display:none;">
+                            <div class="swatch-upload-container" onclick="document.getElementById('color-swatch-input').click()">
                                 <i class='bx bx-image-add' id="swatch-icon"></i>
+                                <span id="swatch-text">Upload</span>
+                                <img id="swatch-preview">
                             </div>
                             <div style="flex:1;">
-                                <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('color-swatch-input').click()">Choose Image</button>
-                                <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:0.25rem;">Recommended: 100x100px</div>
+                                <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:0.5rem;">Click the box to upload a color representation image.</p>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('color-swatch-input').click()">Select File</button>
                             </div>
                             <input type="file" id="color-swatch-input" accept="image/*" style="display:none;">
                             <input type="hidden" id="color-hex"> 
@@ -461,24 +458,18 @@
                     </div>
                     <div class="input-group">
                         <label class="input-label">Available Sizes</label>
-                        <div id="size-selection" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap:0.5rem;">
+                        <div id="size-selection" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap:0.5rem;">
                             <!-- Sizes generated via JS -->
                         </div>
                     </div>
                     <div class="input-group">
                         <label class="input-label">Gallery Images</label>
                         <div class="upload-zone" style="padding:1.5rem;" onclick="document.getElementById('variant-images-input').click()">
-                            <i class='bx bx-images' style="font-size:1.5rem; color:var(--brand-primary);"></i>
-                            <div style="font-size:0.9rem; margin-top:0.5rem;">Upload gallery images</div>
+                            <i class='bx bx-images' style="font-size:1.5rem; color:var(--text-secondary);"></i>
+                            <div style="font-size:0.9rem;">Upload gallery images</div>
                         </div>
                         <input type="file" id="variant-images-input" multiple accept="image/*" style="display:none;">
                         <div id="variant-image-previews" style="display:flex; gap:0.5rem; overflow-x:auto; margin-top:0.75rem; padding-bottom:0.5rem;"></div>
-                        
-                        <div style="margin-top:1rem;">
-                            <label class="input-label" style="margin-bottom:0.25rem;">Or add via URL</label>
-                            <div id="url-list" style="display:flex; flex-direction:column; gap:0.5rem;"></div>
-                            <button type="button" class="btn btn-secondary btn-sm" style="width:100%; margin-top:0.5rem;" onclick="addUrlField()"><i class='bx bx-plus'></i> Add URL</button>
-                        </div>
                     </div>
                 </form>
             </div>
@@ -519,7 +510,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="closeReviewModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="addReview()">Add Review</button>
+                <button type="button" class="btn btn-primary" onclick="addReview()">Add</button>
             </div>
         </div>
     </div>
@@ -531,7 +522,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Sidebar Logic
             const sidebar = document.getElementById('sidebar');
             const menuToggle = document.getElementById('menu-toggle');
             const closeBtn = document.getElementById('sidebar-close-btn');
@@ -546,7 +536,6 @@
             if (closeBtn) closeBtn.addEventListener('click', toggleMenu);
             if (overlay) overlay.addEventListener('click', toggleMenu);
 
-            // Profile Logic
             const profileSection = document.getElementById('profile-section');
             const profilePopup = document.getElementById('profile-popup');
             
@@ -602,11 +591,9 @@
         function initUI(user) {
             const name = user.displayName || 'Admin';
             const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3B82F6&color=fff`;
-            
             document.getElementById('sidebar-name').textContent = name;
             document.getElementById('sidebar-email').textContent = user.email;
             document.getElementById('sidebar-avatar').src = avatar;
-            
             document.getElementById('popup-name').textContent = name;
             document.getElementById('popup-email').textContent = user.email;
             document.getElementById('popup-avatar').src = avatar;
@@ -615,12 +602,10 @@
         async function loadEditor() {
             const params = new URLSearchParams(window.location.search);
             const id = params.get('id');
-            
             try {
                 const catSnap = await db.collection('categories').orderBy('name').get();
                 allCategories = catSnap.docs.map(d => d.data().name);
                 setupCategoryDropdown();
-
                 if (id) {
                     document.getElementById('editor-title').textContent = 'Edit Product';
                     const doc = await db.collection('products').doc(id).get();
@@ -630,9 +615,7 @@
                     document.getElementById('product-form').style.display = 'block';
                     document.getElementById('loading-state').style.display = 'none';
                 }
-            } catch (e) {
-                showToast('Error loading data', 'error');
-            }
+            } catch (e) { showToast('Error loading data', 'error'); }
         }
 
         function setupCategoryDropdown() {
@@ -644,16 +627,11 @@
                 </div>
                 <div class="custom-select-options">
             `;
-            allCategories.forEach(cat => {
-                html += `<div class="custom-option" onclick="selectCategory('${cat}')">${cat}</div>`;
-            });
+            allCategories.forEach(cat => html += `<div class="custom-option" onclick="selectCategory('${cat}')">${cat}</div>`);
             html += `</div>`;
             container.innerHTML = html;
-            
             document.addEventListener('click', e => {
-                if(!container.contains(e.target)) {
-                    container.querySelector('.custom-select-options').classList.remove('open');
-                }
+                if(!container.contains(e.target)) container.querySelector('.custom-select-options').classList.remove('open');
             });
         }
 
@@ -668,7 +646,6 @@
             document.getElementById('description').value = data.description || '';
             document.getElementById('price').value = data.price || '';
             document.getElementById('oldPrice').value = data.oldPrice || '';
-            
             if (data.category) selectCategory(data.category);
             
             const coverUrl = data.image || (data.images && data.images.length > 0 ? data.images[0] : null);
@@ -678,13 +655,10 @@
                 document.getElementById('cover-upload-zone').style.display = 'none';
                 document.getElementById('cover-preview').dataset.url = coverUrl;
             }
-
             colorVariants = data.colorVariants || [];
             renderVariants();
-
             productReviews = data.reviews || [];
             renderReviewsList();
-
             document.getElementById('loading-state').style.display = 'none';
             document.getElementById('product-form').style.display = 'block';
         }
@@ -744,13 +718,8 @@
             const name = document.getElementById('review-name').value.trim();
             const rating = parseInt(document.getElementById('review-rating').value);
             const comment = document.getElementById('review-text').value.trim();
-
             if (!name || rating === 0 || !comment) return showToast('Please fill all fields', 'error');
-
-            productReviews.push({
-                name, rating, comment, date: new Date().toISOString()
-            });
-            
+            productReviews.push({ name, rating, comment, date: new Date().toISOString() });
             renderReviewsList();
             closeReviewModal();
             showToast('Review added');
@@ -762,7 +731,6 @@
                 container.innerHTML = `<div style="color:var(--text-secondary); font-style:italic; padding:1rem; text-align:center;">No reviews added yet.</div>`;
                 return;
             }
-            
             container.innerHTML = productReviews.map((r, i) => `
                 <div class="review-card">
                     <div class="review-header">
@@ -770,9 +738,7 @@
                         <button class="btn-icon" onclick="removeReview(${i})" style="font-size:1rem; padding:0; color:var(--danger-color);"><i class='bx bx-trash'></i></button>
                     </div>
                     <div class="star-display">
-                        ${Array(5).fill(0).map((_, idx) => 
-                            idx < r.rating ? "<i class='bx bxs-star'></i>" : "<i class='bx bx-star'></i>"
-                        ).join('')}
+                        ${Array(5).fill(0).map((_, idx) => idx < r.rating ? "<i class='bx bxs-star'></i>" : "<i class='bx bx-star'></i>").join('')}
                     </div>
                     <div class="review-text" style="margin-top:0.5rem;">${r.comment}</div>
                 </div>
@@ -795,14 +761,17 @@
             
             const swatchImg = document.getElementById('swatch-preview');
             const swatchIcon = document.getElementById('swatch-icon');
+            const swatchText = document.getElementById('swatch-text');
             
             if (data.hex && data.hex.includes('http')) {
                 swatchImg.src = data.hex;
                 swatchImg.style.display = 'block';
                 swatchIcon.style.display = 'none';
+                swatchText.style.display = 'none';
             } else {
                 swatchImg.style.display = 'none';
                 swatchIcon.style.display = 'block';
+                swatchText.style.display = 'block';
             }
             
             const sizesContainer = document.getElementById('size-selection');
@@ -822,14 +791,6 @@
             tempSwatchFile = null;
             tempVariantFiles = [];
             document.getElementById('variant-image-previews').innerHTML = '';
-            document.getElementById('url-list').innerHTML = '';
-            
-            if (data.images) {
-                data.images.forEach(url => addUrlField(url));
-            } else {
-                addUrlField();
-            }
-
             document.getElementById('color-modal').style.display = 'flex';
         }
 
@@ -837,10 +798,8 @@
             const checkbox = el.querySelector('.size-check');
             const stock = el.querySelector('.stock-check');
             const isSelected = !checkbox.checked;
-            
             checkbox.checked = isSelected;
             stock.checked = isSelected; 
-            
             el.style.background = isSelected ? '#EEF2FF' : 'white';
             el.style.borderColor = isSelected ? 'var(--brand-primary)' : 'var(--border-color)';
             el.querySelector('div:nth-child(2)').textContent = isSelected ? 'In Stock' : 'Select';
@@ -854,9 +813,11 @@
             const file = e.target.files[0];
             if(file) {
                 tempSwatchFile = file;
-                document.getElementById('swatch-preview').src = URL.createObjectURL(file);
-                document.getElementById('swatch-preview').style.display = 'block';
+                const prev = document.getElementById('swatch-preview');
+                prev.src = URL.createObjectURL(file);
+                prev.style.display = 'block';
                 document.getElementById('swatch-icon').style.display = 'none';
+                document.getElementById('swatch-text').style.display = 'none';
             }
         }
 
@@ -870,16 +831,6 @@
             });
         }
 
-        function addUrlField(val = '') {
-            const div = document.createElement('div');
-            div.style.display = 'flex'; div.style.gap = '0.5rem';
-            div.innerHTML = `
-                <input type="url" class="form-control url-input" value="${val}" placeholder="https://...">
-                <button type="button" class="btn-icon" onclick="this.parentElement.remove()" style="color:var(--danger-color);"><i class='bx bx-trash'></i></button>
-            `;
-            document.getElementById('url-list').appendChild(div);
-        }
-
         async function saveColorVariant() {
             const name = document.getElementById('color-name').value;
             if (!name) return showToast('Color name required', 'error');
@@ -891,7 +842,7 @@
                 hex = await uploadFile(tempSwatchFile, 'swatches');
             }
 
-            let images = [...document.querySelectorAll('.url-input')].map(i => i.value).filter(Boolean);
+            let images = [];
             if (tempVariantFiles.length) {
                 for (let f of tempVariantFiles) {
                     images.push(await uploadFile(f, 'variants'));
@@ -907,13 +858,11 @@
             });
 
             const variant = { name, hex, sizes, images };
-            
             if (editingVariantIndex !== null) {
                 colorVariants[editingVariantIndex] = variant;
             } else {
                 colorVariants.push(variant);
             }
-
             renderVariants();
             closeColorModal();
             showToast('Variant Saved');
@@ -971,12 +920,10 @@
                 if (coverImageFile) {
                     coverUrl = await uploadFile(coverImageFile, 'products');
                 }
-
                 if (!coverUrl) {
                     btn.disabled = false; btn.textContent = 'Save Product';
                     return showToast('Cover image required', 'error');
                 }
-
                 const productData = {
                     name,
                     description: document.getElementById('description').value,
@@ -989,10 +936,8 @@
                     reviews: productReviews,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
-
                 const params = new URLSearchParams(window.location.search);
                 const id = params.get('id');
-
                 if (id) {
                     await db.collection('products').doc(id).update(productData);
                     showToast('Product Updated');
@@ -1001,9 +946,7 @@
                     await db.collection('products').add(productData);
                     showToast('Product Created');
                 }
-
                 setTimeout(() => window.history.back(), 1000);
-
             } catch (e) {
                 console.error(e);
                 showToast('Save Failed', 'error');
