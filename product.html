@@ -2,70 +2,135 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Product Editor - Vastramaya Admin</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Editor - Vastramaya</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    
     <style>
         :root {
-            --body-bg: #F1F5F9;
+            --body-bg: #F8FAFC;
             --widget-bg: #FFFFFF;
-            --border-color: #E2E8F0;
+            --border-color: #F1F5F9;
             --text-primary: #0F172A;
             --text-secondary: #64748B;
-            --brand-primary: #4F46E5;
-            --brand-hover: #4338CA;
-            --brand-gradient: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+            --brand-primary: #3B82F6;
+            --brand-gradient: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+            --hover-bg: #F8FAFC;
             --danger-color: #EF4444;
             --success-color: #10B981;
             --warning-color: #F59E0B;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --radius-md: 12px;
-            --radius-lg: 16px;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
             --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--body-bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
-        input, button, select, textarea { font-family: inherit; font-size: inherit; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--body-bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; }
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
-        
+        input, button, select, textarea { font-family: inherit; font-size: inherit; }
+
         .dashboard-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; position: relative; }
-        .main-area { display: flex; flex-direction: column; height: 100vh; overflow-y: auto; background-color: var(--body-bg); }
+        .main-area { display: flex; flex-direction: column; overflow-y: auto; height: 100vh; }
+        .main-header { 
+            padding: 12px 2.5rem; 
+            border-bottom: 1px solid var(--border-color); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background-color: var(--widget-bg); 
+            position: sticky; 
+            top: 0; 
+            z-index: 10; 
+            box-shadow: var(--shadow-sm); 
+            min-height: 70px;
+        }
         
-        .sidebar { background-color: var(--widget-bg); border-right: 1px solid var(--border-color); padding: 2rem 1.5rem; display: flex; flex-direction: column; position: relative; z-index: 1001; }
-        .logo-container { display: flex; align-items: center; margin-bottom: 2.5rem; }
-        .logo-image { height: 40px; width: auto; }
+        .nav-logo { height: 42px; width: auto; object-fit: contain; }
         
-        .main-nav ul { display: flex; flex-direction: column; gap: 0.5rem; }
-        .main-nav a { display: flex; align-items: center; gap: 1rem; color: var(--text-secondary); font-weight: 500; padding: 0.875rem 1rem; border-radius: var(--radius-md); transition: var(--transition); }
-        .main-nav a:hover { background-color: var(--body-bg); color: var(--text-primary); } 
-        .main-nav a.active { background: linear-gradient(to right, rgba(99, 102, 241, 0.1), rgba(99, 102, 241, 0.05)); color: var(--brand-primary); font-weight: 600; } 
+        .sidebar { 
+            background-color: var(--widget-bg); 
+            border-right: 1px solid var(--border-color); 
+            padding: 2rem 1.5rem; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            transition: transform 0.3s ease-in-out;
+            box-shadow: var(--shadow-sm);
+            z-index: 1001;
+        }
+        
+        .sidebar-header { 
+            display: flex; align-items: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color);
+        } 
+        
+        .logo-container { display: flex; align-items: center; width: 100%; }
+        .logo-image { height: 40px; width: auto; object-fit: contain; }
+        
+        .main-nav ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+        
+        .main-nav a { 
+            display: flex; align-items: center; gap: 1rem; text-decoration: none; color: var(--text-secondary); 
+            font-weight: 500; padding: 0.875rem 1rem; border-radius: var(--radius-md); transition: var(--transition); position: relative;
+        }
+        .main-nav a i { font-size: 1.375rem; color: var(--text-secondary); transition: var(--transition); width: 24px; text-align: center; }
+        .main-nav a:hover { background-color: var(--hover-bg); color: var(--text-primary); transform: translateY(-1px); } 
+        .main-nav a:hover i { color: var(--brand-primary); }
+        
+        .main-nav a.active { 
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%); 
+            color: var(--brand-primary); font-weight: 600; box-shadow: var(--shadow-sm);
+        } 
         .main-nav a.active i { color: var(--brand-primary); }
-        .main-nav a i { font-size: 1.4rem; width: 24px; text-align: center; }
-
-        .profile-section { margin-top: auto; padding: 1rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
-        .profile-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); }
-        .profile-popup { position: absolute; bottom: 80px; left: 1.5rem; right: 1.5rem; background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); padding: 0.5rem; opacity: 0; pointer-events: none; transform: translateY(10px); transition: var(--transition); border: 1px solid var(--border-color); }
-        .profile-popup.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
-        .popup-list a { padding: 0.75rem; display: flex; align-items: center; gap: 0.75rem; border-radius: 8px; }
-        .popup-list a:hover { background: var(--body-bg); }
-
-        .main-header { padding: 1rem 2rem; background: var(--widget-bg); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .menu-toggle { display: none; font-size: 1.5rem; background: none; border: none; color: var(--text-primary); cursor: pointer; }
-        .nav-logo { height: 32px; display: none; }
+        .main-nav a.active::before {
+            content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 4px; height: 60%; background: var(--brand-gradient); border-radius: 0 4px 4px 0;
+        }
+        
+        .profile-section { 
+            margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-color); 
+            display: flex; align-items: center; gap: 0.75rem; cursor: pointer; 
+            border-radius: var(--radius-md); transition: var(--transition); padding: 1rem;
+        }
+        .profile-section:hover { background-color: var(--hover-bg); }
+        .profile-content-wrapper { display: flex; align-items: center; gap: 0.75rem; width: 100%; }
+        .profile-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid var(--border-color); transition: var(--transition); }
+        .profile-section:hover .profile-avatar { border-color: var(--brand-primary); }
+        .profile-details { flex-grow: 1; min-width: 0; }
+        .profile-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; font-size: 0.9rem; }
+        .profile-email { font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+        .profile-options i { font-size: 1.25rem; color: var(--text-secondary); transition: var(--transition); }
+        .profile-section.active .profile-options i { transform: rotate(180deg); }
+        
+        .profile-popup { 
+            position: absolute; bottom: 90px; left: 1.5rem; right: 1.5rem; 
+            background-color: var(--widget-bg); border-radius: var(--radius-lg); 
+            box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); 
+            padding: 0.75rem; z-index: 100; opacity: 0; pointer-events: none; 
+            transform: translateY(10px) scale(0.95); transition: var(--transition); 
+        }
+        .profile-popup.active { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
+        .popup-header { display: flex; align-items: center; gap: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); margin-bottom: 0.5rem; }
+        .popup-list { list-style: none; } 
+        .popup-list a { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem; border-radius: var(--radius-sm); text-decoration: none; color: var(--text-primary); transition: var(--transition); cursor: pointer; }
+        .popup-list a:hover { background-color: var(--hover-bg); } 
+        .popup-list a i { font-size: 1.2rem; color: var(--text-secondary); }
+        .popup-list a.logout i { color: var(--danger-color); } 
+        .popup-list a.logout { color: var(--danger-color); }
+        
+        .menu-toggle, .sidebar-close-btn { display: none; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .overlay.active { opacity: 1; pointer-events: auto; }
 
         .page-container { max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%; }
         .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
-        .page-title { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em; }
-        
+        .page-title { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); }
+
         .form-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
         .form-col { display: flex; flex-direction: column; gap: 2rem; }
         
@@ -75,10 +140,10 @@
         .input-group { margin-bottom: 1.25rem; }
         .input-label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 0.5rem; }
         .form-control { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: #fff; transition: var(--transition); font-size: 0.95rem; }
-        .form-control:focus { border-color: var(--brand-primary); outline: none; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+        .form-control:focus { border-color: var(--brand-primary); outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
         
         .upload-zone { border: 2px dashed var(--border-color); border-radius: var(--radius-md); padding: 3rem 1rem; text-align: center; cursor: pointer; transition: var(--transition); background: #F8FAFC; }
-        .upload-zone:hover { border-color: var(--brand-primary); background: #EEF2FF; }
+        .upload-zone:hover { border-color: var(--brand-primary); background: #F1F5F9; }
         .cover-preview-wrapper { position: relative; width: 100%; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); }
         .cover-preview-img { width: 100%; height: auto; display: block; max-height: 400px; object-fit: cover; }
         .cover-remove-btn { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); color: var(--danger-color); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: 0.2s; }
@@ -101,10 +166,11 @@
         .review-text { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.4; }
 
         .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; font-weight: 600; border-radius: var(--radius-md); cursor: pointer; transition: var(--transition); border: none; font-size: 0.95rem; }
-        .btn-primary { background: var(--brand-gradient); color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); }
-        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4); }
+        .btn-primary { background: var(--brand-gradient); color: white; box-shadow: var(--shadow-md); }
+        .btn-primary:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
         .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-primary); }
         .btn-secondary:hover { background: #F8FAFC; border-color: #CBD5E1; }
+        .btn-sm { padding: 0.5rem 1rem; font-size: 0.875rem; }
         .btn-icon { padding: 0.5rem; background: transparent; border: none; color: var(--text-secondary); cursor: pointer; border-radius: 6px; font-size: 1.2rem; }
         .btn-icon:hover { background: #F1F5F9; color: var(--text-primary); }
         .btn-block { width: 100%; }
@@ -127,30 +193,50 @@
 
         @media (max-width: 1024px) {
             .dashboard-container { grid-template-columns: 1fr; }
-            .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 85%; max-width: 300px; transform: translateX(-100%); transition: transform 0.3s; padding-top: 4rem; box-shadow: var(--shadow-lg); }
+            .sidebar { 
+                position: fixed; top: 0; left: 0; height: 100%; width: 85%; max-width: 320px; 
+                z-index: 1000; transform: translateX(-100%); box-shadow: var(--shadow-lg); 
+                padding: 2rem 1.25rem;
+            }
             .sidebar.active { transform: translateX(0); }
-            .sidebar-close-btn { display: block; position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; }
-            .main-header { padding: 0.75rem 1rem; }
-            .menu-toggle { display: block; }
-            .nav-logo { display: block; }
+            .main-header { padding: 12px 1.5rem; justify-content: space-between; }
+            
+            .sidebar .logo-container { display: flex; }
+            .nav-logo { display: block; height: 36px; }
+            
+            .menu-toggle { 
+                display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; 
+                font-size: 1.6rem; color: var(--text-primary); cursor: pointer; 
+                border: 1px solid var(--border-color); border-radius: var(--radius-md); background-color: white;
+            }
+            .sidebar-close-btn { 
+                display: flex; align-items: center; justify-content: center; position: absolute; 
+                top: 1.5rem; right: 1.25rem; font-size: 1.75rem; color: var(--text-secondary); 
+                cursor: pointer; border: none; background: none; width: 36px; height: 36px;
+            }
+            
             .page-container { padding: 1rem; }
             .form-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+            .content-header { flex-direction: column; align-items: flex-start; }
+            .content-header div { width: 100%; display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+            .content-header div .btn { flex: 1; }
             .modal-content { height: 100%; max-height: 100%; border-radius: 0; width: 100%; }
             .modal-footer { padding-bottom: 2rem; }
-            .content-header { flex-direction: column; align-items: flex-start; }
-            .content-header div { width: 100%; display: flex; gap: 0.5rem; }
-            .btn { flex: 1; }
         }
+        @media (min-width: 1025px) { .nav-logo { display: none; } }
     </style>
 </head>
 <body>
-    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-    
+    <div class="overlay" id="overlay"></div>
     <div class="dashboard-container">
+        
+        <!-- NAVBAR / SIDEBAR -->
         <aside class="sidebar" id="sidebar">
-            <button class="sidebar-close-btn" onclick="toggleMenu()"><i class='bx bx-x'></i></button>
-            <div class="logo-container">
-                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya" class="logo-image">
+            <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close menu"><i class='bx bx-x'></i></button>
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" class="logo-image">
+                </div>
             </div>
             <nav class="main-nav">
                 <ul>
@@ -160,26 +246,39 @@
                     <li><a href="#"><i class='bx bx-clipboard'></i> All Orders</a></li>
                 </ul>
             </nav>
-            <div class="profile-section" id="profile-trigger">
-                <img id="sidebar-avatar" src="" class="profile-avatar">
-                <div style="flex:1;">
-                    <div style="font-weight:600; font-size:0.9rem;" id="sidebar-name">Loading...</div>
-                    <div style="font-size:0.8rem; color:var(--text-secondary);">Admin</div>
+            
+            <div class="profile-section" id="profile-section">
+                <div class="profile-content-wrapper">
+                    <img id="sidebar-avatar" src="" class="profile-avatar">
+                    <div class="profile-details">
+                        <span class="profile-name" id="sidebar-name">Loading...</span>
+                        <span class="profile-email" id="sidebar-email">Admin</span>
+                    </div>
+                    <div class="profile-options"><i class='bx bx-chevron-down'></i></div>
                 </div>
-                <i class='bx bx-chevron-up'></i>
             </div>
+            
             <div class="profile-popup" id="profile-popup">
-                <div class="popup-list">
-                    <a href="#"><i class='bx bx-user'></i> Profile</a>
-                    <a href="#" onclick="auth.signOut()"><i class='bx bx-log-out' style="color:var(--danger-color);"></i> Logout</a>
+                <div class="popup-header">
+                    <img id="popup-avatar" src="" class="profile-avatar">
+                    <div class="profile-details">
+                        <span class="profile-name" id="popup-name">Loading...</span>
+                        <span class="profile-email" id="popup-email">Admin</span>
+                    </div>
                 </div>
+                <ul class="popup-list">
+                    <li><a href="#"><i class='bx bx-user'></i> Profile</a></li>
+                    <li><a href="#"><i class='bx bx-cog'></i> Settings</a></li>
+                    <li><a href="#" onclick="auth.signOut()" class="logout"><i class='bx bx-log-out'></i> Logout</a></li>
+                </ul>
             </div>
         </aside>
         
+        <!-- MAIN CONTENT AREA -->
         <main class="main-area">
             <header class="main-header">
-                <button class="menu-toggle" onclick="toggleMenu()"><i class='bx bx-menu'></i></button>
-                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya" class="nav-logo">
+                <button class="menu-toggle" id="menu-toggle" aria-label="Open menu"><i class='bx bx-menu'></i></button>
+                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" class="nav-logo">
             </header>
             
             <div class="page-container">
@@ -239,8 +338,8 @@
                             <div class="editor-card">
                                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
                                     <h3 class="section-title" style="margin:0;"><i class='bx bx-palette'></i> Color Variants</h3>
-                                    <button type="button" class="btn btn-secondary btn-sm" onclick="openColorModal()">
-                                        <i class='bx bx-plus'></i> Add Variant
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="openColorModal()">
+                                        <i class='bx bx-plus'></i> Add
                                     </button>
                                 </div>
                                 <div id="variants-list"></div>
@@ -250,8 +349,8 @@
                             <div class="editor-card">
                                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
                                     <h3 class="section-title" style="margin:0;"><i class='bx bx-star'></i> Customer Reviews</h3>
-                                    <button type="button" class="btn btn-secondary btn-sm" onclick="openReviewModal()">
-                                        <i class='bx bx-message-add'></i> Add Review
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="openReviewModal()">
+                                        <i class='bx bx-plus'></i> Add
                                     </button>
                                 </div>
                                 <div id="reviews-list"></div>
@@ -264,12 +363,12 @@
                             <div class="editor-card">
                                 <h3 class="section-title"><i class='bx bx-tag-alt'></i> Pricing</h3>
                                 <div class="input-group">
-                                    <label class="input-label">Current Price ($)</label>
+                                    <label class="input-label">Current Price (₹)</label>
                                     <input type="number" class="form-control" id="price" step="0.01" required>
                                 </div>
                                 <div class="input-group">
-                                    <label class="input-label">Old Price ($) <span style="color:var(--text-secondary); font-weight:400;">(Optional)</span></label>
-                                    <input type="number" class="form-control" id="oldPrice" step="0.01">
+                                    <label class="input-label">Old Price (₹)</label>
+                                    <input type="number" class="form-control" id="oldPrice" step="0.01" required>
                                 </div>
                             </div>
                         </div>
@@ -380,6 +479,42 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Sidebar Logic
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menu-toggle');
+            const closeBtn = document.getElementById('sidebar-close-btn');
+            const overlay = document.getElementById('overlay');
+            
+            const toggleMenu = () => {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            };
+            
+            if (menuToggle) menuToggle.addEventListener('click', toggleMenu);
+            if (closeBtn) closeBtn.addEventListener('click', toggleMenu);
+            if (overlay) overlay.addEventListener('click', toggleMenu);
+
+            // Profile Logic
+            const profileSection = document.getElementById('profile-section');
+            const profilePopup = document.getElementById('profile-popup');
+            
+            if (profileSection && profilePopup) {
+                profileSection.addEventListener('click', e => { 
+                    e.stopPropagation(); 
+                    profilePopup.classList.toggle('active'); 
+                    profileSection.classList.toggle('active'); 
+                });
+                
+                document.addEventListener('click', e => { 
+                    if (!profileSection.contains(e.target)) { 
+                        profilePopup.classList.remove('active'); 
+                        profileSection.classList.remove('active'); 
+                    } 
+                });
+            }
+        });
+
         const firebaseConfig = {
             apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
             authDomain: "vastramaya---magic.firebaseapp.com",
@@ -401,12 +536,9 @@
         let colorVariants = [];
         let productReviews = [];
         let editingVariantIndex = null;
-        
-        // Temp state for variant modal
         let tempVariantFiles = [];
         let tempSwatchFile = null;
 
-        // --- AUTH & INITIALIZATION ---
         auth.onAuthStateChanged(user => {
             if (!user || user.email !== ADMIN_EMAIL) {
                 window.location.href = 'index.html';
@@ -417,26 +549,18 @@
         });
 
         function initUI(user) {
-            document.getElementById('sidebar-name').textContent = user.displayName || 'Admin';
-            document.getElementById('sidebar-avatar').src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=4F46E5&color=fff`;
+            const name = user.displayName || 'Admin';
+            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3B82F6&color=fff`;
             
-            const profileTrigger = document.getElementById('profile-trigger');
-            const popup = document.getElementById('profile-popup');
-            profileTrigger.onclick = (e) => {
-                e.stopPropagation();
-                popup.classList.toggle('active');
-            };
-            document.onclick = (e) => {
-                if(!profileTrigger.contains(e.target)) popup.classList.remove('active');
-            };
+            document.getElementById('sidebar-name').textContent = name;
+            document.getElementById('sidebar-email').textContent = user.email;
+            document.getElementById('sidebar-avatar').src = avatar;
+            
+            document.getElementById('popup-name').textContent = name;
+            document.getElementById('popup-email').textContent = user.email;
+            document.getElementById('popup-avatar').src = avatar;
         }
 
-        function toggleMenu() {
-            document.getElementById('sidebar').classList.toggle('active');
-            document.getElementById('overlay').classList.toggle('active');
-        }
-
-        // --- DATA LOADING ---
         async function loadEditor() {
             const params = new URLSearchParams(window.location.search);
             const id = params.get('id');
@@ -496,13 +620,11 @@
             
             if (data.category) selectCategory(data.category);
             
-            // Handle Cover Image (Assuming stored in 'image' or first of 'images')
             const coverUrl = data.image || (data.images && data.images.length > 0 ? data.images[0] : null);
             if (coverUrl) {
                 document.getElementById('cover-preview').src = coverUrl;
                 document.getElementById('cover-preview-wrapper').style.display = 'block';
                 document.getElementById('cover-upload-zone').style.display = 'none';
-                // Store existing URL in a data attribute to know it exists
                 document.getElementById('cover-preview').dataset.url = coverUrl;
             }
 
@@ -516,7 +638,6 @@
             document.getElementById('product-form').style.display = 'block';
         }
 
-        // --- COVER IMAGE LOGIC ---
         document.getElementById('cover-input').onchange = (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -541,7 +662,6 @@
             document.getElementById('cover-upload-zone').style.display = 'block';
         }
 
-        // --- REVIEWS LOGIC ---
         function openReviewModal() {
             document.getElementById('review-name').value = '';
             document.getElementById('review-text').value = '';
@@ -554,7 +674,6 @@
             document.getElementById('review-modal').style.display = 'none';
         }
 
-        // Star Rating Interactive
         document.querySelectorAll('#star-rating i').forEach(star => {
             star.onclick = function() {
                 const val = parseInt(this.dataset.val);
@@ -614,7 +733,6 @@
             renderReviewsList();
         }
 
-        // --- COLOR VARIANT MODAL LOGIC ---
         function openColorModal(index = null) {
             editingVariantIndex = index;
             const isEdit = index !== null;
@@ -624,7 +742,6 @@
             document.getElementById('color-name').value = data.name || '';
             document.getElementById('color-hex').value = data.hex || '';
             
-            // Swatch Preview
             const swatchImg = document.getElementById('swatch-preview');
             const swatchIcon = document.getElementById('swatch-icon');
             if (data.hex && data.hex.includes('http')) {
@@ -636,7 +753,6 @@
                 swatchIcon.style.display = 'block';
             }
             
-            // Sizes
             const sizesContainer = document.getElementById('size-selection');
             const SIZES = ['S', 'M', 'L', 'XL', '2XL'];
             sizesContainer.innerHTML = SIZES.map(size => {
@@ -651,13 +767,11 @@
                 `;
             }).join('');
 
-            // Reset Temp Files
             tempSwatchFile = null;
             tempVariantFiles = [];
             document.getElementById('variant-image-previews').innerHTML = '';
             document.getElementById('url-list').innerHTML = '';
             
-            // Existing URLs
             if (data.images) {
                 data.images.forEach(url => addUrlField(url));
             } else {
@@ -673,7 +787,7 @@
             const isSelected = !checkbox.checked;
             
             checkbox.checked = isSelected;
-            stock.checked = isSelected; // Default stock to true when selected
+            stock.checked = isSelected; 
             
             el.style.background = isSelected ? '#EEF2FF' : 'white';
             el.style.borderColor = isSelected ? 'var(--brand-primary)' : 'var(--border-color)';
@@ -721,12 +835,10 @@
             showToast('Saving variant...', 'info');
 
             let hex = document.getElementById('color-hex').value;
-            // Upload Swatch
             if (tempSwatchFile) {
                 hex = await uploadFile(tempSwatchFile, 'swatches');
             }
 
-            // Upload Images
             let images = [...document.querySelectorAll('.url-input')].map(i => i.value).filter(Boolean);
             if (tempVariantFiles.length) {
                 for (let f of tempVariantFiles) {
@@ -734,7 +846,6 @@
                 }
             }
 
-            // Sizes
             let sizes = [];
             document.querySelectorAll('.size-check').forEach(cb => {
                 if (cb.checked) {
@@ -786,7 +897,6 @@
             }
         }
 
-        // --- MAIN SAVE ---
         async function uploadFile(file, path) {
             const ref = storage.ref().child(`${path}/${Date.now()}-${file.name}`);
             await ref.put(file);
@@ -797,8 +907,9 @@
             const name = document.getElementById('name').value;
             const price = document.getElementById('price').value;
             const category = document.getElementById('selected-category').value;
+            const oldPrice = document.getElementById('oldPrice').value;
             
-            if (!name || !price || !category) return showToast('Please fill required fields', 'error');
+            if (!name || !price || !category || !oldPrice) return showToast('Please fill required fields', 'error');
 
             const btn = document.getElementById('save-btn');
             btn.disabled = true; btn.textContent = 'Saving...';
@@ -819,9 +930,9 @@
                     description: document.getElementById('description').value,
                     category,
                     price: parseFloat(price),
-                    oldPrice: parseFloat(document.getElementById('oldPrice').value) || 0,
-                    image: coverUrl, // Single cover image
-                    images: [coverUrl], // Backwards compatibility
+                    oldPrice: parseFloat(oldPrice),
+                    image: coverUrl, 
+                    images: [coverUrl],
                     colorVariants,
                     reviews: productReviews,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
