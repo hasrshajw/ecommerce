@@ -11,206 +11,259 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     
     <style>
+        /* --- CSS Variables --- */
         :root {
             --body-bg: #F8FAFC;
             --widget-bg: #FFFFFF;
-            --border-color: #F1F5F9;
+            --border-color: #E2E8F0;
             --text-primary: #0F172A;
             --text-secondary: #64748B;
             --brand-primary: #3B82F6;
-            --brand-gradient: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
-            --hover-bg: #F8FAFC;
+            --brand-gradient: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+            --hover-bg: #F1F5F9;
             --danger-color: #EF4444;
             --success-color: #10B981;
-            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
-            --radius-sm: 6px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             --radius-md: 8px;
             --radius-lg: 12px;
+            --input-bg: #F8FAFC;
             --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--body-bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; overflow-x: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--body-bg); color: var(--text-primary); font-size: 14px; -webkit-font-smoothing: antialiased; }
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
+        button { font-family: inherit; }
+
+        /* --- Layout --- */
+        .dashboard-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; overflow: hidden; }
+        .main-area { display: flex; flex-direction: column; height: 100vh; overflow-y: auto; background-color: var(--body-bg); position: relative; }
         
-        .dashboard-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; position: relative; }
-        .main-area { display: flex; flex-direction: column; height: 100vh; overflow-y: auto; background-color: var(--body-bg); }
-        .main-header { 
-            padding: 12px 2.5rem; 
-            border-bottom: 1px solid var(--border-color); 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            background-color: var(--widget-bg); 
-            position: sticky; 
-            top: 0; 
-            z-index: 10; 
-            box-shadow: var(--shadow-sm); 
-            min-height: 65px;
-        }
-        
+        /* --- Navigation (Unchanged) --- */
+        .main-header { padding: 12px 2.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background-color: var(--widget-bg); position: sticky; top: 0; z-index: 20; min-height: 65px; }
         .nav-logo { height: 42px; width: auto; object-fit: contain; }
-        
-        .sidebar { 
-            background-color: var(--widget-bg); 
-            border-right: 1px solid var(--border-color); 
-            padding: 2rem 1.5rem; 
-            display: flex; 
-            flex-direction: column; 
-            position: relative; 
-            transition: transform 0.3s ease-in-out;
-            box-shadow: var(--shadow-sm);
-            z-index: 1001;
-        }
-        
-        .sidebar-header { 
-            display: flex; align-items: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color);
-        } 
-        
-        .logo-container { display: flex; align-items: center; width: 100%; }
+        .sidebar { background-color: var(--widget-bg); border-right: 1px solid var(--border-color); padding: 2rem 1.5rem; display: flex; flex-direction: column; z-index: 1001; box-shadow: var(--shadow-sm); }
+        .sidebar-header { display: flex; align-items: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); }
         .logo-image { height: 40px; width: auto; object-fit: contain; }
-        
-        .main-nav ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
-        
-        .main-nav a { 
-            display: flex; align-items: center; gap: 1rem; text-decoration: none; color: var(--text-secondary); 
-            font-weight: 500; padding: 0.875rem 1rem; border-radius: var(--radius-md); transition: var(--transition); position: relative;
-        }
-        
-        .main-nav a i { font-size: 1.375rem; color: var(--text-secondary); transition: var(--transition); width: 24px; text-align: center; }
-        
-        .main-nav a:hover { background-color: var(--hover-bg); color: var(--text-primary); transform: translateY(-1px); } 
+        .main-nav ul { display: flex; flex-direction: column; gap: 0.5rem; }
+        .main-nav a { display: flex; align-items: center; gap: 1rem; color: var(--text-secondary); font-weight: 500; padding: 0.875rem 1rem; border-radius: var(--radius-md); transition: var(--transition); }
+        .main-nav a i { font-size: 1.375rem; width: 24px; text-align: center; }
+        .main-nav a:hover { background-color: var(--hover-bg); color: var(--text-primary); }
         .main-nav a:hover i { color: var(--brand-primary); }
-        
-        .main-nav a.active { 
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%); 
-            color: var(--brand-primary); font-weight: 600; box-shadow: var(--shadow-sm);
-        } 
-        
+        .main-nav a.active { background: linear-gradient(90deg, #EFF6FF 0%, #F8FAFC 100%); color: var(--brand-primary); font-weight: 600; border-left: 3px solid var(--brand-primary); }
         .main-nav a.active i { color: var(--brand-primary); }
-        .main-nav a.active::before {
-            content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 4px; height: 60%; background: var(--brand-gradient); border-radius: 0 4px 4px 0;
-        }
         
-        .profile-section { 
-            margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-color); 
-            display: flex; align-items: center; gap: 0.75rem; cursor: pointer; 
-            border-radius: var(--radius-md); transition: var(--transition); padding: 1rem;
-        }
-        
+        .profile-section { margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.75rem; cursor: pointer; padding: 1rem; border-radius: var(--radius-md); transition: var(--transition); }
         .profile-section:hover { background-color: var(--hover-bg); }
-        
-        .profile-content-wrapper { display: flex; align-items: center; gap: 0.75rem; width: 100%; }
-        .profile-avatar { 
-            width: 40px; height: 40px; border-radius: 50%; object-fit: cover; 
-            flex-shrink: 0; border: 2px solid var(--border-color); transition: var(--transition);
-        }
-        
-        .profile-section:hover .profile-avatar { border-color: var(--brand-primary); }
+        .profile-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); }
         .profile-details { flex-grow: 1; min-width: 0; }
-        .profile-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; font-size: 0.9rem; }
-        .profile-email { font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
-        .profile-options i { font-size: 1.25rem; color: var(--text-secondary); transition: var(--transition); }
-        .profile-section.active .profile-options i { transform: rotate(180deg); }
-        
-        .profile-popup { 
-            position: absolute; bottom: 90px; left: 1.5rem; right: 1.5rem; 
-            background-color: var(--widget-bg); border-radius: var(--radius-lg); 
-            box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); 
-            padding: 0.75rem; z-index: 100; opacity: 0; pointer-events: none; 
-            transform: translateY(10px) scale(0.95); transition: var(--transition); 
-        }
-        
-        .profile-popup.active { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
-        .popup-header { display: flex; align-items: center; gap: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); margin-bottom: 0.5rem; }
-        .popup-list { list-style: none; } 
-        .popup-list a { 
-            display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem; 
-            border-radius: var(--radius-sm); text-decoration: none; color: var(--text-primary); transition: var(--transition); cursor: pointer;
-        }
-        .popup-list a:hover { background-color: var(--hover-bg); } 
-        .popup-list a i { font-size: 1.2rem; color: var(--text-secondary); }
-        .popup-list a.logout i { color: var(--danger-color); } 
+        .profile-name { font-weight: 600; display: block; font-size: 0.9rem; }
+        .profile-email { font-size: 0.8rem; color: var(--text-secondary); display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .profile-popup { position: absolute; bottom: 80px; left: 1.5rem; right: 1.5rem; background: white; border-radius: var(--radius-lg); box-shadow: 0 -4px 20px rgba(0,0,0,0.1); border: 1px solid var(--border-color); padding: 0.5rem; opacity: 0; pointer-events: none; transform: translateY(10px); transition: var(--transition); z-index: 1002; }
+        .profile-popup.active { opacity: 1; pointer-events: all; transform: translateY(0); }
+        .popup-list a { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border-radius: var(--radius-md); color: var(--text-primary); }
+        .popup-list a:hover { background-color: var(--hover-bg); }
         .popup-list a.logout { color: var(--danger-color); }
         
-        .menu-toggle, .sidebar-close-btn { display: none; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-        .overlay.active { opacity: 1; pointer-events: auto; }
-
-        .btn-primary { background-color: var(--brand-primary); color: white; border: none; border-radius: var(--radius-sm); padding: 0.75rem 1.5rem; font-weight: 600; cursor: pointer; transition: var(--transition); }
-        .btn-primary:hover { background: #1D4ED8; }
-        .btn-secondary { background-color: #F1F5F9; color: var(--text-primary); border: 1px solid #CBD5E1; border-radius: var(--radius-sm); padding: 0.75rem 1.5rem; font-weight: 600; cursor: pointer; transition: var(--transition); }
-        .btn-secondary:hover { background-color: #E2E8F0; }
-        .btn-danger { background-color: var(--danger-color); color: white; border: none; border-radius: var(--radius-sm); padding: 0.5rem 1rem; cursor: pointer; }
-        .btn-sm { padding: 0.5rem 1rem; font-size: 0.875rem; }
-
-        .card { background-color: var(--widget-bg); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 2rem; margin: 2rem auto; max-width: 1200px; border: 1px solid var(--border-color); }
-        .form-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+        /* --- Updated Product Form UI --- */
+        .content-wrapper { padding: 2rem; max-width: 1100px; margin: 0 auto; width: 100%; }
         
-        fieldset { border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.5rem; margin: 0 0 1.5rem; background: #FAFAFA; }
-        legend { font-weight: 600; padding: 0 0.5rem; font-size: 0.9rem; color: var(--text-primary); }
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text-secondary); }
-        .form-group input, .form-group textarea, .form-group select {
-            display: block; width: 100%; padding: 0.75rem 1rem; font-size: 0.95rem; line-height: 1.5; color: var(--text-primary);
-            background-color: #fff; border: 1px solid #CBD5E1; border-radius: var(--radius-sm);
+        .product-card { 
+            background: var(--widget-bg); 
+            border-radius: var(--radius-lg); 
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .card-header { padding: 2rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .card-header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+        
+        .card-body { padding: 2rem; }
+
+        .form-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2rem; }
+        .col-span-12 { grid-column: span 12; }
+        .col-span-6 { grid-column: span 6; }
+        .col-span-4 { grid-column: span 4; }
+
+        /* Custom Inputs */
+        .input-group { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
+        .input-label { font-weight: 600; font-size: 0.875rem; color: var(--text-primary); }
+        
+        .custom-input, .custom-textarea {
+            width: 100%; padding: 0.75rem 1rem; font-size: 0.95rem; color: var(--text-primary);
+            background-color: var(--input-bg); border: 1px solid var(--border-color); border-radius: var(--radius-md);
             transition: var(--transition);
         }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            border-color: var(--brand-primary); outline: 0; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        .custom-input:focus, .custom-textarea:focus {
+            background-color: #fff; border-color: var(--brand-primary); 
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Custom Select */
+        .select-wrapper { position: relative; }
+        .custom-select {
+            appearance: none; -webkit-appearance: none;
+            width: 100%; padding: 0.75rem 2.5rem 0.75rem 1rem;
+            background-color: var(--input-bg); border: 1px solid var(--border-color); border-radius: var(--radius-md);
+            color: var(--text-primary); font-size: 0.95rem; cursor: pointer;
+        }
+        .select-arrow {
+            position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
+            pointer-events: none; color: var(--text-secondary); font-size: 1.25rem;
         }
         
-        .image-list-item { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.75rem; }
-        .size-row { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; border-bottom: 1px solid var(--border-color); }
-        .availability-toggle { appearance: none; width: 40px; height: 22px; background-color: #CBD5E1; border-radius: 99px; position: relative; cursor: pointer; transition: background-color 0.2s; }
-        .availability-toggle::before { content: ''; position: absolute; width: 18px; height: 18px; border-radius: 50%; background-color: white; top: 2px; left: 2px; transition: transform 0.2s; }
-        .availability-toggle:checked { background-color: var(--success-color); }
-        .availability-toggle:checked::before { transform: translateX(18px); }
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed var(--border-color); border-radius: var(--radius-lg);
+            padding: 2rem; text-align: center; cursor: pointer; background: var(--input-bg);
+            transition: var(--transition); display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+        }
+        .upload-area:hover { border-color: var(--brand-primary); background: #EFF6FF; }
+        .upload-icon { font-size: 2rem; color: var(--brand-primary); margin-bottom: 0.5rem; }
         
-        .form-actions { display: flex; justify-content: flex-end; gap: 1rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); }
-        
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 1rem; backdrop-filter: blur(2px); }
-        .modal { background: white; border-radius: var(--radius-lg); padding: 2rem; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column; box-shadow: var(--shadow-lg); }
-        .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-        .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); }
-        
-        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; pointer-events: none; }
-        .toast { padding: 1rem 1.5rem; border-radius: var(--radius-md); color: white; box-shadow: var(--shadow-lg); animation: slideIn 0.3s, fadeOut 0.3s 2.7s forwards; margin-top: 10px; pointer-events: auto; font-weight: 500; }
-        .toast.success { background-color: var(--success-color); }
-        .toast.error { background-color: var(--danger-color); }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-        @keyframes fadeOut { to { opacity: 0; } }
-        
-        .upload-btn { background: #fff; border: 2px dashed #CBD5E1; padding: 1rem; text-align: center; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); }
-        .upload-btn:hover { border-color: var(--brand-primary); background: #F8FAFC; }
-        .uploaded-images-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 0.5rem; margin-top: 0.5rem; }
-        .uploaded-image-item { position: relative; padding-top: 100%; }
-        .uploaded-image-preview { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border-color); }
-        .uploaded-image-remove { position: absolute; top: -5px; right: -5px; background: var(--danger-color); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        
-        @media (min-width: 768px) { .form-grid { grid-template-columns: 1fr 1fr; } }
+        /* Thumbnails */
+        .thumbnails-grid { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
+        .thumbnail-item { 
+            width: 80px; height: 80px; position: relative; border-radius: var(--radius-md); overflow: hidden; 
+            border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);
+        }
+        .thumbnail-img { width: 100%; height: 100%; object-fit: cover; }
+        .thumbnail-remove {
+            position: absolute; top: 2px; right: 2px; width: 20px; height: 20px;
+            background: rgba(0,0,0,0.6); color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 14px; border: none; cursor: pointer;
+        }
+
+        /* Color Variants */
+        .variant-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);
+            margin-bottom: 0.75rem; background: white; transition: var(--transition);
+        }
+        .variant-item:hover { border-color: var(--brand-primary); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+        .variant-info { display: flex; align-items: center; gap: 1rem; }
+        .color-dot { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-color); box-shadow: inset 0 0 0 2px white; }
+
+        /* Actions */
+        .form-actions { 
+            padding: 1.5rem 2rem; border-top: 1px solid var(--border-color); background: #F8FAFC;
+            display: flex; justify-content: flex-end; gap: 1rem; 
+        }
+
+        /* Buttons */
+        .btn { 
+            display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; 
+            font-weight: 600; border-radius: var(--radius-md); border: none; cursor: pointer; transition: var(--transition); 
+        }
+        .btn-primary { background: var(--brand-gradient); color: white; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2); }
+        .btn-primary:hover { filter: brightness(110%); transform: translateY(-1px); }
+        .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-secondary); }
+        .btn-secondary:hover { background: var(--hover-bg); color: var(--text-primary); border-color: #CBD5E1; }
+        .btn-danger-soft { background: #FEF2F2; color: var(--danger-color); }
+        .btn-danger-soft:hover { background: #FEE2E2; }
+        .btn-full { width: 100%; justify-content: center; }
+
+        /* --- Custom Notifications (Toast) --- */
+        #toast-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 3000; display: flex; flex-direction: column; gap: 0.75rem; pointer-events: none; }
+        .toast { 
+            pointer-events: auto; padding: 1rem 1.25rem; border-radius: var(--radius-md); color: white; 
+            background: #1E293B; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            display: flex; align-items: center; gap: 0.75rem; font-weight: 500;
+            animation: slideUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), fadeOut 0.3s 3.5s forwards;
+            min-width: 300px;
+        }
+        .toast.success { border-left: 4px solid var(--success-color); }
+        .toast.error { border-left: 4px solid var(--danger-color); }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; transform: scale(0.95); } }
+
+        /* --- Custom Confirm Modal --- */
+        .confirm-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(2px); z-index: 4000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
+        .confirm-overlay.active { opacity: 1; }
+        .confirm-box { background: white; padding: 2rem; border-radius: var(--radius-lg); width: 90%; max-width: 400px; text-align: center; box-shadow: var(--shadow-md); transform: scale(0.95); transition: transform 0.2s; }
+        .confirm-overlay.active .confirm-box { transform: scale(1); }
+        .confirm-icon { font-size: 3rem; color: var(--brand-primary); margin-bottom: 1rem; display: block; }
+
+        /* --- Mobile Responsiveness --- */
+        .menu-toggle, .sidebar-close-btn { display: none; }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+        .overlay.active { opacity: 1; pointer-events: auto; }
+
         @media (max-width: 1024px) {
             .dashboard-container { grid-template-columns: 1fr; }
-            .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 85%; max-width: 320px; transform: translateX(-100%); z-index: 1000; padding: 2rem 1.25rem; }
+            .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 280px; transform: translateX(-100%); transition: transform 0.3s; }
             .sidebar.active { transform: translateX(0); }
-            .main-header { padding: 12px 1.5rem; }
-            .nav-logo { display: block; }
-            .menu-toggle { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; font-size: 1.6rem; color: var(--text-primary); cursor: pointer; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white; }
-            .sidebar-close-btn { display: flex; align-items: center; justify-content: center; position: absolute; top: 1.5rem; right: 1.25rem; font-size: 1.75rem; color: var(--text-secondary); cursor: pointer; border: none; background: none; width: 36px; height: 36px; border-radius: 50%; }
-            .card { margin: 1rem; padding: 1rem; border: none; }
-            .modal-grid { grid-template-columns: 1fr; gap: 1rem; }
-            .form-actions { flex-direction: column; }
-            .form-actions button { width: 100%; }
+            .menu-toggle { display: block; font-size: 1.5rem; cursor: pointer; background: none; border: none; color: var(--text-primary); }
+            .sidebar-close-btn { display: block; position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); }
+            
+            .main-header { padding: 10px 1.25rem; }
+            
+            /* --- Mobile Content View Update --- */
+            .content-wrapper { padding: 0; max-width: 100%; margin: 0; }
+            
+            /* Remove card styling on mobile, make it flat body content */
+            .product-card { 
+                border-radius: 0; border: none; box-shadow: none; 
+                background: transparent;
+            }
+            .card-header {
+                padding: 1.5rem 1.25rem;
+                background: var(--body-bg);
+                border-bottom: none;
+            }
+            .card-body {
+                padding: 0 1.25rem 6rem 1.25rem; /* Bottom padding for sticky actions */
+                background: var(--body-bg);
+            }
+            
+            /* Single Column Grid */
+            .col-span-12, .col-span-6, .col-span-4 { grid-column: span 12; }
+            
+            /* Sticky Actions for Mobile */
+            .form-actions {
+                position: fixed; bottom: 0; left: 0; right: 0;
+                background: white; border-top: 1px solid var(--border-color);
+                padding: 1rem 1.25rem; z-index: 100;
+                box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+            }
+            
+            /* Inputs touch friendly */
+            .custom-input, .custom-select { padding: 0.875rem 1rem; font-size: 16px; } /* Prevents iOS zoom */
+            
+            /* Modal Mobile */
+            .modal { max-height: 100vh; border-radius: 0; height: 100%; width: 100%; }
         }
+        
         @media (min-width: 1025px) { .nav-logo { display: none; } }
+        
+        /* Modal Styles */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; }
+        .modal { background: white; width: 600px; max-width: 95%; border-radius: var(--radius-lg); display: flex; flex-direction: column; max-height: 90vh; box-shadow: var(--shadow-md); }
+        .modal-header { padding: 1.25rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 1.1rem; }
+        .modal-body { padding: 1.5rem; overflow-y: auto; }
     </style>
 </head>
 <body>
+
+    <!-- CONFIRM MODAL -->
+    <div class="confirm-overlay" id="confirm-modal">
+        <div class="confirm-box">
+            <i class='bx bx-help-circle confirm-icon'></i>
+            <h3 style="margin-bottom: 0.5rem;">Are you sure?</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;" id="confirm-msg">This action cannot be undone.</p>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button class="btn btn-secondary" id="confirm-cancel">Cancel</button>
+                <button class="btn btn-primary" id="confirm-yes">Yes, Proceed</button>
+            </div>
+        </div>
+    </div>
+
     <div class="overlay" id="overlay"></div>
+    
     <div class="dashboard-container">
+        <!-- SIDEBAR (Unchanged) -->
         <aside class="sidebar" id="sidebar">
             <button class="sidebar-close-btn" id="sidebar-close-btn"><i class='bx bx-x'></i></button>
             <div class="sidebar-header">
@@ -228,7 +281,7 @@
             </nav>
             <div class="profile-section" id="profile-section">
                 <div class="profile-content-wrapper">
-                    <img id="sidebar-avatar" src="https://ui-avatars.com/api/?name=User&background=random" alt="Profile" class="profile-avatar">
+                    <img id="sidebar-avatar" src="" alt="User" class="profile-avatar">
                     <div class="profile-details">
                         <span class="profile-name" id="sidebar-name">Loading...</span>
                         <span class="profile-email" id="sidebar-email">...</span>
@@ -237,32 +290,28 @@
                 </div>
             </div>
             <div class="profile-popup" id="profile-popup">
-                <div class="popup-header">
-                    <img id="popup-avatar" src="https://ui-avatars.com/api/?name=User&background=random" alt="Profile" class="profile-avatar">
-                    <div class="profile-details">
-                        <span class="profile-name" id="popup-name">Loading...</span>
-                        <span class="profile-email" id="popup-email">...</span>
-                    </div>
+                <div class="popup-list">
+                    <a href="#"><i class='bx bx-user'></i> Profile</a>
+                    <a href="#"><i class='bx bx-cog'></i> Settings</a>
+                    <a href="#" id="logout-btn" class="logout"><i class='bx bx-log-out'></i> Logout</a>
                 </div>
-                <ul class="popup-list">
-                    <li><a href="#"><i class='bx bx-user'></i> Profile</a></li>
-                    <li><a href="#"><i class='bx bx-cog'></i> Settings</a></li>
-                    <li><a href="#" id="logout-btn" class="logout"><i class='bx bx-log-out'></i> Logout</a></li>
-                </ul>
             </div>
         </aside>
         
         <main class="main-area">
             <header class="main-header">
                 <button class="menu-toggle" id="menu-toggle"><i class='bx bx-menu'></i></button>
-                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" class="nav-logo">
+                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Logo" class="nav-logo">
             </header>
             
-            <div style="padding: 0 1rem;">
-                <div id="product-editor-container" class="card">
-                    <h1 id="editor-title" style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.5rem; color: var(--text-primary);">Loading Product Editor...</h1>
-                    <div id="product-form-content">
-                        <div style="display:flex; justify-content:center; padding:2rem; color:var(--text-secondary);">
+            <!-- CONTENT AREA (Updated UI) -->
+            <div class="content-wrapper">
+                <div id="product-editor-container" class="product-card">
+                    <div class="card-header">
+                        <h1 id="editor-title">Product Editor</h1>
+                    </div>
+                    <div id="product-form-content" class="card-body">
+                        <div style="display:flex; justify-content:center; padding:4rem; color:var(--text-secondary);">
                             <i class='bx bx-loader-alt bx-spin' style='font-size:2rem'></i>
                         </div>
                     </div>
@@ -273,113 +322,128 @@
 
     <div id="toast-container"></div>
 
-    <div id="color-variant-modal" class="modal-overlay" style="display: none;">
+    <!-- COLOR VARIANT MODAL (Custom UI) -->
+    <div id="color-variant-modal" class="modal-overlay">
         <div class="modal">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h3 style="font-size: 1.25rem; font-weight: 600; margin: 0;" id="color-modal-title">Add Color Variant</h3>
-                <button class="close-modal" onclick="closeColorModal()">&times;</button>
+            <div class="modal-header">
+                <span id="color-modal-title">Add Color Variant</span>
+                <button class="btn-secondary" style="padding: 0.25rem 0.5rem; border:none;" onclick="closeColorModal()"><i class='bx bx-x' style="font-size:1.5rem"></i></button>
             </div>
-            <form id="color-variant-form" style="display: flex; flex-direction: column; flex: 1; overflow-y: auto;">
-                <div class="modal-grid">
-                    <div class="form-column">
-                        <div class="form-group">
-                            <label for="color-name">Color Name</label>
-                            <input type="text" id="color-name" required placeholder="e.g., Red, Blue">
-                        </div>
-                        <div class="form-group">
-                            <label for="color-link">Color Image Link (or upload)</label>
-                            <input type="url" id="color-link" placeholder="https://...">
-                        </div>
-                        <div class="form-group">
-                            <div class="upload-btn" onclick="document.getElementById('color-image-upload').click()">
-                                <div style="font-size:0.875rem; color:var(--text-secondary);">Click to upload color icon</div>
+            <div class="modal-body">
+                <form id="color-variant-form">
+                    <div class="input-group">
+                        <label class="input-label">Color Name</label>
+                        <input type="text" id="color-name" class="custom-input" placeholder="e.g., Midnight Blue">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Color Icon / Swatch</label>
+                        <div style="display:flex; gap:1rem; align-items:center;">
+                            <input type="color" id="simple-color-picker" style="height:40px; width:60px; border:none; background:none; cursor:pointer;">
+                            <span style="color:var(--text-secondary); font-size:0.8rem;">OR</span>
+                            <div class="upload-area" style="padding: 0.5rem 1rem; flex-grow:1;" onclick="document.getElementById('color-image-upload').click()">
+                                <span style="font-size:0.85rem; color:var(--brand-primary);"><i class='bx bx-upload'></i> Upload Image</span>
                             </div>
                             <input type="file" id="color-image-upload" accept="image/*" style="display: none;">
-                            <img id="color-upload-preview" class="uploaded-image-preview" style="position:relative; height:60px; width:60px; margin-top:0.5rem; display:none;" alt="Preview">
-                            <button type="button" class="upload-remove" onclick="removeColorUpload()" style="display: none; margin-top:0.5rem; position:relative; width:auto; padding:0.2rem 0.5rem; border-radius:4px;">Remove Upload</button>
+                            <input type="hidden" id="color-link">
+                        </div>
+                        <img id="color-upload-preview" style="width:40px; height:40px; border-radius:50%; border:1px solid var(--border-color); margin-top:0.5rem; display:none; object-fit:cover;">
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Available Sizes</label>
+                        <div id="modal-sizes-list" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap:0.75rem;">
+                            <!-- Sizes JS Injected -->
                         </div>
                     </div>
-                    <div class="form-column">
-                        <fieldset>
-                            <legend>Sizes & Stock</legend>
-                            <div id="modal-sizes-list"></div>
-                        </fieldset>
-                    </div>
-                </div>
-                
-                <fieldset>
-                    <legend>Color Specific Images</legend>
-                    <div class="form-group">
-                        <div class="upload-btn" onclick="document.getElementById('multiple-color-images-upload').click()">
-                            <div style="font-size:0.875rem; color:var(--text-secondary);">Upload Gallery Images</div>
+
+                    <div class="input-group">
+                        <label class="input-label">Variant Gallery</label>
+                        <div class="upload-area" onclick="document.getElementById('multiple-color-images-upload').click()">
+                            <i class='bx bx-images upload-icon'></i>
+                            <span style="color:var(--brand-primary); font-weight:500;">Click to upload images</span>
+                            <span style="color:var(--text-secondary); font-size:0.8rem;">Max 5MB per image</span>
                         </div>
                         <input type="file" id="multiple-color-images-upload" accept="image/*" multiple style="display: none;">
+                        
+                        <!-- Manual URL Input -->
+                        <div id="modal-color-images" style="margin-top:1rem; display:flex; flex-direction:column; gap:0.5rem;"></div>
+                        <button type="button" class="btn btn-secondary btn-full" id="add-color-image-btn" style="margin-top:0.5rem; font-size:0.8rem;">+ Add Image URL Manually</button>
+                        
+                        <div id="color-uploaded-images" class="thumbnails-grid"></div>
                     </div>
-                    <div id="modal-color-images">
-                        <div class="image-list-item">
-                            <div class="form-group" style="flex-grow:1; margin:0;">
-                                <input type="url" class="color-image-url" placeholder="Main Image URL">
-                            </div>
-                        </div>
-                    </div>
-                    <div id="color-uploaded-images" class="uploaded-images-grid"></div>
-                    <button type="button" class="btn-secondary btn-sm" id="add-color-image-btn" style="margin-top:0.5rem; width: 100%;">Add URL Field</button>
-                </fieldset>
-                
-                <div class="form-actions" style="margin-top: auto;">
-                    <button type="button" class="btn-secondary" onclick="closeColorModal()">Cancel</button>
-                    <button type="submit" class="btn-primary">Save Variant</button>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div style="padding:1.25rem; border-top:1px solid var(--border-color); display:flex; justify-content:flex-end; gap:1rem;">
+                <button type="button" class="btn btn-secondary" onclick="closeColorModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveColorVariant()">Save Variant</button>
+            </div>
         </div>
     </div>
 
+    <!-- FIREBASE & LOGIC -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const sidebar = document.getElementById('sidebar');
-            const menuToggle = document.getElementById('menu-toggle');
-            const closeBtn = document.getElementById('sidebar-close-btn');
-            const overlay = document.getElementById('overlay');
-            const profileSection = document.getElementById('profile-section');
-            const profilePopup = document.getElementById('profile-popup');
-            const logoutBtn = document.getElementById('logout-btn');
+        // --- UI Interaction Scripts ---
+        const toggleMenu = () => {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        };
+        
+        document.getElementById('menu-toggle').addEventListener('click', toggleMenu);
+        document.getElementById('sidebar-close-btn').addEventListener('click', toggleMenu);
+        document.getElementById('overlay').addEventListener('click', toggleMenu);
 
-            const toggleMenu = () => {
-                sidebar.classList.toggle('active');
-                overlay.classList.toggle('active');
-            };
-            
-            if (menuToggle) menuToggle.addEventListener('click', toggleMenu);
-            if (closeBtn) closeBtn.addEventListener('click', toggleMenu);
-            if (overlay) overlay.addEventListener('click', toggleMenu);
-
-            if (profileSection && profilePopup) {
-                profileSection.addEventListener('click', e => { 
-                    e.stopPropagation(); 
-                    profilePopup.classList.toggle('active'); 
-                    profileSection.classList.toggle('active'); 
-                });
-                document.addEventListener('click', e => { 
-                    if (!profileSection.contains(e.target) && !profilePopup.contains(e.target)) { 
-                        profilePopup.classList.remove('active'); 
-                        profileSection.classList.remove('active'); 
-                    } 
-                });
-            }
-
-            if(logoutBtn) {
-                logoutBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    auth.signOut();
-                });
-            }
+        const profileSection = document.getElementById('profile-section');
+        const profilePopup = document.getElementById('profile-popup');
+        
+        profileSection.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profilePopup.classList.toggle('active');
+        });
+        document.addEventListener('click', (e) => {
+            if(!profileSection.contains(e.target)) profilePopup.classList.remove('active');
         });
 
+        // --- CUSTOM NOTIFICATIONS & CONFIRM ---
+        function showToast(msg, type='success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<i class='bx ${type === 'success' ? 'bx-check-circle' : 'bx-error-circle'}' style="font-size:1.25rem"></i> ${msg}`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3800);
+        }
+
+        function customConfirm(message, onYes) {
+            const modal = document.getElementById('confirm-modal');
+            const msgEl = document.getElementById('confirm-msg');
+            const yesBtn = document.getElementById('confirm-yes');
+            const cancelBtn = document.getElementById('confirm-cancel');
+            
+            msgEl.textContent = message;
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('active'), 10);
+
+            const cleanup = () => {
+                modal.classList.remove('active');
+                setTimeout(() => modal.style.display = 'none', 200);
+                yesBtn.replaceWith(yesBtn.cloneNode(true)); // remove listeners
+                cancelBtn.replaceWith(cancelBtn.cloneNode(true));
+            };
+
+            document.getElementById('confirm-yes').onclick = () => {
+                onYes();
+                cleanup();
+            };
+            document.getElementById('confirm-cancel').onclick = cleanup;
+        }
+
+        // --- FIREBASE INIT ---
         const firebaseConfig = {
             apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
             authDomain: "vastramaya---magic.firebaseapp.com",
@@ -404,494 +468,420 @@
         let colorUploadedImages = [];
         let generalUploadedImages = [];
 
+        // --- AUTH CHECK ---
         auth.onAuthStateChanged(user => {
-            currentUser = user;
-            if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
+            if (!user || user.email !== ADMIN_EMAIL) {
                 window.location.href = 'index.html';
                 return;
             }
-            updateProfileUI(user);
+            currentUser = user;
+            document.getElementById('sidebar-name').textContent = user.displayName || 'Admin';
+            document.getElementById('sidebar-email').textContent = user.email;
+            document.getElementById('sidebar-avatar').src = user.photoURL || `https://ui-avatars.com/api/?name=A&background=3B82F6&color=fff`;
+            
+            document.getElementById('logout-btn').addEventListener('click', () => auth.signOut());
             initializeEditor();
         });
 
-        function updateProfileUI(user) {
-            const name = user.displayName || "Admin";
-            const email = user.email;
-            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3B82F6&color=fff`;
-            
-            document.getElementById('sidebar-name').textContent = name;
-            document.getElementById('sidebar-email').textContent = email;
-            document.getElementById('sidebar-avatar').src = avatar;
-            
-            document.getElementById('popup-name').textContent = name;
-            document.getElementById('popup-email').textContent = email;
-            document.getElementById('popup-avatar').src = avatar;
-        }
-
+        // --- EDITOR LOGIC ---
         function initializeEditor() {
             const params = new URLSearchParams(window.location.search);
             const productId = params.get('id');
-            const categoryForCreation = params.get('category');
+            const cat = params.get('category');
 
             if (productId) {
                 document.getElementById('editor-title').textContent = 'Edit Product';
                 loadProductForEdit(productId);
-            } else if (categoryForCreation) {
-                document.getElementById('editor-title').textContent = 'Add New Product';
-                loadCategoriesAndRenderForm({ category: decodeURIComponent(categoryForCreation) });
+            } else if (cat) {
+                document.getElementById('editor-title').textContent = 'New Product';
+                loadCategoriesAndRenderForm({ category: decodeURIComponent(cat) });
             } else {
-                document.getElementById('product-form-content').innerHTML = `<div style="text-align:center; padding:2rem;">No product ID provided. <a href="index.html" style="color:var(--brand-primary)">Return to Dashboard</a></div>`;
-                document.getElementById('editor-title').textContent = 'Product Editor';
+                document.getElementById('product-form-content').innerHTML = `<div style="text-align:center; padding:3rem;">No ID provided. <a href="index.html" style="color:var(--brand-primary)">Back</a></div>`;
             }
         }
 
         async function loadCategories() {
-            try {
-                const snapshot = await db.collection('categories').orderBy('name').get();
-                return snapshot.docs.map(doc => doc.data().name);
-            } catch (error) {
-                console.error("Error loading categories:", error);
-                return [];
-            }
+            const snap = await db.collection('categories').orderBy('name').get();
+            return snap.docs.map(d => d.data().name);
         }
 
-        async function loadProductForEdit(productId) {
-            try {
-                const doc = await db.collection('products').doc(productId).get();
-                if (!doc.exists) {
-                    showToast('Product not found.', 'error');
-                    return;
-                }
-                const productData = { id: doc.id, ...doc.data() };
-                allCategories = await loadCategories();
-                renderProductForm(productData);
-            } catch (error) {
-                console.error("Error loading product:", error);
-                showToast("Failed to load product data.", "error");
-            }
-        }
-        
-        async function loadCategoriesAndRenderForm(initialData = {}) {
+        async function loadCategoriesAndRenderForm(data={}) {
             allCategories = await loadCategories();
-            renderProductForm({...initialData, id: null});
+            renderProductForm({...data, id: null});
+        }
+
+        async function loadProductForEdit(id) {
+            try {
+                const doc = await db.collection('products').doc(id).get();
+                if(!doc.exists) throw new Error("Not found");
+                allCategories = await loadCategories();
+                renderProductForm({ id: doc.id, ...doc.data() });
+            } catch(e) {
+                showToast(e.message, 'error');
+            }
         }
 
         function renderProductForm(product) {
             const container = document.getElementById('product-form-content');
             const isEditing = !!product.id;
-            const categoryForCreation = new URLSearchParams(window.location.search).get('category');
-            const categoryFromUrl = categoryForCreation ? decodeURIComponent(categoryForCreation) : product.category;
             
-            const categorySelectOptions = allCategories.map(cat => 
-                `<option value="${cat}" ${cat === categoryFromUrl ? 'selected' : ''}>${cat}</option>`
-            ).join('') + '<option value="--new--">-- Create New Category --</option>';
+            // Build Category Options
+            const catOptions = allCategories.map(c => `<option value="${c}" ${c===product.category?'selected':''}>${c}</option>`).join('');
             
-            const existingImagesHtml = (product.images || ['']).map((url, index) => `
-                <div class="image-list-item">
-                    <div class="form-group" style="flex-grow:1; margin:0;"><input type="url" class="image-url-input" value="${url}" placeholder="${index === 0 ? 'Main Image URL' : 'Additional Image URL'}"></div>
-                    ${index > 0 ? '<button type="button" class="btn-danger" style="padding:0.5rem; display:flex; align-items:center;" onclick="this.parentElement.remove()"><i class="bx bx-trash"></i></button>' : ''}
+            // Build Existing Images Inputs
+            const imgInputs = (product.images || ['']).map((url, i) => `
+                <div class="input-group" style="margin-bottom:0.5rem;">
+                    <div style="display:flex; gap:0.5rem;">
+                        <input type="url" class="custom-input image-url-input" value="${url}" placeholder="Image URL">
+                        ${i > 0 ? `<button type="button" class="btn btn-danger-soft" onclick="this.closest('.input-group').remove()"><i class='bx bx-trash'></i></button>` : ''}
+                    </div>
                 </div>
             `).join('');
 
+            // Store Variants in DOM
             container.dataset.colorVariants = JSON.stringify(product.colorVariants || []);
-            const colorVariantsHtml = renderColorVariantsSection(product.colorVariants || []);
 
             container.innerHTML = `
                 <form id="product-form">
                     <div class="form-grid">
-                        <div class="form-column">
-                            <fieldset>
-                                <legend>Core Details</legend>
-                                <div class="form-group"><label for="name">Product Name</label><input type="text" id="name" value="${product.name||''}" required placeholder="Product Name"></div>
-                                <div class="form-group">
-                                    <label for="category">Category</label>
-                                    <select id="category-select"><option value="">Select a category...</option>${categorySelectOptions}</select>
-                                    <input type="text" id="new-category-input" placeholder="Enter new category name" style="display:none; margin-top:0.5rem;">
+                        <!-- LEFT COL -->
+                        <div class="col-span-6">
+                            <div class="input-group">
+                                <label class="input-label">Product Name</label>
+                                <input type="text" id="name" class="custom-input" value="${product.name||''}" placeholder="e.g. Cotton Kurta">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">Category</label>
+                                <div class="select-wrapper">
+                                    <select id="category-select" class="custom-select">
+                                        <option value="">Select Category</option>
+                                        ${catOptions}
+                                        <option value="--new--">+ Create New</option>
+                                    </select>
+                                    <i class='bx bx-chevron-down select-arrow'></i>
                                 </div>
-                            </fieldset>
-                            <fieldset>
-                                <legend>Pricing</legend>
-                                <div class="form-group"><label for="price">Current Price ($)</label><input type="number" id="price" step="0.01" value="${product.price||''}" required placeholder="19.99"></div>
-                                <div class="form-group"><label for="oldPrice">Old Price ($)</label><input type="number" id="oldPrice" step="0.01" value="${product.oldPrice||0}" placeholder="24.99"></div>
-                            </fieldset>
-                        </div>
-                        <div class="form-column">
-                            <fieldset>
-                                <legend>Color Variants</legend>
-                                <div id="color-variants-container" style="display:flex; flex-direction:column; gap:0.75rem;">
-                                    ${colorVariantsHtml}
-                                </div>
-                                <button type="button" class="btn-primary btn-sm" onclick="openColorModal()" style="margin-top:1rem; width: 100%;"><i class='bx bx-plus'></i> Add Color Variant</button>
-                            </fieldset>
-                            <fieldset>
-                                <legend>General Images</legend>
-                                <div class="form-group">
-                                    <div class="upload-btn" onclick="document.getElementById('general-images-upload').click()">
-                                        <div style="color:var(--text-secondary); font-size:0.9rem;">Upload Multiple Images</div>
-                                    </div>
-                                    <input type="file" id="general-images-upload" accept="image/*" multiple style="display: none;">
-                                </div>
-                                <div id="general-uploaded-images" class="uploaded-images-grid"></div>
-                                <div id="image-list" style="margin-top: 1rem;">${existingImagesHtml}</div>
-                                <button type="button" class="btn-secondary btn-sm" id="add-image-btn" style="margin-top:0.5rem; width:100%;">Add URL Field</button>
-                            </fieldset>
-                        </div>
-                    </div>
-                    <fieldset>
-                        <legend>Description</legend>
-                        <div class="form-group" style="margin-bottom: 0;"><textarea id="description" rows="5" placeholder="Product details">${product.description||''}</textarea></div>
-                    </fieldset>
-                </form>
-                <div class="form-actions">
-                    <button class="btn-secondary" onclick="window.history.back()">Cancel</button>
-                    <button class="btn-primary" id="save-product-btn">${isEditing ? 'Save Changes' : 'Create Product'}</button>
-                </div>
-            `;
-            
-            setupProductFormListeners(product.id);
-        }
+                                <input type="text" id="new-category-input" class="custom-input" style="display:none; margin-top:0.5rem;" placeholder="New Category Name">
+                            </div>
 
-        function renderColorVariantsSection(colorVariants) {
-            if (!colorVariants || colorVariants.length === 0) {
-                return '<p style="color: var(--text-secondary); font-style: italic; text-align: center; padding:1rem;">No color variants added yet.</p>';
-            }
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem;">
+                                <div class="input-group">
+                                    <label class="input-label">Price (₹)</label>
+                                    <input type="number" id="price" class="custom-input" value="${product.price||''}" placeholder="0.00">
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label">Old Price (₹)</label>
+                                    <input type="number" id="oldPrice" class="custom-input" value="${product.oldPrice||''}" placeholder="0.00">
+                                </div>
+                            </div>
 
-            return colorVariants.map((variant, index) => `
-                <div style="background:#fff; border:1px solid var(--border-color); padding:0.75rem; border-radius:var(--radius-sm); display:flex; justify-content:space-between; align-items:center;">
-                    <div style="display: flex; align-items: center; gap: 1rem;">
-                        <div style="width: 32px; height: 32px; border-radius: 50%; background-color: ${variant.hex || '#e5e7eb'}; border:1px solid var(--border-color);"></div>
-                        <div>
-                            <div style="font-weight:600; font-size:0.9rem;">${variant.name}</div>
-                            <div style="font-size: 0.8rem; color: var(--text-secondary);">
-                                ${variant.sizes ? variant.sizes.filter(s => s.available).length : 0} sizes active
+                            <div class="input-group">
+                                <label class="input-label">Description</label>
+                                <textarea id="description" class="custom-textarea" rows="6">${product.description||''}</textarea>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT COL -->
+                        <div class="col-span-6">
+                            <!-- VARIANTS -->
+                            <div class="input-group" style="background:var(--body-bg); padding:1rem; border-radius:var(--radius-md);">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                                    <label class="input-label" style="margin:0;">Color Variants</label>
+                                    <button type="button" class="btn btn-primary" style="padding:0.5rem 0.75rem; font-size:0.8rem;" onclick="openColorModal()">
+                                        <i class='bx bx-plus'></i> Add
+                                    </button>
+                                </div>
+                                <div id="variants-list"></div>
+                            </div>
+
+                            <!-- IMAGES -->
+                            <div class="input-group">
+                                <label class="input-label">General Images</label>
+                                <div class="upload-area" onclick="document.getElementById('general-images-upload').click()">
+                                    <i class='bx bx-cloud-upload upload-icon'></i>
+                                    <span style="font-weight:500; color:var(--text-primary);">Drag & drop or click</span>
+                                </div>
+                                <input type="file" id="general-images-upload" multiple style="display:none;" accept="image/*">
+                                
+                                <div id="general-uploaded-images" class="thumbnails-grid"></div>
+                                
+                                <div style="margin-top:1rem;">
+                                    <label class="input-label" style="font-size:0.8rem;">Or use URLs</label>
+                                    <div id="url-list">${imgInputs}</div>
+                                    <button type="button" class="btn btn-secondary btn-full" style="margin-top:0.5rem; font-size:0.85rem;" id="add-url-btn">+ Add Another URL</button>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </form>
+                
+                <div class="form-actions">
+                    <button class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+                    <button class="btn btn-primary" id="save-btn" style="min-width:140px;">${isEditing ? 'Save Changes' : 'Create Product'}</button>
+                </div>
+            `;
+
+            renderVariantsList();
+            setupFormListeners(product.id);
+        }
+
+        function renderVariantsList() {
+            const container = document.getElementById('product-form-content');
+            const variants = JSON.parse(container.dataset.colorVariants || '[]');
+            const listEl = document.getElementById('variants-list');
+            
+            if(variants.length === 0) {
+                listEl.innerHTML = `<div style="text-align:center; padding:1rem; color:var(--text-secondary); font-size:0.9rem;">No variants added.</div>`;
+                return;
+            }
+
+            listEl.innerHTML = variants.map((v, idx) => `
+                <div class="variant-item">
+                    <div class="variant-info">
+                        <div class="color-dot" style="background: ${v.hex || '#ccc'}"></div>
+                        <div>
+                            <div style="font-weight:600;">${v.name}</div>
+                            <div style="font-size:0.8rem; color:var(--text-secondary);">${v.sizes.filter(s=>s.available).length} sizes</div>
+                        </div>
+                    </div>
                     <div style="display:flex; gap:0.5rem;">
-                        <button type="button" class="btn-secondary btn-sm" onclick="editColorVariant(${index})"><i class='bx bx-edit'></i></button>
-                        <button type="button" class="btn-danger btn-sm" onclick="removeColorVariant(${index})"><i class='bx bx-trash'></i></button>
+                        <button type="button" class="btn btn-secondary" style="padding:0.4rem;" onclick="editVariant(${idx})"><i class='bx bx-edit'></i></button>
+                        <button type="button" class="btn btn-danger-soft" style="padding:0.4rem;" onclick="deleteVariant(${idx})"><i class='bx bx-trash'></i></button>
                     </div>
                 </div>
             `).join('');
         }
 
-        function openColorModal(colorVariant = null, index = null) {
-            currentColorEditingIndex = index;
+        // --- MODAL & VARIANT LOGIC ---
+        function openColorModal(variant=null, idx=null) {
+            currentColorEditingIndex = idx;
             const modal = document.getElementById('color-variant-modal');
             const title = document.getElementById('color-modal-title');
             
             colorUploadedFile = null;
             colorUploadedImages = [];
-            
-            if (colorVariant) {
-                title.textContent = 'Edit Color Variant';
-                document.getElementById('color-name').value = colorVariant.name;
-                document.getElementById('color-link').value = colorVariant.hex || '';
-                renderModalSizes(colorVariant.sizes || []);
+            document.getElementById('color-upload-preview').style.display = 'none';
+            document.getElementById('color-uploaded-images').innerHTML = '';
+
+            if(variant) {
+                title.textContent = 'Edit Variant';
+                document.getElementById('color-name').value = variant.name;
+                document.getElementById('color-link').value = variant.hex;
+                document.getElementById('simple-color-picker').value = variant.hex && variant.hex.startsWith('#') ? variant.hex : '#000000';
                 
-                const imagesContainer = document.getElementById('modal-color-images');
-                imagesContainer.innerHTML = (colorVariant.images || ['']).map((url, index) => `
-                    <div class="image-list-item">
-                        <div class="form-group" style="flex-grow:1; margin:0;">
-                            <input type="url" class="color-image-url" value="${url}" placeholder="${index === 0 ? 'Main Image URL' : 'Additional'}">
-                        </div>
-                        ${index > 0 ? '<button type="button" class="btn-danger btn-sm" onclick="this.parentElement.remove()"><i class="bx bx-trash"></i></button>' : ''}
-                    </div>
+                // Load Sizes
+                const sizesHtml = SIZES_LIST.map(size => {
+                    const sData = variant.sizes.find(s => s.name === size);
+                    return `
+                        <label style="display:flex; flex-direction:column; align-items:center; gap:0.5rem; padding:0.5rem; border:1px solid var(--border-color); border-radius:var(--radius-md); cursor:pointer; background: ${sData?.available ? '#EFF6FF' : 'transparent'}; border-color: ${sData?.available ? 'var(--brand-primary)' : 'var(--border-color)'};">
+                            <span style="font-weight:600; font-size:0.9rem;">${size}</span>
+                            <input type="checkbox" class="size-chk" ${sData?.available ? 'checked' : ''} style="accent-color:var(--brand-primary);">
+                        </label>
+                    `;
+                }).join('');
+                document.getElementById('modal-sizes-list').innerHTML = sizesHtml;
+
+                // Load Urls
+                document.getElementById('modal-color-images').innerHTML = (variant.images||[]).map(url => `
+                    <input type="url" class="custom-input color-img-url" value="${url}" placeholder="Image URL">
                 `).join('');
-                document.getElementById('color-uploaded-images').innerHTML = '';
+
             } else {
-                title.textContent = 'Add Color Variant';
+                title.textContent = 'Add Variant';
                 document.getElementById('color-variant-form').reset();
-                renderModalSizes([]);
-                document.getElementById('modal-color-images').innerHTML = `
-                    <div class="image-list-item">
-                        <div class="form-group" style="flex-grow:1; margin:0;">
-                            <input type="url" class="color-image-url" placeholder="Main Image URL">
-                        </div>
-                    </div>
-                `;
-                document.getElementById('color-uploaded-images').innerHTML = '';
+                document.getElementById('modal-color-images').innerHTML = '';
+                document.getElementById('modal-sizes-list').innerHTML = SIZES_LIST.map(size => `
+                    <label style="display:flex; flex-direction:column; align-items:center; gap:0.5rem; padding:0.5rem; border:1px solid var(--border-color); border-radius:var(--radius-md); cursor:pointer;">
+                        <span style="font-weight:600; font-size:0.9rem;">${size}</span>
+                        <input type="checkbox" class="size-chk" style="accent-color:var(--brand-primary);">
+                    </label>
+                `).join('');
             }
             
-            document.getElementById('color-upload-preview').style.display = 'none';
-            document.querySelector('#color-variant-form .upload-remove').style.display = 'none';
+            // Visual Toggle for checkboxes
+            document.querySelectorAll('.size-chk').forEach(chk => {
+                chk.addEventListener('change', (e) => {
+                    const p = e.target.parentElement;
+                    if(e.target.checked) { p.style.background='#EFF6FF'; p.style.borderColor='var(--brand-primary)'; }
+                    else { p.style.background='transparent'; p.style.borderColor='var(--border-color)'; }
+                });
+            });
+
             modal.style.display = 'flex';
         }
 
-        function closeColorModal() {
-            document.getElementById('color-variant-modal').style.display = 'none';
-            currentColorEditingIndex = null;
+        function closeColorModal() { document.getElementById('color-variant-modal').style.display = 'none'; }
+
+        async function saveColorVariant() {
+            const name = document.getElementById('color-name').value;
+            if(!name) return showToast('Color name required', 'error');
+
+            let hex = document.getElementById('color-link').value || document.getElementById('simple-color-picker').value;
+            if(colorUploadedFile) hex = await uploadFile(colorUploadedFile, 'swatches');
+
+            // Get sizes
+            const sizes = [];
+            const sizeLabels = document.getElementById('modal-sizes-list').children;
+            for(let i=0; i<sizeLabels.length; i++) {
+                const chk = sizeLabels[i].querySelector('input');
+                const txt = sizeLabels[i].querySelector('span').innerText;
+                if(chk.checked) sizes.push({name: txt, available: true});
+            }
+
+            // Get Images
+            let imgs = [...document.querySelectorAll('.color-img-url')].map(i => i.value).filter(Boolean);
+            if(colorUploadedImages.length > 0) {
+                for(let f of colorUploadedImages) imgs.push(await uploadFile(f, 'variant-imgs'));
+            }
+
+            const variant = { name, hex, sizes, images: imgs };
+            const container = document.getElementById('product-form-content');
+            let list = JSON.parse(container.dataset.colorVariants || '[]');
+            
+            if(currentColorEditingIndex !== null) list[currentColorEditingIndex] = variant;
+            else list.push(variant);
+            
+            container.dataset.colorVariants = JSON.stringify(list);
+            renderVariantsList();
+            closeColorModal();
+            showToast('Variant saved');
         }
 
-        function renderModalSizes(existingSizes = []) {
-            const container = document.getElementById('modal-sizes-list');
-            container.innerHTML = SIZES_LIST.map(size => {
-                const sizeData = existingSizes.find(s => s.name === size);
-                const isOffered = !!sizeData;
-                const isAvailable = sizeData ? sizeData.available : false;
-                
-                return `
-                    <div class="size-row" data-size-name="${size}">
-                        <label style="display:flex; align-items:center; gap:0.75rem; cursor:pointer;">
-                            <input type="checkbox" class="size-offered-checkbox" ${isOffered ? 'checked' : ''} style="width:18px;height:18px;">
-                            <span>${size}</span>
-                        </label>
-                        <div style="display:flex; align-items:center; gap:0.5rem;">
-                            <span style="font-size:0.8rem; color:var(--text-secondary);">Stock:</span>
-                            <input type="checkbox" class="availability-toggle size-availability-toggle" ${isAvailable ? 'checked' : ''} ${!isOffered ? 'disabled' : ''}>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+        function deleteVariant(idx) {
+            customConfirm('Remove this variant?', () => {
+                const container = document.getElementById('product-form-content');
+                let list = JSON.parse(container.dataset.colorVariants);
+                list.splice(idx, 1);
+                container.dataset.colorVariants = JSON.stringify(list);
+                renderVariantsList();
+            });
+        }
 
-            container.querySelectorAll('.size-offered-checkbox').forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    const toggle = this.closest('.size-row').querySelector('.size-availability-toggle');
-                    toggle.disabled = !this.checked;
-                    if (!this.checked) toggle.checked = false;
+        function editVariant(idx) {
+            const container = document.getElementById('product-form-content');
+            const list = JSON.parse(container.dataset.colorVariants);
+            openColorModal(list[idx], idx);
+        }
+
+        // --- FORM LISTENERS & UPLOADS ---
+        function setupFormListeners(productId) {
+            // Category Toggle
+            const catSelect = document.getElementById('category-select');
+            const catInput = document.getElementById('new-category-input');
+            catSelect.addEventListener('change', () => {
+                catInput.style.display = catSelect.value === '--new--' ? 'block' : 'none';
+            });
+            if(catSelect.value === '--new--') catInput.style.display = 'block';
+
+            // Add URL Btn
+            document.getElementById('add-url-btn').onclick = () => {
+                const div = document.createElement('div');
+                div.className = 'input-group';
+                div.style.marginBottom = '0.5rem';
+                div.innerHTML = `<div style="display:flex; gap:0.5rem;"><input type="url" class="custom-input image-url-input" placeholder="Image URL"><button type="button" class="btn btn-danger-soft" onclick="this.closest('.input-group').remove()"><i class='bx bx-trash'></i></button></div>`;
+                document.getElementById('url-list').appendChild(div);
+            };
+            
+            // Add Color URL Manual
+            document.getElementById('add-color-image-btn').onclick = () => {
+                const i = document.createElement('input');
+                i.type = 'url'; i.className = 'custom-input color-img-url'; i.placeholder = 'Image URL'; i.style.marginBottom = '0.5rem';
+                document.getElementById('modal-color-images').appendChild(i);
+            }
+
+            // Color Picker logic
+            document.getElementById('simple-color-picker').addEventListener('input', (e) => {
+                document.getElementById('color-link').value = e.target.value;
+            });
+
+            // Upload Listeners
+            setupUploadPreview('color-image-upload', (f) => {
+                colorUploadedFile = f;
+                const p = document.getElementById('color-upload-preview');
+                p.src = URL.createObjectURL(f);
+                p.style.display = 'block';
+            });
+
+            setupMultiUpload('multiple-color-images-upload', colorUploadedImages, 'color-uploaded-images');
+            setupMultiUpload('general-images-upload', generalUploadedImages, 'general-uploaded-images');
+
+            // Main Save
+            document.getElementById('save-btn').onclick = async (e) => {
+                e.preventDefault();
+                const btn = e.target;
+                btn.disabled = true; btn.textContent = 'Saving...';
+                
+                try {
+                    await saveProduct(productId);
+                } catch(err) {
+                    showToast(err.message, 'error');
+                } finally {
+                    btn.disabled = false; btn.textContent = productId ? 'Save Changes' : 'Create Product';
+                }
+            };
+        }
+
+        function setupUploadPreview(id, cb) {
+            document.getElementById(id).addEventListener('change', e => {
+                if(e.target.files[0]) cb(e.target.files[0]);
+            });
+        }
+
+        function setupMultiUpload(id, arr, containerId) {
+            document.getElementById(id).addEventListener('change', e => {
+                Array.from(e.target.files).forEach(f => {
+                    arr.push(f);
+                    const div = document.createElement('div');
+                    div.className = 'thumbnail-item';
+                    div.innerHTML = `<img src="${URL.createObjectURL(f)}" class="thumbnail-img"><button type="button" class="thumbnail-remove">×</button>`;
+                    div.querySelector('button').onclick = () => {
+                        const idx = arr.indexOf(f);
+                        if(idx > -1) arr.splice(idx, 1);
+                        div.remove();
+                    };
+                    document.getElementById(containerId).appendChild(div);
                 });
             });
         }
 
-        function setupProductFormListeners(productId) {
-            const container = document.getElementById('product-form-content');
-            const categorySelect = container.querySelector('#category-select');
-            const newCategoryInput = container.querySelector('#new-category-input');
+        async function uploadFile(file, path) {
+            const ref = storage.ref().child(`${path}/${Date.now()}-${file.name}`);
+            await ref.put(file);
+            return await ref.getDownloadURL();
+        }
+
+        async function saveProduct(id) {
+            const catSelect = document.getElementById('category-select');
+            let cat = catSelect.value;
+            if(cat === '--new--') cat = document.getElementById('new-category-input').value;
+            if(!cat) throw new Error('Category required');
             
-            if (categorySelect.value === '--new--') newCategoryInput.style.display = 'block';
-            categorySelect.addEventListener('change', () => { newCategoryInput.style.display = categorySelect.value === '--new--' ? 'block' : 'none'; });
+            const name = document.getElementById('name').value;
+            if(!name) throw new Error('Name required');
 
-            container.querySelector('#add-image-btn').onclick = () => {
-                const list = container.querySelector('#image-list');
-                const div = document.createElement('div');
-                div.className = 'image-list-item';
-                div.innerHTML = `<div class="form-group" style="flex-grow:1; margin:0;"><input type="url" class="image-url-input" placeholder="Additional Image URL"></div><button type="button" class="btn-danger btn-sm" onclick="this.parentElement.remove()"><i class="bx bx-trash"></i></button>`;
-                list.appendChild(div);
+            // General Images
+            let images = [...document.querySelectorAll('.image-url-input')].map(i => i.value).filter(Boolean);
+            for(let f of generalUploadedImages) images.push(await uploadFile(f, 'products'));
+            if(images.length === 0) throw new Error('At least 1 image required');
+
+            const data = {
+                name, category: cat,
+                price: parseFloat(document.getElementById('price').value) || 0,
+                oldPrice: parseFloat(document.getElementById('oldPrice').value) || 0,
+                description: document.getElementById('description').value,
+                colorVariants: JSON.parse(document.getElementById('product-form-content').dataset.colorVariants || '[]'),
+                images,
+                createdAt: id ? undefined : firebase.firestore.FieldValue.serverTimestamp()
             };
-
-            document.getElementById('add-color-image-btn').onclick = () => {
-                const list = document.getElementById('modal-color-images');
-                const div = document.createElement('div');
-                div.className = 'image-list-item';
-                div.innerHTML = `
-                    <div class="form-group" style="flex-grow:1; margin:0;">
-                        <input type="url" class="color-image-url" placeholder="Additional Image URL">
-                    </div>
-                    <button type="button" class="btn-danger btn-sm" onclick="this.parentElement.remove()"><i class="bx bx-trash"></i></button>
-                `;
-                list.appendChild(div);
-            };
-
-            document.getElementById('color-image-upload').addEventListener('change', handleColorImageUpload);
-            document.getElementById('multiple-color-images-upload').addEventListener('change', handleMultipleColorImagesUpload);
-            document.getElementById('general-images-upload').addEventListener('change', handleGeneralImagesUpload);
-
-            document.getElementById('color-variant-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-                saveColorVariant();
-            });
-
-            container.querySelector('#save-product-btn').onclick = () => document.getElementById('product-form').requestSubmit();
-            container.querySelector('#product-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                await saveProduct(productId);
-            });
-        }
-
-        function handleColorImageUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                if (file.size > 5 * 1024 * 1024) { showToast("Image > 5MB", "error"); return; }
-                colorUploadedFile = file;
-                const preview = document.getElementById('color-upload-preview');
-                preview.src = URL.createObjectURL(file);
-                preview.style.display = 'block';
-                document.querySelector('#color-variant-form .upload-remove').style.display = 'block';
-                document.getElementById('color-link').value = '';
-            }
-        }
-
-        function handleMultipleColorImagesUpload(event) {
-            const files = Array.from(event.target.files);
-            files.forEach(file => {
-                if (file.size > 5 * 1024 * 1024) return;
-                colorUploadedImages.push(file);
-            });
-            renderColorUploadedImages();
-        }
-
-        function handleGeneralImagesUpload(event) {
-            const files = Array.from(event.target.files);
-            files.forEach(file => {
-                if (file.size > 5 * 1024 * 1024) return;
-                generalUploadedImages.push(file);
-            });
-            renderGeneralUploadedImages();
-        }
-
-        function renderColorUploadedImages() {
-            const container = document.getElementById('color-uploaded-images');
-            container.innerHTML = colorUploadedImages.map((file, index) => `
-                <div class="uploaded-image-item">
-                    <img src="${URL.createObjectURL(file)}" class="uploaded-image-preview">
-                    <button type="button" class="uploaded-image-remove" onclick="removeColorUploadedImage(${index})">×</button>
-                </div>
-            `).join('');
-        }
-
-        function renderGeneralUploadedImages() {
-            const container = document.getElementById('general-uploaded-images');
-            container.innerHTML = generalUploadedImages.map((file, index) => `
-                <div class="uploaded-image-item">
-                    <img src="${URL.createObjectURL(file)}" class="uploaded-image-preview">
-                    <button type="button" class="uploaded-image-remove" onclick="removeGeneralUploadedImage(${index})">×</button>
-                </div>
-            `).join('');
-        }
-
-        function removeColorUploadedImage(index) { colorUploadedImages.splice(index, 1); renderColorUploadedImages(); }
-        function removeGeneralUploadedImage(index) { generalUploadedImages.splice(index, 1); renderGeneralUploadedImages(); }
-
-        function removeColorUpload() {
-            colorUploadedFile = null;
-            document.getElementById('color-image-upload').value = '';
-            document.getElementById('color-upload-preview').style.display = 'none';
-            document.querySelector('#color-variant-form .upload-remove').style.display = 'none';
-        }
-
-        async function uploadImage(file, productName, type) {
-            try {
-                const fileName = `${type}/${productName.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-                const storageRef = storage.ref().child(fileName);
-                const snapshot = await storageRef.put(file);
-                return await snapshot.ref.getDownloadURL();
-            } catch (error) {
-                console.error("Upload error:", error);
-                throw new Error("Upload failed");
-            }
-        }
-
-        async function saveColorVariant() {
-            const colorName = document.getElementById('color-name').value;
-            if (!colorName) { showToast('Color name required.', 'error'); return; }
-
-            let colorImageUrl = document.getElementById('color-link').value;
-            if (colorUploadedFile) {
-                try { colorImageUrl = await uploadImage(colorUploadedFile, colorName, 'color-variants'); } 
-                catch (e) { showToast('Image upload failed.', 'error'); return; }
-            }
-
-            const sizes = [];
-            document.querySelectorAll('#modal-sizes-list .size-row').forEach(row => {
-                if (row.querySelector('.size-offered-checkbox').checked) {
-                    sizes.push({
-                        name: row.dataset.sizeName,
-                        available: row.querySelector('.size-availability-toggle').checked
-                    });
-                }
-            });
-
-            let colorImages = [...document.querySelectorAll('.color-image-url')].map(i => i.value.trim()).filter(Boolean);
-
-            if (colorUploadedImages.length > 0) {
-                try {
-                    for (const file of colorUploadedImages) {
-                        colorImages.push(await uploadImage(file, colorName, 'color-images'));
-                    }
-                } catch (e) { showToast('Gallery upload failed.', 'error'); return; }
-            }
-
-            if (colorImages.length === 0 && !colorImageUrl) { showToast('Image required.', 'error'); return; }
-
-            const colorVariant = { name: colorName, hex: colorImageUrl, sizes: sizes, images: colorImages };
-            const container = document.getElementById('product-form-content');
-            let colorVariants = JSON.parse(container.dataset.colorVariants || '[]');
-
-            if (currentColorEditingIndex !== null) colorVariants[currentColorEditingIndex] = colorVariant;
-            else colorVariants.push(colorVariant);
-
-            container.dataset.colorVariants = JSON.stringify(colorVariants);
-            document.getElementById('color-variants-container').innerHTML = renderColorVariantsSection(colorVariants);
-            closeColorModal();
-            showToast('Variant saved!', 'success');
-        }
-
-        function editColorVariant(index) {
-            const container = document.getElementById('product-form-content');
-            const colorVariants = JSON.parse(container.dataset.colorVariants || '[]');
-            if (colorVariants[index]) openColorModal(colorVariants[index], index);
-        }
-
-        function removeColorVariant(index) {
-            if (!confirm('Remove variant?')) return;
-            const container = document.getElementById('product-form-content');
-            let colorVariants = JSON.parse(container.dataset.colorVariants || '[]');
-            colorVariants.splice(index, 1);
-            container.dataset.colorVariants = JSON.stringify(colorVariants);
-            document.getElementById('color-variants-container').innerHTML = renderColorVariantsSection(colorVariants);
-            showToast('Variant removed.', 'success');
-        }
-
-        async function saveProduct(productId) {
-            const container = document.getElementById('product-form-content');
-            const form = document.getElementById('product-form');
             
-            let category = container.querySelector('#category-select').value;
-            if (category === '--new--') category = container.querySelector('#new-category-input').value.trim();
-            if (!category) { showToast('Category required.', 'error'); return; }
+            // Remove undefined if update
+            if(id) delete data.createdAt;
 
-            let images = [...container.querySelectorAll('.image-url-input')].map(i => i.value.trim()).filter(Boolean);
+            if(id) await db.collection('products').doc(id).update(data);
+            else await db.collection('products').add(data);
 
-            if (generalUploadedImages.length > 0) {
-                try {
-                    for (const file of generalUploadedImages) {
-                        images.push(await uploadImage(file, form.name.value, 'products'));
-                    }
-                } catch (e) { showToast('Image upload failed.', 'error'); return; }
-            }
-
-            if (images.length === 0) { showToast('Main image required.', 'error'); return; }
-
-            const colorVariants = JSON.parse(container.dataset.colorVariants || '[]');
-            const productData = {
-                name: form.name.value,
-                category: category,
-                price: parseFloat(form.price.value),
-                oldPrice: parseFloat(form.oldPrice.value) || 0,
-                images: images,
-                colorVariants: colorVariants,
-                description: form.description.value,
-                isAvailable: colorVariants.some(v => v.sizes && v.sizes.some(s => s.available)) || images.length > 0
-            };
-
-            if (!productId) productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-
-            const btn = document.getElementById('save-product-btn');
-            btn.disabled = true; btn.textContent = 'Saving...';
-
-            try {
-                if (productId) {
-                    await db.collection('products').doc(productId).update(productData);
-                    showToast('Updated successfully!', 'success');
-                } else {
-                    await db.collection('products').add(productData);
-                    showToast('Created successfully!', 'success');
-                }
-                setTimeout(() => window.history.back(), 1000);
-            } catch(error) {
-                console.error("Save error:", error);
-                showToast("Save failed.", "error");
-                btn.disabled = false; btn.textContent = 'Save';
-            }
-        }
-
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.textContent = message;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            showToast('Product Saved Successfully!');
+            setTimeout(() => window.location.href = 'index.html', 1500);
         }
     </script>
 </body>
