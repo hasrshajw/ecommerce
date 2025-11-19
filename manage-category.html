@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Manage Categories - Vastramaya</title>
+    <title>Manage Categories - Vastramaya Admin</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
     <style>
         :root {
             --body-bg: #F8FAFC;
@@ -24,49 +26,40 @@
             --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --radius-sm: 6px;
             --radius-md: 8px;
             --radius-lg: 12px;
             --radius-xl: 24px;
             --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; }
         body { font-family: 'Inter', sans-serif; background-color: var(--body-bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; }
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
         input, button, select, textarea { font-family: inherit; font-size: inherit; outline: none; }
 
+        /* --- LAYOUT & SIDEBAR (Standardized) --- */
         .dashboard-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; position: relative; }
         .main-area { display: flex; flex-direction: column; overflow-y: auto; height: 100vh; background-color: var(--body-bg); }
         
         .main-header { 
-            padding: 12px 2.5rem; 
-            border-bottom: 1px solid var(--border-color); 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            background-color: var(--widget-bg); 
-            position: sticky; 
-            top: 0; 
-            z-index: 10; 
-            box-shadow: var(--shadow-sm); 
-            min-height: 70px;
+            padding: 12px 2.5rem; border-bottom: 1px solid var(--border-color); 
+            display: flex; justify-content: space-between; align-items: center; 
+            background-color: var(--widget-bg); position: sticky; top: 0; z-index: 10; 
+            box-shadow: var(--shadow-sm); min-height: 70px;
         }
         .nav-logo { height: 42px; width: auto; object-fit: contain; display: none; }
         
         .sidebar { 
-            background-color: var(--widget-bg); 
-            border-right: 1px solid var(--border-color); 
-            padding: 2rem 1.5rem; 
-            display: flex; 
-            flex-direction: column; 
-            position: relative; 
-            transition: transform 0.3s ease-in-out;
-            box-shadow: var(--shadow-sm);
-            z-index: 1001;
+            background-color: var(--widget-bg); border-right: 1px solid var(--border-color); 
+            padding: 2rem 1.5rem; display: flex; flex-direction: column; position: relative; 
+            transition: transform 0.3s ease-in-out; box-shadow: var(--shadow-sm); z-index: 1001;
         }
         .sidebar-header { display: flex; align-items: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); } 
         .logo-container { display: flex; align-items: center; width: 100%; }
         .logo-image { height: 40px; width: auto; object-fit: contain; }
+        
         .main-nav ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
         .main-nav a { 
             display: flex; align-items: center; gap: 1rem; text-decoration: none; color: var(--text-secondary); 
@@ -92,12 +85,9 @@
         .profile-section:hover { background-color: var(--hover-bg); }
         .profile-content-wrapper { display: flex; align-items: center; gap: 0.75rem; width: 100%; }
         .profile-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid var(--border-color); transition: var(--transition); }
-        .profile-section:hover .profile-avatar { border-color: var(--brand-primary); }
         .profile-details { flex-grow: 1; min-width: 0; }
         .profile-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; font-size: 0.9rem; }
         .profile-email { font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
-        .profile-options i { font-size: 1.25rem; color: var(--text-secondary); transition: var(--transition); }
-        .profile-section.active .profile-options i { transform: rotate(180deg); }
         
         .profile-popup { 
             position: absolute; bottom: 90px; left: 1.5rem; right: 1.5rem; 
@@ -119,68 +109,110 @@
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .overlay.active { opacity: 1; pointer-events: auto; }
 
-        .page-container { max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%; padding-bottom: 3rem; }
+        /* --- CONTENT SPECIFIC --- */
+        .page-container { max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%; padding-bottom: 5rem; }
         .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
         .page-title { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); }
 
-        .search-container { position: relative; max-width: 400px; width: 100%; }
+        /* --- SEARCH & FILTERS --- */
+        .search-container { position: relative; margin-bottom: 2rem; max-width: 400px; }
         .search-input { 
-            padding: 0.75rem 1rem 0.75rem 2.5rem; 
+            padding: 0.875rem 1rem 0.875rem 2.75rem; 
             border: 1px solid var(--border-color); border-radius: var(--radius-md);
-            width: 100%; font-size: 0.95rem; background: white;
-            transition: all 0.2s ease-in-out;
+            width: 100%; font-size: 0.95rem;
+            background-color: #fff; transition: var(--transition);
         }
         .search-input:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-        .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); pointer-events: none; font-size: 1.2rem; }
+        .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 1.2rem; pointer-events: none; }
 
-        .categories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        /* --- CATEGORIES GRID --- */
+        .categories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
         .category-card { 
-            background: white; border-radius: var(--radius-lg); padding: 1.5rem; 
+            background: var(--widget-bg); border-radius: var(--radius-lg); padding: 1.25rem; 
             box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);
-            transition: var(--transition); position: relative; display: flex; align-items: center; gap: 1rem;
+            transition: var(--transition); position: relative; display: flex; align-items: center; justify-content: space-between;
         }
         .category-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--brand-primary); }
-        .category-image { width: 56px; height: 56px; border-radius: var(--radius-md); object-fit: cover; border: 1px solid var(--border-color); flex-shrink: 0; }
-        .category-details { flex: 1; min-width: 0; }
-        .category-name { font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .category-count { color: var(--text-secondary); font-size: 0.875rem; }
-        .category-actions { position: relative; }
         
-        .menu-button { background: transparent; border: none; padding: 0.5rem; border-radius: 50%; cursor: pointer; color: var(--text-secondary); transition: var(--transition); display: flex; align-items: center; justify-content: center; }
+        .category-info { display: flex; align-items: center; gap: 1rem; flex: 1; min-width: 0; cursor: pointer; }
+        .category-image { 
+            width: 56px; height: 56px; border-radius: var(--radius-md); 
+            object-fit: cover; border: 1px solid var(--border-color); flex-shrink: 0; background-color: #F1F5F9;
+        }
+        .category-details { flex: 1; min-width: 0; }
+        .category-name { font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .category-count { color: var(--text-secondary); font-size: 0.85rem; }
+        
+        .category-actions { display: flex; align-items: center; gap: 0.5rem; }
+        .badge { 
+            background: rgba(59, 130, 246, 0.1); color: var(--brand-primary); padding: 0.25rem 0.75rem; 
+            border-radius: 999px; font-size: 0.75rem; font-weight: 600; 
+        }
+        
+        .menu-button { 
+            background: transparent; border: none; width: 32px; height: 32px; border-radius: 50%;
+            cursor: pointer; color: var(--text-secondary); display: flex; align-items: center; justify-content: center;
+            transition: var(--transition); font-size: 1.25rem;
+        }
         .menu-button:hover { background-color: var(--hover-bg); color: var(--text-primary); }
-        .dropdown-menu { position: absolute; top: 100%; right: 0; background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); padding: 0.5rem; z-index: 100; min-width: 160px; display: none; animation: slideUp 0.2s ease; }
+        
+        .dropdown-menu {
+            position: absolute; top: calc(100% - 10px); right: 1rem; background: var(--widget-bg);
+            border-radius: var(--radius-md); box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color); padding: 0.5rem; z-index: 50;
+            min-width: 160px; display: none; animation: fadeIn 0.1s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
         .dropdown-menu.show { display: block; }
-        .dropdown-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; background: none; border: none; width: 100%; text-align: left; border-radius: var(--radius-sm); cursor: pointer; color: var(--text-primary); font-size: 0.9rem; transition: 0.2s; }
+        .dropdown-item { 
+            display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem;
+            background: none; border: none; width: 100%; text-align: left;
+            border-radius: var(--radius-sm); cursor: pointer; color: var(--text-primary);
+            font-size: 0.9rem; transition: var(--transition); font-weight: 500;
+        }
         .dropdown-item:hover { background-color: var(--hover-bg); }
         .dropdown-item.delete { color: var(--danger-color); }
         .dropdown-item.delete:hover { background-color: #FEF2F2; }
-
-        .empty-state { text-align: center; padding: 4rem 2rem; color: var(--text-secondary); background: white; border-radius: var(--radius-lg); border: 1px dashed var(--border-color); grid-column: 1 / -1; }
-        .empty-state h3 { margin: 1rem 0 0.5rem 0; color: var(--text-primary); font-size: 1.25rem; }
         
+        .empty-state { 
+            text-align: center; padding: 4rem 2rem; color: var(--text-secondary); 
+            background: var(--widget-bg); border-radius: var(--radius-lg); 
+            border: 1px dashed var(--border-color); grid-column: 1 / -1;
+        }
+        .empty-state h3 { margin: 0 0 0.5rem 0; color: var(--text-primary); font-size: 1.25rem; }
+
+        /* --- BUTTONS --- */
         .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; font-weight: 600; border-radius: var(--radius-md); cursor: pointer; transition: var(--transition); border: none; font-size: 0.95rem; }
-        .btn-primary { background: var(--brand-gradient); color: white; box-shadow: var(--shadow-sm); }
-        .btn-primary:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+        .btn-primary { background: var(--brand-gradient); color: white; box-shadow: var(--shadow-md); }
+        .btn-primary:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
         .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-primary); }
         .btn-secondary:hover { background: #F8FAFC; border-color: #CBD5E1; }
-        .btn-danger { background: var(--danger-color); color: white; }
+        .btn-danger { background-color: var(--danger-color); color: white; }
+        .btn-danger:hover { background-color: #DC2626; }
 
+        /* --- MODALS --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 1rem; }
         .modal-content { background: white; width: 100%; max-width: 500px; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
         @keyframes modalPop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #fff; }
+        .modal-title { font-weight: 600; font-size: 1.1rem; }
         .modal-body { padding: 1.5rem; overflow-y: auto; background: #F8FAFC; }
         .modal-footer { padding: 1.25rem 1.5rem; background: white; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; }
-        .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); display: flex; }
-        
+
         .form-group { margin-bottom: 1.25rem; }
-        .form-group label { display: block; font-weight: 500; margin-bottom: 0.5rem; font-size: 0.875rem; color: var(--text-secondary); }
-        .form-control { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white; transition: var(--transition); font-size: 0.95rem; }
+        .input-label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 0.5rem; }
+        .form-control { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: #fff; transition: var(--transition); font-size: 0.95rem; }
         .form-control:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
 
-        .upload-zone { border: 2px dashed var(--border-color); border-radius: var(--radius-md); padding: 1.5rem; text-align: center; cursor: pointer; transition: var(--transition); background: white; }
-        .upload-zone:hover { border-color: var(--brand-primary); background: #F8FAFC; }
-        .preview-image { width: 100%; height: 200px; object-fit: cover; border-radius: var(--radius-md); margin-top: 1rem; display: none; border: 1px solid var(--border-color); }
+        /* Upload Styles */
+        .upload-zone { border: 2px dashed #CBD5E1; border-radius: var(--radius-md); padding: 1.5rem; text-align: center; cursor: pointer; transition: var(--transition); background: #fff; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+        .upload-zone:hover { border-color: var(--brand-primary); background: #EFF6FF; }
+        .upload-preview { width: 80px; height: 80px; border-radius: var(--radius-md); object-fit: cover; border: 1px solid var(--border-color); margin-top: 1rem; display: none; }
+        .upload-preview.show { display: block; }
+        
+        .danger-zone { background: #FEF2F2; border: 1px solid #FECACA; border-radius: var(--radius-md); padding: 1rem; margin-top: 1rem; }
+        .danger-zone h4 { color: var(--danger-color); margin-bottom: 0.5rem; font-size: 0.95rem; }
+        .danger-zone p { font-size: 0.85rem; color: #7F1D1D; margin-bottom: 1rem; }
 
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; pointer-events: none; display: flex; flex-direction: column; gap: 10px; }
         .toast { padding: 1rem 1.5rem; background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); animation: slideUp 0.3s ease; display: flex; align-items: center; gap: 1rem; border-left: 4px solid var(--brand-primary); min-width: 300px; pointer-events: auto; }
@@ -188,21 +220,32 @@
         .toast.error { border-left-color: var(--danger-color); }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* --- RESPONSIVE --- */
         @media (max-width: 1024px) {
             .dashboard-container { grid-template-columns: 1fr; }
-            .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 85%; max-width: 320px; z-index: 1000; transform: translateX(-100%); box-shadow: var(--shadow-lg); padding: 2rem 1.25rem; }
+            .sidebar { 
+                position: fixed; top: 0; left: 0; height: 100%; width: 85%; max-width: 320px; 
+                z-index: 1000; transform: translateX(-100%); box-shadow: var(--shadow-lg); 
+                padding: 2rem 1.25rem;
+            }
             .sidebar.active { transform: translateX(0); }
             .main-header { padding: 12px 1.5rem; justify-content: space-between; }
             .nav-logo { display: block; height: 36px; }
             .menu-toggle { display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; font-size: 1.6rem; color: var(--text-primary); cursor: pointer; border: 1px solid var(--border-color); border-radius: var(--radius-md); background-color: white; }
             .sidebar-close-btn { display: flex; align-items: center; justify-content: center; position: absolute; top: 1.5rem; right: 1.25rem; font-size: 1.75rem; color: var(--text-secondary); cursor: pointer; border: none; background: none; width: 36px; height: 36px; }
+            
             .page-container { padding: 1rem; padding-bottom: 80px; }
-            .content-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
-            .content-header button { width: 100%; }
-            .search-container { max-width: 100%; }
             .categories-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .content-header { flex-direction: column; align-items: flex-start; }
+            .content-header div { width: 100%; display: flex; margin-top: 0.5rem; }
+            .content-header .btn { width: 100%; }
+
+            /* Premium Mobile Modal */
             .modal-overlay { align-items: flex-end; padding: 0; }
-            .modal-content { width: 100%; max-width: 100%; border-radius: var(--radius-xl) var(--radius-xl) 0 0; max-height: 85vh; animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+            .modal-content { 
+                width: 100%; max-width: 100%; border-radius: var(--radius-xl) var(--radius-xl) 0 0 !important; 
+                max-height: 85vh; animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            }
             .modal-footer { padding-bottom: 2rem; }
             @keyframes slideUpModal { from { transform: translateY(100%); } to { transform: translateY(0); } }
         }
@@ -212,8 +255,10 @@
 <body>
     <div class="overlay" id="overlay"></div>
     <div class="dashboard-container">
+        
+        <!-- SIDEBAR -->
         <aside class="sidebar" id="sidebar">
-            <button class="sidebar-close-btn" id="sidebar-close-btn"><i class='bx bx-x'></i></button>
+            <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close menu"><i class='bx bx-x'></i></button>
             <div class="sidebar-header">
                 <div class="logo-container">
                     <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" class="logo-image">
@@ -221,12 +266,14 @@
             </div>
             <nav class="main-nav">
                 <ul>
-                    <li><a href="index.html"><i class='bx bx-home-alt'></i> Dashboard</a></li>
-                    <li><a href="#" class="active"><i class='bx bx-package'></i> Inventory</a></li>
+                    <li><a href="index.html" class="active"><i class='bx bx-home-alt'></i> Dashboard</a></li>
+                    <li><a href="manage-products.html"><i class='bx bx-package'></i> Inventory</a></li>
+                    <li><a href="manage-categories.html" class="active"><i class='bx bx-category'></i> Categories</a></li>
                     <li><a href="#"><i class='bx bx-palette'></i> Customize Site</a></li>
                     <li><a href="#"><i class='bx bx-clipboard'></i> All Orders</a></li>
                 </ul>
             </nav>
+            
             <div class="profile-section" id="profile-section">
                 <div class="profile-content-wrapper">
                     <img id="sidebar-avatar" src="" class="profile-avatar">
@@ -237,6 +284,7 @@
                     <div class="profile-options"><i class='bx bx-chevron-down'></i></div>
                 </div>
             </div>
+            
             <div class="profile-popup" id="profile-popup">
                 <div class="popup-header">
                     <img id="popup-avatar" src="" class="profile-avatar">
@@ -247,22 +295,24 @@
                 </div>
                 <ul class="popup-list">
                     <li><a href="#"><i class='bx bx-user'></i> Profile</a></li>
-                    <li><a href="#"><i class='bx bx-cog'></i> Settings</a></li>
                     <li><a href="#" onclick="auth.signOut()" class="logout"><i class='bx bx-log-out'></i> Logout</a></li>
                 </ul>
             </div>
         </aside>
         
+        <!-- MAIN CONTENT -->
         <main class="main-area">
             <header class="main-header">
-                <button class="menu-toggle" id="menu-toggle"><i class='bx bx-menu'></i></button>
+                <button class="menu-toggle" id="menu-toggle" aria-label="Open menu"><i class='bx bx-menu'></i></button>
                 <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" class="nav-logo">
             </header>
             
             <div class="page-container">
                 <div class="content-header">
                     <h1 class="page-title">Manage Categories</h1>
-                    <button class="btn btn-primary" onclick="openAddCategoryModal()"><i class='bx bx-plus'></i> Add Category</button>
+                    <div>
+                        <button class="btn btn-primary" onclick="openAddCategoryModal()"><i class='bx bx-plus'></i> Add Category</button>
+                    </div>
                 </div>
 
                 <div class="search-container">
@@ -270,96 +320,116 @@
                     <input type="text" id="search-categories" class="search-input" placeholder="Search categories...">
                 </div>
 
-                <div id="categories-container"></div>
+                <div id="categories-container" class="categories-grid">
+                    <!-- Categories injected here -->
+                    <div style="grid-column:1/-1; text-align:center; padding:4rem;">
+                        <i class='bx bx-loader-alt bx-spin' style='font-size:2rem; color:var(--brand-primary)'></i>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
 
-    <div id="add-category-modal" class="modal-overlay">
+    <div id="toast-container"></div>
+
+    <!-- ADD CATEGORY MODAL -->
+    <div class="modal-overlay" id="add-category-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 style="font-size:1.25rem; font-weight:600;">Add Category</h3>
-                <button class="close-modal" onclick="closeAddCategoryModal()"><i class='bx bx-x'></i></button>
+                <div class="modal-title">Add New Category</div>
+                <button class="btn-icon" onclick="closeAddCategoryModal()"><i class='bx bx-x'></i></button>
             </div>
             <div class="modal-body">
                 <form id="add-category-form">
                     <div class="form-group">
-                        <label>Category Name</label>
-                        <input type="text" id="category-name" class="form-control" placeholder="e.g., Summer Collection" required>
+                        <label class="input-label">Category Name</label>
+                        <input type="text" class="form-control" id="category-name" placeholder="e.g. Mens Wear" required>
                     </div>
                     <div class="form-group">
-                        <label>Category Image</label>
+                        <label class="input-label">Category Image URL</label>
+                        <input type="url" class="form-control" id="category-image" placeholder="https://...">
+                        <img id="add-category-preview" class="upload-preview" style="margin-top:0.5rem;">
+                    </div>
+                    <div class="form-group">
+                        <label class="input-label">Or Upload Image</label>
                         <div class="upload-zone" onclick="document.getElementById('add-image-upload').click()">
                             <i class='bx bx-cloud-upload' style="font-size:2rem; color:var(--brand-primary);"></i>
-                            <div style="color:var(--text-secondary); margin-top:0.5rem;">Click to upload image</div>
+                            <span style="color:var(--text-secondary); font-size:0.9rem;">Click to upload</span>
                         </div>
                         <input type="file" id="add-image-upload" accept="image/*" style="display: none;">
-                        <img id="add-upload-preview" class="preview-image">
+                        <img id="add-upload-preview" class="upload-preview">
+                        <button type="button" class="btn btn-danger btn-sm upload-remove" onclick="removeAddUpload()" style="display:none; margin-top:0.5rem; width:100%;">Remove Image</button>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeAddCategoryModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="addCategory()">Save Category</button>
+                <button type="button" class="btn btn-secondary" onclick="closeAddCategoryModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="addCategory()">Save Category</button>
             </div>
         </div>
     </div>
 
-    <div id="edit-category-modal" class="modal-overlay">
+    <!-- EDIT CATEGORY MODAL -->
+    <div class="modal-overlay" id="edit-category-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 style="font-size:1.25rem; font-weight:600;">Edit Category</h3>
-                <button class="close-modal" onclick="closeEditCategoryModal()"><i class='bx bx-x'></i></button>
+                <div class="modal-title">Edit Category</div>
+                <button class="btn-icon" onclick="closeEditCategoryModal()"><i class='bx bx-x'></i></button>
             </div>
             <div class="modal-body">
                 <form id="edit-category-form">
                     <input type="hidden" id="edit-category-id">
                     <div class="form-group">
-                        <label>Category Name</label>
-                        <input type="text" id="edit-category-name" class="form-control" required>
+                        <label class="input-label">Category Name</label>
+                        <input type="text" class="form-control" id="edit-category-name" required>
                     </div>
                     <div class="form-group">
-                        <label>Category Image</label>
+                        <label class="input-label">Category Image URL</label>
+                        <input type="url" class="form-control" id="edit-category-image" placeholder="https://...">
+                        <img id="edit-category-preview" class="upload-preview" style="margin-top:0.5rem;">
+                    </div>
+                    <div class="form-group">
+                        <label class="input-label">Or Upload New Image</label>
                         <div class="upload-zone" onclick="document.getElementById('edit-image-upload').click()">
                             <i class='bx bx-cloud-upload' style="font-size:2rem; color:var(--brand-primary);"></i>
-                            <div style="color:var(--text-secondary); margin-top:0.5rem;">Click to replace image</div>
+                            <span style="color:var(--text-secondary); font-size:0.9rem;">Click to upload</span>
                         </div>
                         <input type="file" id="edit-image-upload" accept="image/*" style="display: none;">
-                        <img id="edit-upload-preview" class="preview-image">
+                        <img id="edit-upload-preview" class="upload-preview">
+                        <button type="button" class="btn btn-danger btn-sm upload-remove" onclick="removeEditUpload()" style="display:none; margin-top:0.5rem; width:100%;">Remove Image</button>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeEditCategoryModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="updateCategory()">Update</button>
+                <button type="button" class="btn btn-secondary" onclick="closeEditCategoryModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="updateCategory()">Update</button>
             </div>
         </div>
     </div>
 
-    <div id="delete-category-modal" class="modal-overlay">
+    <!-- DELETE CONFIRM MODAL -->
+    <div class="modal-overlay" id="delete-category-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 style="font-size:1.25rem; font-weight:600; color:var(--danger-color);">Delete Category</h3>
-                <button class="close-modal" onclick="closeDeleteCategoryModal()"><i class='bx bx-x'></i></button>
+                <div class="modal-title" style="color:var(--danger-color);">Delete Category</div>
+                <button class="btn-icon" onclick="closeDeleteCategoryModal()"><i class='bx bx-x'></i></button>
             </div>
             <div class="modal-body">
-                <p style="color:var(--text-secondary); margin-bottom:1rem;">
-                    You are about to delete <strong id="delete-category-name" style="color:var(--text-primary);"></strong>. 
-                    This action cannot be undone.
-                </p>
-                <div class="form-group">
-                    <label>Type category name to confirm</label>
-                    <input type="text" id="confirm-category-name" class="form-control" placeholder="Enter category name">
+                <div class="danger-zone">
+                    <h4><i class='bx bx-error-circle'></i> Danger Zone</h4>
+                    <p>You are about to delete <strong id="delete-category-name"></strong>. This cannot be undone.</p>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="input-label">Type category name to confirm:</label>
+                        <input type="text" class="form-control" id="confirm-category-name" style="border-color:var(--danger-color);">
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeDeleteCategoryModal()">Cancel</button>
-                <button class="btn btn-danger" id="confirm-delete-btn" onclick="deleteCategory()" disabled>Delete</button>
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteCategoryModal()">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete-btn" disabled onclick="deleteCategory()">Delete</button>
             </div>
         </div>
     </div>
-
-    <div id="toast-container"></div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -367,30 +437,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const sidebar = document.getElementById('sidebar');
-            const menuToggle = document.getElementById('menu-toggle');
-            const closeBtn = document.getElementById('sidebar-close-btn');
-            const overlay = document.getElementById('overlay');
-            const toggleMenu = () => { sidebar.classList.toggle('active'); overlay.classList.toggle('active'); };
-            if (menuToggle) menuToggle.addEventListener('click', toggleMenu);
-            if (closeBtn) closeBtn.addEventListener('click', toggleMenu);
-            if (overlay) overlay.addEventListener('click', toggleMenu);
-
-            const profileSection = document.getElementById('profile-section');
-            const profilePopup = document.getElementById('profile-popup');
-            if (profileSection) {
-                profileSection.addEventListener('click', e => { e.stopPropagation(); profilePopup.classList.toggle('active'); profileSection.classList.toggle('active'); });
-                document.addEventListener('click', e => { if (!profileSection.contains(e.target)) { profilePopup.classList.remove('active'); profileSection.classList.remove('active'); } });
-            }
-
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.category-actions')) {
-                    document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('show'));
-                }
-            });
-        });
-
+        // --- FIREBASE CONFIG ---
         const firebaseConfig = {
             apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
             authDomain: "vastramaya---magic.firebaseapp.com",
@@ -400,167 +447,180 @@
             appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
             measurementId: "G-E39VNDCFVE"
         };
+        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
         const storage = firebase.storage();
-        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
 
+        // --- STATE ---
         let allCategories = [];
         let productCounts = {};
+        let currentEditingCategory = null;
         let currentDeletingCategory = null;
         let addUploadedFile = null;
         let editUploadedFile = null;
 
-        auth.onAuthStateChanged(user => {
-            if (!user || user.email !== ADMIN_EMAIL) {
-                window.location.href = 'index.html';
-                return;
-            }
-            initUI(user);
-            loadData();
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setupSidebar();
+            auth.onAuthStateChanged(user => {
+                if (!user || user.email !== ADMIN_EMAIL) return window.location.href = 'index.html';
+                initProfile(user);
+                initializePage();
+            });
         });
 
-        function initUI(user) {
-            const name = user.displayName || 'Admin';
-            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3B82F6&color=fff`;
-            document.getElementById('sidebar-name').textContent = name;
-            document.getElementById('sidebar-email').textContent = user.email;
-            document.getElementById('sidebar-avatar').src = avatar;
-            document.getElementById('popup-name').textContent = name;
-            document.getElementById('popup-email').textContent = user.email;
-            document.getElementById('popup-avatar').src = avatar;
+        function setupSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const toggle = () => { sidebar.classList.toggle('active'); overlay.classList.toggle('active'); };
+            
+            document.getElementById('menu-toggle').onclick = toggle;
+            document.getElementById('sidebar-close-btn').onclick = toggle;
+            overlay.onclick = toggle;
+
+            const profile = document.getElementById('profile-section');
+            const popup = document.getElementById('profile-popup');
+            profile.onclick = (e) => { e.stopPropagation(); popup.classList.toggle('active'); profile.classList.toggle('active'); };
+            document.onclick = (e) => { if(!profile.contains(e.target)) popup.classList.remove('active'); };
         }
 
-        async function loadData() {
+        function initProfile(user) {
+            const name = user.displayName || 'Admin';
+            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3B82F6&color=fff`;
+            document.querySelectorAll('#sidebar-name, #popup-name').forEach(el => el.textContent = name);
+            document.querySelectorAll('#sidebar-email, #popup-email').forEach(el => el.textContent = user.email);
+            document.querySelectorAll('#sidebar-avatar, #popup-avatar').forEach(el => el.src = avatar);
+        }
+
+        async function initializePage() {
+            await Promise.all([loadCategories(), loadProductCounts()]);
+            renderCategories();
+            setupSearch();
+            setupImageHandling();
+        }
+
+        // --- DATA LOGIC ---
+        async function loadCategories() {
             try {
-                const [catSnap, prodSnap] = await Promise.all([
-                    db.collection('categories').orderBy('name').get(),
-                    db.collection('products').get()
-                ]);
-                
-                allCategories = catSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                const snap = await db.collection('categories').orderBy('name').get();
+                allCategories = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            } catch(e) { showToast("Failed to load categories", "error"); }
+        }
+
+        async function loadProductCounts() {
+            try {
+                const snap = await db.collection('products').get();
                 productCounts = {};
-                prodSnap.docs.forEach(doc => {
-                    const cat = doc.data().category;
+                snap.docs.forEach(d => {
+                    const cat = d.data().category;
                     if(cat) productCounts[cat] = (productCounts[cat] || 0) + 1;
                 });
-                
-                renderCategories();
-            } catch (e) { showToast('Error loading data', 'error'); }
+            } catch(e) { console.error(e); }
         }
 
         function renderCategories(list = allCategories) {
             const container = document.getElementById('categories-container');
             if (list.length === 0) {
-                container.innerHTML = `<div class="empty-state"><h3>No Categories</h3><p>Get started by adding a new category.</p></div>`;
+                container.innerHTML = `<div class="empty-state"><h3>No Categories</h3><p>Create your first category.</p></div>`;
                 return;
             }
-            container.innerHTML = `<div class="categories-grid">
-                ${list.map(c => `
-                    <div class="category-card">
-                        <img src="${c.imageUrl || 'https://via.placeholder.com/50'}" class="category-image">
+            container.innerHTML = list.map(cat => `
+                <div class="category-card">
+                    <div class="category-info" onclick="window.location.href='manage-products.html?category=${encodeURIComponent(cat.name)}'">
+                        <img src="${cat.imageUrl || 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='}" class="category-image" onerror="this.style.display='none'">
                         <div class="category-details">
-                            <div class="category-name">${c.name}</div>
-                            <div class="category-count">${productCounts[c.name] || 0} products</div>
+                            <div class="category-name">${cat.name}</div>
+                            <div class="category-count">${productCounts[cat.name] || 0} products</div>
                         </div>
-                        <div class="category-actions">
-                            <button class="menu-button" onclick="toggleDropdown('${c.id}')"><i class='bx bx-dots-vertical-rounded'></i></button>
-                            <div class="dropdown-menu" id="menu-${c.id}">
-                                <button class="dropdown-item" onclick="openEditCategoryModal('${c.id}', '${c.name}', '${c.imageUrl||''}')"><i class='bx bx-edit'></i> Edit</button>
-                                <button class="dropdown-item delete" onclick="openDeleteCategoryModal('${c.id}', '${c.name}')"><i class='bx bx-trash'></i> Delete</button>
+                    </div>
+                    <div class="category-actions">
+                        <span class="badge">${productCounts[cat.name] || 0}</span>
+                        <div style="position:relative;">
+                            <button class="menu-button" onclick="toggleCatMenu('${cat.id}')"><i class='bx bx-dots-vertical-rounded'></i></button>
+                            <div class="dropdown-menu" id="menu-${cat.id}">
+                                <button class="dropdown-item" onclick="openEditCategoryModal('${cat.id}', '${cat.name}', '${cat.imageUrl||''}')"><i class='bx bx-edit'></i> Edit</button>
+                                <button class="dropdown-item delete" onclick="openDeleteCategoryModal('${cat.id}', '${cat.name}')"><i class='bx bx-trash'></i> Delete</button>
                             </div>
                         </div>
                     </div>
-                `).join('')}
-            </div>`;
+                </div>
+            `).join('');
         }
 
-        function toggleDropdown(id) {
+        // --- MODAL LOGIC ---
+        function toggleCatMenu(id) {
             const menu = document.getElementById(`menu-${id}`);
-            document.querySelectorAll('.dropdown-menu').forEach(m => { if(m !== menu) m.classList.remove('show'); });
-            menu.classList.toggle('show');
+            const isVis = menu.classList.contains('show');
+            document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+            if(!isVis) menu.classList.add('show');
         }
+        document.addEventListener('click', e => { if(!e.target.closest('.menu-button')) document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show')); });
 
-        document.getElementById('search-categories').addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            renderCategories(allCategories.filter(c => c.name.toLowerCase().includes(term)));
-        });
-
-        // --- Add Modal ---
+        // ADD
         function openAddCategoryModal() {
             document.getElementById('add-category-modal').style.display = 'flex';
         }
         function closeAddCategoryModal() {
             document.getElementById('add-category-modal').style.display = 'none';
             document.getElementById('add-category-form').reset();
-            document.getElementById('add-upload-preview').style.display = 'none';
-            addUploadedFile = null;
+            removeAddUpload();
         }
-        document.getElementById('add-image-upload').onchange = e => {
-            const file = e.target.files[0];
-            if(file) {
-                addUploadedFile = file;
-                const prev = document.getElementById('add-upload-preview');
-                prev.src = URL.createObjectURL(file);
-                prev.style.display = 'block';
-            }
-        };
         async function addCategory() {
             const name = document.getElementById('category-name').value.trim();
-            if(!name) return showToast('Name required', 'error');
-            if(allCategories.some(c => c.name.toLowerCase() === name.toLowerCase())) return showToast('Category exists', 'error');
+            let url = document.getElementById('category-image').value.trim();
             
+            if (!name) return showToast('Name required', 'error');
+            if (allCategories.some(c => c.name.toLowerCase() === name.toLowerCase())) return showToast('Exists already', 'error');
+
             try {
-                let url = '';
-                if(addUploadedFile) url = await uploadImage(addUploadedFile);
+                if (addUploadedFile) url = await uploadImage(addUploadedFile, name);
                 await db.collection('categories').add({ name, imageUrl: url, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-                showToast('Category added');
+                showToast('Category Created');
                 closeAddCategoryModal();
-                loadData();
-            } catch(e) { showToast('Failed to add', 'error'); }
+                await Promise.all([loadCategories(), loadProductCounts()]);
+                renderCategories();
+            } catch(e) { showToast('Failed', 'error'); }
         }
 
-        // --- Edit Modal ---
+        // EDIT
         function openEditCategoryModal(id, name, img) {
+            currentEditingCategory = id;
             document.getElementById('edit-category-id').value = id;
             document.getElementById('edit-category-name').value = name;
-            const prev = document.getElementById('edit-upload-preview');
-            if(img) { prev.src = img; prev.style.display = 'block'; }
-            else prev.style.display = 'none';
+            document.getElementById('edit-category-image').value = img;
+            if(img) {
+                const prev = document.getElementById('edit-category-preview');
+                prev.src = img;
+                prev.classList.add('show');
+            }
             document.getElementById('edit-category-modal').style.display = 'flex';
         }
         function closeEditCategoryModal() {
             document.getElementById('edit-category-modal').style.display = 'none';
-            editUploadedFile = null;
+            removeEditUpload();
         }
-        document.getElementById('edit-image-upload').onchange = e => {
-            const file = e.target.files[0];
-            if(file) {
-                editUploadedFile = file;
-                const prev = document.getElementById('edit-upload-preview');
-                prev.src = URL.createObjectURL(file);
-                prev.style.display = 'block';
-            }
-        };
         async function updateCategory() {
             const id = document.getElementById('edit-category-id').value;
             const name = document.getElementById('edit-category-name').value.trim();
-            if(!name) return showToast('Name required', 'error');
+            let url = document.getElementById('edit-category-image').value.trim();
             
+            if (!name) return showToast('Name required', 'error');
+
             try {
-                let url = document.getElementById('edit-upload-preview').src;
-                if(editUploadedFile) url = await uploadImage(editUploadedFile);
+                if (editUploadedFile) url = await uploadImage(editUploadedFile, name);
                 await db.collection('categories').doc(id).update({ name, imageUrl: url, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-                showToast('Category updated');
+                showToast('Updated');
                 closeEditCategoryModal();
-                loadData();
+                await Promise.all([loadCategories(), loadProductCounts()]);
+                renderCategories();
             } catch(e) { showToast('Update failed', 'error'); }
         }
 
-        // --- Delete Modal ---
+        // DELETE
         function openDeleteCategoryModal(id, name) {
-            currentDeletingCategory = { id, name };
+            currentDeletingCategory = {id, name};
             document.getElementById('delete-category-name').textContent = name;
             document.getElementById('confirm-category-name').value = '';
             document.getElementById('confirm-delete-btn').disabled = true;
@@ -570,30 +630,77 @@
             document.getElementById('delete-category-modal').style.display = 'none';
             currentDeletingCategory = null;
         }
-        document.getElementById('confirm-category-name').oninput = function() {
-            document.getElementById('confirm-delete-btn').disabled = this.value !== currentDeletingCategory.name;
-        };
+        document.getElementById('confirm-category-name').addEventListener('input', (e) => {
+            document.getElementById('confirm-delete-btn').disabled = e.target.value !== currentDeletingCategory.name;
+        });
         async function deleteCategory() {
+            if (!currentDeletingCategory) return;
             try {
                 await db.collection('categories').doc(currentDeletingCategory.id).delete();
-                showToast('Category deleted');
+                showToast('Deleted');
                 closeDeleteCategoryModal();
-                loadData();
+                await Promise.all([loadCategories(), loadProductCounts()]);
+                renderCategories();
             } catch(e) { showToast('Delete failed', 'error'); }
         }
 
-        async function uploadImage(file) {
-            const ref = storage.ref().child(`categories/${Date.now()}-${file.name}`);
+        // SEARCH
+        function setupSearch() {
+            document.getElementById('search-categories').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                const filtered = allCategories.filter(c => c.name.toLowerCase().includes(term));
+                renderCategories(filtered);
+            });
+        }
+
+        // IMAGE HANDLING
+        function setupImageHandling() {
+            setupUpload('add-image-upload', 'add-upload-preview', (f) => { 
+                addUploadedFile = f; 
+                document.querySelector('#add-category-modal .upload-remove').style.display = 'block';
+                document.getElementById('category-image').value = '';
+            });
+            setupUpload('edit-image-upload', 'edit-upload-preview', (f) => { 
+                editUploadedFile = f;
+                document.querySelector('#edit-category-modal .upload-remove').style.display = 'block';
+                document.getElementById('edit-category-image').value = '';
+            });
+        }
+        function setupUpload(inputId, previewId, cb) {
+            document.getElementById(inputId).onchange = (e) => {
+                const file = e.target.files[0];
+                if(file) {
+                    if(file.size > 5*1024*1024) return showToast('Max 5MB', 'error');
+                    document.getElementById(previewId).src = URL.createObjectURL(file);
+                    document.getElementById(previewId).classList.add('show');
+                    cb(file);
+                }
+            };
+        }
+        function removeAddUpload() {
+            addUploadedFile = null;
+            document.getElementById('add-image-upload').value = '';
+            document.getElementById('add-upload-preview').classList.remove('show');
+            document.querySelector('#add-category-modal .upload-remove').style.display = 'none';
+        }
+        function removeEditUpload() {
+            editUploadedFile = null;
+            document.getElementById('edit-image-upload').value = '';
+            document.getElementById('edit-upload-preview').classList.remove('show');
+            document.querySelector('#edit-category-modal .upload-remove').style.display = 'none';
+        }
+        async function uploadImage(file, name) {
+            const ref = storage.ref().child(`categories/${name}-${Date.now()}`);
             await ref.put(file);
             return await ref.getDownloadURL();
         }
 
         function showToast(msg, type='success') {
-            const container = document.getElementById('toast-container');
+            const box = document.getElementById('toast-container');
             const el = document.createElement('div');
             el.className = `toast ${type}`;
-            el.innerHTML = `<i class='bx ${type==='success'?'bx-check-circle':'bx-error-circle'}'></i> <span>${msg}</span>`;
-            container.appendChild(el);
+            el.innerHTML = `<i class='bx ${type==='success'?'bx-check-circle':'bx-error-circle'}'></i> ${msg}`;
+            box.appendChild(el);
             setTimeout(() => el.remove(), 3000);
         }
     </script>
