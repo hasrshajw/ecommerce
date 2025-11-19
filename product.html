@@ -11,7 +11,6 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     
     <style>
-        /* --- CORE VARIABLES & RESET --- */
         :root {
             --body-bg: #F8FAFC;
             --widget-bg: #FFFFFF;
@@ -30,6 +29,7 @@
             --radius-md: 10px;
             --radius-lg: 16px;
             --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --warning-color: #F59E0B;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background-color: var(--body-bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; }
@@ -37,7 +37,6 @@
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
         
-        /* --- PREVIOUS DASHBOARD LAYOUT (UNCHANGED) --- */
         .dashboard-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; position: relative; }
         .main-area { display: flex; flex-direction: column; height: 100vh; overflow-y: auto; background-color: var(--body-bg); }
         .main-header { padding: 12px 2.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background-color: var(--widget-bg); position: sticky; top: 0; z-index: 10; box-shadow: var(--shadow-sm); min-height: 65px; }
@@ -77,12 +76,10 @@
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .overlay.active { opacity: 1; pointer-events: auto; }
 
-        /* --- NEW UI/UX FOR CONTENT AREA --- */
         .page-container { max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%; }
         .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
         .page-title { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); margin: 0; letter-spacing: -0.5px; }
         
-        /* Cards & Sections */
         .editor-card { 
             background: var(--widget-bg); border-radius: var(--radius-lg); 
             box-shadow: var(--shadow-sm); padding: 2rem; 
@@ -90,7 +87,6 @@
         }
         .section-title { font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); display:flex; align-items:center; gap:0.5rem; }
         
-        /* Form Elements */
         .form-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
         .form-col { display: flex; flex-direction: column; gap: 2rem; }
         
@@ -105,7 +101,6 @@
         .form-control:focus { border-color: var(--brand-primary); outline: none; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
         .form-control::placeholder { color: #94A3B8; }
         
-        /* Custom Select */
         .custom-select-container { position: relative; width: 100%; }
         .custom-select-trigger {
             position: relative; display: flex; align-items: center; justify-content: space-between;
@@ -128,7 +123,6 @@
         .custom-option:hover { background-color: var(--body-bg); color: var(--brand-primary); }
         .custom-option.selected { background-color: rgba(79, 70, 229, 0.05); color: var(--brand-primary); font-weight: 600; }
         
-        /* Custom Upload Area */
         .upload-zone {
             border: 2px dashed var(--border-color); border-radius: var(--radius-md);
             padding: 2rem 1rem; text-align: center; cursor: pointer;
@@ -138,7 +132,6 @@
         .upload-icon { font-size: 2rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
         .upload-text { font-size: 0.9rem; color: var(--text-secondary); }
         
-        /* Variant Cards */
         .variant-list { display: flex; flex-direction: column; gap: 0.75rem; }
         .variant-card {
             display: flex; align-items: center; justify-content: space-between;
@@ -149,7 +142,6 @@
         .variant-info { display: flex; align-items: center; gap: 1rem; }
         .variant-swatch { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); }
         
-        /* Buttons */
         .btn { 
             display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
             padding: 0.75rem 1.5rem; font-weight: 600; border-radius: var(--radius-md);
@@ -166,7 +158,6 @@
         .btn-icon:hover { background: var(--body-bg); color: var(--text-primary); }
         .btn-icon.delete:hover { background: #FEF2F2; color: var(--danger-color); }
 
-        /* Custom Confirm Modal & Toast */
         .confirm-modal-wrapper {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px);
@@ -186,7 +177,6 @@
             font-size: 1.5rem; margin: 0 auto 1rem;
         }
         
-        /* Upload Previews */
         .preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 0.75rem; margin-top: 1rem; }
         .preview-item { position: relative; aspect-ratio: 1; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); }
         .preview-img { width: 100%; height: 100%; object-fit: cover; }
@@ -197,14 +187,22 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-size: 1rem;
         }
 
-        /* Modal Styles */
+        .cover-preview-container { position: relative; width: 100%; height: 200px; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); margin-top: 1rem; display: none; }
+        .cover-preview-img { width: 100%; height: 100%; object-fit: cover; }
+
+        .review-list { display: flex; flex-direction: column; gap: 1rem; max-height: 300px; overflow-y: auto; margin-bottom: 1rem; }
+        .review-item { padding: 1rem; background: #F8FAFC; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
+        .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+        .review-user { font-weight: 600; font-size: 0.9rem; }
+        .review-stars { color: var(--warning-color); font-size: 1rem; }
+        .review-text { font-size: 0.9rem; color: var(--text-secondary); }
+
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); z-index: 1500; display: none; justify-content: center; align-items: center; padding: 1rem; }
         .modal-content { background: #fff; width: 100%; max-width: 650px; border-radius: var(--radius-lg); max-height: 90vh; display: flex; flex-direction: column; box-shadow: var(--shadow-lg); overflow: hidden; }
         .modal-header { padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #fff; }
         .modal-body { padding: 1.5rem; overflow-y: auto; }
         .modal-footer { padding: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; background: #F8FAFC; }
 
-        /* Media Queries */
         @media (max-width: 1024px) {
             .dashboard-container { grid-template-columns: 1fr; }
             .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 85%; max-width: 320px; transform: translateX(-100%); z-index: 1000; padding: 2rem 1.25rem; }
@@ -214,7 +212,6 @@
             .menu-toggle { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; font-size: 1.6rem; color: var(--text-primary); cursor: pointer; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white; }
             .sidebar-close-btn { display: flex; align-items: center; justify-content: center; position: absolute; top: 1.5rem; right: 1.25rem; font-size: 1.75rem; color: var(--text-secondary); cursor: pointer; border: none; background: none; width: 36px; height: 36px; border-radius: 50%; }
             
-            /* Mobile Specific Updates */
             .page-container { padding: 1rem; }
             .form-grid { grid-template-columns: 1fr; gap: 1.5rem; }
             .content-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
@@ -226,7 +223,6 @@
         }
         @media (min-width: 1025px) { .nav-logo { display: none; } }
         
-        /* Toast Animation */
         #toast-container { position: fixed; top: 20px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
         .toast { padding: 1rem 1.5rem; background: #fff; border-left: 4px solid var(--brand-primary); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); pointer-events: auto; animation: slideInRight 0.3s ease forwards; display: flex; align-items: center; gap: 1rem; min-width: 300px; }
         .toast.error { border-left-color: var(--danger-color); }
@@ -240,9 +236,7 @@
 <body>
     <div class="overlay" id="overlay"></div>
     
-    <!-- DASHBOARD LAYOUT -->
     <div class="dashboard-container">
-        <!-- SIDEBAR (UNCHANGED) -->
         <aside class="sidebar" id="sidebar">
             <button class="sidebar-close-btn" id="sidebar-close-btn"><i class='bx bx-x'></i></button>
             <div class="sidebar-header">
@@ -284,14 +278,12 @@
             </div>
         </aside>
         
-        <!-- MAIN CONTENT -->
         <main class="main-area">
             <header class="main-header">
                 <button class="menu-toggle" id="menu-toggle"><i class='bx bx-menu'></i></button>
                 <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" class="nav-logo">
             </header>
             
-            <!-- UPDATED UI CONTENT -->
             <div class="page-container">
                 <div class="content-header">
                     <h1 class="page-title" id="editor-title">Product Editor</h1>
@@ -311,10 +303,8 @@
         </main>
     </div>
 
-    <!-- CUSTOM TOAST CONTAINER -->
     <div id="toast-container"></div>
 
-    <!-- CUSTOM CONFIRMATION MODAL -->
     <div class="confirm-modal-wrapper" id="confirm-modal">
         <div class="confirm-box">
             <div class="confirm-icon"><i class='bx bx-error'></i></div>
@@ -327,7 +317,6 @@
         </div>
     </div>
 
-    <!-- COLOR VARIANT MODAL -->
     <div class="modal-overlay" id="color-variant-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -342,7 +331,6 @@
                             <input type="text" class="form-control" id="color-name" placeholder="e.g., Midnight Blue" required>
                         </div>
                         
-                        <!-- Color Icon Section -->
                         <div class="input-group">
                             <label class="input-label">Color Icon / Swatch</label>
                             <div style="display:flex; gap:1rem; align-items:flex-start;">
@@ -361,15 +349,11 @@
                             </div>
                         </div>
 
-                        <!-- Sizes Section -->
                         <div class="input-group">
                             <label class="input-label">Sizes & Availability</label>
-                            <div style="background:#F8FAFC; border-radius:var(--radius-md); padding:1rem; border:1px solid var(--border-color);" id="modal-sizes-list">
-                                <!-- Sizes injected via JS -->
-                            </div>
+                            <div style="background:#F8FAFC; border-radius:var(--radius-md); padding:1rem; border:1px solid var(--border-color);" id="modal-sizes-list"></div>
                         </div>
 
-                        <!-- Gallery Section -->
                         <div class="input-group">
                             <label class="input-label">Variant Gallery Images</label>
                             <div class="upload-zone" onclick="document.getElementById('multiple-color-images-upload').click()">
@@ -395,14 +379,47 @@
         </div>
     </div>
 
-    <!-- FIREBASE SDKs -->
+    <div class="modal-overlay" id="review-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 style="font-size: 1.2rem; font-weight: 600;">Add Review</h3>
+                <button class="btn-icon" onclick="closeReviewModal()"><i class='bx bx-x' style="font-size:1.5rem;"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="review-form">
+                    <div class="input-group">
+                        <label class="input-label">User Name</label>
+                        <input type="text" class="form-control" id="review-user" required placeholder="John Doe">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Rating</label>
+                        <select class="form-control" id="review-rating">
+                            <option value="5">5 Stars</option>
+                            <option value="4">4 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <option value="2">2 Stars</option>
+                            <option value="1">1 Star</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Comment</label>
+                        <textarea class="form-control" id="review-comment" rows="4" required placeholder="Write a comment..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeReviewModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="addReview()">Add Review</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <script>
-        /* --- CONFIG & STATE --- */
         const firebaseConfig = {
             apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
             authDomain: "vastramaya---magic.firebaseapp.com",
@@ -423,11 +440,9 @@
         let currentColorEditingIndex = null;
         let colorUploadedFile = null;
         let colorUploadedImages = [];
-        let generalUploadedImages = [];
+        let coverUploadedFile = null;
 
-        /* --- MENU & UI INTERACTION --- */
         document.addEventListener('DOMContentLoaded', () => {
-            // Sidebar Logic
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
             const toggleMenu = () => { sidebar.classList.toggle('active'); overlay.classList.toggle('active'); };
@@ -436,7 +451,6 @@
             document.getElementById('sidebar-close-btn')?.addEventListener('click', toggleMenu);
             overlay?.addEventListener('click', toggleMenu);
 
-            // Profile Popup
             const profileSection = document.getElementById('profile-section');
             const profilePopup = document.getElementById('profile-popup');
             profileSection?.addEventListener('click', (e) => {
@@ -451,19 +465,16 @@
                 }
             });
 
-            // Logout
             document.getElementById('logout-btn')?.addEventListener('click', (e) => {
                 e.preventDefault();
                 auth.signOut();
             });
 
-            // Header Save Button delegation
             document.getElementById('header-save-btn')?.addEventListener('click', () => {
                 document.getElementById('product-form')?.requestSubmit();
             });
         });
 
-        /* --- AUTH & INIT --- */
         auth.onAuthStateChanged(user => {
             if (!user || user.email !== ADMIN_EMAIL) {
                 window.location.href = 'index.html';
@@ -484,8 +495,6 @@
             document.getElementById('popup-avatar').src = avatar;
         }
 
-        /* --- CUSTOM COMPONENTS --- */
-        // Custom Confirm Modal (Promise based)
         function showConfirm(message) {
             return new Promise((resolve) => {
                 const modal = document.getElementById('confirm-modal');
@@ -510,7 +519,6 @@
             });
         }
 
-        // Custom Toast
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -529,7 +537,6 @@
             }, 3000);
         }
 
-        // Custom Select Logic
         function setupCustomSelect(containerId, options, selectedValue, onChange) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
@@ -545,7 +552,6 @@
             const optionsList = document.createElement('div');
             optionsList.className = 'custom-select-options';
             
-            // Add standard options
             options.forEach(opt => {
                 const el = document.createElement('div');
                 el.className = `custom-option ${opt === selectedValue ? 'selected' : ''}`;
@@ -559,7 +565,6 @@
                 optionsList.appendChild(el);
             });
             
-            // Add "Create New" option
             const newOpt = document.createElement('div');
             newOpt.className = 'custom-option';
             newOpt.innerHTML = `<span style="color:var(--brand-primary); font-weight:600;">+ Create New Category</span>`;
@@ -572,7 +577,6 @@
             trigger.onclick = (e) => {
                 e.stopPropagation();
                 const isOpen = optionsList.classList.contains('open');
-                // Close others
                 document.querySelectorAll('.custom-select-options').forEach(el => el.classList.remove('open'));
                 document.querySelectorAll('.custom-select-trigger').forEach(el => el.classList.remove('open'));
                 
@@ -592,7 +596,6 @@
             });
         }
 
-        /* --- MAIN LOGIC --- */
         function initializeEditor() {
             const params = new URLSearchParams(window.location.search);
             const productId = params.get('id');
@@ -637,13 +640,27 @@
         function renderProductForm(product) {
             const container = document.getElementById('product-form-content');
             container.dataset.colorVariants = JSON.stringify(product.colorVariants || []);
-            
-            // Build UI
+            container.dataset.reviews = JSON.stringify(product.reviews || []);
+            const coverImage = product.images && product.images.length > 0 ? product.images[0] : '';
+
             container.innerHTML = `
                 <form id="product-form">
                     <div class="form-grid">
-                        <!-- Left Column -->
                         <div class="form-col">
+                            <div class="editor-card">
+                                <h3 class="section-title"><i class='bx bx-image'></i> Cover Image</h3>
+                                <div class="upload-zone" onclick="document.getElementById('cover-image-upload').click()">
+                                    <i class='bx bx-cloud-upload upload-icon'></i>
+                                    <div class="upload-text">Click to upload cover image</div>
+                                </div>
+                                <input type="file" id="cover-image-upload" accept="image/*" style="display:none;">
+                                <div id="cover-preview-container" class="cover-preview-container" style="${coverImage ? 'display:block;' : ''}">
+                                    <img id="cover-preview-img" src="${coverImage}" class="cover-preview-img">
+                                    <button type="button" class="preview-remove" onclick="removeCoverImage()" style="top:10px; right:10px; width:30px; height:30px;">×</button>
+                                </div>
+                                <input type="hidden" id="cover-image-url" value="${coverImage}">
+                            </div>
+
                             <div class="editor-card">
                                 <h3 class="section-title"><i class='bx bx-info-circle'></i> Basic Details</h3>
                                 <div class="input-group">
@@ -671,32 +688,8 @@
                                     <i class='bx bx-plus'></i> Add Color Variant
                                 </button>
                             </div>
-                            
-                            <div class="editor-card">
-                                <h3 class="section-title"><i class='bx bx-images'></i> General Images</h3>
-                                <div class="upload-zone" onclick="document.getElementById('general-images-upload').click()">
-                                    <i class='bx bx-cloud-upload upload-icon'></i>
-                                    <div class="upload-text">Drop files here or click to upload</div>
-                                </div>
-                                <input type="file" id="general-images-upload" accept="image/*" multiple style="display:none;">
-                                <div id="general-uploaded-images" class="preview-grid"></div>
-                                
-                                <div style="margin-top:1.5rem;">
-                                    <label class="input-label">Image URLs</label>
-                                    <div id="general-url-list">
-                                        ${(product.images || []).map(url => `
-                                            <div class="input-group" style="display:flex; gap:0.5rem; margin-bottom:0.5rem;">
-                                                <input type="url" class="form-control general-url" value="${url}">
-                                                <button type="button" class="btn-icon delete" onclick="this.parentElement.remove()"><i class='bx bx-trash'></i></button>
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                    <button type="button" class="btn btn-secondary btn-sm" style="margin-top:0.5rem;" onclick="addGeneralUrlField()">+ Add URL</button>
-                                </div>
-                            </div>
                         </div>
 
-                        <!-- Right Column -->
                         <div class="form-col">
                             <div class="editor-card">
                                 <h3 class="section-title"><i class='bx bx-purchase-tag'></i> Pricing</h3>
@@ -709,12 +702,21 @@
                                     <input type="number" class="form-control" id="oldPrice" step="0.01" value="${product.oldPrice||''}">
                                 </div>
                             </div>
+
+                            <div class="editor-card">
+                                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); margin-bottom:1rem; padding-bottom:0.75rem;">
+                                    <h3 class="section-title" style="margin:0; border:none;"><i class='bx bx-star'></i> Customer Reviews</h3>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="openReviewModal()" style="padding:0.4rem 0.8rem; font-size:0.8rem;">+ Add</button>
+                                </div>
+                                <div id="reviews-list" class="review-list">
+                                    ${renderReviewsList(product.reviews || [])}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </form>
             `;
 
-            // Setup Listeners
             setupCustomSelect('category-select-wrapper', allCategories, product.category, (val) => {
                 document.getElementById('selected-category').value = val;
                 const newCatInput = document.getElementById('new-category-input');
@@ -722,25 +724,34 @@
                 if(val === '--new--') newCatInput.focus();
             });
 
-            document.getElementById('general-images-upload').addEventListener('change', (e) => handleGeneralUpload(e));
+            document.getElementById('cover-image-upload').addEventListener('change', handleCoverUpload);
             document.getElementById('product-form').addEventListener('submit', (e) => {
                 e.preventDefault();
                 saveProduct(product.id);
             });
         }
 
-        function addGeneralUrlField() {
-            const div = document.createElement('div');
-            div.className = 'input-group';
-            div.style.cssText = 'display:flex; gap:0.5rem; margin-bottom:0.5rem;';
-            div.innerHTML = `
-                <input type="url" class="form-control general-url" placeholder="https://...">
-                <button type="button" class="btn-icon delete" onclick="this.parentElement.remove()"><i class='bx bx-trash'></i></button>
-            `;
-            document.getElementById('general-url-list').appendChild(div);
+        function handleCoverUpload(e) {
+            const file = e.target.files[0];
+            if(file) {
+                if(file.size > 5*1024*1024) return showToast('File too large', 'error');
+                coverUploadedFile = file;
+                const container = document.getElementById('cover-preview-container');
+                const img = document.getElementById('cover-preview-img');
+                img.src = URL.createObjectURL(file);
+                container.style.display = 'block';
+                document.getElementById('cover-image-url').value = '';
+            }
         }
 
-        /* --- VARIANT LOGIC --- */
+        function removeCoverImage() {
+            coverUploadedFile = null;
+            document.getElementById('cover-image-upload').value = '';
+            document.getElementById('cover-image-url').value = '';
+            document.getElementById('cover-preview-container').style.display = 'none';
+            document.getElementById('cover-preview-img').src = '';
+        }
+
         function renderVariantsList(variants) {
             if (!variants.length) return `<div style="text-align:center; padding:1rem; color:var(--text-secondary);">No variants added yet.</div>`;
             return variants.map((v, i) => `
@@ -760,6 +771,64 @@
             `).join('');
         }
 
+        function renderReviewsList(reviews) {
+            if(!reviews || reviews.length === 0) return `<div style="text-align:center; padding:1rem; color:var(--text-secondary);">No reviews yet.</div>`;
+            return reviews.map((r, i) => {
+                const stars = Array(5).fill(0).map((_, idx) => idx < r.rating ? "<i class='bx bxs-star'></i>" : "<i class='bx bx-star'></i>").join('');
+                return `
+                    <div class="review-item">
+                        <div class="review-header">
+                            <span class="review-user">${r.userName}</span>
+                            <button type="button" class="btn-icon delete" style="padding:0; width:20px; height:20px;" onclick="deleteReview(${i})">×</button>
+                        </div>
+                        <div class="review-stars" style="margin-bottom:0.5rem;">${stars}</div>
+                        <p class="review-text">${r.comment}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openReviewModal() {
+            document.getElementById('review-form').reset();
+            document.getElementById('review-modal').style.display = 'flex';
+        }
+
+        function closeReviewModal() {
+            document.getElementById('review-modal').style.display = 'none';
+        }
+
+        function addReview() {
+            const user = document.getElementById('review-user').value;
+            const rating = parseInt(document.getElementById('review-rating').value);
+            const comment = document.getElementById('review-comment').value;
+            
+            if(!user || !comment) return showToast('Please fill all fields', 'error');
+            
+            const container = document.getElementById('product-form-content');
+            let reviews = JSON.parse(container.dataset.reviews);
+            reviews.push({
+                userName: user,
+                rating: rating,
+                comment: comment,
+                date: Date.now()
+            });
+            
+            container.dataset.reviews = JSON.stringify(reviews);
+            document.getElementById('reviews-list').innerHTML = renderReviewsList(reviews);
+            closeReviewModal();
+            showToast('Review added');
+        }
+
+        async function deleteReview(index) {
+            if(await showConfirm('Delete this review?')) {
+                const container = document.getElementById('product-form-content');
+                let reviews = JSON.parse(container.dataset.reviews);
+                reviews.splice(index, 1);
+                container.dataset.reviews = JSON.stringify(reviews);
+                document.getElementById('reviews-list').innerHTML = renderReviewsList(reviews);
+            }
+        }
+
         function openColorModal(variant = null, index = null) {
             currentColorEditingIndex = index;
             const modal = document.getElementById('color-variant-modal');
@@ -776,7 +845,6 @@
             
             title.textContent = variant ? 'Edit Variant' : 'Add Variant';
             
-            // Sizes
             const container = document.getElementById('modal-sizes-list');
             container.innerHTML = SIZES_LIST.map(size => {
                 const s = variant?.sizes?.find(x => x.name === size);
@@ -794,7 +862,6 @@
                 `;
             }).join('');
             
-            // Size Logic
             container.querySelectorAll('.size-cb').forEach(cb => {
                 cb.addEventListener('change', function() {
                     const stock = this.closest('div').querySelector('.stock-cb');
@@ -810,13 +877,11 @@
                      document.getElementById('color-upload-preview').src = variant.hex;
                      document.getElementById('color-preview-container').style.display = 'block';
                 }
-                
-                // Load existing URLs
                 (variant.images || []).forEach(url => {
                     addVariantUrlField(url);
                 });
             } else {
-                addVariantUrlField(); // Add one empty
+                addVariantUrlField();
             }
 
             modal.style.display = 'flex';
@@ -836,18 +901,6 @@
             `;
             document.getElementById('modal-color-images-urls').appendChild(div);
         }
-        
-        /* --- UPLOAD HANDLERS --- */
-        function handleGeneralUpload(e) {
-            Array.from(e.target.files).forEach(file => {
-                if(file.size > 5*1024*1024) return showToast('File too large', 'error');
-                generalUploadedImages.push(file);
-            });
-            renderUploadPreviews('general-uploaded-images', generalUploadedImages, (i) => {
-                generalUploadedImages.splice(i, 1);
-                handleGeneralUpload({target:{files:[]}}); // re-render hack
-            });
-        }
 
         document.getElementById('color-image-upload').onchange = (e) => {
             const file = e.target.files[0];
@@ -856,7 +909,7 @@
                 const prev = document.getElementById('color-upload-preview');
                 prev.src = URL.createObjectURL(file);
                 document.getElementById('color-preview-container').style.display = 'block';
-                document.getElementById('color-link').value = ''; // Clear URL if upload
+                document.getElementById('color-link').value = '';
             }
         };
 
@@ -891,7 +944,6 @@
             document.getElementById('color-preview-container').style.display = 'none';
         }
 
-        /* --- SAVING LOGIC --- */
         async function uploadFile(file, path) {
             const ref = storage.ref().child(`${path}/${Date.now()}-${file.name}`);
             await ref.put(file);
@@ -962,16 +1014,20 @@
             
             if(!category) return showToast('Category required', 'error');
 
-            let images = [...document.querySelectorAll('.general-url')].map(i=>i.value).filter(Boolean);
+            let coverImageUrl = document.getElementById('cover-image-url').value;
             
-            if(generalUploadedImages.length) {
-                showToast('Uploading images...', 'info');
+            if(coverUploadedFile) {
+                showToast('Uploading cover image...', 'info');
                 try {
-                    for(let f of generalUploadedImages) images.push(await uploadFile(f, 'products'));
-                } catch(e) { return showToast('Upload failed', 'error'); }
+                    coverImageUrl = await uploadFile(coverUploadedFile, 'products');
+                } catch(e) { return showToast('Cover upload failed', 'error'); }
             }
 
+            if (!coverImageUrl) return showToast('Cover Image is required', 'error');
+
             const colorVariants = JSON.parse(container.dataset.colorVariants);
+            const reviews = JSON.parse(container.dataset.reviews);
+
             const productData = {
                 name: document.getElementById('name').value,
                 category,
@@ -979,7 +1035,8 @@
                 oldPrice: parseFloat(document.getElementById('oldPrice').value) || 0,
                 description: document.getElementById('description').value,
                 colorVariants,
-                images,
+                images: [coverImageUrl],
+                reviews,
                 isAvailable: true,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
