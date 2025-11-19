@@ -310,9 +310,9 @@
                 justify-content: space-between;
             }
             
-            /* Hide desktop logo in sidebar on mobile */
+            /* Show logo in mobile menu */
             .sidebar .logo-container {
-                display: none;
+                display: flex;
             }
             
             /* Show logo in navbar on mobile */
@@ -339,15 +339,15 @@
                 border-radius: var(--radius-md); 
                 background-color: transparent;
                 transition: var(--transition);
-                outline: none;
+                -webkit-tap-highlight-color: transparent;
             }
             .menu-toggle:hover { 
                 background-color: var(--hover-bg);
                 border-color: var(--brand-primary);
             }
-            .menu-toggle:active, .menu-toggle:focus {
+            .menu-toggle:active { 
                 background-color: var(--hover-bg);
-                border-color: var(--border-color);
+                border-color: var(--brand-primary);
             }
             .sidebar-close-btn { 
                 display: flex; 
@@ -365,15 +365,20 @@
                 width: 36px;
                 height: 36px;
                 border-radius: 50%;
-                outline: none;
+                -webkit-tap-highlight-color: transparent;
             }
             .sidebar-close-btn:hover {
                 background-color: var(--hover-bg);
                 color: var(--text-primary);
             }
-            .sidebar-close-btn:active, .sidebar-close-btn:focus {
+            .sidebar-close-btn:active {
                 background-color: var(--hover-bg);
                 color: var(--text-primary);
+            }
+            
+            /* Remove blue highlight on menu links */
+            .main-nav a {
+                -webkit-tap-highlight-color: transparent;
             }
             
             /* Adjust profile popup position for mobile */
@@ -400,7 +405,7 @@
             <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close menu"><i class='bx bx-x'></i></button>
             <div class="sidebar-header">
                 <div class="logo-container">
-                    <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Usha Designers Logo" class="logo-image">
+                    <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" class="logo-image">
                 </div>
             </div>
             <nav class="main-nav">
@@ -451,7 +456,7 @@
                 <button class="menu-toggle" id="menu-toggle" aria-label="Open menu"><i class='bx bx-menu'></i></button>
                 
                 <!-- Logo in navbar for mobile -->
-                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Usha Designers Logo" class="nav-logo">
+                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" class="nav-logo">
             </header>
             <div style="padding: 2rem; text-align: center;">
                 <!-- Placeholder for actual page content -->
