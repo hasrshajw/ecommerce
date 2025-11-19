@@ -4,168 +4,153 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Product Editor - Vastramaya Admin</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
     <style>
         :root {
-            --body-bg: #F8FAFC;
+            --body-bg: #F1F5F9;
             --widget-bg: #FFFFFF;
             --border-color: #E2E8F0;
-            --text-primary: #1E293B;
+            --text-primary: #0F172A;
             --text-secondary: #64748B;
             --brand-primary: #4F46E5;
             --brand-hover: #4338CA;
-            --brand-gradient: linear-gradient(135deg, #4F46E5 0%, #4338CA 100%);
+            --brand-gradient: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
             --danger-color: #EF4444;
             --success-color: #10B981;
             --warning-color: #F59E0B;
             --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            --radius-md: 10px;
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius-md: 12px;
             --radius-lg: 16px;
             --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--body-bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--body-bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
         input, button, select, textarea { font-family: inherit; font-size: inherit; }
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
-
+        
         .dashboard-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; position: relative; }
         .main-area { display: flex; flex-direction: column; height: 100vh; overflow-y: auto; background-color: var(--body-bg); }
-        .main-header { padding: 12px 2.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background-color: var(--widget-bg); position: sticky; top: 0; z-index: 10; box-shadow: var(--shadow-sm); min-height: 65px; }
-        .nav-logo { height: 42px; width: auto; object-fit: contain; }
         
-        .sidebar { background-color: var(--widget-bg); border-right: 1px solid var(--border-color); padding: 2rem 1.5rem; display: flex; flex-direction: column; position: relative; transition: transform 0.3s ease-in-out; box-shadow: var(--shadow-sm); z-index: 1001; }
-        .sidebar-header { display: flex; align-items: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); } 
-        .logo-container { display: flex; align-items: center; width: 100%; }
-        .logo-image { height: 40px; width: auto; object-fit: contain; }
-        .main-nav ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
-        .main-nav a { display: flex; align-items: center; gap: 1rem; text-decoration: none; color: var(--text-secondary); font-weight: 500; padding: 0.875rem 1rem; border-radius: var(--radius-md); transition: var(--transition); position: relative; }
-        .main-nav a i { font-size: 1.375rem; color: var(--text-secondary); transition: var(--transition); width: 24px; text-align: center; }
-        .main-nav a:hover { background-color: var(--body-bg); color: var(--text-primary); transform: translateY(-1px); } 
-        .main-nav a:hover i { color: var(--brand-primary); }
-        .main-nav a.active { background: linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(79, 70, 229, 0.05) 100%); color: var(--brand-primary); font-weight: 600; box-shadow: var(--shadow-sm); } 
+        .sidebar { background-color: var(--widget-bg); border-right: 1px solid var(--border-color); padding: 2rem 1.5rem; display: flex; flex-direction: column; position: relative; z-index: 1001; }
+        .logo-container { display: flex; align-items: center; margin-bottom: 2.5rem; }
+        .logo-image { height: 40px; width: auto; }
+        
+        .main-nav ul { display: flex; flex-direction: column; gap: 0.5rem; }
+        .main-nav a { display: flex; align-items: center; gap: 1rem; color: var(--text-secondary); font-weight: 500; padding: 0.875rem 1rem; border-radius: var(--radius-md); transition: var(--transition); }
+        .main-nav a:hover { background-color: var(--body-bg); color: var(--text-primary); } 
+        .main-nav a.active { background: linear-gradient(to right, rgba(99, 102, 241, 0.1), rgba(99, 102, 241, 0.05)); color: var(--brand-primary); font-weight: 600; } 
         .main-nav a.active i { color: var(--brand-primary); }
-        .main-nav a.active::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 4px; height: 60%; background: var(--brand-gradient); border-radius: 0 4px 4px 0; }
-        
-        .profile-section { margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.75rem; cursor: pointer; border-radius: var(--radius-md); transition: var(--transition); padding: 1rem; }
-        .profile-section:hover { background-color: var(--body-bg); }
-        .profile-content-wrapper { display: flex; align-items: center; gap: 0.75rem; width: 100%; }
-        .profile-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid var(--border-color); transition: var(--transition); }
-        .profile-section:hover .profile-avatar { border-color: var(--brand-primary); }
-        .profile-details { flex-grow: 1; min-width: 0; }
-        .profile-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; font-size: 0.9rem; }
-        .profile-email { font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
-        .profile-options i { font-size: 1.25rem; color: var(--text-secondary); transition: var(--transition); }
-        .profile-popup { position: absolute; bottom: 90px; left: 1.5rem; right: 1.5rem; background-color: var(--widget-bg); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); padding: 0.75rem; z-index: 100; opacity: 0; pointer-events: none; transform: translateY(10px) scale(0.95); transition: var(--transition); }
-        .profile-popup.active { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
-        .popup-list a { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem; border-radius: 6px; text-decoration: none; color: var(--text-primary); transition: var(--transition); cursor: pointer; }
-        .popup-list a:hover { background-color: var(--body-bg); }
-        .popup-list a.logout { color: var(--danger-color); }
-        
-        .menu-toggle, .sidebar-close-btn { display: none; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-        .overlay.active { opacity: 1; pointer-events: auto; }
+        .main-nav a i { font-size: 1.4rem; width: 24px; text-align: center; }
+
+        .profile-section { margin-top: auto; padding: 1rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
+        .profile-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); }
+        .profile-popup { position: absolute; bottom: 80px; left: 1.5rem; right: 1.5rem; background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); padding: 0.5rem; opacity: 0; pointer-events: none; transform: translateY(10px); transition: var(--transition); border: 1px solid var(--border-color); }
+        .profile-popup.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .popup-list a { padding: 0.75rem; display: flex; align-items: center; gap: 0.75rem; border-radius: 8px; }
+        .popup-list a:hover { background: var(--body-bg); }
+
+        .main-header { padding: 1rem 2rem; background: var(--widget-bg); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .menu-toggle { display: none; font-size: 1.5rem; background: none; border: none; color: var(--text-primary); cursor: pointer; }
+        .nav-logo { height: 32px; display: none; }
 
         .page-container { max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%; }
-        .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-        .page-title { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); margin: 0; letter-spacing: -0.5px; }
-        
-        .editor-card { background: var(--widget-bg); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 2rem; border: 1px solid var(--border-color); margin-bottom: 2rem; }
-        .section-title { font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); display:flex; align-items:center; gap:0.5rem; }
+        .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        .page-title { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em; }
         
         .form-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
-        .form-col { display: flex; flex-direction: column; }
+        .form-col { display: flex; flex-direction: column; gap: 2rem; }
+        
+        .editor-card { background: var(--widget-bg); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 1.5rem; border: 1px solid var(--border-color); }
+        .section-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem; color: var(--text-primary); }
         
         .input-group { margin-bottom: 1.25rem; }
         .input-label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 0.5rem; }
-        .form-control { width: 100%; padding: 0.75rem 1rem; font-size: 0.95rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); background-color: #fff; color: var(--text-primary); transition: var(--transition); }
-        .form-control:focus { border-color: var(--brand-primary); outline: none; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+        .form-control { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: #fff; transition: var(--transition); font-size: 0.95rem; }
+        .form-control:focus { border-color: var(--brand-primary); outline: none; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
         
-        .custom-select-container { position: relative; width: 100%; }
-        .custom-select-trigger { position: relative; display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; background: #fff; border: 1px solid var(--border-color); border-radius: var(--radius-md); cursor: pointer; }
-        .custom-select-options { position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: #fff; border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); z-index: 50; max-height: 250px; overflow-y: auto; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: var(--transition); }
-        .custom-select-options.open { opacity: 1; visibility: visible; transform: translateY(0); }
+        .upload-zone { border: 2px dashed var(--border-color); border-radius: var(--radius-md); padding: 3rem 1rem; text-align: center; cursor: pointer; transition: var(--transition); background: #F8FAFC; }
+        .upload-zone:hover { border-color: var(--brand-primary); background: #EEF2FF; }
+        .cover-preview-wrapper { position: relative; width: 100%; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); }
+        .cover-preview-img { width: 100%; height: auto; display: block; max-height: 400px; object-fit: cover; }
+        .cover-remove-btn { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); color: var(--danger-color); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: 0.2s; }
+        .cover-remove-btn:hover { transform: scale(1.1); background: white; }
+
+        .custom-select-container { position: relative; }
+        .custom-select-trigger { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); cursor: pointer; background: white; }
+        .custom-select-options { position: absolute; top: 105%; left: 0; right: 0; background: white; border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); z-index: 50; opacity: 0; pointer-events: none; transform: translateY(-10px); transition: var(--transition); max-height: 200px; overflow-y: auto; }
+        .custom-select-options.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
         .custom-option { padding: 0.75rem 1rem; cursor: pointer; transition: 0.1s; }
-        .custom-option:hover { background-color: var(--body-bg); color: var(--brand-primary); }
-        .custom-option.selected { background-color: rgba(79, 70, 229, 0.05); color: var(--brand-primary); font-weight: 600; }
-        
-        .upload-zone { border: 2px dashed var(--border-color); border-radius: var(--radius-md); padding: 2rem; text-align: center; cursor: pointer; transition: var(--transition); background: #F8FAFC; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 150px; }
-        .upload-zone:hover { border-color: var(--brand-primary); background: #fff; }
-        .upload-icon { font-size: 2.5rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
-        
-        .cover-preview { position: relative; width: 100%; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); aspect-ratio: 16/9; display: none; background: #f1f5f9; }
-        .cover-preview img { width: 100%; height: 100%; object-fit: cover; }
-        .cover-preview-remove { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.95); color: var(--danger-color); border: none; padding: 8px 12px; border-radius: 8px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: 0.2s; display: flex; align-items: center; gap: 5px; }
-        .cover-preview-remove:hover { background: #fff; transform: scale(1.05); }
+        .custom-option:hover { background: #F8FAFC; color: var(--brand-primary); }
 
-        .variant-card { display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: #fff; border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 0.75rem; transition: var(--transition); }
-        .variant-card:hover { border-color: var(--brand-primary); box-shadow: var(--shadow-sm); }
-        
+        .variant-card { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 0.75rem; background: #fff; transition: 0.2s; }
+        .variant-card:hover { border-color: var(--brand-primary); }
+        .variant-swatch { width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border-color); object-fit: cover; }
+
+        .review-card { padding: 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 0.75rem; background: #fff; }
+        .review-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem; font-weight: 600; }
+        .star-display { color: var(--warning-color); display: flex; gap: 2px; font-size: 1rem; }
+        .review-text { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.4; }
+
         .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; font-weight: 600; border-radius: var(--radius-md); cursor: pointer; transition: var(--transition); border: none; font-size: 0.95rem; }
-        .btn-primary { background: var(--brand-gradient); color: white; box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2); }
-        .btn-primary:hover { box-shadow: 0 6px 8px -1px rgba(79, 70, 229, 0.3); transform: translateY(-1px); }
-        .btn-secondary { background: #fff; color: var(--text-primary); border: 1px solid var(--border-color); }
-        .btn-secondary:hover { background: var(--body-bg); border-color: #CBD5E1; }
-        .btn-danger-soft { background: #FEF2F2; color: var(--danger-color); }
+        .btn-primary { background: var(--brand-gradient); color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4); }
+        .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-primary); }
+        .btn-secondary:hover { background: #F8FAFC; border-color: #CBD5E1; }
+        .btn-icon { padding: 0.5rem; background: transparent; border: none; color: var(--text-secondary); cursor: pointer; border-radius: 6px; font-size: 1.2rem; }
+        .btn-icon:hover { background: #F1F5F9; color: var(--text-primary); }
         .btn-block { width: 100%; }
-        .btn-icon { width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; background: transparent; color: var(--text-secondary); transition: 0.2s; }
-        .btn-icon:hover { background: var(--body-bg); color: var(--text-primary); }
-        .btn-icon.delete:hover { background: #FEF2F2; color: var(--danger-color); }
 
-        .review-item { background: #F8FAFC; border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1rem; border: 1px solid var(--border-color); }
-        .star-rating-input { display: flex; gap: 5px; margin-bottom: 0.5rem; }
-        .star-icon { font-size: 1.5rem; color: #CBD5E1; cursor: pointer; transition: 0.2s; }
-        .star-icon.active { color: var(--warning-color); }
-        .review-stars-display { color: var(--warning-color); font-size: 1rem; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 1rem; }
+        .modal-content { background: white; width: 100%; max-width: 600px; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes modalPop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #fff; }
+        .modal-body { padding: 1.5rem; overflow-y: auto; background: #F8FAFC; }
+        .modal-footer { padding: 1.25rem 1.5rem; background: white; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); z-index: 1500; display: none; justify-content: center; align-items: center; padding: 1rem; }
-        .modal-content { background: #fff; width: 100%; max-width: 600px; border-radius: var(--radius-lg); max-height: 90vh; display: flex; flex-direction: column; box-shadow: var(--shadow-lg); }
-        .modal-header { padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-        .modal-body { padding: 1.5rem; overflow-y: auto; }
-        .modal-footer { padding: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; background: #F8FAFC; border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
-
-        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-        .toast { padding: 1rem 1.5rem; background: #fff; border-left: 4px solid var(--brand-primary); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); pointer-events: auto; animation: slideIn 0.3s ease forwards; display: flex; align-items: center; gap: 1rem; }
-        .toast.error { border-left-color: var(--danger-color); }
+        .star-rating-input { display: flex; gap: 0.5rem; font-size: 2rem; color: #CBD5E1; cursor: pointer; justify-content: center; margin: 1rem 0; }
+        .star-rating-input i.active { color: var(--warning-color); }
+        
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; pointer-events: none; display: flex; flex-direction: column; gap: 10px; }
+        .toast { padding: 1rem 1.5rem; background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); animation: slideUp 0.3s ease; display: flex; align-items: center; gap: 1rem; border-left: 4px solid var(--brand-primary); min-width: 300px; pointer-events: auto; }
         .toast.success { border-left-color: var(--success-color); }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
-
-        .preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 0.5rem; margin-top: 1rem; }
-        .preview-item { position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); }
-        .preview-img { width: 100%; height: 100%; object-fit: cover; }
-        .preview-remove { position: absolute; top: 2px; right: 2px; width: 20px; height: 20px; background: rgba(255,255,255,0.9); border-radius: 50%; color: var(--danger-color); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; }
+        .toast.error { border-left-color: var(--danger-color); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         @media (max-width: 1024px) {
             .dashboard-container { grid-template-columns: 1fr; }
-            .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 85%; max-width: 320px; transform: translateX(-100%); z-index: 1000; padding: 2rem 1.25rem; }
+            .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 85%; max-width: 300px; transform: translateX(-100%); transition: transform 0.3s; padding-top: 4rem; box-shadow: var(--shadow-lg); }
             .sidebar.active { transform: translateX(0); }
-            .main-header { padding: 12px 1.5rem; }
+            .sidebar-close-btn { display: block; position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; }
+            .main-header { padding: 0.75rem 1rem; }
+            .menu-toggle { display: block; }
             .nav-logo { display: block; }
-            .menu-toggle { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; font-size: 1.6rem; color: var(--text-primary); cursor: pointer; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white; }
-            .sidebar-close-btn { display: flex; align-items: center; justify-content: center; position: absolute; top: 1.5rem; right: 1.25rem; font-size: 1.75rem; color: var(--text-secondary); cursor: pointer; border: none; background: none; width: 36px; height: 36px; border-radius: 50%; }
             .page-container { padding: 1rem; }
             .form-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-            .content-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
-            .btn { width: 100%; }
-            .modal-content { height: 100%; max-height: 100%; border-radius: 0; }
-            .modal-footer { flex-direction: column-reverse; }
+            .modal-content { height: 100%; max-height: 100%; border-radius: 0; width: 100%; }
+            .modal-footer { padding-bottom: 2rem; }
+            .content-header { flex-direction: column; align-items: flex-start; }
+            .content-header div { width: 100%; display: flex; gap: 0.5rem; }
+            .btn { flex: 1; }
         }
-        @media (min-width: 1025px) { .nav-logo { display: none; } }
     </style>
 </head>
 <body>
-    <div class="overlay" id="overlay"></div>
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
     
     <div class="dashboard-container">
         <aside class="sidebar" id="sidebar">
-            <button class="sidebar-close-btn" id="sidebar-close-btn"><i class='bx bx-x'></i></button>
-            <div class="sidebar-header">
-                <div class="logo-container"><img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Logo" class="logo-image"></div>
+            <button class="sidebar-close-btn" onclick="toggleMenu()"><i class='bx bx-x'></i></button>
+            <div class="logo-container">
+                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya" class="logo-image">
             </div>
             <nav class="main-nav">
                 <ul>
@@ -175,108 +160,216 @@
                     <li><a href="#"><i class='bx bx-clipboard'></i> All Orders</a></li>
                 </ul>
             </nav>
-            <div class="profile-section" id="profile-section">
-                <div class="profile-content-wrapper">
-                    <img id="sidebar-avatar" src="https://ui-avatars.com/api/?name=Admin&background=random" class="profile-avatar">
-                    <div class="profile-details"><span class="profile-name" id="sidebar-name">Loading...</span><span class="profile-email" id="sidebar-email">...</span></div>
-                    <div class="profile-options"><i class='bx bx-chevron-down'></i></div>
+            <div class="profile-section" id="profile-trigger">
+                <img id="sidebar-avatar" src="" class="profile-avatar">
+                <div style="flex:1;">
+                    <div style="font-weight:600; font-size:0.9rem;" id="sidebar-name">Loading...</div>
+                    <div style="font-size:0.8rem; color:var(--text-secondary);">Admin</div>
                 </div>
+                <i class='bx bx-chevron-up'></i>
             </div>
             <div class="profile-popup" id="profile-popup">
-                <div class="profile-content-wrapper" style="margin-bottom:1rem; padding-bottom:1rem; border-bottom:1px solid var(--border-color);">
-                    <img id="popup-avatar" src="https://ui-avatars.com/api/?name=Admin&background=random" class="profile-avatar">
-                    <div class="profile-details"><span class="profile-name" id="popup-name">Loading...</span><span class="profile-email" id="popup-email">...</span></div>
+                <div class="popup-list">
+                    <a href="#"><i class='bx bx-user'></i> Profile</a>
+                    <a href="#" onclick="auth.signOut()"><i class='bx bx-log-out' style="color:var(--danger-color);"></i> Logout</a>
                 </div>
-                <ul class="popup-list">
-                    <li><a href="#"><i class='bx bx-user'></i> Profile</a></li>
-                    <li><a href="#"><i class='bx bx-cog'></i> Settings</a></li>
-                    <li><a href="#" id="logout-btn" class="logout"><i class='bx bx-log-out'></i> Logout</a></li>
-                </ul>
             </div>
         </aside>
         
         <main class="main-area">
             <header class="main-header">
-                <button class="menu-toggle" id="menu-toggle"><i class='bx bx-menu'></i></button>
-                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Logo" class="nav-logo">
+                <button class="menu-toggle" onclick="toggleMenu()"><i class='bx bx-menu'></i></button>
+                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya" class="nav-logo">
             </header>
             
             <div class="page-container">
                 <div class="content-header">
                     <h1 class="page-title" id="editor-title">Product Editor</h1>
-                    <div style="display:flex; gap:1rem; width:100%; max-width:300px;">
+                    <div>
                         <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
-                        <button type="button" class="btn btn-primary" id="header-save-btn">Save Product</button>
+                        <button type="button" class="btn btn-primary" id="save-btn">Save Product</button>
                     </div>
                 </div>
 
-                <div id="product-form-content">
-                    <div style="text-align:center; padding:4rem; color:var(--text-secondary);">
-                        <i class='bx bx-loader-alt bx-spin' style='font-size:2.5rem; margin-bottom:1rem;'></i><p>Loading product data...</p>
-                    </div>
+                <div id="loading-state" style="text-align:center; padding:4rem;">
+                    <i class='bx bx-loader-alt bx-spin' style='font-size:2.5rem; color:var(--brand-primary);'></i>
                 </div>
+
+                <form id="product-form" style="display:none;">
+                    <div class="form-grid">
+                        <!-- LEFT COLUMN -->
+                        <div class="form-col">
+                            <!-- COVER IMAGE SECTION -->
+                            <div class="editor-card">
+                                <h3 class="section-title"><i class='bx bx-image'></i> Cover Image</h3>
+                                <div id="cover-upload-zone" class="upload-zone" onclick="document.getElementById('cover-input').click()">
+                                    <i class='bx bx-cloud-upload' style="font-size:2.5rem; color:var(--brand-primary); margin-bottom:0.5rem;"></i>
+                                    <div style="color:var(--text-secondary); font-weight:500;">Click to upload cover image</div>
+                                    <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:0.25rem;">Single image only</div>
+                                </div>
+                                <input type="file" id="cover-input" accept="image/*" style="display:none;">
+                                
+                                <div id="cover-preview-wrapper" class="cover-preview-wrapper" style="display:none;">
+                                    <img id="cover-preview" class="cover-preview-img">
+                                    <button type="button" class="cover-remove-btn" onclick="removeCoverImage()">
+                                        <i class='bx bx-trash'></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- BASIC DETAILS -->
+                            <div class="editor-card">
+                                <h3 class="section-title"><i class='bx bx-info-circle'></i> Product Details</h3>
+                                <div class="input-group">
+                                    <label class="input-label">Product Name</label>
+                                    <input type="text" class="form-control" id="name" required placeholder="e.g. Classic Cotton Shirt">
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label">Category</label>
+                                    <div id="category-select" class="custom-select-container"></div>
+                                    <input type="hidden" id="selected-category">
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label">Description</label>
+                                    <textarea class="form-control" id="description" rows="4" placeholder="Detailed product description..."></textarea>
+                                </div>
+                            </div>
+
+                            <!-- COLOR VARIANTS -->
+                            <div class="editor-card">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                                    <h3 class="section-title" style="margin:0;"><i class='bx bx-palette'></i> Color Variants</h3>
+                                    <button type="button" class="btn btn-secondary btn-sm" onclick="openColorModal()">
+                                        <i class='bx bx-plus'></i> Add Variant
+                                    </button>
+                                </div>
+                                <div id="variants-list"></div>
+                            </div>
+
+                            <!-- REVIEWS SECTION -->
+                            <div class="editor-card">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                                    <h3 class="section-title" style="margin:0;"><i class='bx bx-star'></i> Customer Reviews</h3>
+                                    <button type="button" class="btn btn-secondary btn-sm" onclick="openReviewModal()">
+                                        <i class='bx bx-message-add'></i> Add Review
+                                    </button>
+                                </div>
+                                <div id="reviews-list"></div>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT COLUMN -->
+                        <div class="form-col">
+                            <!-- PRICING -->
+                            <div class="editor-card">
+                                <h3 class="section-title"><i class='bx bx-tag-alt'></i> Pricing</h3>
+                                <div class="input-group">
+                                    <label class="input-label">Current Price ($)</label>
+                                    <input type="number" class="form-control" id="price" step="0.01" required>
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label">Old Price ($) <span style="color:var(--text-secondary); font-weight:400;">(Optional)</span></label>
+                                    <input type="number" class="form-control" id="oldPrice" step="0.01">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
         </main>
     </div>
 
     <div id="toast-container"></div>
 
-    <div class="modal-overlay" id="color-variant-modal">
+    <!-- COLOR VARIANT MODAL -->
+    <div class="modal-overlay" id="color-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 style="font-size: 1.2rem; font-weight: 600;" id="color-modal-title">Manage Color Variant</h3>
-                <button class="btn-icon" onclick="closeColorModal()"><i class='bx bx-x' style="font-size:1.5rem;"></i></button>
+                <h3 style="font-size:1.25rem; font-weight:600;" id="color-modal-title">Add Variant</h3>
+                <button class="btn-icon" onclick="closeColorModal()"><i class='bx bx-x'></i></button>
             </div>
             <div class="modal-body">
-                <form id="color-variant-form">
-                    <div class="form-grid" style="grid-template-columns: 1fr; gap: 1.5rem;">
-                        <div class="input-group">
-                            <label class="input-label">Color Name</label>
-                            <input type="text" class="form-control" id="color-name" placeholder="e.g., Midnight Blue" required>
+                <form id="color-form">
+                    <div class="input-group">
+                        <label class="input-label">Color Name</label>
+                        <input type="text" class="form-control" id="color-name" placeholder="e.g. Midnight Blue" required>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Color Swatch (Image/Icon)</label>
+                        <div style="display:flex; gap:1rem; align-items:center;">
+                            <div style="width:60px; height:60px; border-radius:8px; border:1px solid var(--border-color); overflow:hidden; background:#F8FAFC; display:flex; align-items:center; justify-content:center;" onclick="document.getElementById('color-swatch-input').click()">
+                                <img id="swatch-preview" style="width:100%; height:100%; object-fit:cover; display:none;">
+                                <i class='bx bx-upload' id="swatch-icon" style="color:var(--text-secondary);"></i>
+                            </div>
+                            <div style="flex:1;">
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('color-swatch-input').click()">Upload Image</button>
+                                <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:0.25rem;">Recommended: 100x100px</div>
+                            </div>
+                            <input type="file" id="color-swatch-input" accept="image/*" style="display:none;">
+                            <input type="hidden" id="color-hex"> 
                         </div>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Available Sizes</label>
+                        <div id="size-selection" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap:0.5rem;">
+                            <!-- Sizes generated via JS -->
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Gallery Images</label>
+                        <div class="upload-zone" style="padding:1.5rem;" onclick="document.getElementById('variant-images-input').click()">
+                            <i class='bx bx-images' style="font-size:1.5rem; color:var(--text-secondary);"></i>
+                            <div style="font-size:0.9rem;">Upload gallery images</div>
+                        </div>
+                        <input type="file" id="variant-images-input" multiple accept="image/*" style="display:none;">
+                        <div id="variant-image-previews" style="display:flex; gap:0.5rem; overflow-x:auto; margin-top:0.75rem; padding-bottom:0.5rem;"></div>
                         
-                        <div class="input-group">
-                            <label class="input-label">Color Swatch / Icon</label>
-                            <div style="display:flex; gap:1rem; align-items:center; padding:1rem; border:1px solid var(--border-color); border-radius:var(--radius-md);">
-                                <div style="width:50px; height:50px; background:#f1f5f9; border-radius:8px; overflow:hidden; display:flex; align-items:center; justify-content:center; border:1px solid var(--border-color);">
-                                    <img id="color-upload-preview" style="width:100%; height:100%; object-fit:cover; display:none;">
-                                    <i class='bx bx-palette' id="color-placeholder-icon" style="font-size:1.5rem; color:var(--text-secondary);"></i>
-                                </div>
-                                <div style="flex-grow:1;">
-                                    <div class="btn btn-secondary btn-sm" onclick="document.getElementById('color-image-upload').click()" style="padding:0.4rem 0.8rem; font-size:0.85rem; width:auto;">Upload Swatch</div>
-                                    <input type="file" id="color-image-upload" accept="image/*" style="display: none;">
-                                    <input type="hidden" id="color-link">
-                                </div>
-                                <button type="button" class="btn-icon" onclick="removeColorUpload()" style="color:var(--danger-color);"><i class='bx bx-trash'></i></button>
-                            </div>
-                        </div>
-
-                        <div class="input-group">
-                            <label class="input-label">Available Sizes</label>
-                            <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap:0.75rem;" id="modal-sizes-list"></div>
-                        </div>
-
-                        <div class="input-group">
-                            <label class="input-label">Variant Images</label>
-                            <div class="upload-zone" style="min-height:100px; padding:1.5rem;" onclick="document.getElementById('multiple-color-images-upload').click()">
-                                <i class='bx bx-images upload-icon' style="font-size:1.5rem;"></i>
-                                <div style="font-size:0.9rem; color:var(--text-secondary);">Upload multiple images</div>
-                            </div>
-                            <input type="file" id="multiple-color-images-upload" accept="image/*" multiple style="display: none;">
-                            <div id="color-uploaded-images" class="preview-grid"></div>
-                            
-                            <div style="margin-top:1rem; padding-top:1rem; border-top:1px dashed var(--border-color);">
-                                <label class="input-label">External Image URLs</label>
-                                <div id="modal-color-images-urls" style="display:flex; flex-direction:column; gap:0.5rem;"></div>
-                                <button type="button" class="btn btn-secondary btn-block" style="margin-top:0.5rem;" id="add-color-url-btn"><i class='bx bx-plus'></i> Add URL</button>
-                            </div>
+                        <div style="margin-top:1rem;">
+                            <label class="input-label" style="margin-bottom:0.25rem;">Or add via URL</label>
+                            <div id="url-list" style="display:flex; flex-direction:column; gap:0.5rem;"></div>
+                            <button type="button" class="btn btn-secondary btn-sm" style="width:100%; margin-top:0.5rem;" onclick="addUrlField()"><i class='bx bx-plus'></i> Add URL</button>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="closeColorModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="document.getElementById('color-variant-form').requestSubmit()">Save Variant</button>
+                <button type="button" class="btn btn-primary" onclick="saveColorVariant()">Save Variant</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- REVIEW MODAL -->
+    <div class="modal-overlay" id="review-modal">
+        <div class="modal-content" style="max-width:500px;">
+            <div class="modal-header">
+                <h3 style="font-size:1.25rem; font-weight:600;">Add Customer Review</h3>
+                <button class="btn-icon" onclick="closeReviewModal()"><i class='bx bx-x'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label class="input-label">Customer Name</label>
+                    <input type="text" class="form-control" id="review-name" placeholder="e.g. John Doe">
+                </div>
+                <div class="input-group" style="text-align:center;">
+                    <label class="input-label">Rating</label>
+                    <div class="star-rating-input" id="star-rating">
+                        <i class='bx bx-star' data-val="1"></i>
+                        <i class='bx bx-star' data-val="2"></i>
+                        <i class='bx bx-star' data-val="3"></i>
+                        <i class='bx bx-star' data-val="4"></i>
+                        <i class='bx bx-star' data-val="5"></i>
+                    </div>
+                    <input type="hidden" id="review-rating" value="0">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Comment</label>
+                    <textarea class="form-control" id="review-text" rows="4" placeholder="Write the review here..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeReviewModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="addReview()">Add Review</button>
             </div>
         </div>
     </div>
@@ -296,415 +389,472 @@
             appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
             measurementId: "G-E39VNDCFVE"
         };
-        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
+        
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
         const storage = firebase.storage();
+        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
 
         let allCategories = [];
-        const SIZES_LIST = ['S', 'M', 'L', 'XL', '2XL'];
-        let currentColorEditingIndex = null;
-        let colorUploadedFile = null;
-        let colorUploadedImages = [];
         let coverImageFile = null;
-        let coverImageUrl = '';
-        let currentReviews = [];
+        let colorVariants = [];
+        let productReviews = [];
+        let editingVariantIndex = null;
+        
+        // Temp state for variant modal
+        let tempVariantFiles = [];
+        let tempSwatchFile = null;
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            const toggleMenu = () => { sidebar.classList.toggle('active'); overlay.classList.toggle('active'); };
-            document.getElementById('menu-toggle')?.addEventListener('click', toggleMenu);
-            document.getElementById('sidebar-close-btn')?.addEventListener('click', toggleMenu);
-            overlay?.addEventListener('click', toggleMenu);
-
-            const profileSection = document.getElementById('profile-section');
-            const profilePopup = document.getElementById('profile-popup');
-            profileSection?.addEventListener('click', (e) => { e.stopPropagation(); profilePopup.classList.toggle('active'); });
-            document.addEventListener('click', (e) => { if (!profileSection?.contains(e.target)) profilePopup?.classList.remove('active'); });
-            document.getElementById('logout-btn')?.addEventListener('click', () => auth.signOut());
-            document.getElementById('header-save-btn')?.addEventListener('click', () => document.getElementById('product-form')?.requestSubmit());
-        });
-
+        // --- AUTH & INITIALIZATION ---
         auth.onAuthStateChanged(user => {
-            if (!user || user.email !== ADMIN_EMAIL) { window.location.href = 'index.html'; return; }
-            const name = user.displayName || "Admin";
-            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=4F46E5&color=fff`;
-            document.getElementById('sidebar-name').textContent = name; document.getElementById('popup-name').textContent = name;
-            document.getElementById('sidebar-email').textContent = user.email; document.getElementById('popup-email').textContent = user.email;
-            document.getElementById('sidebar-avatar').src = avatar; document.getElementById('popup-avatar').src = avatar;
-            initializeEditor();
+            if (!user || user.email !== ADMIN_EMAIL) {
+                window.location.href = 'index.html';
+                return;
+            }
+            initUI(user);
+            loadEditor();
         });
 
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.innerHTML = `<i class='bx ${type === 'success' ? 'bx-check-circle' : 'bx-x-circle'}'></i><span>${message}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
+        function initUI(user) {
+            document.getElementById('sidebar-name').textContent = user.displayName || 'Admin';
+            document.getElementById('sidebar-avatar').src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=4F46E5&color=fff`;
+            
+            const profileTrigger = document.getElementById('profile-trigger');
+            const popup = document.getElementById('profile-popup');
+            profileTrigger.onclick = (e) => {
+                e.stopPropagation();
+                popup.classList.toggle('active');
+            };
+            document.onclick = (e) => {
+                if(!profileTrigger.contains(e.target)) popup.classList.remove('active');
+            };
         }
 
-        function setupCustomSelect(containerId, options, selectedValue, onChange) {
-            const container = document.getElementById(containerId); container.innerHTML = '';
-            const wrapper = document.createElement('div'); wrapper.className = 'custom-select-container';
-            const trigger = document.createElement('div'); trigger.className = 'custom-select-trigger';
-            const selectedText = options.find(o => o === selectedValue) || 'Select Category...';
-            trigger.innerHTML = `<span>${selectedText}</span><i class='bx bx-chevron-down'></i>`;
-            const optionsList = document.createElement('div'); optionsList.className = 'custom-select-options';
-            options.forEach(opt => {
-                const el = document.createElement('div'); el.className = `custom-option ${opt === selectedValue ? 'selected' : ''}`;
-                el.textContent = opt;
-                el.onclick = () => { trigger.querySelector('span').textContent = opt; optionsList.classList.remove('open'); onChange(opt); };
-                optionsList.appendChild(el);
-            });
-            trigger.onclick = (e) => { e.stopPropagation(); optionsList.classList.toggle('open'); };
-            wrapper.appendChild(trigger); wrapper.appendChild(optionsList); container.appendChild(wrapper);
-            document.addEventListener('click', () => optionsList.classList.remove('open'));
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
         }
 
-        function initializeEditor() {
+        // --- DATA LOADING ---
+        async function loadEditor() {
             const params = new URLSearchParams(window.location.search);
-            const productId = params.get('id');
-            if (productId) {
-                document.getElementById('editor-title').textContent = 'Edit Product';
-                db.collection('products').doc(productId).get().then(doc => {
-                    if (doc.exists) {
-                        db.collection('categories').orderBy('name').get().then(snap => {
-                            allCategories = snap.docs.map(d => d.data().name);
-                            renderProductForm({ id: doc.id, ...doc.data() });
-                        });
-                    } else showToast('Product not found', 'error');
-                });
-            } else {
-                document.getElementById('editor-title').textContent = 'New Product';
-                db.collection('categories').orderBy('name').get().then(snap => {
-                    allCategories = snap.docs.map(d => d.data().name);
-                    renderProductForm({ id: null });
-                });
+            const id = params.get('id');
+            
+            try {
+                const catSnap = await db.collection('categories').orderBy('name').get();
+                allCategories = catSnap.docs.map(d => d.data().name);
+                setupCategoryDropdown();
+
+                if (id) {
+                    document.getElementById('editor-title').textContent = 'Edit Product';
+                    const doc = await db.collection('products').doc(id).get();
+                    if (doc.exists) populateForm({id: doc.id, ...doc.data()});
+                } else {
+                    document.getElementById('editor-title').textContent = 'New Product';
+                    document.getElementById('product-form').style.display = 'block';
+                    document.getElementById('loading-state').style.display = 'none';
+                }
+            } catch (e) {
+                showToast('Error loading data', 'error');
             }
         }
 
-        function renderProductForm(product) {
-            const container = document.getElementById('product-form-content');
-            container.dataset.colorVariants = JSON.stringify(product.colorVariants || []);
-            currentReviews = product.reviews || [];
-            coverImageUrl = (product.images && product.images.length > 0) ? product.images[0] : '';
-
-            container.innerHTML = `
-                <form id="product-form">
-                    <div class="form-grid">
-                        <div class="form-col">
-                            <div class="editor-card">
-                                <h3 class="section-title"><i class='bx bx-image'></i> Cover Image</h3>
-                                <div id="cover-upload-container" class="upload-zone" onclick="document.getElementById('cover-image-input').click()" style="${coverImageUrl ? 'display:none' : ''}">
-                                    <i class='bx bx-cloud-upload upload-icon'></i>
-                                    <div style="font-weight:500; color:var(--brand-primary);">Click to upload</div>
-                                    <div style="font-size:0.8rem; color:var(--text-secondary);">Single High Quality Image</div>
-                                </div>
-                                <input type="file" id="cover-image-input" accept="image/*" style="display:none;">
-                                <div id="cover-preview-container" class="cover-preview" style="${coverImageUrl ? 'display:block' : ''}">
-                                    <img id="cover-preview-img" src="${coverImageUrl || ''}">
-                                    <button type="button" class="cover-preview-remove" onclick="removeCoverImage()"><i class='bx bx-trash'></i> Remove</button>
-                                </div>
-                            </div>
-
-                            <div class="editor-card">
-                                <h3 class="section-title"><i class='bx bx-info-circle'></i> Basic Details</h3>
-                                <div class="input-group"><label class="input-label">Product Name</label><input type="text" class="form-control" id="name" value="${product.name||''}" required></div>
-                                <div class="input-group"><label class="input-label">Description</label><textarea class="form-control" id="description" rows="4">${product.description||''}</textarea></div>
-                                <div class="input-group">
-                                    <label class="input-label">Category</label>
-                                    <div id="category-select-wrapper"></div>
-                                    <input type="hidden" id="selected-category" value="${product.category || ''}">
-                                </div>
-                            </div>
-
-                            <div class="editor-card">
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; border-bottom:1px solid var(--border-color); padding-bottom:0.75rem;">
-                                    <h3 class="section-title" style="border:none; margin:0;"><i class='bx bx-palette'></i> Color Variants</h3>
-                                    <button type="button" class="btn btn-secondary btn-sm" onclick="openColorModal()"><i class='bx bx-plus'></i> Add Variant</button>
-                                </div>
-                                <div id="variants-list" style="display:flex; flex-direction:column; gap:0.5rem;">${renderVariantsList(product.colorVariants || [])}</div>
-                            </div>
-                        </div>
-
-                        <div class="form-col">
-                            <div class="editor-card">
-                                <h3 class="section-title"><i class='bx bx-purchase-tag'></i> Pricing</h3>
-                                <div class="input-group"><label class="input-label">Price</label><input type="number" class="form-control" id="price" step="0.01" value="${product.price||''}" required></div>
-                                <div class="input-group"><label class="input-label">Old Price</label><input type="number" class="form-control" id="oldPrice" step="0.01" value="${product.oldPrice||''}"></div>
-                            </div>
-
-                            <div class="editor-card">
-                                <h3 class="section-title"><i class='bx bx-star'></i> Customer Reviews</h3>
-                                <div id="reviews-list-container"></div>
-                                <div style="margin-top:1.5rem; padding-top:1.5rem; border-top:1px solid var(--border-color);">
-                                    <h4 style="font-size:0.95rem; font-weight:600; margin-bottom:1rem;">Add Manual Review</h4>
-                                    <div class="input-group"><input type="text" class="form-control" id="review-name" placeholder="Customer Name"></div>
-                                    <div class="input-group">
-                                        <label class="input-label">Rating</label>
-                                        <div class="star-rating-input" id="new-review-stars">
-                                            ${[1,2,3,4,5].map(i => `<i class='bx bx-star star-icon' data-val="${i}"></i>`).join('')}
-                                        </div>
-                                        <input type="hidden" id="review-rating" value="0">
-                                    </div>
-                                    <div class="input-group"><textarea class="form-control" id="review-comment" placeholder="Review text..." rows="3"></textarea></div>
-                                    <button type="button" class="btn btn-primary btn-block" onclick="addManualReview()">Add Review</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+        function setupCategoryDropdown() {
+            const container = document.getElementById('category-select');
+            let html = `
+                <div class="custom-select-trigger" onclick="this.nextElementSibling.classList.toggle('open')">
+                    <span id="cat-display">Select Category</span>
+                    <i class='bx bx-chevron-down'></i>
+                </div>
+                <div class="custom-select-options">
             `;
-
-            setupCustomSelect('category-select-wrapper', allCategories, product.category, (val) => document.getElementById('selected-category').value = val);
+            allCategories.forEach(cat => {
+                html += `<div class="custom-option" onclick="selectCategory('${cat}')">${cat}</div>`;
+            });
+            html += `</div>`;
+            container.innerHTML = html;
             
-            document.getElementById('cover-image-input').addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if(file) {
-                    if(file.size > 5*1024*1024) return showToast('Image too large', 'error');
-                    coverImageFile = file;
-                    const reader = new FileReader();
-                    reader.onload = (ev) => {
-                        document.getElementById('cover-preview-img').src = ev.target.result;
-                        document.getElementById('cover-preview-container').style.display = 'block';
-                        document.getElementById('cover-upload-container').style.display = 'none';
-                    };
-                    reader.readAsDataURL(file);
+            document.addEventListener('click', e => {
+                if(!container.contains(e.target)) {
+                    container.querySelector('.custom-select-options').classList.remove('open');
                 }
             });
-
-            renderReviewsList();
-            
-            const stars = document.querySelectorAll('#new-review-stars .star-icon');
-            stars.forEach(star => {
-                star.addEventListener('click', function() {
-                    const val = parseInt(this.dataset.val);
-                    document.getElementById('review-rating').value = val;
-                    stars.forEach(s => {
-                        s.classList.toggle('active', parseInt(s.dataset.val) <= val);
-                        s.classList.toggle('bxs-star', parseInt(s.dataset.val) <= val);
-                        s.classList.toggle('bx-star', parseInt(s.dataset.val) > val);
-                    });
-                });
-            });
-
-            document.getElementById('product-form').addEventListener('submit', (e) => { e.preventDefault(); saveProduct(product.id); });
         }
+
+        function selectCategory(cat) {
+            document.getElementById('selected-category').value = cat;
+            document.getElementById('cat-display').textContent = cat;
+            document.querySelector('.custom-select-options').classList.remove('open');
+        }
+
+        function populateForm(data) {
+            document.getElementById('name').value = data.name || '';
+            document.getElementById('description').value = data.description || '';
+            document.getElementById('price').value = data.price || '';
+            document.getElementById('oldPrice').value = data.oldPrice || '';
+            
+            if (data.category) selectCategory(data.category);
+            
+            // Handle Cover Image (Assuming stored in 'image' or first of 'images')
+            const coverUrl = data.image || (data.images && data.images.length > 0 ? data.images[0] : null);
+            if (coverUrl) {
+                document.getElementById('cover-preview').src = coverUrl;
+                document.getElementById('cover-preview-wrapper').style.display = 'block';
+                document.getElementById('cover-upload-zone').style.display = 'none';
+                // Store existing URL in a data attribute to know it exists
+                document.getElementById('cover-preview').dataset.url = coverUrl;
+            }
+
+            colorVariants = data.colorVariants || [];
+            renderVariants();
+
+            productReviews = data.reviews || [];
+            renderReviewsList();
+
+            document.getElementById('loading-state').style.display = 'none';
+            document.getElementById('product-form').style.display = 'block';
+        }
+
+        // --- COVER IMAGE LOGIC ---
+        document.getElementById('cover-input').onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) return showToast('Image too large (Max 5MB)', 'error');
+                coverImageFile = file;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('cover-preview').src = e.target.result;
+                    document.getElementById('cover-preview-wrapper').style.display = 'block';
+                    document.getElementById('cover-upload-zone').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        };
 
         function removeCoverImage() {
-            coverImageFile = null; coverImageUrl = '';
-            document.getElementById('cover-image-input').value = '';
-            document.getElementById('cover-preview-container').style.display = 'none';
-            document.getElementById('cover-upload-container').style.display = 'flex';
+            coverImageFile = null;
+            document.getElementById('cover-input').value = '';
+            document.getElementById('cover-preview').src = '';
+            delete document.getElementById('cover-preview').dataset.url;
+            document.getElementById('cover-preview-wrapper').style.display = 'none';
+            document.getElementById('cover-upload-zone').style.display = 'block';
         }
 
-        function renderVariantsList(variants) {
-            if (!variants.length) return `<div style="text-align:center; padding:1rem; color:var(--text-secondary); font-size:0.9rem; background:#F8FAFC; border-radius:8px;">No color variants.</div>`;
-            return variants.map((v, i) => `
-                <div class="variant-card">
-                    <div style="display:flex; align-items:center; gap:1rem;">
-                        <div style="width:40px; height:40px; border-radius:8px; background:${v.hex || '#eee'}; ${v.hex && v.hex.includes('http') ? `background-image:url(${v.hex}); background-size:cover;` : ''} border:1px solid var(--border-color);"></div>
-                        <div><div style="font-weight:600; font-size:0.95rem;">${v.name}</div><div style="font-size:0.8rem; color:var(--text-secondary);">${v.sizes.filter(s=>s.available).length} sizes</div></div>
-                    </div>
-                    <div style="display:flex; gap:0.5rem;">
-                        <button type="button" class="btn-icon" onclick="editColorVariant(${i})"><i class='bx bx-edit-alt'></i></button>
-                        <button type="button" class="btn-icon delete" onclick="removeColorVariant(${i})"><i class='bx bx-trash'></i></button>
-                    </div>
-                </div>
-            `).join('');
+        // --- REVIEWS LOGIC ---
+        function openReviewModal() {
+            document.getElementById('review-name').value = '';
+            document.getElementById('review-text').value = '';
+            document.getElementById('review-rating').value = '0';
+            updateStars(0);
+            document.getElementById('review-modal').style.display = 'flex';
+        }
+
+        function closeReviewModal() {
+            document.getElementById('review-modal').style.display = 'none';
+        }
+
+        // Star Rating Interactive
+        document.querySelectorAll('#star-rating i').forEach(star => {
+            star.onclick = function() {
+                const val = parseInt(this.dataset.val);
+                document.getElementById('review-rating').value = val;
+                updateStars(val);
+            }
+        });
+
+        function updateStars(val) {
+            document.querySelectorAll('#star-rating i').forEach(s => {
+                s.classList.toggle('active', parseInt(s.dataset.val) <= val);
+                s.className = parseInt(s.dataset.val) <= val ? 'bx bxs-star' : 'bx bx-star';
+            });
+        }
+
+        function addReview() {
+            const name = document.getElementById('review-name').value.trim();
+            const rating = parseInt(document.getElementById('review-rating').value);
+            const comment = document.getElementById('review-text').value.trim();
+
+            if (!name || rating === 0 || !comment) return showToast('Please fill all fields', 'error');
+
+            productReviews.push({
+                name, rating, comment, date: new Date().toISOString()
+            });
+            
+            renderReviewsList();
+            closeReviewModal();
+            showToast('Review added');
         }
 
         function renderReviewsList() {
-            const container = document.getElementById('reviews-list-container');
-            if (!currentReviews.length) { container.innerHTML = '<div style="text-align:center; color:var(--text-secondary); font-size:0.9rem; padding:1rem;">No reviews yet.</div>'; return; }
-            container.innerHTML = currentReviews.map((r, i) => `
-                <div class="review-item">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
-                        <div style="font-weight:600;">${r.userName}</div>
-                        <button type="button" class="btn-icon delete" style="width:24px; height:24px;" onclick="removeReview(${i})"><i class='bx bx-trash'></i></button>
+            const container = document.getElementById('reviews-list');
+            if (productReviews.length === 0) {
+                container.innerHTML = `<div style="color:var(--text-secondary); font-style:italic; padding:1rem; text-align:center;">No reviews added yet.</div>`;
+                return;
+            }
+            
+            container.innerHTML = productReviews.map((r, i) => `
+                <div class="review-card">
+                    <div class="review-header">
+                        <span>${r.name}</span>
+                        <button class="btn-icon" onclick="removeReview(${i})" style="font-size:1rem; padding:0; color:var(--danger-color);"><i class='bx bx-trash'></i></button>
                     </div>
-                    <div class="review-stars-display">${Array(5).fill(0).map((_, idx) => `<i class='bx ${idx < r.rating ? 'bxs-star' : 'bx-star'}'></i>`).join('')}</div>
-                    <div style="font-size:0.9rem; color:var(--text-primary); margin-top:0.5rem;">${r.comment}</div>
+                    <div class="star-display">
+                        ${Array(5).fill(0).map((_, idx) => 
+                            idx < r.rating ? "<i class='bx bxs-star'></i>" : "<i class='bx bx-star'></i>"
+                        ).join('')}
+                    </div>
+                    <div class="review-text" style="margin-top:0.5rem;">${r.comment}</div>
                 </div>
             `).join('');
         }
 
-        function addManualReview() {
-            const name = document.getElementById('review-name').value.trim();
-            const rating = parseInt(document.getElementById('review-rating').value);
-            const comment = document.getElementById('review-comment').value.trim();
-            if (!name || !rating || !comment) return showToast('Fill all review fields', 'error');
-            currentReviews.push({ userName: name, rating, comment, date: new Date().toISOString() });
+        function removeReview(index) {
+            productReviews.splice(index, 1);
             renderReviewsList();
-            document.getElementById('review-name').value = '';
-            document.getElementById('review-rating').value = '0';
-            document.getElementById('review-comment').value = '';
-            document.querySelectorAll('#new-review-stars .star-icon').forEach(s => { s.classList.remove('active', 'bxs-star'); s.classList.add('bx-star'); });
         }
 
-        function removeReview(index) { currentReviews.splice(index, 1); renderReviewsList(); }
-
-        function openColorModal(variant = null, index = null) {
-            currentColorEditingIndex = index;
-            const modal = document.getElementById('color-variant-modal');
-            document.getElementById('color-variant-form').reset();
-            colorUploadedImages = []; colorUploadedFile = null;
-            document.getElementById('color-uploaded-images').innerHTML = '';
-            document.getElementById('modal-color-images-urls').innerHTML = '';
-            document.getElementById('color-upload-preview').style.display = 'none';
-            document.getElementById('color-placeholder-icon').style.display = 'block';
+        // --- COLOR VARIANT MODAL LOGIC ---
+        function openColorModal(index = null) {
+            editingVariantIndex = index;
+            const isEdit = index !== null;
+            const data = isEdit ? colorVariants[index] : {};
             
-            document.getElementById('color-modal-title').textContent = variant ? 'Edit Variant' : 'Add Variant';
-            const sizesHtml = SIZES_LIST.map(size => {
-                const s = variant?.sizes?.find(x => x.name === size);
-                return `<label style="display:flex; flex-direction:column; align-items:center; gap:0.5rem; padding:0.75rem; border:1px solid var(--border-color); border-radius:8px; cursor:pointer; background:${s ? '#EFF6FF' : '#fff'}; transition:0.2s;" class="size-box">
-                            <input type="checkbox" class="size-cb" ${s ? 'checked' : ''} style="display:none;">
-                            <span style="font-weight:600; font-size:1rem;">${size}</span>
-                            <div style="font-size:0.75rem; display:flex; align-items:center; gap:4px;">
-                                <input type="checkbox" class="stock-cb" ${s?.available ? 'checked' : ''} ${!s ? 'disabled' : ''}> Stock
-                            </div>
-                        </label>`;
+            document.getElementById('color-modal-title').textContent = isEdit ? 'Edit Variant' : 'Add Variant';
+            document.getElementById('color-name').value = data.name || '';
+            document.getElementById('color-hex').value = data.hex || '';
+            
+            // Swatch Preview
+            const swatchImg = document.getElementById('swatch-preview');
+            const swatchIcon = document.getElementById('swatch-icon');
+            if (data.hex && data.hex.includes('http')) {
+                swatchImg.src = data.hex;
+                swatchImg.style.display = 'block';
+                swatchIcon.style.display = 'none';
+            } else {
+                swatchImg.style.display = 'none';
+                swatchIcon.style.display = 'block';
+            }
+            
+            // Sizes
+            const sizesContainer = document.getElementById('size-selection');
+            const SIZES = ['S', 'M', 'L', 'XL', '2XL'];
+            sizesContainer.innerHTML = SIZES.map(size => {
+                const existing = data.sizes?.find(s => s.name === size);
+                return `
+                    <div style="border:1px solid var(--border-color); border-radius:6px; padding:0.5rem; text-align:center; cursor:pointer; background:${existing ? '#EEF2FF' : 'white'}; border-color:${existing ? 'var(--brand-primary)' : 'var(--border-color)'}" onclick="toggleSize(this)">
+                        <div style="font-weight:600;">${size}</div>
+                        <div style="font-size:0.7rem; color:var(--text-secondary);">${existing && existing.available ? 'In Stock' : 'Select'}</div>
+                        <input type="checkbox" class="size-check" style="display:none;" value="${size}" ${existing ? 'checked' : ''}>
+                        <input type="checkbox" class="stock-check" style="display:none;" ${existing && existing.available ? 'checked' : ''}>
+                    </div>
+                `;
             }).join('');
-            document.getElementById('modal-sizes-list').innerHTML = sizesHtml;
 
-            document.querySelectorAll('.size-box').forEach(box => {
-                const cb = box.querySelector('.size-cb');
-                box.onclick = (e) => {
-                    if(e.target.type !== 'checkbox') { cb.checked = !cb.checked; }
-                    box.style.background = cb.checked ? '#EFF6FF' : '#fff';
-                    box.style.borderColor = cb.checked ? var(--brand-primary) : var(--border-color);
-                    box.querySelector('.stock-cb').disabled = !cb.checked;
-                }
-            });
+            // Reset Temp Files
+            tempSwatchFile = null;
+            tempVariantFiles = [];
+            document.getElementById('variant-image-previews').innerHTML = '';
+            document.getElementById('url-list').innerHTML = '';
+            
+            // Existing URLs
+            if (data.images) {
+                data.images.forEach(url => addUrlField(url));
+            } else {
+                addUrlField();
+            }
 
-            if (variant) {
-                document.getElementById('color-name').value = variant.name;
-                document.getElementById('color-link').value = variant.hex || '';
-                if(variant.hex && variant.hex.includes('http')) {
-                     document.getElementById('color-upload-preview').src = variant.hex;
-                     document.getElementById('color-upload-preview').style.display = 'block';
-                     document.getElementById('color-placeholder-icon').style.display = 'none';
-                }
-                (variant.images || []).forEach(url => addVariantUrlField(url));
-            } else addVariantUrlField();
-
-            modal.style.display = 'flex';
+            document.getElementById('color-modal').style.display = 'flex';
         }
 
-        function closeColorModal() { document.getElementById('color-variant-modal').style.display = 'none'; }
-        
-        document.getElementById('add-color-url-btn').onclick = () => addVariantUrlField();
-        function addVariantUrlField(val = '') {
-            const div = document.createElement('div'); div.style.display = 'flex'; div.style.gap = '0.5rem';
-            div.innerHTML = `<input type="url" class="form-control color-url-input" value="${val}" placeholder="Image URL"><button type="button" class="btn-icon delete" onclick="this.parentElement.remove()"><i class='bx bx-trash'></i></button>`;
-            document.getElementById('modal-color-images-urls').appendChild(div);
+        function toggleSize(el) {
+            const checkbox = el.querySelector('.size-check');
+            const stock = el.querySelector('.stock-check');
+            const isSelected = !checkbox.checked;
+            
+            checkbox.checked = isSelected;
+            stock.checked = isSelected; // Default stock to true when selected
+            
+            el.style.background = isSelected ? '#EEF2FF' : 'white';
+            el.style.borderColor = isSelected ? 'var(--brand-primary)' : 'var(--border-color)';
+            el.querySelector('div:nth-child(2)').textContent = isSelected ? 'In Stock' : 'Select';
         }
 
-        document.getElementById('color-image-upload').onchange = (e) => {
+        function closeColorModal() {
+            document.getElementById('color-modal').style.display = 'none';
+        }
+
+        document.getElementById('color-swatch-input').onchange = (e) => {
             const file = e.target.files[0];
             if(file) {
-                colorUploadedFile = file;
-                document.getElementById('color-upload-preview').src = URL.createObjectURL(file);
-                document.getElementById('color-upload-preview').style.display = 'block';
-                document.getElementById('color-placeholder-icon').style.display = 'none';
-                document.getElementById('color-link').value = '';
+                tempSwatchFile = file;
+                document.getElementById('swatch-preview').src = URL.createObjectURL(file);
+                document.getElementById('swatch-preview').style.display = 'block';
+                document.getElementById('swatch-icon').style.display = 'none';
             }
-        };
-        
-        function removeColorUpload() {
-            colorUploadedFile = null; document.getElementById('color-image-upload').value = '';
-            document.getElementById('color-upload-preview').style.display = 'none';
-            document.getElementById('color-placeholder-icon').style.display = 'block';
         }
 
-        document.getElementById('multiple-color-images-upload').onchange = (e) => {
-            Array.from(e.target.files).forEach(f => colorUploadedImages.push(f));
-            renderPreviewGrid();
-        };
-
-        function renderPreviewGrid() {
-            document.getElementById('color-uploaded-images').innerHTML = colorUploadedImages.map((f, i) => 
-                `<div class="preview-item"><img src="${URL.createObjectURL(f)}" class="preview-img"><div class="preview-remove" onclick="removeVariantImage(${i})">×</div></div>`
-            ).join('');
-        }
-        function removeVariantImage(i) { colorUploadedImages.splice(i, 1); renderPreviewGrid(); }
-
-        async function uploadFile(file, path) {
-            const ref = storage.ref().child(`${path}/${Date.now()}-${file.name}`);
-            await ref.put(file); return await ref.getDownloadURL();
+        document.getElementById('variant-images-input').onchange = (e) => {
+            Array.from(e.target.files).forEach(file => {
+                tempVariantFiles.push(file);
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.style.cssText = "width:60px; height:60px; border-radius:6px; object-fit:cover; border:1px solid #eee; flex-shrink:0;";
+                document.getElementById('variant-image-previews').appendChild(img);
+            });
         }
 
-        document.getElementById('color-variant-form').onsubmit = async (e) => {
-            e.preventDefault();
+        function addUrlField(val = '') {
+            const div = document.createElement('div');
+            div.style.display = 'flex'; div.style.gap = '0.5rem';
+            div.innerHTML = `
+                <input type="url" class="form-control url-input" value="${val}" placeholder="https://...">
+                <button type="button" class="btn-icon" onclick="this.parentElement.remove()" style="color:var(--danger-color);"><i class='bx bx-trash'></i></button>
+            `;
+            document.getElementById('url-list').appendChild(div);
+        }
+
+        async function saveColorVariant() {
             const name = document.getElementById('color-name').value;
-            let hex = document.getElementById('color-link').value;
-            if(colorUploadedFile) {
-                try { hex = await uploadFile(colorUploadedFile, 'swatches'); } catch { return showToast('Swatch upload failed', 'error'); }
+            if (!name) return showToast('Color name required', 'error');
+            
+            showToast('Saving variant...', 'info');
+
+            let hex = document.getElementById('color-hex').value;
+            // Upload Swatch
+            if (tempSwatchFile) {
+                hex = await uploadFile(tempSwatchFile, 'swatches');
             }
-            let images = [...document.querySelectorAll('.color-url-input')].map(i => i.value).filter(Boolean);
-            if(colorUploadedImages.length) {
-                showToast('Uploading variant images...', 'info');
-                for(let f of colorUploadedImages) images.push(await uploadFile(f, 'variants'));
+
+            // Upload Images
+            let images = [...document.querySelectorAll('.url-input')].map(i => i.value).filter(Boolean);
+            if (tempVariantFiles.length) {
+                for (let f of tempVariantFiles) {
+                    images.push(await uploadFile(f, 'variants'));
+                }
             }
-            const sizes = [];
-            document.querySelectorAll('.size-box').forEach(box => {
-                if(box.querySelector('.size-cb').checked) {
-                    sizes.push({ name: box.querySelector('span').textContent, available: box.querySelector('.stock-cb').checked });
+
+            // Sizes
+            let sizes = [];
+            document.querySelectorAll('.size-check').forEach(cb => {
+                if (cb.checked) {
+                    const stock = cb.parentElement.querySelector('.stock-check').checked;
+                    sizes.push({ name: cb.value, available: stock });
                 }
             });
-            const variant = { name, hex, sizes, images };
-            const container = document.getElementById('product-form-content');
-            let vars = JSON.parse(container.dataset.colorVariants);
-            if(currentColorEditingIndex !== null) vars[currentColorEditingIndex] = variant; else vars.push(variant);
-            container.dataset.colorVariants = JSON.stringify(vars);
-            document.getElementById('variants-list').innerHTML = renderVariantsList(vars);
-            closeColorModal(); showToast('Variant Saved');
-        };
 
-        function editColorVariant(i) { openColorModal(JSON.parse(document.getElementById('product-form-content').dataset.colorVariants)[i], i); }
-        function removeColorVariant(i) {
-            if(!confirm('Delete this variant?')) return;
-            const container = document.getElementById('product-form-content');
-            let vars = JSON.parse(container.dataset.colorVariants);
-            vars.splice(i, 1); container.dataset.colorVariants = JSON.stringify(vars);
-            document.getElementById('variants-list').innerHTML = renderVariantsList(vars);
+            const variant = { name, hex, sizes, images };
+            
+            if (editingVariantIndex !== null) {
+                colorVariants[editingVariantIndex] = variant;
+            } else {
+                colorVariants.push(variant);
+            }
+
+            renderVariants();
+            closeColorModal();
+            showToast('Variant Saved');
         }
 
-        async function saveProduct(productId) {
-            const container = document.getElementById('product-form-content');
-            let category = document.getElementById('selected-category').value;
-            if(!category) return showToast('Category required', 'error');
-            
-            let finalCoverUrl = coverImageUrl;
-            if (coverImageFile) {
-                showToast('Uploading cover image...', 'info');
-                try { finalCoverUrl = await uploadFile(coverImageFile, 'products/covers'); } catch { return showToast('Cover upload failed', 'error'); }
+        function renderVariants() {
+            const container = document.getElementById('variants-list');
+            if (colorVariants.length === 0) {
+                container.innerHTML = `<div style="text-align:center; color:var(--text-secondary); padding:1rem; font-style:italic;">No variants yet.</div>`;
+                return;
             }
-            if (!finalCoverUrl) return showToast('Cover image required', 'error');
+            container.innerHTML = colorVariants.map((v, i) => `
+                <div class="variant-card">
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <img src="${v.hex && v.hex.includes('http') ? v.hex : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='}" class="variant-swatch" style="background:${v.hex || '#eee'}">
+                        <div>
+                            <div style="font-weight:600;">${v.name}</div>
+                            <div style="font-size:0.8rem; color:var(--text-secondary);">${v.sizes.length} sizes</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:0.5rem;">
+                        <button type="button" class="btn-icon" onclick="openColorModal(${i})"><i class='bx bx-edit-alt'></i></button>
+                        <button type="button" class="btn-icon" onclick="removeVariant(${i})" style="color:var(--danger-color);"><i class='bx bx-trash'></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-            const productData = {
-                name: document.getElementById('name').value,
-                category,
-                price: parseFloat(document.getElementById('price').value),
-                oldPrice: parseFloat(document.getElementById('oldPrice').value) || 0,
-                description: document.getElementById('description').value,
-                colorVariants: JSON.parse(container.dataset.colorVariants),
-                images: [finalCoverUrl], // Restrict to single image at index 0
-                reviews: currentReviews,
-                isAvailable: true,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
+        function removeVariant(i) {
+            if(confirm('Remove this variant?')) {
+                colorVariants.splice(i, 1);
+                renderVariants();
+            }
+        }
 
-            if(!productId) productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+        // --- MAIN SAVE ---
+        async function uploadFile(file, path) {
+            const ref = storage.ref().child(`${path}/${Date.now()}-${file.name}`);
+            await ref.put(file);
+            return await ref.getDownloadURL();
+        }
+
+        document.getElementById('save-btn').onclick = async () => {
+            const name = document.getElementById('name').value;
+            const price = document.getElementById('price').value;
+            const category = document.getElementById('selected-category').value;
+            
+            if (!name || !price || !category) return showToast('Please fill required fields', 'error');
+
+            const btn = document.getElementById('save-btn');
+            btn.disabled = true; btn.textContent = 'Saving...';
 
             try {
-                if(productId) { await db.collection('products').doc(productId).update(productData); showToast('Product Updated'); }
-                else { await db.collection('products').add(productData); showToast('Product Created'); }
+                let coverUrl = document.getElementById('cover-preview').dataset.url || '';
+                if (coverImageFile) {
+                    coverUrl = await uploadFile(coverImageFile, 'products');
+                }
+
+                if (!coverUrl) {
+                    btn.disabled = false; btn.textContent = 'Save Product';
+                    return showToast('Cover image required', 'error');
+                }
+
+                const productData = {
+                    name,
+                    description: document.getElementById('description').value,
+                    category,
+                    price: parseFloat(price),
+                    oldPrice: parseFloat(document.getElementById('oldPrice').value) || 0,
+                    image: coverUrl, // Single cover image
+                    images: [coverUrl], // Backwards compatibility
+                    colorVariants,
+                    reviews: productReviews,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                const params = new URLSearchParams(window.location.search);
+                const id = params.get('id');
+
+                if (id) {
+                    await db.collection('products').doc(id).update(productData);
+                    showToast('Product Updated');
+                } else {
+                    productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    await db.collection('products').add(productData);
+                    showToast('Product Created');
+                }
+
                 setTimeout(() => window.history.back(), 1000);
-            } catch(e) { showToast('Save failed', 'error'); }
+
+            } catch (e) {
+                console.error(e);
+                showToast('Save Failed', 'error');
+                btn.disabled = false; btn.textContent = 'Save Product';
+            }
+        };
+
+        function showToast(msg, type='success') {
+            const container = document.getElementById('toast-container');
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.innerHTML = `<i class='bx ${type==='success'?'bx-check-circle':'bx-error-circle'}'></i> <span>${msg}</span>`;
+            container.appendChild(el);
+            setTimeout(() => el.remove(), 3000);
         }
     </script>
 </body>
