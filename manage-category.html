@@ -16,19 +16,23 @@
             --text-primary: #0F172A;
             --text-secondary: #64748B;
             --brand-primary: #3B82F6;
-            --brand-gradient: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
-            --hover-bg: #F1F5F9;
+            --brand-gradient: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+            --hover-bg: #F8FAFC;
             --danger-color: #EF4444;
             --success-color: #10B981;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --radius-md: 12px;
-            --radius-lg: 16px;
+            --warning-color: #F59E0B;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
             --radius-xl: 24px;
             --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; }
         body { font-family: 'Inter', sans-serif; background-color: var(--body-bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; }
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
@@ -38,7 +42,6 @@
         .dashboard-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; position: relative; }
         .main-area { display: flex; flex-direction: column; overflow-y: auto; height: 100vh; background-color: var(--body-bg); }
         
-        /* --- HEADER --- */
         .main-header { 
             padding: 12px 2.5rem; 
             border-bottom: 1px solid var(--border-color); 
@@ -54,7 +57,6 @@
         }
         .nav-logo { height: 42px; width: auto; object-fit: contain; display: none; }
         
-        /* --- SIDEBAR --- */
         .sidebar { 
             background-color: var(--widget-bg); 
             border-right: 1px solid var(--border-color); 
@@ -143,31 +145,24 @@
         .search-input:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
         .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 1.25rem; pointer-events: none; }
 
-        /* --- CATEGORY CARD GRID --- */
         .categories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; position: relative; }
         
         .category-card { 
-            background: var(--widget-bg); 
-            border-radius: var(--radius-lg); 
-            padding: 1.25rem; 
-            border: 1px solid var(--border-color); 
-            box-shadow: var(--shadow-sm); 
-            transition: all 0.2s ease;
-            position: relative; 
-            display: flex; 
-            align-items: center; 
-            gap: 1rem;
-            z-index: 1; /* Default z-index */
+            background: var(--widget-bg); border-radius: var(--radius-lg); 
+            padding: 1.25rem; border: 1px solid var(--border-color); 
+            box-shadow: var(--shadow-sm); transition: var(--transition);
+            position: relative; display: flex; align-items: center; gap: 1rem;
+            z-index: 1; /* Base z-index */
         }
         
-        .category-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: #CBD5E1; }
-        
-        /* This class is added by JS when menu opens */
-        .category-card.menu-open {
+        /* IMPORTANT: Raises card above others when menu is open */
+        .category-card.menu-active {
             z-index: 50;
             border-color: var(--brand-primary);
             box-shadow: var(--shadow-md);
         }
+        
+        .category-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: #CBD5E1; }
         
         .cat-img { width: 56px; height: 56px; border-radius: var(--radius-md); object-fit: cover; border: 1px solid var(--border-color); flex-shrink: 0; background: #F1F5F9; }
         .cat-info { flex: 1; min-width: 0; cursor: pointer; }
@@ -175,7 +170,7 @@
         .cat-count { font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; gap: 0.5rem; }
         .badge { background: #EFF6FF; color: var(--brand-primary); padding: 0.15rem 0.5rem; border-radius: 99px; font-size: 0.75rem; font-weight: 600; }
 
-        /* --- CARD MENU --- */
+        .menu-btn-wrapper { position: relative; }
         .menu-btn { 
             width: 32px; height: 32px; border-radius: 50%; border: none; 
             background: transparent; color: var(--text-secondary); cursor: pointer; 
@@ -184,48 +179,38 @@
         }
         .menu-btn:hover { background: #F1F5F9; color: var(--text-primary); }
         
+        /* Updated Dropdown UI */
         .card-menu-dropdown {
             position: absolute;
-            top: calc(100% + 5px);
+            top: calc(100% + 4px);
             right: 0;
-            background: white;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(12px);
             border-radius: var(--radius-md);
-            box-shadow: var(--shadow-lg); /* Increased shadow for lift */
-            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-premium);
+            border: 1px solid rgba(0,0,0,0.05);
             min-width: 180px;
             z-index: 100;
             opacity: 0;
             visibility: hidden;
-            transform: translateY(10px);
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(10px) scale(0.95);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: top right;
             overflow: hidden;
-            pointer-events: none;
         }
-        
-        .card-menu-dropdown.active { 
-            opacity: 1; 
-            visibility: visible; 
-            transform: translateY(0);
-            pointer-events: auto;
-        }
+        .card-menu-dropdown.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
         
         .menu-item { 
-            padding: 0.85rem 1rem; 
-            display: flex; 
-            align-items: center; 
-            gap: 0.75rem; 
-            font-size: 0.9rem; 
-            cursor: pointer; 
-            color: var(--text-primary); 
-            transition: background 0.2s;
+            padding: 0.85rem 1rem; display: flex; align-items: center; gap: 0.75rem; 
+            font-size: 0.9rem; cursor: pointer; color: var(--text-primary); transition: background 0.2s;
             font-weight: 500;
         }
-        .menu-item:hover { background: #F8FAFC; color: var(--brand-primary); }
-        .menu-item.delete { color: var(--danger-color); border-top: 1px solid var(--border-color); }
+        .menu-item:hover { background: #F8FAFC; }
+        .menu-item:first-child { border-bottom: 1px solid var(--border-color); }
+        .menu-item.delete { color: var(--danger-color); }
         .menu-item.delete:hover { background: #FEF2F2; }
-        .menu-item i { font-size: 1.2rem; }
+        .menu-item i { font-size: 1.2rem; opacity: 0.8; }
 
-        /* --- MODALS --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 1rem; }
         .modal-content { background: white; width: 100%; max-width: 500px; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); display: flex; flex-direction: column; overflow: hidden; animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
         @keyframes modalPop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -458,11 +443,18 @@
                 });
             }
             
-            // Close dropdowns on click outside
+            // Global click to close dropdowns
             document.addEventListener('click', (e) => {
-                if (!e.target.closest('.menu-btn') && !e.target.closest('.card-menu-dropdown')) {
-                    document.querySelectorAll('.card-menu-dropdown').forEach(d => d.classList.remove('active'));
-                    document.querySelectorAll('.category-card').forEach(c => c.classList.remove('menu-open'));
+                const isMenuBtn = e.target.closest('.menu-btn');
+                const isDropdown = e.target.closest('.card-menu-dropdown');
+                
+                if (!isMenuBtn && !isDropdown) {
+                    document.querySelectorAll('.card-menu-dropdown').forEach(d => {
+                        d.classList.remove('active');
+                        // Reset parent card z-index
+                        const card = d.closest('.category-card');
+                        if(card) card.classList.remove('menu-active');
+                    });
                 }
             });
         });
@@ -513,7 +505,6 @@
 
         async function loadData() {
             try {
-                // Load Product Counts
                 const prodSnap = await db.collection('products').get();
                 productCounts = {};
                 prodSnap.forEach(doc => {
@@ -521,7 +512,6 @@
                     if(cat) productCounts[cat] = (productCounts[cat] || 0) + 1;
                 });
 
-                // Load Categories
                 const catSnap = await db.collection('categories').orderBy('name').get();
                 allCategories = catSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderCategories(allCategories);
@@ -544,7 +534,7 @@
                         <div class="cat-name">${cat.name}</div>
                         <div class="cat-count"><span class="badge">${productCounts[cat.name] || 0} products</span></div>
                     </div>
-                    <div style="position:relative;">
+                    <div class="menu-btn-wrapper">
                         <button class="menu-btn" onclick="toggleCardMenu(event, '${cat.id}')"><i class='bx bx-dots-vertical-rounded'></i></button>
                         <div class="card-menu-dropdown" id="menu-${cat.id}">
                             <div class="menu-item" onclick="openEditModal('${cat.id}')"><i class='bx bx-edit'></i> Edit</div>
@@ -557,18 +547,18 @@
 
         function toggleCardMenu(e, id) {
             e.stopPropagation();
-            const dropdown = document.getElementById(`menu-${id}`);
-            const card = dropdown.closest('.category-card');
-            const isActive = dropdown.classList.contains('active');
-
+            
             // Close all others
             document.querySelectorAll('.card-menu-dropdown').forEach(d => d.classList.remove('active'));
-            document.querySelectorAll('.category-card').forEach(c => c.classList.remove('menu-open'));
+            document.querySelectorAll('.category-card').forEach(c => c.classList.remove('menu-active'));
+
+            const menu = document.getElementById(`menu-${id}`);
+            const card = menu.closest('.category-card');
 
             // Toggle current
-            if (!isActive) {
-                dropdown.classList.add('active');
-                card.classList.add('menu-open');
+            if (!menu.classList.contains('active')) {
+                menu.classList.add('active');
+                card.classList.add('menu-active');
             }
         }
 
@@ -605,6 +595,9 @@
                 document.getElementById('cat-preview').style.display = 'none';
             }
             document.getElementById('category-modal').style.display = 'flex';
+            // Clean up menus
+            document.querySelectorAll('.card-menu-dropdown').forEach(d => d.classList.remove('active'));
+            document.querySelectorAll('.category-card').forEach(c => c.classList.remove('menu-active'));
         }
 
         function closeModal() {
@@ -627,7 +620,6 @@
             const name = document.getElementById('cat-name-input').value.trim();
             if(!name) return showToast('Name required', 'error');
 
-            // Check dupes
             const exists = allCategories.some(c => c.id !== editingId && c.name.toLowerCase() === name.toLowerCase());
             if(exists) return showToast('Category name exists', 'error');
 
@@ -677,6 +669,9 @@
             document.getElementById('confirm-del-input').value = '';
             document.getElementById('confirm-del-btn').disabled = true;
             document.getElementById('delete-modal').style.display = 'flex';
+            // Clean up menus
+            document.querySelectorAll('.card-menu-dropdown').forEach(d => d.classList.remove('active'));
+            document.querySelectorAll('.category-card').forEach(c => c.classList.remove('menu-active'));
         }
 
         function closeDeleteModal() {
