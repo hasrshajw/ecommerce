@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Product Editor - Vastramaya Admin</title>
-    
+    <title>Product Editor - ShopSphere Admin</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -12,225 +11,134 @@
     
     <style>
         :root {
-            --body-bg: #F8FAFC;
+            --body-bg: #F1F5F9;
             --widget-bg: #FFFFFF;
             --border-color: #E2E8F0;
-            --text-primary: #1E293B;
+            --text-primary: #0F172A;
             --text-secondary: #64748B;
             --brand-primary: #4F46E5;
             --brand-hover: #4338CA;
             --brand-gradient: linear-gradient(135deg, #4F46E5 0%, #4338CA 100%);
             --danger-color: #EF4444;
             --success-color: #10B981;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --radius-sm: 6px;
-            --radius-md: 10px;
-            --radius-lg: 16px;
-            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             --warning-color: #F59E0B;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--body-bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; }
-        input, button, select, textarea { font-family: inherit; font-size: inherit; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--body-bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+        button, input, select, textarea { font-family: inherit; font-size: inherit; outline: none; }
         a { text-decoration: none; color: inherit; }
-        ul { list-style: none; }
         
         .dashboard-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; position: relative; }
         .main-area { display: flex; flex-direction: column; height: 100vh; overflow-y: auto; background-color: var(--body-bg); }
+        
         .main-header { padding: 12px 2.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background-color: var(--widget-bg); position: sticky; top: 0; z-index: 10; box-shadow: var(--shadow-sm); min-height: 65px; }
-        .nav-logo { height: 42px; width: auto; object-fit: contain; }
-        .sidebar { background-color: var(--widget-bg); border-right: 1px solid var(--border-color); padding: 2rem 1.5rem; display: flex; flex-direction: column; position: relative; transition: transform 0.3s ease-in-out; box-shadow: var(--shadow-sm); z-index: 1001; }
+        .nav-logo { height: 32px; width: auto; }
+        
+        .sidebar { background-color: var(--widget-bg); border-right: 1px solid var(--border-color); padding: 2rem 1.5rem; display: flex; flex-direction: column; transition: transform 0.3s ease; z-index: 1001; }
         .sidebar-header { display: flex; align-items: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); } 
-        .logo-container { display: flex; align-items: center; width: 100%; }
-        .logo-image { height: 40px; width: auto; object-fit: contain; }
+        .logo-image { height: 36px; width: auto; }
         .main-nav ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
-        .main-nav a { display: flex; align-items: center; gap: 1rem; text-decoration: none; color: var(--text-secondary); font-weight: 500; padding: 0.875rem 1rem; border-radius: var(--radius-md); transition: var(--transition); position: relative; }
-        .main-nav a i { font-size: 1.375rem; color: var(--text-secondary); transition: var(--transition); width: 24px; text-align: center; }
-        .main-nav a:hover { background-color: var(--body-bg); color: var(--text-primary); transform: translateY(-1px); } 
-        .main-nav a:hover i { color: var(--brand-primary); }
-        .main-nav a.active { background: linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(79, 70, 229, 0.05) 100%); color: var(--brand-primary); font-weight: 600; box-shadow: var(--shadow-sm); } 
-        .main-nav a.active i { color: var(--brand-primary); }
-        .main-nav a.active::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 4px; height: 60%; background: var(--brand-gradient); border-radius: 0 4px 4px 0; }
-        .profile-section { margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.75rem; cursor: pointer; border-radius: var(--radius-md); transition: var(--transition); padding: 1rem; }
+        .main-nav a { display: flex; align-items: center; gap: 1rem; color: var(--text-secondary); font-weight: 500; padding: 0.75rem 1rem; border-radius: var(--radius-md); transition: var(--transition); }
+        .main-nav a i { font-size: 1.25rem; }
+        .main-nav a:hover { background-color: var(--body-bg); color: var(--text-primary); }
+        .main-nav a.active { background: rgba(79, 70, 229, 0.08); color: var(--brand-primary); font-weight: 600; }
+        
+        .profile-section { margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.75rem; cursor: pointer; padding: 1rem; border-radius: var(--radius-md); }
         .profile-section:hover { background-color: var(--body-bg); }
-        .profile-content-wrapper { display: flex; align-items: center; gap: 0.75rem; width: 100%; }
-        .profile-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid var(--border-color); transition: var(--transition); }
-        .profile-section:hover .profile-avatar { border-color: var(--brand-primary); }
-        .profile-details { flex-grow: 1; min-width: 0; }
-        .profile-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; font-size: 0.9rem; }
-        .profile-email { font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
-        .profile-options i { font-size: 1.25rem; color: var(--text-secondary); transition: var(--transition); }
-        .profile-section.active .profile-options i { transform: rotate(180deg); }
-        .profile-popup { position: absolute; bottom: 90px; left: 1.5rem; right: 1.5rem; background-color: var(--widget-bg); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); padding: 0.75rem; z-index: 100; opacity: 0; pointer-events: none; transform: translateY(10px) scale(0.95); transition: var(--transition); }
-        .profile-popup.active { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
-        .popup-header { display: flex; align-items: center; gap: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); margin-bottom: 0.5rem; }
-        .popup-list { list-style: none; } 
-        .popup-list a { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem; border-radius: var(--radius-sm); text-decoration: none; color: var(--text-primary); transition: var(--transition); cursor: pointer; }
-        .popup-list a:hover { background-color: var(--body-bg); } 
-        .popup-list a i { font-size: 1.2rem; color: var(--text-secondary); }
-        .popup-list a.logout i { color: var(--danger-color); } 
-        .popup-list a.logout { color: var(--danger-color); }
+        .profile-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-color); }
+        .profile-name { font-weight: 600; font-size: 0.9rem; display: block; }
+        .profile-email { font-size: 0.75rem; color: var(--text-secondary); display: block; }
+        
         .menu-toggle, .sidebar-close-btn { display: none; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(2px); }
         .overlay.active { opacity: 1; pointer-events: auto; }
 
-        .page-container { max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%; }
+        .page-container { max-width: 1100px; margin: 0 auto; padding: 2rem; width: 100%; }
         .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-        .page-title { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); margin: 0; letter-spacing: -0.5px; }
+        .page-title { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin: 0; }
+
+        .form-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
+        .form-col { display: flex; flex-direction: column; gap: 1.5rem; }
+
+        .card { background: var(--widget-bg); border-radius: var(--radius-lg); padding: 1.5rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); }
+        .card-title { font-size: 1rem; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; }
         
-        .editor-card { 
-            background: var(--widget-bg); border-radius: var(--radius-lg); 
-            box-shadow: var(--shadow-sm); padding: 2rem; 
-            border: 1px solid var(--border-color); 
-        }
-        .section-title { font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); display:flex; align-items:center; gap:0.5rem; }
+        .input-group { margin-bottom: 1.25rem; }
+        .label { display: block; font-size: 0.85rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 0.5rem; }
+        .input-control { width: 100%; padding: 0.625rem 0.875rem; font-size: 0.95rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); transition: var(--transition); background: #fff; color: var(--text-primary); }
+        .input-control:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
         
-        .form-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
-        .form-col { display: flex; flex-direction: column; gap: 2rem; }
-        
-        .input-group { position: relative; margin-bottom: 1.25rem; }
-        .input-label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 0.5rem; }
-        .form-control {
-            width: 100%; padding: 0.75rem 1rem; font-size: 0.95rem; 
-            border: 1px solid var(--border-color); border-radius: var(--radius-md);
-            background-color: #FFFFFF; color: var(--text-primary);
-            transition: var(--transition);
-        }
-        .form-control:focus { border-color: var(--brand-primary); outline: none; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
-        .form-control::placeholder { color: #94A3B8; }
-        
-        .custom-select-container { position: relative; width: 100%; }
-        .custom-select-trigger {
-            position: relative; display: flex; align-items: center; justify-content: space-between;
-            padding: 0.75rem 1rem; font-size: 0.95rem; background: #fff;
-            border: 1px solid var(--border-color); border-radius: var(--radius-md);
-            cursor: pointer; transition: var(--transition);
-        }
-        .custom-select-trigger:hover { border-color: #CBD5E1; }
-        .custom-select-trigger.open { border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
-        .custom-select-options {
-            position: absolute; top: calc(100% + 6px); left: 0; right: 0;
-            background: #fff; border: 1px solid var(--border-color); border-radius: var(--radius-md);
-            box-shadow: var(--shadow-lg); z-index: 50;
-            max-height: 250px; overflow-y: auto;
-            opacity: 0; visibility: hidden; transform: translateY(-10px);
-            transition: var(--transition);
-        }
-        .custom-select-options.open { opacity: 1; visibility: visible; transform: translateY(0); }
-        .custom-option { padding: 0.75rem 1rem; cursor: pointer; transition: background 0.1s; display: flex; align-items: center; justify-content: space-between; }
-        .custom-option:hover { background-color: var(--body-bg); color: var(--brand-primary); }
-        .custom-option.selected { background-color: rgba(79, 70, 229, 0.05); color: var(--brand-primary); font-weight: 600; }
-        
-        .upload-zone {
-            border: 2px dashed var(--border-color); border-radius: var(--radius-md);
-            padding: 2rem 1rem; text-align: center; cursor: pointer;
-            transition: var(--transition); background: #F8FAFC;
-        }
-        .upload-zone:hover { border-color: var(--brand-primary); background: #fff; }
-        .upload-icon { font-size: 2rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
-        .upload-text { font-size: 0.9rem; color: var(--text-secondary); }
-        
-        .variant-list { display: flex; flex-direction: column; gap: 0.75rem; }
-        .variant-card {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 1rem; background: #fff; border: 1px solid var(--border-color);
-            border-radius: var(--radius-md); transition: var(--transition);
-        }
-        .variant-card:hover { border-color: var(--brand-primary); box-shadow: var(--shadow-sm); }
-        .variant-info { display: flex; align-items: center; gap: 1rem; }
-        .variant-swatch { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); }
-        
-        .btn { 
-            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
-            padding: 0.75rem 1.5rem; font-weight: 600; border-radius: var(--radius-md);
-            cursor: pointer; transition: var(--transition); border: none; font-size: 0.95rem;
-        }
-        .btn-primary { background: var(--brand-gradient); color: white; box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2); }
-        .btn-primary:hover { box-shadow: 0 6px 8px -1px rgba(79, 70, 229, 0.3); transform: translateY(-1px); }
-        .btn-secondary { background: #fff; color: var(--text-primary); border: 1px solid var(--border-color); }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.625rem 1.25rem; font-weight: 600; border-radius: var(--radius-md); cursor: pointer; transition: var(--transition); border: none; font-size: 0.9rem; }
+        .btn-primary { background: var(--brand-gradient); color: white; box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2); }
+        .btn-primary:hover { filter: brightness(110%); transform: translateY(-1px); }
+        .btn-secondary { background: #fff; border: 1px solid var(--border-color); color: var(--text-primary); }
         .btn-secondary:hover { background: var(--body-bg); border-color: #CBD5E1; }
         .btn-danger-soft { background: #FEF2F2; color: var(--danger-color); }
         .btn-danger-soft:hover { background: #FEE2E2; }
-        .btn-block { width: 100%; }
-        .btn-icon { padding: 0.5rem; border-radius: 6px; cursor: pointer; border: none; background: transparent; color: var(--text-secondary); transition: 0.2s; }
+        .btn-icon { padding: 0.4rem; border-radius: 6px; cursor: pointer; border: none; background: transparent; color: var(--text-secondary); transition: 0.2s; font-size: 1.2rem; display: flex; }
         .btn-icon:hover { background: var(--body-bg); color: var(--text-primary); }
-        .btn-icon.delete:hover { background: #FEF2F2; color: var(--danger-color); }
+        .btn-block { width: 100%; }
 
-        .confirm-modal-wrapper {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.2s;
-        }
-        .confirm-modal-wrapper.active { opacity: 1; pointer-events: auto; }
-        .confirm-box {
-            background: white; padding: 2rem; border-radius: var(--radius-lg);
-            width: 90%; max-width: 400px; text-align: center;
-            box-shadow: var(--shadow-lg); transform: scale(0.95); transition: transform 0.2s;
-        }
-        .confirm-modal-wrapper.active .confirm-box { transform: scale(1); }
-        .confirm-icon { 
-            width: 48px; height: 48px; background: #FEF2F2; color: var(--danger-color);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; margin: 0 auto 1rem;
-        }
+        .upload-zone { border: 2px dashed var(--border-color); border-radius: var(--radius-lg); padding: 2.5rem 1rem; text-align: center; cursor: pointer; transition: var(--transition); background: #F8FAFC; }
+        .upload-zone:hover { border-color: var(--brand-primary); background: #F1F5F9; }
+        .upload-zone.hidden { display: none; }
+        .cover-preview { position: relative; width: 100%; aspect-ratio: 16/9; background: #F1F5F9; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-color); display: none; }
+        .cover-preview.active { display: block; }
+        .cover-img { width: 100%; height: 100%; object-fit: cover; }
+        .cover-remove { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.9); color: var(--danger-color); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: var(--shadow-sm); transition: 0.2s; }
+        .cover-remove:hover { transform: scale(1.1); }
+
+        .variant-item { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; background: #fff; border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 0.75rem; transition: 0.2s; }
+        .variant-item:hover { border-color: var(--brand-primary); }
         
-        .preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 0.75rem; margin-top: 1rem; }
-        .preview-item { position: relative; aspect-ratio: 1; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); }
-        .preview-img { width: 100%; height: 100%; object-fit: cover; }
-        .preview-remove { 
-            position: absolute; top: 4px; right: 4px; width: 24px; height: 24px;
-            background: rgba(255, 255, 255, 0.9); border-radius: 50%; color: var(--danger-color);
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-size: 1rem;
-        }
+        .review-item { background: #F8FAFC; border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1rem; border: 1px solid var(--border-color); }
+        .review-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
+        .review-user { display: flex; align-items: center; gap: 0.75rem; }
+        .review-avatar { width: 32px; height: 32px; background: #E2E8F0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; color: var(--text-secondary); font-size: 0.8rem; }
+        .stars { color: var(--warning-color); font-size: 0.9rem; letter-spacing: 1px; }
+        .review-text { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.4; }
 
-        .cover-preview-container { position: relative; width: 100%; height: 200px; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); margin-top: 1rem; display: none; }
-        .cover-preview-img { width: 100%; height: 100%; object-fit: cover; }
-
-        .review-list { display: flex; flex-direction: column; gap: 1rem; max-height: 300px; overflow-y: auto; margin-bottom: 1rem; }
-        .review-item { padding: 1rem; background: #F8FAFC; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
-        .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-        .review-user { font-weight: 600; font-size: 0.9rem; }
-        .review-stars { color: var(--warning-color); font-size: 1rem; }
-        .review-text { font-size: 0.9rem; color: var(--text-secondary); }
-
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); z-index: 1500; display: none; justify-content: center; align-items: center; padding: 1rem; }
-        .modal-content { background: #fff; width: 100%; max-width: 650px; border-radius: var(--radius-lg); max-height: 90vh; display: flex; flex-direction: column; box-shadow: var(--shadow-lg); overflow: hidden; }
-        .modal-header { padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #fff; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(3px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 1rem; }
+        .modal-card { background: #fff; width: 100%; max-width: 550px; border-radius: 16px; box-shadow: var(--shadow-lg); overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; }
+        .modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; }
         .modal-body { padding: 1.5rem; overflow-y: auto; }
-        .modal-footer { padding: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; background: #F8FAFC; }
-
-        @media (max-width: 1024px) {
-            .dashboard-container { grid-template-columns: 1fr; }
-            .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 85%; max-width: 320px; transform: translateX(-100%); z-index: 1000; padding: 2rem 1.25rem; }
-            .sidebar.active { transform: translateX(0); }
-            .main-header { padding: 12px 1.5rem; }
-            .nav-logo { display: block; }
-            .menu-toggle { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; font-size: 1.6rem; color: var(--text-primary); cursor: pointer; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white; }
-            .sidebar-close-btn { display: flex; align-items: center; justify-content: center; position: absolute; top: 1.5rem; right: 1.25rem; font-size: 1.75rem; color: var(--text-secondary); cursor: pointer; border: none; background: none; width: 36px; height: 36px; border-radius: 50%; }
-            
-            .page-container { padding: 1rem; }
-            .form-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-            .content-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
-            .btn { width: 100%; justify-content: center; }
-            .modal-content { height: 100%; max-height: 100%; border-radius: 0; }
-            .modal-footer { flex-direction: column-reverse; }
-            .confirm-box { width: 100%; border-radius: var(--radius-lg) var(--radius-lg) 0 0; position: absolute; bottom: 0; margin: 0; max-width: 100%; transform: translateY(100%); }
-            .confirm-modal-wrapper.active .confirm-box { transform: translateY(0); }
-        }
-        @media (min-width: 1025px) { .nav-logo { display: none; } }
+        .modal-footer { padding: 1.25rem 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 0.75rem; background: #fff; }
         
+        .section-divider { height: 1px; background: var(--border-color); margin: 1.5rem 0; }
+        .preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 0.5rem; margin-top: 1rem; }
+        .mini-preview { aspect-ratio: 1; border-radius: 6px; overflow: hidden; position: relative; border: 1px solid var(--border-color); }
+        .mini-preview img { width: 100%; height: 100%; object-fit: cover; }
+        .mini-remove { position: absolute; top: 2px; right: 2px; background: rgba(255,255,255,0.9); color: var(--danger-color); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 10px; }
+
         #toast-container { position: fixed; top: 20px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
         .toast { padding: 1rem 1.5rem; background: #fff; border-left: 4px solid var(--brand-primary); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); pointer-events: auto; animation: slideInRight 0.3s ease forwards; display: flex; align-items: center; gap: 1rem; min-width: 300px; }
         .toast.error { border-left-color: var(--danger-color); }
-        .toast.success { border-left-color: var(--success-color); }
         .toast-icon { font-size: 1.5rem; }
-        .toast.success .toast-icon { color: var(--success-color); }
-        .toast.error .toast-icon { color: var(--danger-color); }
         @keyframes slideInRight { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+
+        @media (max-width: 1024px) {
+            .dashboard-container { grid-template-columns: 1fr; }
+            .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 85%; max-width: 320px; transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .menu-toggle { display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; border: 1px solid var(--border-color); border-radius: 8px; padding: 0.4rem; background: white; }
+            .sidebar-close-btn { display: flex; align-items: center; justify-content: center; position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; cursor: pointer; border: none; background: none; }
+            .nav-logo { display: block; }
+            
+            .page-container { padding: 1rem; }
+            .form-grid { grid-template-columns: 1fr; }
+            .content-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .content-header .btn-group { width: 100%; display: flex; gap: 0.5rem; }
+            .content-header .btn { flex: 1; }
+            .modal-card { height: 100%; max-height: 100%; border-radius: 0; }
+        }
+        @media (min-width: 1025px) { .nav-logo { display: none; } }
     </style>
 </head>
 <body>
@@ -240,9 +148,7 @@
         <aside class="sidebar" id="sidebar">
             <button class="sidebar-close-btn" id="sidebar-close-btn"><i class='bx bx-x'></i></button>
             <div class="sidebar-header">
-                <div class="logo-container">
-                    <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" class="logo-image">
-                </div>
+                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Logo" class="logo-image">
             </div>
             <nav class="main-nav">
                 <ul>
@@ -252,167 +158,222 @@
                     <li><a href="#"><i class='bx bx-clipboard'></i> All Orders</a></li>
                 </ul>
             </nav>
-            <div class="profile-section" id="profile-section">
-                <div class="profile-content-wrapper">
-                    <img id="sidebar-avatar" src="https://ui-avatars.com/api/?name=Admin&background=random" alt="Profile" class="profile-avatar">
-                    <div class="profile-details">
-                        <span class="profile-name" id="sidebar-name">Loading...</span>
-                        <span class="profile-email" id="sidebar-email">...</span>
-                    </div>
-                    <div class="profile-options"><i class='bx bx-chevron-down'></i></div>
+            <div class="profile-section">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=random" class="profile-avatar" id="sidebar-avatar">
+                <div class="profile-details">
+                    <span class="profile-name" id="sidebar-name">Admin User</span>
+                    <span class="profile-email" id="sidebar-email">admin@shop.com</span>
                 </div>
-            </div>
-            <div class="profile-popup" id="profile-popup">
-                <div class="popup-header">
-                    <img id="popup-avatar" src="https://ui-avatars.com/api/?name=Admin&background=random" alt="Profile" class="profile-avatar">
-                    <div class="profile-details">
-                        <span class="profile-name" id="popup-name">Loading...</span>
-                        <span class="profile-email" id="popup-email">...</span>
-                    </div>
-                </div>
-                <ul class="popup-list">
-                    <li><a href="#"><i class='bx bx-user'></i> Profile</a></li>
-                    <li><a href="#"><i class='bx bx-cog'></i> Settings</a></li>
-                    <li><a href="#" id="logout-btn" class="logout"><i class='bx bx-log-out'></i> Logout</a></li>
-                </ul>
             </div>
         </aside>
         
         <main class="main-area">
             <header class="main-header">
                 <button class="menu-toggle" id="menu-toggle"><i class='bx bx-menu'></i></button>
-                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" class="nav-logo">
+                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Logo" class="nav-logo">
             </header>
             
             <div class="page-container">
                 <div class="content-header">
-                    <h1 class="page-title" id="editor-title">Product Editor</h1>
-                    <div style="display:flex; gap:1rem;">
+                    <h1 class="page-title" id="editor-title">Edit Product</h1>
+                    <div class="btn-group" style="display: flex; gap: 0.75rem;">
                         <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
-                        <button type="button" class="btn btn-primary" id="header-save-btn">Save Product</button>
+                        <button type="button" class="btn btn-primary" id="save-btn">Save Product</button>
                     </div>
                 </div>
 
-                <div id="product-form-content">
-                    <div style="text-align:center; padding:4rem; color:var(--text-secondary);">
-                        <i class='bx bx-loader-alt bx-spin' style='font-size:2.5rem; margin-bottom:1rem;'></i>
-                        <p>Loading product data...</p>
-                    </div>
+                <div id="loading-state" style="text-align:center; padding:4rem; color:var(--text-secondary);">
+                    <i class='bx bx-loader-alt bx-spin' style='font-size:2.5rem; margin-bottom:1rem;'></i>
+                    <p>Loading product data...</p>
                 </div>
+
+                <form id="product-form" style="display:none;">
+                    <div class="form-grid">
+                        <div class="form-col">
+                            <!-- COVER IMAGE CARD -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="card-title"><i class='bx bx-image'></i> Cover Image</span>
+                                    <span style="font-size:0.8rem; color:var(--text-secondary);">Required (1 only)</span>
+                                </div>
+                                <div class="upload-zone" id="cover-upload-zone" onclick="document.getElementById('cover-file').click()">
+                                    <i class='bx bx-cloud-upload' style="font-size:2.5rem; color:var(--brand-primary); margin-bottom:0.5rem;"></i>
+                                    <div style="font-weight:600; color:var(--text-primary);">Click to upload cover</div>
+                                    <div style="font-size:0.85rem; color:var(--text-secondary);">SVG, PNG, JPG or GIF</div>
+                                </div>
+                                <input type="file" id="cover-file" accept="image/*" style="display:none;">
+                                
+                                <div class="cover-preview" id="cover-preview">
+                                    <img src="" class="cover-img" id="cover-img-el">
+                                    <div class="cover-remove" onclick="removeCover()"><i class='bx bx-trash'></i></div>
+                                </div>
+                                
+                                <div style="margin-top:1rem;">
+                                    <div class="label">Or use Image URL</div>
+                                    <div style="display:flex; gap:0.5rem;">
+                                        <input type="url" class="input-control" id="cover-url-input" placeholder="https://example.com/image.jpg">
+                                        <button type="button" class="btn btn-secondary" onclick="setCoverFromUrl()">Set</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- BASIC DETAILS -->
+                            <div class="card">
+                                <div class="card-header"><span class="card-title"><i class='bx bx-info-circle'></i> Basic Info</span></div>
+                                <div class="input-group">
+                                    <label class="label">Product Name</label>
+                                    <input type="text" class="input-control" id="name" required>
+                                </div>
+                                <div class="input-group">
+                                    <label class="label">Description</label>
+                                    <textarea class="input-control" id="description" rows="4"></textarea>
+                                </div>
+                                <div class="input-group">
+                                    <label class="label">Category</label>
+                                    <select class="input-control" id="category-select"></select>
+                                    <input type="text" class="input-control" id="new-category" placeholder="New Category Name" style="display:none; margin-top:0.5rem;">
+                                </div>
+                            </div>
+
+                            <!-- VARIANTS -->
+                            <div class="card">
+                                <div class="card-header"><span class="card-title"><i class='bx bx-palette'></i> Color Variants</span></div>
+                                <div id="variants-list"></div>
+                                <button type="button" class="btn btn-secondary btn-block" onclick="openVariantModal()" style="margin-top:1rem;">
+                                    <i class='bx bx-plus'></i> Add Color Variant
+                                </button>
+                            </div>
+
+                            <!-- REVIEWS -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="card-title"><i class='bx bx-star'></i> Customer Reviews</span>
+                                    <button type="button" class="btn btn-sm btn-secondary" onclick="openReviewModal()" style="padding:0.4rem 0.8rem; font-size:0.8rem;">
+                                        <i class='bx bx-plus'></i> Add Review
+                                    </button>
+                                </div>
+                                <div id="reviews-list"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-col">
+                            <!-- PRICING -->
+                            <div class="card">
+                                <div class="card-header"><span class="card-title"><i class='bx bx-purchase-tag'></i> Pricing</span></div>
+                                <div class="input-group">
+                                    <label class="label">Current Price ($)</label>
+                                    <input type="number" class="input-control" id="price" step="0.01" required>
+                                </div>
+                                <div class="input-group">
+                                    <label class="label">Old Price ($)</label>
+                                    <input type="number" class="input-control" id="oldPrice" step="0.01">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
         </main>
     </div>
 
-    <div id="toast-container"></div>
-
-    <div class="confirm-modal-wrapper" id="confirm-modal">
-        <div class="confirm-box">
-            <div class="confirm-icon"><i class='bx bx-error'></i></div>
-            <h3 style="font-size:1.25rem; font-weight:600; margin-bottom:0.5rem;">Are you sure?</h3>
-            <p id="confirm-message" style="color:var(--text-secondary); margin-bottom:1.5rem;">This action cannot be undone.</p>
-            <div style="display:flex; gap:1rem;">
-                <button class="btn btn-secondary btn-block" id="confirm-cancel">Cancel</button>
-                <button class="btn btn-danger-soft btn-block" style="background:#EF4444; color:white;" id="confirm-yes">Yes, Delete</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="color-variant-modal">
-        <div class="modal-content">
+    <!-- VARIANT MODAL -->
+    <div class="modal-overlay" id="variant-modal">
+        <div class="modal-card">
             <div class="modal-header">
-                <h3 style="font-size: 1.2rem; font-weight: 600;" id="color-modal-title">Manage Variant</h3>
-                <button class="btn-icon" onclick="closeColorModal()"><i class='bx bx-x' style="font-size:1.5rem;"></i></button>
+                <h3 class="card-title" id="variant-modal-title">Add Variant</h3>
+                <button class="btn-icon" onclick="closeVariantModal()"><i class='bx bx-x'></i></button>
             </div>
             <div class="modal-body">
-                <form id="color-variant-form">
-                    <div class="form-grid" style="grid-template-columns: 1fr;">
-                        <div class="input-group">
-                            <label class="input-label">Color Name</label>
-                            <input type="text" class="form-control" id="color-name" placeholder="e.g., Midnight Blue" required>
+                <form id="variant-form">
+                    <div class="input-group">
+                        <label class="label">Color Name</label>
+                        <input type="text" class="input-control" id="v-name" placeholder="e.g., Midnight Blue" required>
+                    </div>
+                    
+                    <div class="section-divider"></div>
+                    
+                    <div class="input-group">
+                        <label class="label">Color Swatch (Icon)</label>
+                        <div style="display:flex; gap:1rem; align-items:center;">
+                            <div style="width:50px; height:50px; border-radius:8px; border:1px solid var(--border-color); overflow:hidden; background:#F8FAFC; display:flex; align-items:center; justify-content:center;" id="swatch-preview-box">
+                                <img id="swatch-preview-img" style="width:100%; height:100%; object-fit:cover; display:none;">
+                                <i class='bx bx-image' style="font-size:1.5rem; color:var(--text-secondary);" id="swatch-placeholder-icon"></i>
+                            </div>
+                            <div style="flex:1;">
+                                <input type="file" id="v-swatch-file" accept="image/*" style="display:none;">
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('v-swatch-file').click()">Upload Swatch</button>
+                                <input type="url" class="input-control" id="v-swatch-url" placeholder="Or Image URL" style="margin-top:0.5rem; font-size:0.85rem;">
+                            </div>
                         </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <div class="input-group">
+                        <label class="label">Available Sizes</label>
+                        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:0.75rem;" id="size-grid"></div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <div class="input-group">
+                        <label class="label">Gallery Images</label>
+                        <div class="upload-zone" style="padding:1.5rem; border-radius:8px;" onclick="document.getElementById('v-gallery-files').click()">
+                            <span style="font-size:0.9rem; font-weight:500; color:var(--brand-primary);">+ Upload Images</span>
+                        </div>
+                        <input type="file" id="v-gallery-files" accept="image/*" multiple style="display:none;">
+                        <div class="preview-grid" id="v-gallery-preview"></div>
                         
-                        <div class="input-group">
-                            <label class="input-label">Color Icon / Swatch</label>
-                            <div style="display:flex; gap:1rem; align-items:flex-start;">
-                                <div class="upload-zone" style="padding:1rem; flex-grow:1;" onclick="document.getElementById('color-image-upload').click()">
-                                    <i class='bx bx-image-add' style="font-size:1.5rem; color:var(--text-secondary);"></i>
-                                    <div style="font-size:0.8rem; color:var(--text-secondary);">Tap to upload swatch</div>
-                                </div>
-                                <input type="file" id="color-image-upload" accept="image/*" style="display: none;">
-                                <div id="color-preview-container" style="display:none; position:relative; width:60px; height:60px; border-radius:8px; overflow:hidden; border:1px solid var(--border-color);">
-                                    <img id="color-upload-preview" style="width:100%; height:100%; object-fit:cover;">
-                                    <button type="button" onclick="removeColorUpload()" style="position:absolute; top:0; right:0; background:rgba(0,0,0,0.5); color:white; border:none; width:100%; height:100%; opacity:0; transition:0.2s; cursor:pointer;">
-                                        <i class='bx bx-trash'></i>
-                                    </button>
-                                </div>
-                                <input type="hidden" id="color-link">
+                        <div style="margin-top:1rem;">
+                            <label class="label">Add by URL</label>
+                            <div style="display:flex; gap:0.5rem;">
+                                <input type="url" class="input-control" id="v-gallery-url-input" placeholder="https://...">
+                                <button type="button" class="btn btn-secondary" onclick="addVariantUrl()">Add</button>
                             </div>
-                        </div>
-
-                        <div class="input-group">
-                            <label class="input-label">Sizes & Availability</label>
-                            <div style="background:#F8FAFC; border-radius:var(--radius-md); padding:1rem; border:1px solid var(--border-color);" id="modal-sizes-list"></div>
-                        </div>
-
-                        <div class="input-group">
-                            <label class="input-label">Variant Gallery Images</label>
-                            <div class="upload-zone" onclick="document.getElementById('multiple-color-images-upload').click()">
-                                <i class='bx bx-images upload-icon'></i>
-                                <div class="upload-text">Click to upload multiple images</div>
-                            </div>
-                            <input type="file" id="multiple-color-images-upload" accept="image/*" multiple style="display: none;">
-                            <div id="color-uploaded-images" class="preview-grid"></div>
-                            
-                            <div style="margin-top:1rem;">
-                                <label class="input-label">Or add via URL</label>
-                                <div id="modal-color-images-urls" style="display:flex; flex-direction:column; gap:0.5rem;"></div>
-                                <button type="button" class="btn btn-secondary" style="width:100%; margin-top:0.5rem; padding:0.5rem;" id="add-color-url-btn"><i class='bx bx-plus'></i> Add URL</button>
-                            </div>
+                            <div id="v-url-list" style="margin-top:0.5rem; display:flex; flex-direction:column; gap:0.5rem;"></div>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeColorModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="document.getElementById('color-variant-form').requestSubmit()">Save Variant</button>
+                <button type="button" class="btn btn-secondary" onclick="closeVariantModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveVariant()">Save Variant</button>
             </div>
         </div>
     </div>
 
+    <!-- REVIEW MODAL -->
     <div class="modal-overlay" id="review-modal">
-        <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-card" style="max-width:400px;">
             <div class="modal-header">
-                <h3 style="font-size: 1.2rem; font-weight: 600;">Add Review</h3>
-                <button class="btn-icon" onclick="closeReviewModal()"><i class='bx bx-x' style="font-size:1.5rem;"></i></button>
+                <h3 class="card-title">Add Review</h3>
+                <button class="btn-icon" onclick="closeReviewModal()"><i class='bx bx-x'></i></button>
             </div>
             <div class="modal-body">
-                <form id="review-form">
-                    <div class="input-group">
-                        <label class="input-label">User Name</label>
-                        <input type="text" class="form-control" id="review-user" required placeholder="John Doe">
+                <div class="input-group">
+                    <label class="label">User Name</label>
+                    <input type="text" class="input-control" id="r-name" placeholder="John Doe">
+                </div>
+                <div class="input-group">
+                    <label class="label">Rating</label>
+                    <div style="display:flex; gap:0.5rem;" id="star-rating-input">
+                        <!-- Stars injected via JS -->
                     </div>
-                    <div class="input-group">
-                        <label class="input-label">Rating</label>
-                        <select class="form-control" id="review-rating">
-                            <option value="5">5 Stars</option>
-                            <option value="4">4 Stars</option>
-                            <option value="3">3 Stars</option>
-                            <option value="2">2 Stars</option>
-                            <option value="1">1 Star</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label class="input-label">Comment</label>
-                        <textarea class="form-control" id="review-comment" rows="4" required placeholder="Write a comment..."></textarea>
-                    </div>
-                </form>
+                    <input type="hidden" id="r-rating" value="5">
+                </div>
+                <div class="input-group">
+                    <label class="label">Comment</label>
+                    <textarea class="input-control" id="r-comment" rows="3" placeholder="Great product!"></textarea>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="closeReviewModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="addReview()">Add Review</button>
+                <button type="button" class="btn btn-primary" onclick="saveReview()">Add Review</button>
             </div>
         </div>
     </div>
+
+    <div id="toast-container"></div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -429,630 +390,408 @@
             appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
             measurementId: "G-E39VNDCFVE"
         };
-        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
         firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
         const db = firebase.firestore();
         const storage = firebase.storage();
+        const auth = firebase.auth();
+        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
 
-        let allCategories = [];
-        const SIZES_LIST = ['S', 'M', 'L', 'XL', '2XL'];
-        let currentColorEditingIndex = null;
-        let colorUploadedFile = null;
-        let colorUploadedImages = [];
-        let coverUploadedFile = null;
+        // State
+        let productData = {
+            images: [], // [0] is cover
+            colorVariants: [],
+            reviews: []
+        };
+        let coverFile = null;
+        let editingVariantIndex = null;
+        let variantGalleryFiles = [];
+        let variantGalleryUrls = [];
+        let variantSwatchFile = null;
 
+        // Init
         document.addEventListener('DOMContentLoaded', () => {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            const toggleMenu = () => { sidebar.classList.toggle('active'); overlay.classList.toggle('active'); };
-            
-            document.getElementById('menu-toggle')?.addEventListener('click', toggleMenu);
-            document.getElementById('sidebar-close-btn')?.addEventListener('click', toggleMenu);
-            overlay?.addEventListener('click', toggleMenu);
-
-            const profileSection = document.getElementById('profile-section');
-            const profilePopup = document.getElementById('profile-popup');
-            profileSection?.addEventListener('click', (e) => {
-                e.stopPropagation();
-                profilePopup.classList.toggle('active');
-                profileSection.classList.toggle('active');
-            });
-            document.addEventListener('click', (e) => {
-                if (!profileSection?.contains(e.target)) {
-                    profilePopup?.classList.remove('active');
-                    profileSection?.classList.remove('active');
-                }
-            });
-
-            document.getElementById('logout-btn')?.addEventListener('click', (e) => {
-                e.preventDefault();
-                auth.signOut();
-            });
-
-            document.getElementById('header-save-btn')?.addEventListener('click', () => {
-                document.getElementById('product-form')?.requestSubmit();
+            setupSidebar();
+            auth.onAuthStateChanged(user => {
+                if(!user || user.email !== ADMIN_EMAIL) return window.location.href = 'index.html';
+                initEditor();
+                updateProfile(user);
             });
         });
 
-        auth.onAuthStateChanged(user => {
-            if (!user || user.email !== ADMIN_EMAIL) {
-                window.location.href = 'index.html';
-                return;
-            }
-            updateProfileUI(user);
-            initializeEditor();
-        });
+        function setupSidebar() {
+            const sb = document.getElementById('sidebar');
+            const ov = document.getElementById('overlay');
+            const toggle = () => { sb.classList.toggle('active'); ov.classList.toggle('active'); };
+            document.getElementById('menu-toggle').onclick = toggle;
+            document.getElementById('sidebar-close-btn').onclick = toggle;
+            ov.onclick = toggle;
+        }
 
-        function updateProfileUI(user) {
-            const name = user.displayName || "Admin";
-            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=4F46E5&color=fff`;
-            document.getElementById('sidebar-name').textContent = name;
+        function updateProfile(user) {
+            document.getElementById('sidebar-name').textContent = user.displayName || 'Admin';
             document.getElementById('sidebar-email').textContent = user.email;
-            document.getElementById('sidebar-avatar').src = avatar;
-            document.getElementById('popup-name').textContent = name;
-            document.getElementById('popup-email').textContent = user.email;
-            document.getElementById('popup-avatar').src = avatar;
+            document.getElementById('sidebar-avatar').src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=4F46E5&color=fff`;
         }
 
-        function showConfirm(message) {
-            return new Promise((resolve) => {
-                const modal = document.getElementById('confirm-modal');
-                const msgEl = document.getElementById('confirm-message');
-                const yesBtn = document.getElementById('confirm-yes');
-                const cancelBtn = document.getElementById('confirm-cancel');
-                
-                msgEl.textContent = message;
-                modal.classList.add('active');
-                
-                const cleanup = () => {
-                    modal.classList.remove('active');
-                    yesBtn.removeEventListener('click', onYes);
-                    cancelBtn.removeEventListener('click', onCancel);
-                };
-                
-                const onYes = () => { cleanup(); resolve(true); };
-                const onCancel = () => { cleanup(); resolve(false); };
-                
-                yesBtn.addEventListener('click', onYes);
-                cancelBtn.addEventListener('click', onCancel);
-            });
-        }
-
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            
-            let icon = type === 'success' ? 'bx-check-circle' : 'bx-x-circle';
-            toast.innerHTML = `
-                <i class='bx ${icon} toast-icon'></i>
-                <span style="font-weight:500; color:var(--text-primary);">${message}</span>
-            `;
-            
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        function setupCustomSelect(containerId, options, selectedValue, onChange) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = '';
-            
-            const wrapper = document.createElement('div');
-            wrapper.className = 'custom-select-container';
-            
-            const trigger = document.createElement('div');
-            trigger.className = 'custom-select-trigger';
-            const selectedText = options.find(o => o === selectedValue) || 'Select Category...';
-            trigger.innerHTML = `<span>${selectedText}</span><i class='bx bx-chevron-down'></i>`;
-            
-            const optionsList = document.createElement('div');
-            optionsList.className = 'custom-select-options';
-            
-            options.forEach(opt => {
-                const el = document.createElement('div');
-                el.className = `custom-option ${opt === selectedValue ? 'selected' : ''}`;
-                el.textContent = opt;
-                el.onclick = () => {
-                    trigger.querySelector('span').textContent = opt;
-                    optionsList.classList.remove('open');
-                    trigger.classList.remove('open');
-                    onChange(opt);
-                };
-                optionsList.appendChild(el);
-            });
-            
-            const newOpt = document.createElement('div');
-            newOpt.className = 'custom-option';
-            newOpt.innerHTML = `<span style="color:var(--brand-primary); font-weight:600;">+ Create New Category</span>`;
-            newOpt.onclick = () => {
-                optionsList.classList.remove('open');
-                onChange('--new--');
-            };
-            optionsList.appendChild(newOpt);
-            
-            trigger.onclick = (e) => {
-                e.stopPropagation();
-                const isOpen = optionsList.classList.contains('open');
-                document.querySelectorAll('.custom-select-options').forEach(el => el.classList.remove('open'));
-                document.querySelectorAll('.custom-select-trigger').forEach(el => el.classList.remove('open'));
-                
-                if (!isOpen) {
-                    optionsList.classList.add('open');
-                    trigger.classList.add('open');
-                }
-            };
-            
-            wrapper.appendChild(trigger);
-            wrapper.appendChild(optionsList);
-            container.appendChild(wrapper);
-            
-            document.addEventListener('click', () => {
-                optionsList.classList.remove('open');
-                trigger.classList.remove('open');
-            });
-        }
-
-        function initializeEditor() {
+        async function initEditor() {
             const params = new URLSearchParams(window.location.search);
-            const productId = params.get('id');
-            const categoryForCreation = params.get('category');
+            const id = params.get('id');
+            const cat = params.get('category');
 
-            if (productId) {
-                document.getElementById('editor-title').textContent = 'Edit Product';
-                loadProductForEdit(productId);
-            } else if (categoryForCreation) {
-                document.getElementById('editor-title').textContent = 'New Product';
-                loadCategoriesAndRenderForm({ category: decodeURIComponent(categoryForCreation) });
+            // Load Categories
+            const catSnap = await db.collection('categories').get();
+            const cats = catSnap.docs.map(d => d.data().name).sort();
+            const catSel = document.getElementById('category-select');
+            catSel.innerHTML = `<option value="">Select Category</option>` + 
+                               cats.map(c => `<option value="${c}">${c}</option>`).join('') + 
+                               `<option value="--new--">+ Create New</option>`;
+            
+            catSel.onchange = () => {
+                document.getElementById('new-category').style.display = catSel.value === '--new--' ? 'block' : 'none';
+            };
+
+            if(id) {
+                const doc = await db.collection('products').doc(id).get();
+                if(doc.exists) {
+                    productData = { id: doc.id, ...doc.data() };
+                    populateForm();
+                }
+            } else if(cat) {
+                catSel.value = decodeURIComponent(cat);
+                document.getElementById('product-form').style.display = 'block';
+                document.getElementById('loading-state').style.display = 'none';
             } else {
-                document.getElementById('product-form-content').innerHTML = `
-                    <div style="text-align:center; padding:3rem;">
-                        <h3>No Product Selected</h3>
-                        <a href="index.html" class="btn btn-primary" style="margin-top:1rem;">Go to Dashboard</a>
-                    </div>`;
+                document.getElementById('product-form').style.display = 'block';
+                document.getElementById('loading-state').style.display = 'none';
             }
         }
 
-        async function loadCategories() {
-            try {
-                const snapshot = await db.collection('categories').orderBy('name').get();
-                return snapshot.docs.map(doc => doc.data().name);
-            } catch (error) { return []; }
+        function populateForm() {
+            document.getElementById('name').value = productData.name || '';
+            document.getElementById('description').value = productData.description || '';
+            document.getElementById('price').value = productData.price || '';
+            document.getElementById('oldPrice').value = productData.oldPrice || '';
+            
+            const catSel = document.getElementById('category-select');
+            if([...catSel.options].some(o => o.value === productData.category)) {
+                catSel.value = productData.category;
+            } else {
+                catSel.value = '--new--';
+                document.getElementById('new-category').style.display = 'block';
+                document.getElementById('new-category').value = productData.category || '';
+            }
+
+            if(productData.images && productData.images.length > 0) {
+                showCoverPreview(productData.images[0]);
+            }
+
+            renderVariants();
+            renderReviews();
+
+            document.getElementById('loading-state').style.display = 'none';
+            document.getElementById('product-form').style.display = 'block';
         }
 
-        async function loadProductForEdit(productId) {
-            try {
-                const doc = await db.collection('products').doc(productId).get();
-                if (!doc.exists) { showToast('Product not found', 'error'); return; }
-                allCategories = await loadCategories();
-                renderProductForm({ id: doc.id, ...doc.data() });
-            } catch (error) { showToast("Error loading product", "error"); }
-        }
-
-        async function loadCategoriesAndRenderForm(initialData = {}) {
-            allCategories = await loadCategories();
-            renderProductForm({ ...initialData, id: null });
-        }
-
-        function renderProductForm(product) {
-            const container = document.getElementById('product-form-content');
-            container.dataset.colorVariants = JSON.stringify(product.colorVariants || []);
-            container.dataset.reviews = JSON.stringify(product.reviews || []);
-            const coverImage = product.images && product.images.length > 0 ? product.images[0] : '';
-
-            container.innerHTML = `
-                <form id="product-form">
-                    <div class="form-grid">
-                        <div class="form-col">
-                            <div class="editor-card">
-                                <h3 class="section-title"><i class='bx bx-image'></i> Cover Image</h3>
-                                <div class="upload-zone" onclick="document.getElementById('cover-image-upload').click()">
-                                    <i class='bx bx-cloud-upload upload-icon'></i>
-                                    <div class="upload-text">Click to upload cover image</div>
-                                </div>
-                                <input type="file" id="cover-image-upload" accept="image/*" style="display:none;">
-                                <div id="cover-preview-container" class="cover-preview-container" style="${coverImage ? 'display:block;' : ''}">
-                                    <img id="cover-preview-img" src="${coverImage}" class="cover-preview-img">
-                                    <button type="button" class="preview-remove" onclick="removeCoverImage()" style="top:10px; right:10px; width:30px; height:30px;">×</button>
-                                </div>
-                                <input type="hidden" id="cover-image-url" value="${coverImage}">
-                            </div>
-
-                            <div class="editor-card">
-                                <h3 class="section-title"><i class='bx bx-info-circle'></i> Basic Details</h3>
-                                <div class="input-group">
-                                    <label class="input-label">Product Name</label>
-                                    <input type="text" class="form-control" id="name" value="${product.name||''}" required>
-                                </div>
-                                <div class="input-group">
-                                    <label class="input-label">Description</label>
-                                    <textarea class="form-control" id="description" rows="4">${product.description||''}</textarea>
-                                </div>
-                                <div class="input-group">
-                                    <label class="input-label">Category</label>
-                                    <div id="category-select-wrapper"></div>
-                                    <input type="text" class="form-control" id="new-category-input" placeholder="Enter new category name" style="display:none; margin-top:0.75rem;">
-                                    <input type="hidden" id="selected-category" value="${product.category || ''}">
-                                </div>
-                            </div>
-
-                            <div class="editor-card">
-                                <h3 class="section-title"><i class='bx bx-palette'></i> Color Variants</h3>
-                                <div id="variants-list" class="variant-list">
-                                    ${renderVariantsList(product.colorVariants || [])}
-                                </div>
-                                <button type="button" class="btn btn-secondary btn-block" style="margin-top:1rem;" onclick="openColorModal()">
-                                    <i class='bx bx-plus'></i> Add Color Variant
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="form-col">
-                            <div class="editor-card">
-                                <h3 class="section-title"><i class='bx bx-purchase-tag'></i> Pricing</h3>
-                                <div class="input-group">
-                                    <label class="input-label">Current Price</label>
-                                    <input type="number" class="form-control" id="price" step="0.01" value="${product.price||''}" required>
-                                </div>
-                                <div class="input-group">
-                                    <label class="input-label">Old Price (Optional)</label>
-                                    <input type="number" class="form-control" id="oldPrice" step="0.01" value="${product.oldPrice||''}">
-                                </div>
-                            </div>
-
-                            <div class="editor-card">
-                                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); margin-bottom:1rem; padding-bottom:0.75rem;">
-                                    <h3 class="section-title" style="margin:0; border:none;"><i class='bx bx-star'></i> Customer Reviews</h3>
-                                    <button type="button" class="btn btn-primary btn-sm" onclick="openReviewModal()" style="padding:0.4rem 0.8rem; font-size:0.8rem;">+ Add</button>
-                                </div>
-                                <div id="reviews-list" class="review-list">
-                                    ${renderReviewsList(product.reviews || [])}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            `;
-
-            setupCustomSelect('category-select-wrapper', allCategories, product.category, (val) => {
-                document.getElementById('selected-category').value = val;
-                const newCatInput = document.getElementById('new-category-input');
-                newCatInput.style.display = val === '--new--' ? 'block' : 'none';
-                if(val === '--new--') newCatInput.focus();
-            });
-
-            document.getElementById('cover-image-upload').addEventListener('change', handleCoverUpload);
-            document.getElementById('product-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-                saveProduct(product.id);
-            });
-        }
-
-        function handleCoverUpload(e) {
+        // --- COVER IMAGE LOGIC ---
+        document.getElementById('cover-file').onchange = (e) => {
             const file = e.target.files[0];
             if(file) {
-                if(file.size > 5*1024*1024) return showToast('File too large', 'error');
-                coverUploadedFile = file;
-                const container = document.getElementById('cover-preview-container');
-                const img = document.getElementById('cover-preview-img');
-                img.src = URL.createObjectURL(file);
-                container.style.display = 'block';
-                document.getElementById('cover-image-url').value = '';
+                coverFile = file;
+                showCoverPreview(URL.createObjectURL(file));
+            }
+        };
+
+        function setCoverFromUrl() {
+            const url = document.getElementById('cover-url-input').value;
+            if(url) {
+                coverFile = null; // Clear file if URL is used
+                productData.images = [url];
+                showCoverPreview(url);
+                document.getElementById('cover-url-input').value = '';
             }
         }
 
-        function removeCoverImage() {
-            coverUploadedFile = null;
-            document.getElementById('cover-image-upload').value = '';
-            document.getElementById('cover-image-url').value = '';
-            document.getElementById('cover-preview-container').style.display = 'none';
-            document.getElementById('cover-preview-img').src = '';
+        function showCoverPreview(src) {
+            document.getElementById('cover-upload-zone').classList.add('hidden');
+            document.getElementById('cover-preview').classList.add('active');
+            document.getElementById('cover-img-el').src = src;
         }
 
-        function renderVariantsList(variants) {
-            if (!variants.length) return `<div style="text-align:center; padding:1rem; color:var(--text-secondary);">No variants added yet.</div>`;
-            return variants.map((v, i) => `
-                <div class="variant-card">
-                    <div class="variant-info">
-                        <div class="variant-swatch" style="background:${v.hex || '#eee'}; ${v.hex && v.hex.includes('http') ? `background-image:url(${v.hex}); background-size:cover;` : ''}"></div>
+        function removeCover() {
+            coverFile = null;
+            productData.images = [];
+            document.getElementById('cover-file').value = '';
+            document.getElementById('cover-preview').classList.remove('active');
+            document.getElementById('cover-upload-zone').classList.remove('hidden');
+        }
+
+        // --- VARIANTS LOGIC ---
+        function renderVariants() {
+            const container = document.getElementById('variants-list');
+            container.innerHTML = (productData.colorVariants || []).map((v, i) => `
+                <div class="variant-item">
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <div style="width:40px; height:40px; border-radius:6px; background:${v.hex || '#eee'}; border:1px solid var(--border-color); background-image:url(${v.hex}); background-size:cover;"></div>
                         <div>
                             <div style="font-weight:600;">${v.name}</div>
-                            <div style="font-size:0.8rem; color:var(--text-secondary);">${v.sizes.filter(s=>s.available).length} sizes active</div>
+                            <div style="font-size:0.8rem; color:var(--text-secondary);">${v.sizes.filter(s=>s.available).length} sizes • ${v.images?.length||0} images</div>
                         </div>
                     </div>
                     <div style="display:flex; gap:0.5rem;">
-                        <button type="button" class="btn-icon" onclick="editColorVariant(${i})"><i class='bx bx-edit-alt'></i></button>
-                        <button type="button" class="btn-icon delete" onclick="removeColorVariant(${i})"><i class='bx bx-trash'></i></button>
+                        <button type="button" class="btn-icon" onclick="editVariant(${i})"><i class='bx bx-edit'></i></button>
+                        <button type="button" class="btn-icon" style="color:var(--danger-color);" onclick="deleteVariant(${i})"><i class='bx bx-trash'></i></button>
                     </div>
                 </div>
             `).join('');
         }
 
-        function renderReviewsList(reviews) {
-            if(!reviews || reviews.length === 0) return `<div style="text-align:center; padding:1rem; color:var(--text-secondary);">No reviews yet.</div>`;
-            return reviews.map((r, i) => {
-                const stars = Array(5).fill(0).map((_, idx) => idx < r.rating ? "<i class='bx bxs-star'></i>" : "<i class='bx bx-star'></i>").join('');
+        function openVariantModal(v = null, idx = null) {
+            editingVariantIndex = idx;
+            const form = document.getElementById('variant-form');
+            form.reset();
+            variantGalleryFiles = [];
+            variantGalleryUrls = [];
+            variantSwatchFile = null;
+            
+            // Render Sizes
+            const sizes = ['S','M','L','XL','2XL'];
+            document.getElementById('size-grid').innerHTML = sizes.map(s => {
+                const existing = v?.sizes?.find(x => x.name === s);
                 return `
-                    <div class="review-item">
-                        <div class="review-header">
-                            <span class="review-user">${r.userName}</span>
-                            <button type="button" class="btn-icon delete" style="padding:0; width:20px; height:20px;" onclick="deleteReview(${i})">×</button>
-                        </div>
-                        <div class="review-stars" style="margin-bottom:0.5rem;">${stars}</div>
-                        <p class="review-text">${r.comment}</p>
-                    </div>
-                `;
+                <label style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0.5rem; border:1px solid var(--border-color); border-radius:6px; cursor:pointer; text-align:center;">
+                    <span style="font-weight:600; margin-bottom:0.2rem;">${s}</span>
+                    <input type="checkbox" class="size-cb" ${existing?.available ? 'checked' : ''}>
+                    <span style="font-size:0.7rem; color:var(--text-secondary);">Stock</span>
+                </label>`;
             }).join('');
+
+            if(v) {
+                document.getElementById('v-name').value = v.name;
+                if(v.hex) {
+                    document.getElementById('swatch-preview-img').src = v.hex;
+                    document.getElementById('swatch-preview-img').style.display = 'block';
+                    document.getElementById('swatch-placeholder-icon').style.display = 'none';
+                    document.getElementById('v-swatch-url').value = v.hex.startsWith('http') ? v.hex : '';
+                }
+                (v.images || []).forEach(url => variantGalleryUrls.push(url));
+            } else {
+                document.getElementById('swatch-preview-img').style.display = 'none';
+                document.getElementById('swatch-placeholder-icon').style.display = 'block';
+            }
+            
+            renderVariantGallery();
+            document.getElementById('variant-modal').style.display = 'flex';
+        }
+
+        function closeVariantModal() {
+            document.getElementById('variant-modal').style.display = 'none';
+        }
+
+        // Variant Swatch
+        document.getElementById('v-swatch-file').onchange = (e) => {
+            const f = e.target.files[0];
+            if(f) {
+                variantSwatchFile = f;
+                const src = URL.createObjectURL(f);
+                document.getElementById('swatch-preview-img').src = src;
+                document.getElementById('swatch-preview-img').style.display = 'block';
+                document.getElementById('swatch-placeholder-icon').style.display = 'none';
+            }
+        };
+
+        // Variant Gallery
+        document.getElementById('v-gallery-files').onchange = (e) => {
+            [...e.target.files].forEach(f => variantGalleryFiles.push(f));
+            renderVariantGallery();
+        };
+
+        function addVariantUrl() {
+            const val = document.getElementById('v-gallery-url-input').value;
+            if(val) { variantGalleryUrls.push(val); renderVariantGallery(); document.getElementById('v-gallery-url-input').value=''; }
+        }
+
+        function renderVariantGallery() {
+            const container = document.getElementById('v-gallery-preview');
+            let html = '';
+            variantGalleryFiles.forEach((f, i) => {
+                html += `<div class="mini-preview"><img src="${URL.createObjectURL(f)}"><div class="mini-remove" onclick="removeVFile(${i})">×</div></div>`;
+            });
+            variantGalleryUrls.forEach((u, i) => {
+                html += `<div class="mini-preview"><img src="${u}"><div class="mini-remove" onclick="removeVUrl(${i})">×</div></div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function removeVFile(i) { variantGalleryFiles.splice(i,1); renderVariantGallery(); }
+        function removeVUrl(i) { variantGalleryUrls.splice(i,1); renderVariantGallery(); }
+
+        async function saveVariant() {
+            const name = document.getElementById('v-name').value;
+            if(!name) return alert('Name required');
+            
+            let hex = document.getElementById('v-swatch-url').value;
+            if(variantSwatchFile) {
+                hex = await uploadFile(variantSwatchFile, 'swatches');
+            }
+
+            const sizes = [];
+            const labels = document.getElementById('size-grid').querySelectorAll('label');
+            labels.forEach(l => {
+                const name = l.querySelector('span').textContent;
+                const checked = l.querySelector('input').checked;
+                if(checked) sizes.push({ name, available: true });
+            });
+
+            // Upload Gallery
+            let images = [...variantGalleryUrls];
+            for(const f of variantGalleryFiles) {
+                const u = await uploadFile(f, 'variants');
+                images.push(u);
+            }
+
+            const variant = { name, hex, sizes, images };
+            if(editingVariantIndex !== null) productData.colorVariants[editingVariantIndex] = variant;
+            else productData.colorVariants = [...(productData.colorVariants||[]), variant];
+
+            renderVariants();
+            closeVariantModal();
+        }
+
+        function editVariant(i) { openVariantModal(productData.colorVariants[i], i); }
+        function deleteVariant(i) { 
+            if(confirm('Delete variant?')) { 
+                productData.colorVariants.splice(i,1); 
+                renderVariants(); 
+            } 
+        }
+
+        // --- REVIEWS LOGIC ---
+        function renderReviews() {
+            const container = document.getElementById('reviews-list');
+            if(!productData.reviews || productData.reviews.length === 0) {
+                container.innerHTML = '<div style="padding:1rem; text-align:center; color:var(--text-secondary); font-size:0.9rem;">No reviews yet.</div>';
+                return;
+            }
+            container.innerHTML = productData.reviews.map((r, i) => `
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="review-user">
+                            <div class="review-avatar">${r.name.charAt(0).toUpperCase()}</div>
+                            <div>
+                                <div style="font-weight:600; font-size:0.9rem;">${r.name}</div>
+                                <div class="stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+                            </div>
+                        </div>
+                        <button class="btn-icon" style="color:var(--danger-color);" onclick="deleteReview(${i})"><i class='bx bx-trash'></i></button>
+                    </div>
+                    <div class="review-text">${r.comment}</div>
+                </div>
+            `).join('');
         }
 
         function openReviewModal() {
-            document.getElementById('review-form').reset();
+            document.getElementById('r-name').value = '';
+            document.getElementById('r-comment').value = '';
+            setRating(5);
             document.getElementById('review-modal').style.display = 'flex';
         }
+        function closeReviewModal() { document.getElementById('review-modal').style.display = 'none'; }
 
-        function closeReviewModal() {
-            document.getElementById('review-modal').style.display = 'none';
+        function setRating(n) {
+            document.getElementById('r-rating').value = n;
+            let html = '';
+            for(let i=1; i<=5; i++) {
+                html += `<i class='bx ${i<=n?'bxs-star':'bx-star'}' style="font-size:1.5rem; color:var(--warning-color); cursor:pointer;" onclick="setRating(${i})"></i>`;
+            }
+            document.getElementById('star-rating-input').innerHTML = html;
         }
 
-        function addReview() {
-            const user = document.getElementById('review-user').value;
-            const rating = parseInt(document.getElementById('review-rating').value);
-            const comment = document.getElementById('review-comment').value;
+        function saveReview() {
+            const name = document.getElementById('r-name').value || 'Anonymous';
+            const rating = parseInt(document.getElementById('r-rating').value);
+            const comment = document.getElementById('r-comment').value;
             
-            if(!user || !comment) return showToast('Please fill all fields', 'error');
-            
-            const container = document.getElementById('product-form-content');
-            let reviews = JSON.parse(container.dataset.reviews);
-            reviews.push({
-                userName: user,
-                rating: rating,
-                comment: comment,
-                date: Date.now()
-            });
-            
-            container.dataset.reviews = JSON.stringify(reviews);
-            document.getElementById('reviews-list').innerHTML = renderReviewsList(reviews);
+            if(!comment) return alert('Comment required');
+
+            const review = { name, rating, comment, date: new Date().toISOString() };
+            productData.reviews = [...(productData.reviews||[]), review];
+            renderReviews();
             closeReviewModal();
-            showToast('Review added');
         }
 
-        async function deleteReview(index) {
-            if(await showConfirm('Delete this review?')) {
-                const container = document.getElementById('product-form-content');
-                let reviews = JSON.parse(container.dataset.reviews);
-                reviews.splice(index, 1);
-                container.dataset.reviews = JSON.stringify(reviews);
-                document.getElementById('reviews-list').innerHTML = renderReviewsList(reviews);
+        function deleteReview(i) {
+            if(confirm('Delete review?')) {
+                productData.reviews.splice(i,1);
+                renderReviews();
             }
         }
 
-        function openColorModal(variant = null, index = null) {
-            currentColorEditingIndex = index;
-            const modal = document.getElementById('color-variant-modal');
-            const title = document.getElementById('color-modal-title');
-            const form = document.getElementById('color-variant-form');
-            
-            form.reset();
-            colorUploadedImages = [];
-            colorUploadedFile = null;
-            document.getElementById('color-uploaded-images').innerHTML = '';
-            document.getElementById('modal-color-images-urls').innerHTML = '';
-            document.getElementById('color-upload-preview').src = '';
-            document.getElementById('color-preview-container').style.display = 'none';
-            
-            title.textContent = variant ? 'Edit Variant' : 'Add Variant';
-            
-            const container = document.getElementById('modal-sizes-list');
-            container.innerHTML = SIZES_LIST.map(size => {
-                const s = variant?.sizes?.find(x => x.name === size);
-                return `
-                    <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid #eee;">
-                        <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
-                            <input type="checkbox" class="size-cb" ${s ? 'checked' : ''}>
-                            <span style="font-weight:500;">${size}</span>
-                        </label>
-                        <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem;">
-                            Stock
-                            <input type="checkbox" class="stock-cb" ${s?.available ? 'checked' : ''} ${!s ? 'disabled' : ''}>
-                        </label>
-                    </div>
-                `;
-            }).join('');
-            
-            container.querySelectorAll('.size-cb').forEach(cb => {
-                cb.addEventListener('change', function() {
-                    const stock = this.closest('div').querySelector('.stock-cb');
-                    stock.disabled = !this.checked;
-                    if(!this.checked) stock.checked = false;
-                });
-            });
+        // --- SAVE PRODUCT ---
+        document.getElementById('save-btn').onclick = async () => {
+            const btn = document.getElementById('save-btn');
+            btn.textContent = 'Saving...';
+            btn.disabled = true;
 
-            if (variant) {
-                document.getElementById('color-name').value = variant.name;
-                document.getElementById('color-link').value = variant.hex || '';
-                if(variant.hex && variant.hex.includes('http')) {
-                     document.getElementById('color-upload-preview').src = variant.hex;
-                     document.getElementById('color-preview-container').style.display = 'block';
+            try {
+                // Basic Info
+                const name = document.getElementById('name').value;
+                const desc = document.getElementById('description').value;
+                const price = parseFloat(document.getElementById('price').value);
+                const oldPrice = parseFloat(document.getElementById('oldPrice').value);
+                let cat = document.getElementById('category-select').value;
+                if(cat === '--new--') cat = document.getElementById('new-category').value;
+
+                if(!name || !price || !cat) throw new Error('Missing required fields');
+
+                // Upload Cover if changed
+                if(coverFile) {
+                    const url = await uploadFile(coverFile, 'products');
+                    productData.images = [url];
+                } else if(productData.images.length === 0) {
+                     throw new Error('Cover image required');
                 }
-                (variant.images || []).forEach(url => {
-                    addVariantUrlField(url);
-                });
-            } else {
-                addVariantUrlField();
-            }
 
-            modal.style.display = 'flex';
-        }
-
-        function closeColorModal() {
-            document.getElementById('color-variant-modal').style.display = 'none';
-        }
-
-        document.getElementById('add-color-url-btn').onclick = () => addVariantUrlField();
-        function addVariantUrlField(val = '') {
-            const div = document.createElement('div');
-            div.style.display = 'flex'; div.style.gap = '0.5rem';
-            div.innerHTML = `
-                <input type="url" class="form-control color-url-input" value="${val}" placeholder="https://...">
-                <button type="button" class="btn-icon delete" onclick="this.parentElement.remove()"><i class='bx bx-trash'></i></button>
-            `;
-            document.getElementById('modal-color-images-urls').appendChild(div);
-        }
-
-        document.getElementById('color-image-upload').onchange = (e) => {
-            const file = e.target.files[0];
-            if(file) {
-                colorUploadedFile = file;
-                const prev = document.getElementById('color-upload-preview');
-                prev.src = URL.createObjectURL(file);
-                document.getElementById('color-preview-container').style.display = 'block';
-                document.getElementById('color-link').value = '';
-            }
-        };
-
-        document.getElementById('multiple-color-images-upload').onchange = (e) => {
-            Array.from(e.target.files).forEach(file => {
-                colorUploadedImages.push(file);
-            });
-            renderUploadPreviews('color-uploaded-images', colorUploadedImages, (i) => {
-                colorUploadedImages.splice(i, 1);
-            });
-        };
-
-        function renderUploadPreviews(containerId, files, removeCb) {
-            const cont = document.getElementById(containerId);
-            cont.innerHTML = files.map((f, i) => `
-                <div class="preview-item">
-                    <img src="${URL.createObjectURL(f)}" class="preview-img">
-                    <div class="preview-remove" data-idx="${i}">×</div>
-                </div>
-            `).join('');
-            cont.querySelectorAll('.preview-remove').forEach(btn => {
-                btn.onclick = () => {
-                    removeCb(parseInt(btn.dataset.idx));
-                    btn.parentElement.remove();
+                // Update Data
+                productData = {
+                    ...productData,
+                    name,
+                    description: desc,
+                    price,
+                    oldPrice: oldPrice || 0,
+                    category: cat,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
-            });
-        }
-        
-        function removeColorUpload() {
-            colorUploadedFile = null;
-            document.getElementById('color-image-upload').value = '';
-            document.getElementById('color-preview-container').style.display = 'none';
-        }
+                
+                if(!productData.id) productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+
+                if(productData.id) {
+                    await db.collection('products').doc(productData.id).update(productData);
+                    showToast('Product Updated Successfully');
+                } else {
+                    await db.collection('products').add(productData);
+                    showToast('Product Created Successfully');
+                }
+                setTimeout(() => window.history.back(), 1500);
+
+            } catch(e) {
+                alert(e.message);
+                btn.textContent = 'Save Product';
+                btn.disabled = false;
+            }
+        };
 
         async function uploadFile(file, path) {
-            const ref = storage.ref().child(`${path}/${Date.now()}-${file.name}`);
+            const ref = storage.ref().child(`${path}/${Date.now()}_${file.name}`);
             await ref.put(file);
             return await ref.getDownloadURL();
         }
 
-        document.getElementById('color-variant-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('color-name').value;
-            let hex = document.getElementById('color-link').value;
-            
-            if(colorUploadedFile) {
-                try { hex = await uploadFile(colorUploadedFile, 'swatches'); } 
-                catch(e) { showToast('Swatch upload failed', 'error'); return; }
-            }
-
-            let images = [...document.querySelectorAll('.color-url-input')].map(i => i.value).filter(Boolean);
-            
-            if(colorUploadedImages.length) {
-                showToast('Uploading images...', 'info');
-                for(let f of colorUploadedImages) {
-                    images.push(await uploadFile(f, 'variants'));
-                }
-            }
-
-            const sizes = [];
-            document.querySelectorAll('#modal-sizes-list > div').forEach(row => {
-                const cb = row.querySelector('.size-cb');
-                const stock = row.querySelector('.stock-cb');
-                if(cb.checked) sizes.push({
-                    name: row.querySelector('span').innerText,
-                    available: stock.checked
-                });
-            });
-
-            const variant = { name, hex, sizes, images };
-            const container = document.getElementById('product-form-content');
-            let vars = JSON.parse(container.dataset.colorVariants);
-            
-            if(currentColorEditingIndex !== null) vars[currentColorEditingIndex] = variant;
-            else vars.push(variant);
-            
-            container.dataset.colorVariants = JSON.stringify(vars);
-            document.getElementById('variants-list').innerHTML = renderVariantsList(vars);
-            closeColorModal();
-            showToast('Variant Saved');
-        };
-
-        function editColorVariant(i) {
-            const vars = JSON.parse(document.getElementById('product-form-content').dataset.colorVariants);
-            openColorModal(vars[i], i);
-        }
-
-        async function removeColorVariant(i) {
-            if(await showConfirm('Remove this color variant?')) {
-                const container = document.getElementById('product-form-content');
-                let vars = JSON.parse(container.dataset.colorVariants);
-                vars.splice(i, 1);
-                container.dataset.colorVariants = JSON.stringify(vars);
-                document.getElementById('variants-list').innerHTML = renderVariantsList(vars);
-            }
-        }
-
-        async function saveProduct(productId) {
-            const container = document.getElementById('product-form-content');
-            let category = document.getElementById('selected-category').value;
-            if(category === '--new--') category = document.getElementById('new-category-input').value;
-            
-            if(!category) return showToast('Category required', 'error');
-
-            let coverImageUrl = document.getElementById('cover-image-url').value;
-            
-            if(coverUploadedFile) {
-                showToast('Uploading cover image...', 'info');
-                try {
-                    coverImageUrl = await uploadFile(coverUploadedFile, 'products');
-                } catch(e) { return showToast('Cover upload failed', 'error'); }
-            }
-
-            if (!coverImageUrl) return showToast('Cover Image is required', 'error');
-
-            const colorVariants = JSON.parse(container.dataset.colorVariants);
-            const reviews = JSON.parse(container.dataset.reviews);
-
-            const productData = {
-                name: document.getElementById('name').value,
-                category,
-                price: parseFloat(document.getElementById('price').value),
-                oldPrice: parseFloat(document.getElementById('oldPrice').value) || 0,
-                description: document.getElementById('description').value,
-                colorVariants,
-                images: [coverImageUrl],
-                reviews,
-                isAvailable: true,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-            
-            if(!productId) productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-
-            try {
-                if(productId) {
-                    await db.collection('products').doc(productId).update(productData);
-                    showToast('Product Updated');
-                } else {
-                    await db.collection('products').add(productData);
-                    showToast('Product Created');
-                }
-                setTimeout(() => window.history.back(), 1000);
-            } catch(e) { showToast('Save failed', 'error'); console.error(e); }
+        function showToast(msg) {
+            const t = document.createElement('div');
+            t.className = 'toast';
+            t.innerHTML = `<i class='bx bx-check-circle toast-icon' style="color:var(--success-color)"></i><span>${msg}</span>`;
+            document.getElementById('toast-container').appendChild(t);
+            setTimeout(() => t.remove(), 3000);
         }
     </script>
 </body>
