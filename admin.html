@@ -4,16 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - ShopSphere</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    
+
     <style>
         :root {
             --primary: #111827;
-            --accent: #10B981;
+            --accent: #2563eb; /* Changed to Blue for ShopSphere Identity */
             --pure-white: #FFFFFF;
             --light-gray: #F3F4F6;
             --text-color: #111827;
@@ -21,447 +24,168 @@
             --border-gray: #E5E7EB;
             --color-danger: #EF4444;
             --color-success: #10B981;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
-
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
-        }
-
-        html, body { 
-            height: 100%; 
-            overflow: hidden; 
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; overflow: hidden; }
         body { 
             font-family: 'IBM Plex Sans', sans-serif; 
-            background-color: var(--pure-white); 
+            background-color: #e9eef2; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
             color: var(--text-color); 
         }
-
+        
+        /* --- Layout --- */
         .page-container { 
-            width: 100%; 
-            height: 100%; 
-            max-height: 900px; 
-            background-color: var(--pure-white); 
-            border-radius: 0; 
-            overflow: hidden; 
-            display: flex; 
-            flex-direction: column; 
+            width: 100%; height: 100%; max-height: 900px; 
+            background-color: var(--pure-white); border-radius: 0; 
+            overflow: hidden; display: flex; flex-direction: column; 
         }
-
-        .info-panel { 
-            display: none; 
+        .form-panel-wrapper { 
+            flex-grow: 1; position: relative; display: flex; 
+            flex-direction: column; overflow-y: auto; padding: 2rem;
+            align-items: center; justify-content: center;
         }
-
-        .page { 
-            display: flex; 
-            flex-direction: column; 
-            padding: 2rem; 
-            flex-grow: 1; 
-            justify-content: flex-start; 
+        .info-panel { display: none; }
+        
+        /* --- Form Elements --- */
+        .form-content { width: 100%; max-width: 400px; }
+        .form-header h2 { font-size: 1.8rem; font-weight: 700; text-align: center; margin-bottom: 0.5rem; color: var(--primary); }
+        .form-header p { text-align: center; color: var(--text-light); margin-bottom: 2rem; font-size: 0.9rem; }
+        
+        .admin-badge {
+            background: #dbeafe; color: #1e40af; padding: 0.25rem 0.75rem;
+            border-radius: 99px; font-size: 0.75rem; font-weight: 600;
+            text-transform: uppercase; display: inline-block; margin-bottom: 0.5rem;
         }
-
-        .form-header h2 { 
-            font-size: 1.8rem; 
-            font-weight: 600; 
-            text-align: center; 
-            margin-bottom: 0.5rem; 
-        }
-
-        .form-header p { 
-            text-align: center; 
-            color: var(--text-light); 
-            margin-bottom: 2rem; 
-            font-size: 0.9rem; 
-        }
-
-        .input-group { 
-            margin-bottom: 1.25rem; 
-        }
-
-        .input-group label { 
-            display: block; 
-            font-size: 0.875rem; 
-            font-weight: 500; 
-            margin-bottom: 0.5rem; 
-            color: var(--text-light); 
-        }
-
-        .input-wrapper { 
-            position: relative; 
-        }
-
-        .input-wrapper i { 
-            position: absolute; 
-            left: 1rem; 
-            top: 50%; 
-            transform: translateY(-50%); 
-            font-size: 1.25rem; 
-            color: var(--text-light); 
-        }
-
-        .input-wrapper .toggle-password { 
-            position: absolute; 
-            right: 1rem; 
-            left: auto; 
-            cursor: pointer; 
-        }
-
+        
+        .input-group { margin-bottom: 1.25rem; }
+        .input-group label { display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-light); }
+        .input-wrapper { position: relative; }
+        .input-wrapper i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); font-size: 1.25rem; color: var(--text-light); }
+        .input-wrapper .toggle-password { position: absolute; right: 1rem; left: auto; cursor: pointer; }
+        
         .input-group input { 
-            width: 100%; 
-            padding: 0.9rem 1rem 0.9rem 3rem; 
-            border: 1px solid var(--border-gray); 
-            background-color: var(--light-gray); 
-            border-radius: 12px; 
-            font-size: 1rem; 
-            font-family: 'IBM Plex Sans', sans-serif; 
+            width: 100%; padding: 0.9rem 1rem 0.9rem 3rem; 
+            border: 1px solid var(--border-gray); background-color: var(--light-gray); 
+            border-radius: 12px; font-size: 1rem; font-family: 'IBM Plex Sans', sans-serif; 
             transition: all 0.3s ease; 
         }
-
         .input-group input:focus { 
-            outline: none; 
-            border-color: var(--accent); 
+            outline: none; border-color: var(--accent); 
             background-color: var(--pure-white); 
-            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2); 
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); 
         }
-
+        
         .btn-submit { 
-            width: 100%; 
-            padding: 1rem; 
-            font-size: 1rem; 
-            font-weight: 600; 
-            color: var(--pure-white); 
-            background-color: var(--primary); 
-            border: none; 
-            border-radius: 12px; 
-            cursor: pointer; 
-            margin-top: 0.5rem; 
-            transition: all 0.3s; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 0.5rem; 
+            width: 100%; padding: 1rem; font-size: 1rem; font-weight: 600; 
+            color: var(--pure-white); background-color: var(--primary); 
+            border: none; border-radius: 12px; cursor: pointer; margin-top: 0.5rem; 
+            transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; 
         }
-
-        .btn-submit:hover { 
-            background-color: #000; 
-            transform: translateY(-3px); 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
-        }
-
-        .btn-submit:disabled { 
-            background-color: #D1D5DB; 
-            cursor: not-allowed; 
-            transform: none; 
-            box-shadow: none; 
-        }
-
-        .btn-submit .spinner { 
-            display: none; 
-        }
-
-        .btn-submit.loading .spinner { 
-            display: inline-block; 
-            width: 20px; 
-            height: 20px; 
-            border: 2px solid rgba(255,255,255,0.3); 
-            border-top-color: #fff; 
-            border-radius: 50%; 
-            animation: rotation 1s linear infinite; 
-        }
-
-        .btn-submit.loading .btn-text { 
-            display: none; 
-        }
-
-        .divider { 
-            display: flex; 
-            align-items: center; 
-            text-align: center; 
-            color: var(--text-light); 
-            margin: 1.75rem 0; 
-            font-size: 0.8rem; 
-            font-weight: 500; 
-        }
-
-        .divider::before, .divider::after { 
-            content: ''; 
-            flex: 1; 
-            border-bottom: 1px solid var(--border-gray); 
-        }
-
-        .divider:not(:empty)::before { 
-            margin-right: .75em; 
-        }
-
-        .divider:not(:empty)::after { 
-            margin-left: .75em; 
-        }
-
+        .btn-submit:hover { background-color: #000; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .btn-submit:disabled { background-color: #9CA3AF; cursor: not-allowed; transform: none; }
+        
+        .divider { display: flex; align-items: center; text-align: center; color: var(--text-light); margin: 1.75rem 0; font-size: 0.8rem; font-weight: 500; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border-gray); }
+        .divider:not(:empty)::before { margin-right: .75em; }
+        .divider:not(:empty)::after { margin-left: .75em; }
+        
         .btn-google { 
-            width: 100%; 
-            padding: 0.9rem 1rem; 
-            font-size: 0.95rem; 
-            font-weight: 600; 
-            color: var(--text-color); 
-            background-color: var(--pure-white); 
-            border: 1px solid var(--border-gray); 
-            border-radius: 12px; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
+            width: 100%; padding: 0.9rem 1rem; font-size: 0.95rem; font-weight: 600; 
+            color: var(--text-color); background-color: var(--pure-white); 
+            border: 1px solid var(--border-gray); border-radius: 12px; 
+            cursor: pointer; display: flex; align-items: center; justify-content: center; 
             transition: all 0.3s; 
         }
+        .btn-google:hover { background-color: var(--light-gray); }
+        .google-icon { width: 20px; height: 20px; margin-right: 0.75rem; }
 
-        .btn-google:hover { 
-            background-color: var(--light-gray); 
-        }
+        /* --- Utils --- */
+        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(4px); }
+        .spinner { width: 48px; height: 48px; border: 5px solid rgba(37, 99, 235, 0.2); border-bottom-color: var(--accent); border-radius: 50%; animation: rotation 1s linear infinite; }
+        .btn-spinner { display: none; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: rotation 1s linear infinite; }
+        
+        #toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); padding: 1rem 1.5rem; border-radius: 12px; color: white; font-weight: 500; box-shadow: var(--shadow-lg); transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); z-index: 1001; display: flex; align-items: center; gap: 0.75rem; }
+        #toast.show { bottom: 30px; }
+        #toast.success { background-color: var(--color-success); }
+        #toast.error { background-color: var(--color-danger); }
 
-        .google-icon { 
-            width: 20px; 
-            height: 20px; 
-            margin-right: 0.75rem; 
-        }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .admin-badge { 
-            background: var(--light-gray); 
-            color: var(--primary); 
-            padding: 0.5rem 1rem; 
-            border-radius: 20px; 
-            font-size: 0.75rem; 
-            font-weight: 600; 
-            display: inline-block; 
-            margin-bottom: 2rem; 
-            text-align: center;
-            width: 100%;
-        }
-
-        .admin-email { 
-            background: #fffbeb; 
-            color: #d97706; 
-            padding: 0.75rem 1rem; 
-            border-radius: 8px; 
-            border: 1px solid #fed7aa; 
-            font-size: 0.75rem; 
-            margin-bottom: 1rem; 
-        }
-
-        .admin-email strong { 
-            display: block; 
-            margin-bottom: 0.25rem; 
-        }
-
-        .logo { 
-            margin-bottom: 2rem; 
-            text-align: center;
-        }
-
-        .logo h1 { 
-            font-size: 2rem; 
-            font-weight: 700; 
-            color: var(--primary); 
-            margin-bottom: 0.5rem; 
-        }
-
-        .logo p { 
-            color: var(--text-light); 
-            font-size: 0.875rem; 
-        }
-
-        #loader { 
-            display: flex; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(255, 255, 255, 0.8); 
-            justify-content: center; 
-            align-items: center; 
-            z-index: 9999; 
-            backdrop-filter: blur(4px); 
-        }
-
-        .spinner { 
-            width: 48px; 
-            height: 48px; 
-            border: 5px solid rgba(16, 185, 129, 0.2); 
-            border-bottom-color: var(--accent); 
-            border-radius: 50%; 
-            animation: rotation 1s linear infinite; 
-        }
-
-        #toast { 
-            position: fixed; 
-            bottom: -100px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            padding: 1rem 1.5rem; 
-            border-radius: 8px; 
-            color: white; 
-            font-weight: 500; 
-            box-shadow: var(--shadow-lg); 
-            transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); 
-            z-index: 1001; 
-            display: flex; 
-            align-items: center; 
-            gap: 0.75rem; 
-        }
-
-        #toast.show { 
-            bottom: 30px; 
-        }
-
-        #toast.success { 
-            background-color: var(--color-success); 
-        }
-
-        #toast.error { 
-            background-color: var(--color-danger); 
-        }
-
-        #toast i { 
-            font-size: 1.25rem; 
-        }
-
-        @keyframes rotation { 
-            0% { transform: rotate(0deg); } 
-            100% { transform: rotate(360deg); } 
-        }
-
+        /* --- Desktop View --- */
         @media (min-width: 992px) {
-            html, body { 
-                height: auto; 
-                overflow: auto; 
-            }
-            
-            body { 
-                background-color: #e9eef2; 
-                padding: 2rem; 
-                min-height: 100vh; 
-            }
-            
+            html, body { height: auto; overflow: auto; }
+            body { padding: 2rem; min-height: 100vh; }
             .page-container { 
-                flex-direction: row; 
-                max-width: 1200px; 
-                height: 800px; 
-                max-height: 95vh; 
-                border-radius: 2rem; 
-                box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.2); 
+                flex-direction: row; max-width: 1100px; height: 700px; 
+                border-radius: 2rem; box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.1); 
             }
-            
             .info-panel { 
-                display: flex; 
-                flex-direction: column; 
-                justify-content: space-between; 
-                flex-basis: 55%; 
-                background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://ihtnas.com/assets/ihtnas-nav.png') center center / cover; 
-                padding: 4rem; 
-                color: var(--pure-white); 
+                display: flex; flex-direction: column; justify-content: space-between; 
+                flex-basis: 50%; 
+                background: linear-gradient(135deg, rgba(17, 24, 39, 0.9), rgba(17, 24, 39, 0.8)), url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop') center center / cover; 
+                padding: 4rem; color: var(--pure-white); 
             }
-            
-            .info-panel-header { 
-                font-size: 1.5rem; 
-                font-weight: 700; 
-            }
-            
-            .info-panel-text h2 { 
-                font-size: 3.5rem; 
-                font-weight: 700; 
-                line-height: 1.2; 
-                margin-bottom: 1rem; 
-            }
-            
-            .info-panel-text p { 
-                font-size: 1rem; 
-                max-width: 450px; 
-                line-height: 1.6; 
-                opacity: 0.8; 
-            }
-            
-            .form-panel-wrapper { 
-                flex-basis: 45%; 
-                display: flex; 
-                align-items: center; 
-                justify-content: center; 
-                padding: 3rem; 
-                overflow-y: auto; 
-                position: static; 
-                flex-grow: 0; 
-            }
-            
-            .page { 
-                width: 100%; 
-                max-width: 400px; 
-                padding: 0; 
-            }
+            .info-panel-header { font-size: 1.5rem; font-weight: 700; letter-spacing: 1px; }
+            .info-panel-text h2 { font-size: 3rem; font-weight: 700; line-height: 1.2; margin-bottom: 1rem; }
+            .info-panel-text p { font-size: 1rem; max-width: 400px; line-height: 1.6; opacity: 0.8; }
+            .form-panel-wrapper { flex-basis: 50%; padding: 3rem; }
         }
     </style>
 </head>
 <body>
+    
+    <!-- Full Screen Loader -->
     <div id="loader"><div class="spinner"></div></div>
-    <div class="page-container" style="display:none;">
+
+    <div class="page-container">
+        <!-- Left Panel -->
         <div class="info-panel">
-            <div class="info-panel-header">ShopSphere</div>
+            <div class="info-panel-header">SHOSPHERE</div>
             <div class="info-panel-text">
-                <h2>Admin Portal</h2>
-                <p>Manage your e-commerce platform with powerful admin tools and analytics.</p>
+                <h2>Control Center</h2>
+                <p>Manage products, categories, and orders efficiently from one premium dashboard.</p>
             </div>
         </div>
+
+        <!-- Right Panel (Form) -->
         <div class="form-panel-wrapper">
-            <div class="page">
-                <div class="logo">
-                    <h1>ShopSphere</h1>
-                    <p>Premium E-commerce Platform</p>
-                </div>
-
-                <div class="admin-badge">
-                    ADMIN PANEL
-                </div>
-
-                <div class="admin-email">
-                    <strong>Admin Access Only</strong>
-                    <span>Use your authorized credentials</span>
-                </div>
-
+            <div class="form-content">
                 <div class="form-header">
+                    <div style="text-align: center;"><span class="admin-badge">Admin Portal</span></div>
                     <h2>Welcome Back</h2>
-                    <p>Please enter your details to sign in.</p>
+                    <p>Secure authentication required.</p>
                 </div>
-                
+
                 <form id="login-form">
                     <div class="input-group">
-                        <label for="login-email">Email</label>
+                        <label for="email">Email Address</label>
                         <div class="input-wrapper">
                             <i class='bx bxs-envelope'></i>
-                            <input type="email" id="login-email" required>
+                            <input type="email" id="email" placeholder="admin@shopsphere.com" required>
                         </div>
                     </div>
+                    
                     <div class="input-group">
-                        <label for="login-password">Password</label>
+                        <label for="password">Password</label>
                         <div class="input-wrapper">
                             <i class='bx bxs-lock-alt'></i>
-                            <input type="password" id="login-password" required>
-                            <i class='bx bx-hide toggle-password'></i>
+                            <input type="password" id="password" placeholder="••••••••" required>
+                            <i class='bx bx-hide toggle-password' id="toggle-password"></i>
                         </div>
                     </div>
-                    <button type="submit" class="btn-submit">
+
+                    <button type="submit" class="btn-submit" id="email-submit-btn">
                         <span class="btn-text">Sign In</span>
-                        <span class="spinner"></span>
+                        <span class="btn-spinner"></span>
                     </button>
                 </form>
 
-                <div class="divider">OR</div>
-                
+                <div class="divider">OR CONTINUE WITH</div>
+
                 <button type="button" class="btn-google" id="google-login-btn">
                     <svg class="google-icon" viewBox="0 0 48 48">
                         <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>
@@ -469,16 +193,13 @@
                         <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.222,0-9.519-3.108-11.127-7.481l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path>
                         <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571l6.19,5.238C42.022,36.218,44,30.561,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
                     </svg>
-                    Sign in with Google
+                    Google
                 </button>
-
-                <div style="font-size: 0.75rem; color: var(--text-light); line-height: 1.5; margin-top: 1.5rem;">
-                    <p>Only authorized administrators can access this panel.</p>
-                    <p>All activities are logged for security purposes.</p>
-                </div>
             </div>
         </div>
     </div>
+
+    <!-- Notification Toast -->
     <div id="toast"></div>
 
     <script>
@@ -494,220 +215,126 @@
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-        
-        // Admin email configuration
         const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
 
-        // DOM elements
+        // DOM Elements
         const loginForm = document.getElementById('login-form');
-        const loginEmail = document.getElementById('login-email');
-        const loginPassword = document.getElementById('login-password');
-        const googleSignInBtn = document.getElementById('google-login-btn');
-        const submitBtn = loginForm.querySelector('.btn-submit');
+        const googleBtn = document.getElementById('google-login-btn');
+        const togglePassword = document.getElementById('toggle-password');
+        const passwordInput = document.getElementById('password');
         const loader = document.getElementById('loader');
-        const pageContainer = document.querySelector('.page-container');
-        const toast = document.getElementById('toast');
-        const togglePasswordIcons = document.querySelectorAll('.toggle-password');
 
-        // Show page after initial load
-        window.addEventListener('load', () => {
-            setTimeout(() => {
+        // Toggle Password Visibility
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('bx-hide');
+            this.classList.toggle('bx-show');
+        });
+
+        // 1. Email/Password Login Logic
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('email-submit-btn');
+            const btnText = btn.querySelector('.btn-text');
+            const btnSpinner = btn.querySelector('.btn-spinner');
+
+            // UI Loading State
+            btn.disabled = true;
+            btnText.style.display = 'none';
+            btnSpinner.style.display = 'inline-block';
+
+            try {
+                const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+                await handleAdminAuth(userCredential.user);
+            } catch (error) {
+                console.error(error);
+                showToast(getErrorMsg(error.code), 'error');
+                btn.disabled = false;
+                btnText.style.display = 'block';
+                btnSpinner.style.display = 'none';
+            }
+        });
+
+        // 2. Google Login Logic
+        googleBtn.addEventListener('click', async () => {
+            loader.style.display = 'flex'; // Full screen loader
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                const result = await firebase.auth().signInWithPopup(provider);
+                await handleAdminAuth(result.user);
+            } catch (error) {
+                console.error(error);
+                showToast(getErrorMsg(error.code), 'error');
                 loader.style.display = 'none';
-                pageContainer.style.display = 'flex';
-            }, 1000);
+            }
         });
 
-        // Toggle password visibility
-        togglePasswordIcons.forEach(icon => {
-            icon.addEventListener('click', function() {
-                const passwordInput = this.parentElement.querySelector('input[type="password"]');
-                if (passwordInput.type === 'password') {
-                    passwordInput.type = 'text';
-                    this.classList.remove('bx-hide');
-                    this.classList.add('bx-show');
-                } else {
-                    passwordInput.type = 'password';
-                    this.classList.remove('bx-show');
-                    this.classList.add('bx-hide');
+        // 3. Centralized Admin Auth Handler
+        async function handleAdminAuth(user) {
+            if (user.email === ADMIN_EMAIL) {
+                showToast('Authentication Successful!', 'success');
+                
+                // Set Admin Session
+                sessionStorage.setItem('adminAuthenticated', 'true');
+                sessionStorage.setItem('adminEmail', user.email);
+                sessionStorage.setItem('adminName', user.displayName || "Admin");
+
+                // Redirect
+                setTimeout(() => {
+                    window.location.href = 'manage-category.html';
+                }, 1000);
+            } else {
+                // Not Admin
+                await firebase.auth().signOut();
+                showToast('Access Denied: Unauthorized Email', 'error');
+                
+                // Reset UI if it was email login
+                const btn = document.getElementById('email-submit-btn');
+                const btnText = btn.querySelector('.btn-text');
+                const btnSpinner = btn.querySelector('.btn-spinner');
+                if(btn.disabled) {
+                    btn.disabled = false;
+                    btnText.style.display = 'block';
+                    btnSpinner.style.display = 'none';
                 }
-            });
+                // Reset UI if it was google login
+                loader.style.display = 'none';
+            }
+        }
+
+        // Check Existing Auth State
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user && user.email === ADMIN_EMAIL) {
+                window.location.href = 'manage-category.html';
+            }
         });
 
-        // Show toast message
+        // Helper: Toast Notification
         function showToast(message, type) {
-            toast.textContent = message;
-            toast.className = '';
-            toast.classList.add(type, 'show');
+            const toast = document.getElementById('toast');
+            let icon = type === 'success' ? 'bx-check-circle' : 'bx-error-circle';
+            
+            toast.innerHTML = `<i class='bx ${icon}'></i> <span>${message}</span>`;
+            toast.className = `show ${type}`;
             
             setTimeout(() => {
-                toast.classList.remove('show');
+                toast.className = '';
             }, 3000);
         }
 
-        // Set loading state
-        function setLoading(isLoading) {
-            if (isLoading) {
-                submitBtn.classList.add('loading');
-                submitBtn.disabled = true;
-            } else {
-                submitBtn.classList.remove('loading');
-                submitBtn.disabled = false;
+        // Helper: Error Messages
+        function getErrorMsg(code) {
+            switch (code) {
+                case 'auth/user-not-found': return 'No account found with this email.';
+                case 'auth/wrong-password': return 'Incorrect password.';
+                case 'auth/invalid-email': return 'Invalid email address.';
+                case 'auth/popup-closed-by-user': return 'Sign-in cancelled.';
+                default: return 'Authentication failed. Try again.';
             }
         }
-
-        // Email/password login
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = loginEmail.value;
-            const password = loginPassword.value;
-            
-            if (!email || !password) {
-                showToast('Please fill in all fields', 'error');
-                return;
-            }
-            
-            try {
-                setLoading(true);
-                
-                const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
-                const user = userCredential.user;
-                
-                // Check if user is admin
-                if (user.email === ADMIN_EMAIL) {
-                    showToast('Successfully signed in as admin!', 'success');
-                    
-                    // Store admin session
-                    sessionStorage.setItem('adminAuthenticated', 'true');
-                    sessionStorage.setItem('adminEmail', user.email);
-                    
-                    // Redirect to admin dashboard after short delay
-                    setTimeout(() => {
-                        window.location.href = 'manage-category.html';
-                    }, 1500);
-                } else {
-                    // Not admin - sign out and show error
-                    await firebase.auth().signOut();
-                    showToast('Access denied. Only authorized administrators can access this panel.', 'error');
-                    setLoading(false);
-                }
-            } catch (error) {
-                console.error('Login Error:', error);
-                
-                // Handle specific error cases
-                if (error.code === 'auth/user-not-found') {
-                    showToast('No account found with this email.', 'error');
-                } else if (error.code === 'auth/wrong-password') {
-                    showToast('Incorrect password.', 'error');
-                } else if (error.code === 'auth/invalid-email') {
-                    showToast('Invalid email address.', 'error');
-                } else if (error.code === 'auth/network-request-failed') {
-                    showToast('Network error. Please check your connection.', 'error');
-                } else {
-                    showToast('Login failed. Please try again.', 'error');
-                }
-                
-                setLoading(false);
-            }
-        });
-
-        // Google Sign-In function
-        async function signInWithGoogle() {
-            try {
-                setLoading(true);
-
-                const provider = new firebase.auth.GoogleAuthProvider();
-                
-                // Add scopes if needed
-                provider.addScope('email');
-                provider.addScope('profile');
-
-                const result = await firebase.auth().signInWithPopup(provider);
-                const user = result.user;
-
-                // Check if user is admin
-                if (user.email === ADMIN_EMAIL) {
-                    showToast('Successfully signed in as admin!', 'success');
-                    
-                    // Store admin session
-                    sessionStorage.setItem('adminAuthenticated', 'true');
-                    sessionStorage.setItem('adminEmail', user.email);
-                    sessionStorage.setItem('adminName', user.displayName);
-                    
-                    // Redirect to admin dashboard after short delay
-                    setTimeout(() => {
-                        window.location.href = 'manage-category.html';
-                    }, 1500);
-                    
-                } else {
-                    // Not admin - sign out and show error
-                    await firebase.auth().signOut();
-                    showToast('Access denied. Only authorized administrators can access this panel.', 'error');
-                    setLoading(false);
-                }
-
-            } catch (error) {
-                console.error('Google Sign-In Error:', error);
-                
-                // Handle specific error cases
-                if (error.code === 'auth/popup-closed-by-user') {
-                    showToast('Sign-in was cancelled.', 'error');
-                } else if (error.code === 'auth/network-request-failed') {
-                    showToast('Network error. Please check your connection.', 'error');
-                } else if (error.code === 'auth/popup-blocked') {
-                    showToast('Popup was blocked. Please allow popups for this site.', 'error');
-                } else {
-                    showToast('Sign-in failed. Please try again.', 'error');
-                }
-                
-                setLoading(false);
-            }
-        }
-
-        // Check if user is already signed in
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user && user.email === ADMIN_EMAIL) {
-                // User is already signed in as admin
-                sessionStorage.setItem('adminAuthenticated', 'true');
-                sessionStorage.setItem('adminEmail', user.email);
-                sessionStorage.setItem('adminName', user.displayName);
-                
-                // Redirect to admin dashboard
-                window.location.href = 'manage-category.html';
-            } else if (user) {
-                // User is signed in but not admin - sign them out
-                firebase.auth().signOut();
-            }
-        });
-
-        // Check if user was redirected from admin page without authentication
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('redirect') === 'unauthorized') {
-            showToast('Please sign in to access the admin panel.', 'error');
-        }
-
-        // Add event listener for Google login button
-        googleSignInBtn.addEventListener('click', signInWithGoogle);
-
-        // Add enter key support for accessibility
-        document.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter' && !submitBtn.classList.contains('loading')) {
-                loginForm.dispatchEvent(new Event('submit'));
-            }
-        });
-
-        // Add focus styles for accessibility
-        const focusableElements = document.querySelectorAll('input, button');
-        focusableElements.forEach(el => {
-            el.addEventListener('focus', function() {
-                this.style.outline = '2px solid #10B981';
-                this.style.outlineOffset = '2px';
-            });
-
-            el.addEventListener('blur', function() {
-                this.style.outline = 'none';
-            });
-        });
     </script>
 </body>
 </html>
