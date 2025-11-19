@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Manage Categories - Vastramaya</title>
+    <title>Manage Categories - Vastramaya Admin</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,159 +29,209 @@
             --radius-md: 8px;
             --radius-lg: 12px;
             --radius-xl: 16px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html { scroll-behavior: smooth; }
         body { font-family: 'Inter', sans-serif; background-color: var(--body-bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; }
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
         input, button, select, textarea { font-family: inherit; font-size: inherit; outline: none; }
-        
+
         .dashboard-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; position: relative; }
         .main-area { display: flex; flex-direction: column; overflow-y: auto; height: 100vh; background-color: var(--body-bg); }
         
+        .main-header { 
+            padding: 12px 2.5rem; border-bottom: 1px solid var(--border-color); 
+            display: flex; justify-content: space-between; align-items: center; 
+            background-color: rgba(255, 255, 255, 0.8); backdrop-filter: blur(8px);
+            position: sticky; top: 0; z-index: 50; 
+            min-height: 70px;
+        }
+        .nav-logo { height: 42px; width: auto; object-fit: contain; display: none; }
+        
         .sidebar { 
             background-color: var(--widget-bg); border-right: 1px solid var(--border-color); 
-            padding: 2rem 1.5rem; display: flex; flex-direction: column; position: relative; 
-            z-index: 1001; transition: transform 0.3s ease-in-out; box-shadow: var(--shadow-sm);
+            padding: 2rem 1.5rem; display: flex; flex-direction: column; 
+            position: relative; z-index: 1001; transition: transform 0.3s ease-in-out;
         }
-        .sidebar-header { display: flex; align-items: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); }
+        .sidebar-header { display: flex; align-items: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); } 
+        .logo-container { display: flex; align-items: center; width: 100%; }
         .logo-image { height: 40px; width: auto; object-fit: contain; }
         .main-nav ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
         .main-nav a { 
             display: flex; align-items: center; gap: 1rem; text-decoration: none; color: var(--text-secondary); 
             font-weight: 500; padding: 0.875rem 1rem; border-radius: var(--radius-md); transition: var(--transition); 
         }
+        .main-nav a i { font-size: 1.375rem; color: var(--text-secondary); transition: var(--transition); width: 24px; text-align: center; }
         .main-nav a:hover { background-color: var(--hover-bg); color: var(--text-primary); transform: translateY(-1px); } 
+        .main-nav a:hover i { color: var(--brand-primary); }
         .main-nav a.active { 
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%); 
             color: var(--brand-primary); font-weight: 600; box-shadow: var(--shadow-sm);
-        }
-        .main-nav a i { font-size: 1.375rem; width: 24px; text-align: center; transition: var(--transition); }
-        .main-nav a.active i, .main-nav a:hover i { color: var(--brand-primary); }
-
+        } 
+        .main-nav a.active i { color: var(--brand-primary); }
+        
         .profile-section { margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.75rem; cursor: pointer; padding: 1rem; border-radius: var(--radius-md); transition: var(--transition); }
         .profile-section:hover { background-color: var(--hover-bg); }
         .profile-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); }
-        .profile-popup { position: absolute; bottom: 90px; left: 1.5rem; right: 1.5rem; background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); padding: 0.75rem; opacity: 0; pointer-events: none; transform: translateY(10px); transition: var(--transition); border: 1px solid var(--border-color); }
-        .profile-popup.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
-        .popup-list a { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem; border-radius: var(--radius-sm); }
-        .popup-list a:hover { background-color: var(--hover-bg); }
-        .popup-list a.logout { color: var(--danger-color); }
-
-        .main-header { 
-            padding: 12px 2.5rem; border-bottom: 1px solid var(--border-color); 
-            display: flex; justify-content: space-between; align-items: center; 
-            background-color: var(--widget-bg); position: sticky; top: 0; z-index: 10; 
-            box-shadow: var(--shadow-sm); min-height: 65px;
+        .profile-popup { 
+            position: absolute; bottom: 90px; left: 1.5rem; right: 1.5rem; 
+            background-color: var(--widget-bg); border-radius: var(--radius-lg); 
+            box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); 
+            padding: 0.75rem; z-index: 100; opacity: 0; pointer-events: none; 
+            transform: translateY(10px); transition: var(--transition); 
         }
-        .nav-logo { height: 42px; display: none; }
+        .profile-popup.active { opacity: 1; pointer-events: all; transform: translateY(0); }
+        .popup-list a { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem; border-radius: var(--radius-md); color: var(--text-primary); }
+        .popup-list a:hover { background-color: var(--hover-bg); }
+        
         .menu-toggle, .sidebar-close-btn { display: none; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .overlay.active { opacity: 1; pointer-events: auto; }
 
-        .page-container { max-width: 1280px; margin: 0 auto; padding: 2rem; width: 100%; }
-        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
-        .page-title { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); }
-
-        .search-wrapper { position: relative; width: 100%; max-width: 400px; }
-        .search-input { 
-            width: 100%; padding: 0.875rem 1rem 0.875rem 2.75rem; 
-            border: 1px solid var(--border-color); border-radius: var(--radius-lg); 
-            background: var(--widget-bg); transition: var(--transition);
-            font-size: 0.95rem; box-shadow: var(--shadow-sm);
+        .page-container { max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%; }
+        
+        .content-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; 
         }
-        .search-input:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-        .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 1.25rem; }
+        .page-title { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.5px; }
 
-        .categories-grid { 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
-            gap: 1.5rem; margin-top: 1.5rem; 
-            align-items: flex-start; 
+        .search-box {
+            position: relative; width: 100%; max-width: 400px; margin-bottom: 2rem;
+        }
+        .search-input {
+            width: 100%; padding: 0.875rem 1rem 0.875rem 2.75rem;
+            background: var(--widget-bg); border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg); font-size: 0.95rem;
+            box-shadow: var(--shadow-sm); transition: var(--transition);
+        }
+        .search-input:focus {
+            border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .search-icon {
+            position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+            color: var(--text-secondary); font-size: 1.25rem;
+        }
+
+        .categories-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;
         }
         
-        .category-card { 
-            background: var(--widget-bg); border-radius: var(--radius-xl); 
-            border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; position: relative;
-            display: flex; flex-direction: column;
+        .category-card {
+            background: var(--widget-bg); border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg); padding: 1.25rem;
+            box-shadow: var(--shadow-sm); transition: var(--transition);
+            display: flex; align-items: center; justify-content: space-between;
+            position: relative; overflow: visible;
         }
-        .category-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: #CBD5E1; }
+        .category-card:hover {
+            transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: #CBD5E1;
+        }
         
-        .card-content { padding: 1.5rem; display: flex; align-items: center; gap: 1rem; cursor: pointer; position: relative; z-index: 2; background: var(--widget-bg); }
-        .category-img { 
-            width: 60px; height: 60px; border-radius: var(--radius-lg); object-fit: cover; 
-            background: #F1F5F9; border: 1px solid var(--border-color);
+        .cat-left { display: flex; align-items: center; gap: 1rem; flex: 1; cursor: pointer; }
+        .cat-img { 
+            width: 56px; height: 56px; border-radius: var(--radius-md); 
+            object-fit: cover; border: 1px solid var(--border-color); background: #F1F5F9;
         }
-        .category-info { flex: 1; }
-        .category-name { font-weight: 600; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 0.25rem; }
-        .category-meta { font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; gap: 0.5rem; }
-        .badge { background: #EFF6FF; color: var(--brand-primary); padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
-
-        .menu-btn-container { padding-right: 1.5rem; display: flex; align-items: center; }
-        .card-menu-btn { 
-            width: 36px; height: 36px; border-radius: 50%; border: 1px solid transparent; 
-            background: transparent; color: var(--text-secondary); cursor: pointer; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
-        }
-        .card-menu-btn:hover { background: var(--body-bg); color: var(--text-primary); border-color: var(--border-color); }
-        .card-menu-btn.active { background: var(--brand-primary); color: white; transform: rotate(90deg); box-shadow: var(--shadow-md); }
-
-        .card-actions-panel { 
-            background: #F8FAFC; border-top: 1px solid var(--border-color); 
-            max-height: 0; overflow: hidden; opacity: 0; transform: translateY(-10px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex; gap: 0.75rem; padding: 0 1.5rem;
-        }
-        .card-actions-panel.open { max-height: 80px; opacity: 1; transform: translateY(0); padding: 1rem 1.5rem; }
+        .cat-info h3 { font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem; }
+        .cat-info p { font-size: 0.85rem; color: var(--text-secondary); }
         
-        .action-btn { 
-            flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-            padding: 0.75rem; border-radius: var(--radius-md); font-size: 0.9rem; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: var(--transition);
+        .cat-right { display: flex; align-items: center; gap: 0.75rem; position: relative; }
+        .badge { 
+            background: #EFF6FF; color: var(--brand-primary); 
+            padding: 0.25rem 0.75rem; border-radius: 99px; 
+            font-size: 0.75rem; font-weight: 600;
         }
-        .btn-edit { background: white; border-color: var(--border-color); color: var(--text-primary); box-shadow: var(--shadow-sm); }
-        .btn-edit:hover { border-color: var(--brand-primary); color: var(--brand-primary); transform: translateY(-2px); box-shadow: var(--shadow-md); }
-        .btn-delete { background: #FEF2F2; color: var(--danger-color); border-color: #FECACA; box-shadow: var(--shadow-sm); }
-        .btn-delete:hover { background: #FEE2E2; transform: translateY(-2px); box-shadow: var(--shadow-md); }
-
-        .empty-state { 
-            grid-column: 1 / -1; text-align: center; padding: 4rem 2rem; 
-            background: white; border-radius: var(--radius-xl); border: 2px dashed var(--border-color); 
+        
+        .menu-btn {
+            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; border: none; background: transparent;
+            color: var(--text-secondary); cursor: pointer; transition: var(--transition);
         }
-        .empty-icon { font-size: 3rem; color: var(--text-secondary); margin-bottom: 1rem; display: block; }
+        .menu-btn:hover { background: #F1F5F9; color: var(--text-primary); }
+        
+        .dropdown-menu {
+            position: absolute; top: 100%; right: 0; margin-top: 0.5rem;
+            background: var(--widget-bg); border: 1px solid var(--border-color);
+            border-radius: var(--radius-md); box-shadow: var(--shadow-lg);
+            min-width: 160px; padding: 0.5rem; z-index: 100;
+            opacity: 0; transform: translateY(-10px) scale(0.95); pointer-events: none;
+            transition: var(--transition); transform-origin: top right;
+        }
+        .dropdown-menu.active { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+        
+        .dropdown-item {
+            display: flex; align-items: center; gap: 0.75rem; width: 100%;
+            padding: 0.6rem 0.75rem; border: none; background: transparent;
+            color: var(--text-primary); font-size: 0.9rem; border-radius: var(--radius-md);
+            cursor: pointer; transition: var(--transition); text-align: left;
+        }
+        .dropdown-item:hover { background: var(--hover-bg); }
+        .dropdown-item i { font-size: 1.1rem; color: var(--text-secondary); }
+        .dropdown-item.delete { color: var(--danger-color); }
+        .dropdown-item.delete i { color: var(--danger-color); }
+        .dropdown-item.delete:hover { background: #FEF2F2; }
 
-        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; font-weight: 600; border-radius: var(--radius-md); cursor: pointer; transition: var(--transition); border: none; font-size: 0.95rem; }
+        .btn { 
+            display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; 
+            font-weight: 600; border-radius: var(--radius-md); cursor: pointer; 
+            transition: var(--transition); border: none; font-size: 0.9rem;
+        }
         .btn-primary { background: var(--brand-gradient); color: white; box-shadow: var(--shadow-md); }
         .btn-primary:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
         .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-primary); }
         .btn-secondary:hover { background: #F8FAFC; border-color: #CBD5E1; }
         .btn-danger { background: var(--danger-color); color: white; }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 1rem; }
-        .modal-content { background: white; width: 100%; max-width: 500px; border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); overflow: hidden; animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .modal-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); 
+            z-index: 2000; display: none; align-items: center; justify-content: center; padding: 1rem; 
+        }
+        .modal-content { 
+            background: white; width: 100%; max-width: 500px; border-radius: var(--radius-lg); 
+            box-shadow: var(--shadow-lg); max-height: 90vh; display: flex; flex-direction: column; 
+            animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
         @keyframes modalPop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .modal-header { padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #fff; }
-        .modal-body { padding: 1.5rem; overflow-y: auto; background: #F8FAFC; }
-        .modal-footer { padding: 1.25rem 1.5rem; background: white; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; }
-        .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); transition: color 0.2s; }
-        .close-modal:hover { color: var(--text-primary); }
-
-        .form-group { margin-bottom: 1.25rem; }
-        .input-label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 0.5rem; }
-        .form-control { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: #fff; transition: var(--transition); font-size: 0.95rem; }
-        .form-control:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
         
-        .upload-zone { border: 2px dashed #CBD5E1; border-radius: var(--radius-md); padding: 2rem; text-align: center; cursor: pointer; transition: var(--transition); background: #F8FAFC; }
-        .upload-zone:hover { border-color: var(--brand-primary); background: #EFF6FF; }
-        .preview-area { margin-top: 1rem; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); display: none; position: relative; }
-        .preview-area.show { display: block; }
-        .preview-area img { width: 100%; height: 150px; object-fit: cover; }
-        .remove-img-btn { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); color: white; border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .modal-header { 
+            padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); 
+            display: flex; justify-content: space-between; align-items: center; 
+        }
+        .modal-title { font-size: 1.1rem; font-weight: 600; }
+        .close-modal { background: none; border: none; font-size: 1.25rem; cursor: pointer; color: var(--text-secondary); }
+        
+        .modal-body { padding: 1.5rem; overflow-y: auto; }
+        .form-group { margin-bottom: 1.25rem; }
+        .form-label { display: block; font-weight: 500; margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text-secondary); }
+        .form-input { 
+            width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); 
+            border-radius: var(--radius-md); font-size: 0.95rem; transition: var(--transition); 
+        }
+        .form-input:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        
+        .upload-area {
+            border: 2px dashed #CBD5E1; border-radius: var(--radius-md); padding: 1.5rem;
+            text-align: center; cursor: pointer; transition: var(--transition); background: #F8FAFC;
+        }
+        .upload-area:hover { border-color: var(--brand-primary); background: #EFF6FF; }
+        .preview-area { margin-top: 1rem; text-align: center; display: none; }
+        .preview-img { width: 100px; height: 100px; object-fit: cover; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
+        
+        .modal-footer { 
+            padding: 1.25rem 1.5rem; background: #F8FAFC; border-top: 1px solid var(--border-color); 
+            display: flex; justify-content: flex-end; gap: 0.75rem; border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+        }
 
-        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; pointer-events: none; display: flex; flex-direction: column; gap: 10px; }
-        .toast { padding: 1rem 1.5rem; background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); animation: slideUp 0.3s ease; display: flex; align-items: center; gap: 1rem; border-left: 4px solid var(--brand-primary); min-width: 300px; pointer-events: auto; }
+        #toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 3000; pointer-events: none; display: flex; flex-direction: column; gap: 12px; }
+        .toast { 
+            padding: 1rem 1.5rem; background: white; border-radius: var(--radius-md); 
+            box-shadow: var(--shadow-lg); animation: slideUp 0.3s ease; 
+            display: flex; align-items: center; gap: 1rem; border-left: 4px solid var(--brand-primary); 
+            min-width: 300px; pointer-events: auto;
+        }
         .toast.success { border-left-color: var(--success-color); }
         .toast.error { border-left-color: var(--danger-color); }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -190,43 +240,34 @@
             .dashboard-container { grid-template-columns: 1fr; }
             .sidebar { 
                 position: fixed; top: 0; left: 0; height: 100%; width: 85%; max-width: 320px; 
-                z-index: 1000; transform: translateX(-100%); box-shadow: var(--shadow-lg); 
-                padding: 2rem 1.25rem;
+                z-index: 1000; transform: translateX(-100%); box-shadow: var(--shadow-lg); padding: 2rem 1.25rem;
             }
             .sidebar.active { transform: translateX(0); }
-            .main-header { 
-                padding: 12px 1.5rem; 
-                justify-content: space-between;
-            }
+            .main-header { padding: 12px 1.5rem; justify-content: space-between; }
+            .nav-logo { display: block; height: 36px; }
+            .menu-toggle { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; font-size: 1.6rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white; }
+            .sidebar-close-btn { display: flex; align-items: center; justify-content: center; position: absolute; top: 1.5rem; right: 1.25rem; font-size: 1.75rem; border: none; background: none; }
+            .page-container { padding: 1.5rem 1rem; }
+            .categories-grid { grid-template-columns: 1fr; }
+            .content-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .content-header button { width: 100%; justify-content: center; }
             
-            .sidebar .logo-container { display: flex; }
-            .nav-logo { display: block; height: 42px; }
-            
-            .menu-toggle { 
-                display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; 
-                font-size: 1.6rem; color: var(--text-primary); cursor: pointer; 
-                border: 2px solid var(--border-color); border-radius: var(--radius-md); background-color: transparent;
-            }
-            .sidebar-close-btn { 
-                display: flex; align-items: center; justify-content: center; position: absolute; 
-                top: 1.5rem; right: 1.25rem; font-size: 1.75rem; color: var(--text-secondary); 
-                cursor: pointer; border: none; background: none; width: 36px; height: 36px;
-            }
-            
-            .page-container { padding: 1rem; padding-bottom: 80px; }
-            .categories-grid { grid-template-columns: 1fr; gap: 1rem; }
-            
+            /* Mobile Modal */
             .modal-overlay { align-items: flex-end; padding: 0; }
-            .modal-content { width: 100%; max-width: 100%; border-radius: var(--radius-xl) var(--radius-xl) 0 0; max-height: 85vh; animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+            .modal-content { 
+                width: 100%; border-radius: 20px 20px 0 0; max-height: 85vh; 
+                animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            }
             .modal-footer { padding-bottom: 2rem; }
             @keyframes slideUpModal { from { transform: translateY(100%); } to { transform: translateY(0); } }
         }
+        @media (min-width: 1025px) { .nav-logo { display: none; } }
     </style>
 </head>
 <body>
     <div class="overlay" id="overlay"></div>
+    
     <div class="dashboard-container">
-        
         <aside class="sidebar" id="sidebar">
             <button class="sidebar-close-btn" id="sidebar-close-btn"><i class='bx bx-x'></i></button>
             <div class="sidebar-header">
@@ -237,23 +278,26 @@
             <nav class="main-nav">
                 <ul>
                     <li><a href="index.html"><i class='bx bx-home-alt'></i> Dashboard</a></li>
-                    <li><a href="#" class="active"><i class='bx bx-package'></i> Inventory</a></li>
+                    <li><a href="manage-category.html" class="active"><i class='bx bx-category'></i> Categories</a></li>
+                    <li><a href="manage-products.html"><i class='bx bx-package'></i> Inventory</a></li>
                     <li><a href="#"><i class='bx bx-palette'></i> Customize Site</a></li>
                     <li><a href="#"><i class='bx bx-clipboard'></i> All Orders</a></li>
                 </ul>
             </nav>
             <div class="profile-section" id="profile-section">
-                <img id="sidebar-avatar" src="" class="profile-avatar">
-                <div class="profile-details" style="margin-left: 0.75rem;">
-                    <span class="profile-name" id="sidebar-name">Loading...</span>
-                    <span class="profile-email" id="sidebar-email">Admin</span>
+                <div class="profile-content-wrapper">
+                    <img id="sidebar-avatar" src="" class="profile-avatar">
+                    <div class="profile-details">
+                        <span class="profile-name" id="sidebar-name">Loading...</span>
+                        <span class="profile-email" id="sidebar-email">Admin</span>
+                    </div>
+                    <div class="profile-options"><i class='bx bx-chevron-down'></i></div>
                 </div>
-                <div class="profile-options" style="margin-left: auto;"><i class='bx bx-chevron-down'></i></div>
             </div>
             <div class="profile-popup" id="profile-popup">
                 <div class="popup-header">
                     <img id="popup-avatar" src="" class="profile-avatar">
-                    <div class="profile-details" style="margin-left: 0.75rem;">
+                    <div class="profile-details">
                         <span class="profile-name" id="popup-name">Loading...</span>
                         <span class="profile-email" id="popup-email">Admin</span>
                     </div>
@@ -264,90 +308,130 @@
                 </ul>
             </div>
         </aside>
-        
+
         <main class="main-area">
             <header class="main-header">
                 <button class="menu-toggle" id="menu-toggle"><i class='bx bx-menu'></i></button>
                 <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" class="nav-logo">
             </header>
-            
+
             <div class="page-container">
-                <div class="page-header">
-                    <h1 class="page-title">Categories</h1>
-                    <button class="btn btn-primary" onclick="openAddModal()">
+                <div class="content-header">
+                    <h1 class="page-title">Category Management</h1>
+                    <button class="btn btn-primary" onclick="openModal('add-category-modal')">
                         <i class='bx bx-plus'></i> Add Category
                     </button>
                 </div>
 
-                <div class="search-wrapper">
+                <div class="search-box">
                     <i class='bx bx-search search-icon'></i>
                     <input type="text" id="search-input" class="search-input" placeholder="Search categories...">
                 </div>
 
-                <div id="categories-container" class="categories-grid">
-                    <div class="empty-state">
-                        <i class='bx bx-loader-alt bx-spin empty-icon'></i>
-                        <p>Loading categories...</p>
-                    </div>
+                <div id="loading-state" style="text-align:center; padding:3rem;">
+                    <i class='bx bx-loader-alt bx-spin' style='font-size:2rem; color:var(--brand-primary);'></i>
                 </div>
+
+                <div id="categories-grid" class="categories-grid"></div>
             </div>
         </main>
     </div>
 
-    <div id="toast-container"></div>
-
-    <div class="modal-overlay" id="category-modal">
+    <!-- Add Modal -->
+    <div class="modal-overlay" id="add-category-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="modal-title">Add Category</h3>
-                <button class="close-modal" onclick="closeCategoryModal()"><i class='bx bx-x'></i></button>
+                <h3 class="modal-title">Add New Category</h3>
+                <button class="close-modal" onclick="closeModal('add-category-modal')">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="category-form">
-                    <input type="hidden" id="cat-id">
+                <form id="add-form">
                     <div class="form-group">
-                        <label class="input-label">Category Name</label>
-                        <input type="text" class="form-control" id="cat-name" required placeholder="e.g., Men's Wear">
+                        <label class="form-label">Category Name</label>
+                        <input type="text" class="form-input" id="add-name" placeholder="e.g. Men's Ethnic" required>
                     </div>
                     <div class="form-group">
-                        <label class="input-label">Category Image</label>
-                        <div class="upload-zone" onclick="document.getElementById('cat-file').click()">
-                            <i class='bx bx-cloud-upload' style="font-size: 2rem; color: var(--brand-primary);"></i>
-                            <div style="margin-top:0.5rem; font-size:0.9rem;">Click to upload image</div>
+                        <label class="form-label">Category Image</label>
+                        <div class="upload-area" onclick="document.getElementById('add-file').click()">
+                            <i class='bx bx-cloud-upload' style="font-size:2rem; color:var(--brand-primary);"></i>
+                            <p style="margin-top:0.5rem; color:var(--text-secondary); font-size:0.9rem;">Click to upload image</p>
                         </div>
-                        <input type="file" id="cat-file" accept="image/*" style="display:none;">
-                        <input type="hidden" id="cat-image-url">
-                        
-                        <div id="img-preview-area" class="preview-area">
-                            <img id="cat-img-preview">
-                            <button type="button" class="remove-img-btn" onclick="removeImage()"><i class='bx bx-trash'></i></button>
+                        <input type="file" id="add-file" hidden accept="image/*">
+                        <div class="preview-area" id="add-preview-area">
+                            <img id="add-preview-img" class="preview-img">
+                            <button type="button" class="btn btn-secondary btn-sm" style="margin-top:0.5rem;" onclick="clearUpload('add')">Remove</button>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeCategoryModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" id="save-btn">Save</button>
+                <button class="btn btn-secondary" onclick="closeModal('add-category-modal')">Cancel</button>
+                <button class="btn btn-primary" onclick="handleAddCategory()">Save Category</button>
             </div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="delete-modal">
-        <div class="modal-content" style="max-width: 400px;">
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="edit-category-modal">
+        <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" style="color: var(--danger-color);">Delete Category</h3>
-                <button class="close-modal" onclick="closeDeleteModal()"><i class='bx bx-x'></i></button>
+                <h3 class="modal-title">Edit Category</h3>
+                <button class="close-modal" onclick="closeModal('edit-category-modal')">&times;</button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete <strong id="del-cat-name"></strong>?</p>
-                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">This action cannot be undone.</p>
+                <form id="edit-form">
+                    <input type="hidden" id="edit-id">
+                    <div class="form-group">
+                        <label class="form-label">Category Name</label>
+                        <input type="text" class="form-input" id="edit-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category Image</label>
+                        <div class="upload-area" onclick="document.getElementById('edit-file').click()">
+                            <i class='bx bx-cloud-upload' style="font-size:2rem; color:var(--brand-primary);"></i>
+                            <p style="margin-top:0.5rem; color:var(--text-secondary); font-size:0.9rem;">Click to upload new image</p>
+                        </div>
+                        <input type="file" id="edit-file" hidden accept="image/*">
+                        <div class="preview-area" id="edit-preview-area" style="display:block;">
+                            <img id="edit-preview-img" class="preview-img">
+                            <button type="button" class="btn btn-secondary btn-sm" style="margin-top:0.5rem;" onclick="clearUpload('edit')">Remove</button>
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
-                <button type="button" class="btn btn-danger" id="confirm-delete-btn">Delete</button>
+                <button class="btn btn-secondary" onclick="closeModal('edit-category-modal')">Cancel</button>
+                <button class="btn btn-primary" onclick="handleUpdateCategory()">Update</button>
             </div>
         </div>
     </div>
+
+    <!-- Delete Modal -->
+    <div class="modal-overlay" id="delete-category-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" style="color:var(--danger-color);">Delete Category</h3>
+                <button class="close-modal" onclick="closeModal('delete-category-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="background:#FEF2F2; border:1px solid #FECACA; border-radius:var(--radius-md); padding:1rem;">
+                    <h4 style="color:#991B1B; margin-bottom:0.5rem;">Warning</h4>
+                    <p style="color:#B91C1C; font-size:0.9rem;">You are about to delete <strong id="delete-name-display"></strong>. This action cannot be undone.</p>
+                </div>
+                <div class="form-group" style="margin-top:1.5rem;">
+                    <label class="form-label">Type category name to confirm</label>
+                    <input type="text" class="form-input" id="delete-confirm-input" placeholder="Enter category name">
+                    <input type="hidden" id="delete-id">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('delete-category-modal')">Cancel</button>
+                <button class="btn btn-danger" id="delete-btn" disabled onclick="handleDeleteCategory()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -355,33 +439,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const sidebar = document.getElementById('sidebar');
-            const menuToggle = document.getElementById('menu-toggle');
-            const closeBtn = document.getElementById('sidebar-close-btn');
-            const overlay = document.getElementById('overlay');
-            
-            const toggleMenu = () => {
-                sidebar.classList.toggle('active');
-                overlay.classList.toggle('active');
-            };
-            
-            if(menuToggle) menuToggle.addEventListener('click', toggleMenu);
-            if(closeBtn) closeBtn.addEventListener('click', toggleMenu);
-            if(overlay) overlay.addEventListener('click', toggleMenu);
-
-            const pSection = document.getElementById('profile-section');
-            const pPopup = document.getElementById('profile-popup');
-            pSection?.addEventListener('click', (e) => {
-                e.stopPropagation();
-                pPopup.classList.toggle('active');
-                pSection.classList.toggle('active');
-            });
-            document.addEventListener('click', (e) => {
-                if(!pSection.contains(e.target)) pPopup.classList.remove('active');
-            });
-        });
-
         const firebaseConfig = {
             apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
             authDomain: "vastramaya---magic.firebaseapp.com",
@@ -398,214 +455,226 @@
         const storage = firebase.storage();
         const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
 
-        let categories = [];
+        let allCategories = [];
         let productCounts = {};
-        let tempImageFile = null;
-        let categoryToDelete = null;
+        let addFile = null;
+        let editFile = null;
 
+        // --- UI INTERACTIONS ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const toggleMenu = () => { sidebar.classList.toggle('active'); overlay.classList.toggle('active'); };
+            
+            document.getElementById('menu-toggle').addEventListener('click', toggleMenu);
+            document.getElementById('sidebar-close-btn').addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', toggleMenu);
+
+            const profileSection = document.getElementById('profile-section');
+            const profilePopup = document.getElementById('profile-popup');
+            profileSection.addEventListener('click', e => { 
+                e.stopPropagation(); 
+                profilePopup.classList.toggle('active'); 
+                profileSection.classList.toggle('active'); 
+            });
+            document.addEventListener('click', e => { 
+                if (!profileSection.contains(e.target)) profilePopup.classList.remove('active'); 
+            });
+
+            document.addEventListener('click', e => {
+                if (!e.target.closest('.cat-right')) {
+                    document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('active'));
+                }
+            });
+        });
+
+        function toggleDropdown(id) {
+            const menu = document.getElementById(`dropdown-${id}`);
+            const isActive = menu.classList.contains('active');
+            document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('active'));
+            if (!isActive) menu.classList.add('active');
+        }
+
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        // --- FILE HANDLING ---
+        document.getElementById('add-file').onchange = (e) => handleFileSelect(e, 'add');
+        document.getElementById('edit-file').onchange = (e) => handleFileSelect(e, 'edit');
+
+        function handleFileSelect(e, type) {
+            const file = e.target.files[0];
+            if(file) {
+                if(file.size > 5*1024*1024) return showToast('Image too large (Max 5MB)', 'error');
+                if(type === 'add') addFile = file; else editFile = file;
+                
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    document.getElementById(`${type}-preview-img`).src = ev.target.result;
+                    document.getElementById(`${type}-preview-area`).style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function clearUpload(type) {
+            if(type === 'add') { addFile = null; document.getElementById('add-file').value = ''; }
+            else { editFile = null; document.getElementById('edit-file').value = ''; }
+            document.getElementById(`${type}-preview-area`).style.display = 'none';
+            if(type === 'edit') document.getElementById('edit-preview-img').src = '';
+        }
+
+        // --- AUTH & LOGIC ---
         auth.onAuthStateChanged(user => {
-            if (!user || user.email !== ADMIN_EMAIL) return window.location.href = 'index.html';
+            if (!user || user.email !== ADMIN_EMAIL) { window.location.href = 'index.html'; return; }
             
             document.getElementById('sidebar-name').textContent = user.displayName || 'Admin';
             document.getElementById('sidebar-email').textContent = user.email;
-            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=3B82F6&color=fff`;
-            document.getElementById('sidebar-avatar').src = avatar;
-            document.getElementById('popup-avatar').src = avatar;
+            document.getElementById('sidebar-avatar').src = user.photoURL || `https://ui-avatars.com/api/?name=Admin&background=3B82F6&color=fff`;
             document.getElementById('popup-name').textContent = user.displayName || 'Admin';
             document.getElementById('popup-email').textContent = user.email;
+            document.getElementById('popup-avatar').src = user.photoURL || `https://ui-avatars.com/api/?name=Admin&background=3B82F6&color=fff`;
 
             loadData();
         });
 
         async function loadData() {
             try {
+                // Load Product Counts
                 const pSnap = await db.collection('products').get();
                 productCounts = {};
-                pSnap.forEach(doc => {
+                pSnap.docs.forEach(doc => {
                     const cat = doc.data().category;
                     if(cat) productCounts[cat] = (productCounts[cat] || 0) + 1;
                 });
 
+                // Load Categories
                 const cSnap = await db.collection('categories').orderBy('name').get();
-                categories = cSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderCategories();
-            } catch (e) {
-                console.error(e);
-                showToast('Error loading data', 'error');
-            }
+                allCategories = cSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                
+                renderGrid(allCategories);
+                document.getElementById('loading-state').style.display = 'none';
+            } catch(e) { showToast('Error loading data', 'error'); }
         }
 
-        function renderCategories(list = categories) {
-            const container = document.getElementById('categories-container');
-            if (list.length === 0) {
-                container.innerHTML = `<div class="empty-state"><i class='bx bx-folder-open empty-icon'></i><p>No categories found.</p></div>`;
+        function renderGrid(data) {
+            const grid = document.getElementById('categories-grid');
+            if(data.length === 0) {
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:2rem; color:var(--text-secondary);">No categories found.</div>`;
                 return;
             }
-            
-            container.innerHTML = list.map(cat => `
-                <div class="category-card" id="card-${cat.id}">
-                    <div class="card-content" onclick="navigateToProducts('${cat.name}')">
-                        <img src="${cat.imageUrl || 'https://via.placeholder.com/60'}" class="category-img">
-                        <div class="category-info">
-                            <div class="category-name">${cat.name}</div>
-                            <div class="category-meta">
-                                <span class="badge">${productCounts[cat.name] || 0} items</span>
-                            </div>
-                        </div>
-                        <div class="menu-btn-container">
-                            <button class="card-menu-btn" onclick="event.stopPropagation(); toggleActions('${cat.id}')">
-                                <i class='bx bx-dots-vertical-rounded'></i>
-                            </button>
+            grid.innerHTML = data.map(cat => `
+                <div class="category-card">
+                    <div class="cat-left" onclick="window.location.href='manage-products.html?category=${encodeURIComponent(cat.name)}'">
+                        <img src="${cat.imageUrl || 'https://via.placeholder.com/56?text='}" class="cat-img" onerror="this.src='https://via.placeholder.com/56?text='">
+                        <div class="cat-info">
+                            <h3>${cat.name}</h3>
+                            <p>${productCounts[cat.name] || 0} Products</p>
                         </div>
                     </div>
-                    <div class="card-actions-panel" id="actions-${cat.id}">
-                        <div class="action-btn btn-edit" onclick="openEditModal('${cat.id}')">
-                            <i class='bx bx-edit'></i> Edit
-                        </div>
-                        <div class="action-btn btn-delete" onclick="openDeleteModal('${cat.id}', '${cat.name}')">
-                            <i class='bx bx-trash'></i> Delete
+                    <div class="cat-right">
+                        <span class="badge">${productCounts[cat.name] || 0}</span>
+                        <button class="menu-btn" onclick="toggleDropdown('${cat.id}')"><i class='bx bx-dots-vertical-rounded'></i></button>
+                        <div class="dropdown-menu" id="dropdown-${cat.id}">
+                            <button class="dropdown-item" onclick="prepEdit('${cat.id}')"><i class='bx bx-edit-alt'></i> Edit</button>
+                            <button class="dropdown-item delete" onclick="prepDelete('${cat.id}', '${cat.name}')"><i class='bx bx-trash'></i> Delete</button>
                         </div>
                     </div>
                 </div>
             `).join('');
         }
 
-        function toggleActions(id) {
-            const panel = document.getElementById(`actions-${id}`);
-            const btn = document.querySelector(`#card-${id} .card-menu-btn`);
-            
-            document.querySelectorAll('.card-actions-panel').forEach(p => {
-                if(p.id !== `actions-${id}`) p.classList.remove('open');
-            });
-            document.querySelectorAll('.card-menu-btn').forEach(b => {
-                if(b !== btn) b.classList.remove('active');
-            });
-
-            panel.classList.toggle('open');
-            btn.classList.toggle('active');
-        }
-
-        function navigateToProducts(catName) {
-            window.location.href = `manage-products.html?category=${encodeURIComponent(catName)}`;
-        }
-
         document.getElementById('search-input').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
-            const filtered = categories.filter(c => c.name.toLowerCase().includes(term));
-            renderCategories(filtered);
+            const filtered = allCategories.filter(c => c.name.toLowerCase().includes(term));
+            renderGrid(filtered);
         });
 
-        function openAddModal() {
-            document.getElementById('modal-title').textContent = 'Add Category';
-            document.getElementById('category-form').reset();
-            document.getElementById('cat-id').value = '';
-            document.getElementById('cat-image-url').value = '';
-            removeImage();
-            document.getElementById('category-modal').style.display = 'flex';
+        // --- CRUD ---
+        async function uploadImage(file, pathName) {
+            const ref = storage.ref().child(`categories/${pathName}-${Date.now()}`);
+            await ref.put(file);
+            return await ref.getDownloadURL();
         }
 
-        function openEditModal(id) {
-            const cat = categories.find(c => c.id === id);
-            if(!cat) return;
+        async function handleAddCategory() {
+            const name = document.getElementById('add-name').value.trim();
+            if(!name) return showToast('Name required', 'error');
             
-            document.getElementById('modal-title').textContent = 'Edit Category';
-            document.getElementById('cat-id').value = id;
-            document.getElementById('cat-name').value = cat.name;
-            document.getElementById('cat-image-url').value = cat.imageUrl || '';
-            
+            showToast('Creating category...', 'info');
+            try {
+                let url = '';
+                if(addFile) url = await uploadImage(addFile, name);
+                
+                await db.collection('categories').add({
+                    name, imageUrl: url, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                closeModal('add-category-modal');
+                showToast('Category Created');
+                loadData();
+                document.getElementById('add-form').reset();
+                clearUpload('add');
+            } catch(e) { showToast('Failed to create', 'error'); }
+        }
+
+        function prepEdit(id) {
+            const cat = allCategories.find(c => c.id === id);
+            document.getElementById('edit-id').value = id;
+            document.getElementById('edit-name').value = cat.name;
             if(cat.imageUrl) {
-                document.getElementById('cat-img-preview').src = cat.imageUrl;
-                document.getElementById('img-preview-area').classList.add('show');
+                document.getElementById('edit-preview-img').src = cat.imageUrl;
+                document.getElementById('edit-preview-area').style.display = 'block';
             } else {
-                removeImage();
+                clearUpload('edit');
             }
-            
-            document.getElementById('category-modal').style.display = 'flex';
-            toggleActions(id); 
+            openModal('edit-category-modal');
         }
 
-        function closeCategoryModal() {
-            document.getElementById('category-modal').style.display = 'none';
-            tempImageFile = null;
-        }
-
-        document.getElementById('cat-file').onchange = (e) => {
-            const file = e.target.files[0];
-            if(file) {
-                tempImageFile = file;
-                document.getElementById('cat-img-preview').src = URL.createObjectURL(file);
-                document.getElementById('img-preview-area').classList.add('show');
-            }
-        }
-
-        function removeImage() {
-            tempImageFile = null;
-            document.getElementById('cat-file').value = '';
-            document.getElementById('img-preview-area').classList.remove('show');
-            document.getElementById('cat-img-preview').src = '';
-        }
-
-        document.getElementById('save-btn').onclick = async () => {
-            const id = document.getElementById('cat-id').value;
-            const name = document.getElementById('cat-name').value.trim();
-            let imageUrl = document.getElementById('cat-image-url').value;
-
+        async function handleUpdateCategory() {
+            const id = document.getElementById('edit-id').value;
+            const name = document.getElementById('edit-name').value.trim();
             if(!name) return showToast('Name required', 'error');
 
-            const btn = document.getElementById('save-btn');
-            btn.disabled = true; btn.textContent = 'Saving...';
-
+            showToast('Updating...', 'info');
             try {
-                if(tempImageFile) {
-                    const ref = storage.ref().child(`categories/${Date.now()}-${tempImageFile.name}`);
-                    await ref.put(tempImageFile);
-                    imageUrl = await ref.getDownloadURL();
+                let updateData = { name };
+                if(editFile) {
+                    const url = await uploadImage(editFile, name);
+                    updateData.imageUrl = url;
+                } else if(document.getElementById('edit-preview-area').style.display === 'none') {
+                    updateData.imageUrl = '';
                 }
 
-                const data = { name, imageUrl, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
-
-                if(id) {
-                    await db.collection('categories').doc(id).update(data);
-                    showToast('Updated successfully');
-                } else {
-                    data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                    await db.collection('categories').add(data);
-                    showToast('Created successfully');
-                }
-                
-                closeCategoryModal();
-                loadData(); 
-            } catch(e) {
-                console.error(e);
-                showToast('Failed to save', 'error');
-            } finally {
-                btn.disabled = false; btn.textContent = 'Save';
-            }
-        };
-
-        function openDeleteModal(id, name) {
-            categoryToDelete = id;
-            document.getElementById('del-cat-name').textContent = name;
-            document.getElementById('delete-modal').style.display = 'flex';
-            toggleActions(id);
-        }
-
-        function closeDeleteModal() {
-            document.getElementById('delete-modal').style.display = 'none';
-            categoryToDelete = null;
-        }
-
-        document.getElementById('confirm-delete-btn').onclick = async () => {
-            if(!categoryToDelete) return;
-            try {
-                await db.collection('categories').doc(categoryToDelete).delete();
-                showToast('Category deleted');
-                closeDeleteModal();
+                await db.collection('categories').doc(id).update(updateData);
+                closeModal('edit-category-modal');
+                showToast('Category Updated');
                 loadData();
-            } catch(e) {
-                showToast('Delete failed', 'error');
-            }
-        };
+            } catch(e) { showToast('Update failed', 'error'); }
+        }
+
+        function prepDelete(id, name) {
+            document.getElementById('delete-id').value = id;
+            document.getElementById('delete-name-display').textContent = name;
+            document.getElementById('delete-confirm-input').value = '';
+            document.getElementById('delete-btn').disabled = true;
+            openModal('delete-category-modal');
+        }
+
+        document.getElementById('delete-confirm-input').addEventListener('input', (e) => {
+            const target = document.getElementById('delete-name-display').textContent;
+            document.getElementById('delete-btn').disabled = e.target.value !== target;
+        });
+
+        async function handleDeleteCategory() {
+            const id = document.getElementById('delete-id').value;
+            try {
+                await db.collection('categories').doc(id).delete();
+                closeModal('delete-category-modal');
+                showToast('Category Deleted');
+                loadData();
+            } catch(e) { showToast('Delete failed', 'error'); }
+        }
 
         function showToast(msg, type='success') {
             const container = document.getElementById('toast-container');
