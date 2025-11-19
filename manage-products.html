@@ -2,529 +2,553 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Products - ShopSphere Admin</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Manage Products - Vastramaya</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         :root {
-            --primary-color: #4F46E5; --primary-hover: #4338CA; --primary-light: #eef2ff;
-            --secondary-color: #6B7280; --success-color: #10B981; --danger-color: #EF4444;
-            --warning-color: #F59E0B; --light-color: #F9FAFB; --dark-color: #1F2937;
-            --bg-color: #F3F4F6; --font-family: 'Inter', sans-serif; --border-radius: 0.5rem;
-            --box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px 0 rgba(0,0,0,0.06);
+            --body-bg: #F8FAFC;
+            --widget-bg: #FFFFFF;
+            --border-color: #F1F5F9;
+            --text-primary: #0F172A;
+            --text-secondary: #64748B;
+            --brand-primary: #3B82F6;
+            --brand-gradient: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+            --hover-bg: #F8FAFC;
+            --danger-color: #EF4444;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 24px;
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--body-bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        input, button, select, textarea { font-family: inherit; font-size: inherit; outline: none; }
+        button:focus, a:focus { outline: none; }
+
+        .dashboard-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; position: relative; }
+        .main-area { display: flex; flex-direction: column; overflow-y: auto; height: 100vh; background-color: var(--body-bg); }
+        
+        .main-header { 
+            padding: 12px 2.5rem; 
+            border-bottom: 1px solid var(--border-color); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background-color: var(--widget-bg); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            box-shadow: var(--shadow-sm); 
+            min-height: 70px;
+        }
+        .nav-logo { height: 42px; width: auto; object-fit: contain; display: none; }
+        
+        .sidebar { 
+            background-color: var(--widget-bg); 
+            border-right: 1px solid var(--border-color); 
+            padding: 2rem 1.5rem; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            transition: transform 0.3s ease-in-out;
+            box-shadow: var(--shadow-sm);
+            z-index: 1001;
+        }
+        .sidebar-header { display: flex; align-items: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); } 
+        .logo-container { display: flex; align-items: center; width: 100%; }
+        .logo-image { height: 40px; width: auto; object-fit: contain; }
+        .main-nav ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+        .main-nav a { 
+            display: flex; align-items: center; gap: 1rem; text-decoration: none; color: var(--text-secondary); 
+            font-weight: 500; padding: 0.875rem 1rem; border-radius: var(--radius-md); transition: var(--transition); position: relative;
+        }
+        .main-nav a i { font-size: 1.375rem; color: var(--text-secondary); transition: var(--transition); width: 24px; text-align: center; }
+        .main-nav a:hover { background-color: var(--hover-bg); color: var(--text-primary); transform: translateY(-1px); } 
+        .main-nav a:hover i { color: var(--brand-primary); }
+        .main-nav a.active { 
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%); 
+            color: var(--brand-primary); font-weight: 600; box-shadow: var(--shadow-sm);
+        } 
+        .main-nav a.active i { color: var(--brand-primary); }
+        .main-nav a.active::before {
+            content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 4px; height: 60%; background: var(--brand-gradient); border-radius: 0 4px 4px 0;
         }
         
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: var(--font-family); background-color: var(--bg-color); color: var(--dark-color); line-height: 1.5; padding-bottom: 20px; }
-        .container { max-width: 1400px; margin: 0 auto; padding: 1.5rem; }
+        .profile-section { 
+            margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-color); 
+            display: flex; align-items: center; gap: 0.75rem; cursor: pointer; 
+            border-radius: var(--radius-md); transition: var(--transition); padding: 1rem;
+        }
+        .profile-section:hover { background-color: var(--hover-bg); }
+        .profile-content-wrapper { display: flex; align-items: center; gap: 0.75rem; width: 100%; }
+        .profile-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid var(--border-color); transition: var(--transition); }
+        .profile-section:hover .profile-avatar { border-color: var(--brand-primary); }
+        .profile-details { flex-grow: 1; min-width: 0; }
+        .profile-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; font-size: 0.9rem; }
+        .profile-email { font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+        .profile-options i { font-size: 1.25rem; color: var(--text-secondary); transition: var(--transition); }
+        .profile-section.active .profile-options i { transform: rotate(180deg); }
         
-        nav { 
-            background: #fff; padding: 1rem 1.5rem; 
-            display: flex; justify-content: space-between; align-items: center; 
-            box-shadow: var(--box-shadow); position: sticky; top: 0; z-index: 1000; 
-            border-bottom: 1px solid #e5e7eb;
+        .profile-popup { 
+            position: absolute; bottom: 90px; left: 1.5rem; right: 1.5rem; 
+            background-color: var(--widget-bg); border-radius: var(--radius-lg); 
+            box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); 
+            padding: 0.75rem; z-index: 100; opacity: 0; pointer-events: none; 
+            transform: translateY(10px) scale(0.95); transition: var(--transition); 
         }
-        .nav-left h1 { 
-            margin: 0; font-size: 1.75rem; font-weight: 700; 
-            color: var(--primary-color); cursor: pointer; 
-        }
-        .nav-right { display: flex; align-items: center; gap: 0.75rem; }
-        .nav-icon { 
-            cursor: pointer; background: none; border: none; padding: 0.5rem; 
-            border-radius: 50%; transition: all 0.2s ease-in-out; color: var(--secondary-color);
-        }
-        .nav-icon:hover { background-color: #f3f4f6; color: var(--dark-color); }
+        .profile-popup.active { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
+        .popup-header { display: flex; align-items: center; gap: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); margin-bottom: 0.5rem; }
+        .popup-list { list-style: none; } 
+        .popup-list a { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem; border-radius: var(--radius-sm); text-decoration: none; color: var(--text-primary); transition: var(--transition); cursor: pointer; }
+        .popup-list a:hover { background-color: var(--hover-bg); } 
+        .popup-list a i { font-size: 1.2rem; color: var(--text-secondary); }
+        .popup-list a.logout i { color: var(--danger-color); } 
+        .popup-list a.logout { color: var(--danger-color); }
         
-        button { 
-            border: none; border-radius: var(--border-radius); cursor: pointer; 
-            font-family: var(--font-family); font-weight: 600; 
-            transition: all 0.2s ease-in-out; display: inline-flex; align-items: center; gap: 0.5rem;
-        }
-        .btn-primary { background-color: var(--primary-color); color: white; padding: 0.75rem 1.5rem; font-size: 0.875rem; }
-        .btn-success { background-color: var(--success-color); color: white; padding: 0.75rem 1.5rem; font-size: 0.875rem; }
-        .btn-danger { background-color: var(--danger-color); color: white; padding: 0.5rem 1rem; font-size: 0.75rem; }
-        .btn-secondary { background-color: white; color: var(--secondary-color); border: 1px solid #d1d5db; padding: 0.5rem 1rem; font-size: 0.75rem; }
+        .menu-toggle, .sidebar-close-btn { display: none; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .overlay.active { opacity: 1; pointer-events: auto; }
+
+        .page-container { max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%; }
+        .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        .page-title-wrapper { display: flex; align-items: center; gap: 1rem; }
+        .page-title { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); margin: 0; }
+        .category-badge { background: #EFF6FF; color: var(--brand-primary); padding: 0.35rem 0.85rem; border-radius: 99px; font-size: 0.85rem; font-weight: 600; }
+
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; font-weight: 600; border-radius: var(--radius-md); cursor: pointer; transition: var(--transition); border: none; font-size: 0.95rem; }
+        .btn-primary { background: var(--brand-gradient); color: white; box-shadow: var(--shadow-md); }
+        .btn-primary:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+        .btn-secondary { background: white; border: 1px solid #CBD5E1; color: var(--text-primary); padding: 0.5rem 1rem; font-size: 0.85rem; }
+        .btn-secondary:hover { background: #F8FAFC; border-color: #94A3B8; }
+        .btn-danger { background: #FEF2F2; color: var(--danger-color); border: 1px solid #FECACA; padding: 0.5rem 1rem; font-size: 0.85rem; }
+        .btn-danger:hover { background: #FEE2E2; }
         
-        .card { 
-            background-color: #fff; border-radius: var(--border-radius); 
-            box-shadow: var(--box-shadow); border: 1px solid #e5e7eb;
-            padding: 2rem;
-        }
+        .search-wrapper { position: relative; width: 100%; max-width: 400px; margin-bottom: 1.5rem; }
+        .search-input { width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); background-color: white; font-size: 0.95rem; transition: var(--transition); box-shadow: var(--shadow-sm); }
+        .search-input:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 1.25rem; pointer-events: none; }
+
+        .table-card { background: var(--widget-bg); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); overflow: hidden; }
+        .products-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .products-table th { background: #F8FAFC; padding: 1rem 1.5rem; font-weight: 600; color: var(--text-secondary); font-size: 0.85rem; border-bottom: 1px solid var(--border-color); }
+        .products-table td { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); vertical-align: middle; color: var(--text-primary); }
+        .products-table tr:last-child td { border-bottom: none; }
+        .products-table tr:hover { background: #F8FAFC; }
+
+        .prod-info { display: flex; align-items: center; gap: 1rem; }
+        .prod-img { width: 48px; height: 48px; border-radius: var(--radius-md); object-fit: cover; border: 1px solid var(--border-color); background: #F1F5F9; }
+        .prod-name { font-weight: 600; font-size: 0.95rem; color: var(--text-primary); margin-bottom: 0.25rem; }
+        .prod-cat { font-size: 0.85rem; color: var(--text-secondary); }
         
-        .page-header { 
-            display: flex; justify-content: space-between; align-items: center; 
-            margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb;
-        }
-        .page-title { font-size: 1.5rem; font-weight: 700; color: var(--dark-color); }
-        .category-badge { 
-            background: var(--primary-light); color: var(--primary-color); 
-            padding: 0.5rem 1rem; border-radius: var(--border-radius); 
-            font-size: 0.875rem; font-weight: 600; margin-left: 1rem;
-        }
-        
-        .search-container { position: relative; margin-bottom: 1.5rem; max-width: 400px; }
-        .search-input { 
-            padding: 0.75rem 1rem 0.75rem 2.5rem; 
-            border: 1px solid #d1d5db; border-radius: var(--border-radius);
-            width: 100%; font-size: 0.875rem; background: white;
-        }
-        .search-icon { 
-            position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); 
-            color: var(--secondary-color); pointer-events: none;
-        }
-        
-        .table-container { 
-            background: white; border-radius: var(--border-radius); 
-            overflow: hidden; box-shadow: var(--box-shadow); width: 100%;
-        }
-        .products-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
-        .products-table th { 
-            background-color: #f8fafc; padding: 1rem 1.5rem; text-align: left; 
-            font-weight: 600; color: var(--dark-color); border-bottom: 1px solid #e5e7eb;
-            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;
-        }
-        .products-table td { 
-            padding: 1rem 1.5rem; border-bottom: 1px solid #f1f5f9;
-            vertical-align: middle;
-        }
-        .products-table tr:hover { background-color: #fafafa; }
-        
-        .product-cell { display: flex; align-items: center; gap: 1rem; }
-        .product-image { 
-            width: 48px; height: 48px; border-radius: var(--border-radius); 
-            object-fit: cover; border: 1px solid #e5e7eb; flex-shrink: 0;
-        }
-        .product-info { flex: 1; min-width: 0; }
-        .product-name { 
-            font-weight: 600; color: var(--dark-color); margin-bottom: 0.25rem;
-            font-size: 0.875rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
-        .product-category { color: var(--secondary-color); font-size: 0.75rem; font-weight: 500; }
-        
-        .colors-badge { 
-            background: var(--primary-color); color: white; 
-            padding: 0.25rem 0.5rem; border-radius: 999px; 
-            font-size: 0.75rem; font-weight: 600;
-        }
-        
-        .availability-toggle { 
-            appearance: none; width: 36px; height: 20px; 
-            background-color: #d1d5db; border-radius: 999px; 
-            position: relative; cursor: pointer; transition: all 0.2s; flex-shrink: 0;
-        }
-        .availability-toggle::before { 
-            content: ''; position: absolute; width: 16px; height: 16px; 
-            border-radius: 50%; background-color: white; top: 2px; left: 2px; 
-            transition: transform 0.2s; box-shadow: var(--box-shadow);
-        }
-        .availability-toggle:checked { background-color: var(--success-color); }
-        .availability-toggle:checked::before { transform: translateX(16px); }
-        
-        .actions-container { display: flex; align-items: center; gap: 0.5rem; justify-content: flex-end; }
-        .mobile-menu-btn { display: none; background: none; border: none; color: var(--dark-color); padding: 0.5rem; }
-        
-        /* Bottom Sheet */
-        .bottom-sheet-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.5); 
-            z-index: 2000; display: none; opacity: 0; transition: opacity 0.3s;
-        }
-        .bottom-sheet-overlay.active { display: block; opacity: 1; }
-        
-        .bottom-sheet {
-            position: fixed; bottom: 0; left: 0; right: 0; 
-            background: white; z-index: 2001; 
-            border-top-left-radius: 1rem; border-top-right-radius: 1rem;
-            transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 1.5rem; box-shadow: 0 -4px 6px -1px rgba(0,0,0,0.1);
-        }
+        .price-tag { font-weight: 600; color: var(--text-primary); }
+        .count-badge { background: #F1F5F9; padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.85rem; font-weight: 500; color: var(--text-secondary); }
+
+        .toggle-switch { position: relative; width: 40px; height: 22px; cursor: pointer; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: #CBD5E1; transition: .4s; border-radius: 99px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--success-color); }
+        input:checked + .slider:before { transform: translateX(18px); }
+
+        .menu-btn { width: 32px; height: 32px; border-radius: 50%; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; display: none; align-items: center; justify-content: center; transition: var(--transition); font-size: 1.25rem; }
+        .menu-btn:hover { background: #F1F5F9; color: var(--text-primary); }
+        .desktop-actions { display: flex; gap: 0.5rem; justify-content: flex-end; }
+
+        /* Mobile Bottom Sheet */
+        .bottom-sheet-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+        .bottom-sheet-overlay.active { opacity: 1; visibility: visible; }
+        .bottom-sheet { position: fixed; bottom: 0; left: 0; right: 0; background: white; z-index: 2001; border-radius: var(--radius-xl) var(--radius-xl) 0 0; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); padding: 1.5rem; box-shadow: 0 -10px 25px rgba(0,0,0,0.1); }
         .bottom-sheet.active { transform: translateY(0); }
-        
-        .sheet-handle { width: 40px; height: 4px; background: #e5e7eb; border-radius: 2px; margin: 0 auto 1.5rem; }
-        .sheet-header { display: flex; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid #f3f4f6; padding-bottom: 1rem; }
-        .sheet-img { width: 64px; height: 64px; border-radius: 0.5rem; object-fit: cover; }
-        .sheet-info h3 { font-weight: 600; color: var(--dark-color); margin-bottom: 0.25rem; }
-        .sheet-meta { font-size: 0.875rem; color: var(--secondary-color); display: flex; flex-direction: column; gap: 0.25rem; }
-        .sheet-actions { display: grid; gap: 0.75rem; }
-        .sheet-btn { 
-            width: 100%; justify-content: center; padding: 0.875rem; 
-            font-size: 1rem; border-radius: 0.5rem;
-        }
+        .sheet-handle { width: 40px; height: 4px; background: #CBD5E1; border-radius: 99px; margin: 0 auto 1.5rem; }
+        .sheet-header { display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); }
+        .sheet-img { width: 64px; height: 64px; border-radius: var(--radius-md); object-fit: cover; border: 1px solid var(--border-color); }
+        .sheet-info h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem; color: var(--text-primary); }
+        .sheet-info p { font-size: 0.9rem; color: var(--text-secondary); margin: 0; }
+        .sheet-actions { display: flex; flex-direction: column; gap: 0.75rem; }
+        .sheet-btn { width: 100%; justify-content: flex-start; padding: 0.875rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: white; font-size: 1rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.75rem; transition: 0.2s; }
+        .sheet-btn:active { background: #F8FAFC; transform: scale(0.98); }
+        .sheet-btn.delete { color: var(--danger-color); border-color: #FECACA; background: #FEF2F2; }
+        .sheet-btn i { font-size: 1.25rem; }
 
-        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
-        .toast { 
-            padding: 1rem 1.5rem; border-radius: var(--border-radius); 
-            color: white; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); 
-            margin-top: 10px;
-        }
-        .toast.success { background-color: var(--success-color); }
-        .toast.error { background-color: var(--danger-color); }
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; pointer-events: none; display: flex; flex-direction: column; gap: 10px; }
+        .toast { padding: 1rem 1.5rem; background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); animation: slideUp 0.3s ease; display: flex; align-items: center; gap: 1rem; border-left: 4px solid var(--brand-primary); min-width: 300px; pointer-events: auto; }
+        .toast.success { border-left-color: var(--success-color); }
+        .toast.error { border-left-color: var(--danger-color); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .loading-spinner {
-            width: 24px; height: 24px; border: 2px solid #e5e7eb;
-            border-top: 2px solid var(--primary-color); border-radius: 50%;
-            animation: spin 1s linear infinite; margin: 0 auto 1rem;
+        @media (max-width: 1024px) {
+            .dashboard-container { grid-template-columns: 1fr; }
+            .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 85%; max-width: 320px; z-index: 1000; transform: translateX(-100%); box-shadow: var(--shadow-lg); padding: 2rem 1.25rem; }
+            .sidebar.active { transform: translateX(0); }
+            .main-header { padding: 12px 1.5rem; justify-content: space-between; }
+            .nav-logo { display: block; height: 36px; }
+            
+            .menu-toggle { display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; font-size: 1.6rem; color: var(--text-primary); cursor: pointer; border: 1px solid var(--border-color); border-radius: var(--radius-md); background-color: white; }
+            .sidebar-close-btn { display: flex; align-items: center; justify-content: center; position: absolute; top: 1.5rem; right: 1.25rem; font-size: 1.75rem; color: var(--text-secondary); cursor: pointer; border: none; background: none; width: 36px; height: 36px; }
+            
+            .page-container { padding: 1.5rem 1rem; }
+            .content-header { flex-direction: column; align-items: stretch; }
+            .btn-primary { width: 100%; }
+            .search-wrapper { max-width: 100%; }
+            
+            .table-card { border: none; box-shadow: none; background: transparent; }
+            .products-table thead { display: none; }
+            .products-table tr { display: flex; align-items: center; background: white; padding: 1rem; margin-bottom: 1rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); }
+            .products-table td { padding: 0; border: none; display: block; }
+            
+            /* Mobile Layout */
+            .products-table td:nth-child(1) { flex: 1; padding-right: 1rem; } /* Info */
+            .products-table td:nth-child(4) { margin-right: 1rem; } /* Toggle */
+            .products-table td:nth-child(5) { width: auto; } /* Menu */
+            
+            .desktop-only { display: none !important; }
+            .desktop-actions { display: none; }
+            .menu-btn { display: flex; }
+            
+            .prod-info { gap: 0.75rem; }
+            .prod-img { width: 56px; height: 56px; }
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        @media (max-width: 768px) {
-            .container { padding: 0.5rem; }
-            .card { padding: 1rem; border: none; background: transparent; box-shadow: none; }
-            .page-header { flex-direction: column; gap: 1rem; align-items: stretch; }
-            .search-container { max-width: 100%; }
-            .nav-left h1 { font-size: 1.25rem; }
-            
-            /* Mobile Table Adjustments */
-            .table-container { border: none; box-shadow: none; background: transparent; }
-            .products-table { background: white; border-radius: 0.5rem; overflow: hidden; box-shadow: var(--box-shadow); }
-            .products-table thead { display: none; } /* Hide headers on mobile */
-            
-            .products-table td { padding: 1rem; }
-            
-            /* Hide specific columns */
-            .mobile-hidden { display: none !important; }
-            
-            /* Action column adjustments */
-            .desktop-actions { display: none !important; }
-            .mobile-menu-btn { display: block; margin-left: auto; }
-            
-            /* Layout for mobile row */
-            .products-table tr { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0; }
-            .products-table td { border-bottom: none; padding: 0.5rem 1rem; }
-            
-            /* Specific widths for mobile flex layout */
-            .products-table td:nth-child(1) { flex: 1; min-width: 0; } /* Product Info */
-            .products-table td:nth-child(4) { width: auto; padding-right: 0.5rem; } /* Availability */
-            .products-table td:nth-child(5) { width: auto; padding-left: 0; } /* Actions (Dots) */
-            
-            .product-image { width: 40px; height: 40px; }
-            .product-category { display: none; } /* Simplify info */
-        }
+        @media (min-width: 1025px) { .nav-logo { display: none; } }
     </style>
 </head>
 <body>
-    <div id="toast-container"></div>
+    <div class="overlay" id="overlay"></div>
+    <div class="dashboard-container">
+        
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <button class="sidebar-close-btn" id="sidebar-close-btn"><i class='bx bx-x'></i></button>
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" class="logo-image">
+                </div>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html"><i class='bx bx-home-alt'></i> Dashboard</a></li>
+                    <li><a href="#" class="active"><i class='bx bx-package'></i> Inventory</a></li>
+                    <li><a href="#"><i class='bx bx-palette'></i> Customize Site</a></li>
+                    <li><a href="#"><i class='bx bx-clipboard'></i> All Orders</a></li>
+                </ul>
+            </nav>
+            <div class="profile-section" id="profile-section">
+                <div class="profile-content-wrapper">
+                    <img id="sidebar-avatar" src="" class="profile-avatar">
+                    <div class="profile-details">
+                        <span class="profile-name" id="sidebar-name">Loading...</span>
+                        <span class="profile-email" id="sidebar-email">Admin</span>
+                    </div>
+                    <div class="profile-options"><i class='bx bx-chevron-down'></i></div>
+                </div>
+            </div>
+            <div class="profile-popup" id="profile-popup">
+                <div class="popup-header">
+                    <img id="popup-avatar" src="" class="profile-avatar">
+                    <div class="profile-details">
+                        <span class="profile-name" id="popup-name">Loading...</span>
+                        <span class="profile-email" id="popup-email">Admin</span>
+                    </div>
+                </div>
+                <ul class="popup-list">
+                    <li><a href="#"><i class='bx bx-user'></i> Profile</a></li>
+                    <li><a href="#"><i class='bx bx-cog'></i> Settings</a></li>
+                    <li><a href="#" onclick="auth.signOut()" class="logout"><i class='bx bx-log-out'></i> Logout</a></li>
+                </ul>
+            </div>
+        </aside>
+        
+        <!-- MAIN CONTENT -->
+        <main class="main-area">
+            <header class="main-header">
+                <button class="menu-toggle" id="menu-toggle"><i class='bx bx-menu'></i></button>
+                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" class="nav-logo">
+            </header>
+            
+            <div class="page-container">
+                <div class="content-header">
+                    <div class="page-title-wrapper">
+                        <h1 class="page-title" id="page-title">All Products</h1>
+                        <span class="category-badge" id="cat-badge" style="display: none;"></span>
+                    </div>
+                    <button class="btn btn-primary" id="add-btn"><i class='bx bx-plus'></i> Add Product</button>
+                </div>
+                
+                <div class="search-wrapper">
+                    <i class='bx bx-search search-icon'></i>
+                    <input type="text" id="search-input" class="search-input" placeholder="Search products...">
+                </div>
 
-    <!-- Bottom Sheet -->
-    <div class="bottom-sheet-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+                <div class="table-card">
+                    <table class="products-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40%;">Product</th>
+                                <th class="desktop-only" style="width: 15%;">Price</th>
+                                <th class="desktop-only" style="width: 15%; text-align: center;">Variants</th>
+                                <th style="width: 15%; text-align: center;">Status</th>
+                                <th style="width: 15%; text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-tbody">
+                            <tr><td colspan="5" style="text-align: center; padding: 3rem; color: var(--text-secondary);">Loading products...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MOBILE BOTTOM SHEET -->
+    <div class="bottom-sheet-overlay" id="mobile-overlay" onclick="closeMobileSheet()"></div>
     <div class="bottom-sheet" id="mobile-sheet">
         <div class="sheet-handle"></div>
-        <div id="sheet-content">
-            <!-- Content injected by JS -->
-        </div>
+        <div id="sheet-content"></div>
     </div>
 
-    <nav>
-        <div class="nav-left">
-            <h1 onclick="window.location.href='index.html'">ShopSphere</h1>
-        </div>
-        <div id="nav-right" class="nav-right"></div>
-    </nav>
+    <div id="toast-container"></div>
 
-    <div class="container page">
-        <div class="card">
-            <div class="page-header">
-                <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-                    <div style="display: flex; align-items: center;">
-                        <h1 class="page-title" id="products-page-title">Products</h1>
-                        <span class="category-badge" id="category-badge" style="display: none;"></span>
-                    </div>
-                    <!-- Mobile Add Button shown in header row on mobile if preferred, or kept below -->
-                </div>
-                <button class="btn-success" id="add-product-btn" style="width: 100%; justify-content: center; margin-top: 5px;">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 4v16m8-8H4"/>
-                    </svg>
-                    Add Product
-                </button>
-            </div>
-
-            <div class="search-container">
-                <div class="search-icon">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <path d="m21 21-4.3-4.3"></path>
-                    </svg>
-                </div>
-                <input type="text" id="search-products" class="search-input" placeholder="Search products...">
-            </div>
-
-            <div class="table-container">
-                <table class="products-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 40%;">Product</th>
-                            <th class="mobile-hidden" style="width: 15%;">Price</th>
-                            <th class="mobile-hidden" style="width: 10%;">Colors</th>
-                            <th style="width: 15%; text-align: center;">Status</th>
-                            <th style="width: 20%; text-align: right;"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="admin-products-table">
-                        <tr>
-                            <td colspan="5" style="text-align: center; padding: 2rem;">
-                                <div class="loading-spinner"></div>
-                                Loading...
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
-  authDomain: "vastramaya---magic.firebaseapp.com",
-  projectId: "vastramaya---magic",
-  storageBucket: "vastramaya---magic.firebasestorage.app",
-  messagingSenderId: "543460072082",
-  appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
-  measurementId: "G-E39VNDCFVE"
-};
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menu-toggle');
+            const closeBtn = document.getElementById('sidebar-close-btn');
+            const overlay = document.getElementById('overlay');
+            const profileSection = document.getElementById('profile-section');
+            const profilePopup = document.getElementById('profile-popup');
+
+            const toggleMenu = () => {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            };
+
+            if (menuToggle) menuToggle.addEventListener('click', toggleMenu);
+            if (closeBtn) closeBtn.addEventListener('click', toggleMenu);
+            if (overlay) overlay.addEventListener('click', toggleMenu);
+
+            if (profileSection) {
+                profileSection.addEventListener('click', e => {
+                    e.stopPropagation();
+                    profilePopup.classList.toggle('active');
+                    profileSection.classList.toggle('active');
+                });
+                document.addEventListener('click', e => {
+                    if (!profileSection.contains(e.target)) {
+                        profilePopup.classList.remove('active');
+                        profileSection.classList.remove('active');
+                    }
+                });
+            }
+        });
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
+            authDomain: "vastramaya---magic.firebaseapp.com",
+            projectId: "vastramaya---magic",
+            storageBucket: "vastramaya---magic.firebasestorage.app",
+            messagingSenderId: "543460072082",
+            appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
+            measurementId: "G-E39VNDCFVE"
+        };
         const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        let currentUser = null;
         let allProducts = [];
         let currentCategory = null;
-        let filteredProducts = [];
 
-        document.addEventListener('DOMContentLoaded', () => {
-            auth.onAuthStateChanged(user => {
-                currentUser = user;
-                renderNav();
-                if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
-                    window.location.href = 'index.html';
-                    return;
-                }
-                initializePage();
-            });
+        auth.onAuthStateChanged(user => {
+            if (!user || user.email !== ADMIN_EMAIL) {
+                window.location.href = 'index.html';
+                return;
+            }
+            initProfile(user);
+            initPage();
         });
 
-        function initializePage() {
+        function initProfile(user) {
+            const name = user.displayName || 'Admin';
+            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3B82F6&color=fff`;
+            document.getElementById('sidebar-name').textContent = name;
+            document.getElementById('sidebar-email').textContent = user.email;
+            document.getElementById('sidebar-avatar').src = avatar;
+            document.getElementById('popup-name').textContent = name;
+            document.getElementById('popup-email').textContent = user.email;
+            document.getElementById('popup-avatar').src = avatar;
+        }
+
+        function initPage() {
             const params = new URLSearchParams(window.location.search);
             currentCategory = params.get('category');
-            
-            const pageTitle = document.getElementById('products-page-title');
-            const categoryBadge = document.getElementById('category-badge');
-            const addBtn = document.getElementById('add-product-btn');
-            
-            if (!currentCategory) {
-                pageTitle.textContent = "All Products";
-                categoryBadge.style.display = 'none';
-                addBtn.onclick = () => window.location.href = 'product.html';
+            const addBtn = document.getElementById('add-btn');
+
+            if (currentCategory) {
+                document.getElementById('page-title').textContent = 'Products';
+                const badge = document.getElementById('cat-badge');
+                badge.textContent = decodeURIComponent(currentCategory);
+                badge.style.display = 'block';
+                addBtn.onclick = () => window.location.href = `product.html?category=${currentCategory}`;
             } else {
-                const decoded = decodeURIComponent(currentCategory);
-                pageTitle.textContent = "Products";
-                categoryBadge.textContent = decoded;
-                categoryBadge.style.display = 'inline-block';
-                addBtn.onclick = () => window.location.href = `product.html?category=${encodeURIComponent(decoded)}`;
+                addBtn.onclick = () => window.location.href = 'product.html';
             }
 
-            loadAndRenderProducts();
+            loadProducts();
             
-            document.getElementById('search-products').addEventListener('input', (e) => {
+            document.getElementById('search-input').addEventListener('input', (e) => {
                 filterProducts(e.target.value.toLowerCase().trim());
             });
         }
 
-        async function loadAndRenderProducts() {
+        async function loadProducts() {
             try {
-                const snapshot = await db.collection('products').orderBy('name').get();
-                allProducts = snapshot.docs.map(doc => ({ 
+                const snap = await db.collection('products').orderBy('updatedAt', 'desc').get();
+                allProducts = snap.docs.map(doc => ({ 
                     id: doc.id, 
                     ...doc.data(),
-                    colorsCount: (doc.data().colorVariants || []).length
+                    variantCount: (doc.data().colorVariants || []).length
                 }));
                 filterProducts('');
-            } catch (error) {
-                console.error(error);
-                showToast("Failed to load products.", "error");
+            } catch (e) {
+                console.error(e);
+                showToast('Failed to load products', 'error');
             }
         }
 
-        function filterProducts(searchTerm) {
-            if (!searchTerm) {
-                filteredProducts = currentCategory 
-                    ? allProducts.filter(p => p.category === decodeURIComponent(currentCategory))
-                    : allProducts;
-            } else {
-                filteredProducts = allProducts.filter(p => 
-                    p.name.toLowerCase().includes(searchTerm) &&
-                    (!currentCategory || p.category === decodeURIComponent(currentCategory))
-                );
-            }
-            renderProductsTable();
-        }
-
-        function renderProductsTable() {
-            const tableBody = document.getElementById('admin-products-table');
+        function filterProducts(term) {
+            let filtered = allProducts;
             
-            if (filteredProducts.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:2rem; color:#6b7280;">No products found.</td></tr>`;
+            if (currentCategory) {
+                filtered = filtered.filter(p => p.category === decodeURIComponent(currentCategory));
+            }
+            
+            if (term) {
+                filtered = filtered.filter(p => p.name.toLowerCase().includes(term));
+            }
+            
+            renderTable(filtered);
+        }
+
+        function renderTable(products) {
+            const tbody = document.getElementById('products-tbody');
+            if (products.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 3rem; color: var(--text-secondary);">No products found.</td></tr>`;
                 return;
             }
 
-            tableBody.innerHTML = filteredProducts.map(product => {
-                const imageUrl = (product.images && product.images.length > 0) 
-                    ? product.images[0] 
-                    : 'https://via.placeholder.com/50?text=No+Image';
-                
-                const isAvailable = product.isAvailable !== false;
-
+            tbody.innerHTML = products.map(p => {
+                const img = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/100?text=No+Image';
                 return `
-                <tr>
-                    <td>
-                        <div class="product-cell">
-                            <img src="${imageUrl}" alt="" class="product-image">
-                            <div class="product-info">
-                                <div class="product-name">${product.name}</div>
-                                <div class="product-category">${product.category || 'General'}</div>
+                    <tr>
+                        <td>
+                            <div class="prod-info">
+                                <img src="${img}" class="prod-img">
+                                <div>
+                                    <div class="prod-name">${p.name}</div>
+                                    <div class="prod-cat">${p.category || 'General'}</div>
+                                </div>
                             </div>
-                        </div>
-                    </td>
-                    <td class="mobile-hidden" style="font-weight:600;">$${(product.price || 0).toFixed(2)}</td>
-                    <td class="mobile-hidden" style="text-align:center;">
-                        <span class="colors-badge">${product.colorsCount || 0}</span>
-                    </td>
-                    <td style="text-align: center;">
-                        <input type="checkbox" class="availability-toggle" 
-                               data-id="${product.id}" ${isAvailable ? 'checked' : ''}>
-                    </td>
-                    <td>
-                        <div class="actions-container">
-                            <!-- Desktop Buttons -->
-                            <div class="desktop-actions" style="display:flex; gap:0.5rem;">
-                                <button class="btn-secondary" onclick="editProduct('${product.id}')">Edit</button>
-                                <button class="btn-danger" onclick="deleteProduct('${product.id}', '${product.name.replace(/'/g, "\\'")}')">Delete</button>
+                        </td>
+                        <td class="desktop-only"><span class="price-tag">₹${(p.price || 0).toFixed(2)}</span></td>
+                        <td class="desktop-only" style="text-align: center;"><span class="count-badge">${p.variantCount} Variants</span></td>
+                        <td style="text-align: center;">
+                            <label class="toggle-switch">
+                                <input type="checkbox" ${p.isAvailable ? 'checked' : ''} onchange="toggleStatus('${p.id}', this.checked)">
+                                <span class="slider"></span>
+                            </label>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="desktop-actions">
+                                <button class="btn btn-secondary" onclick="window.location.href='product.html?id=${p.id}'">Edit</button>
+                                <button class="btn btn-danger" onclick="deleteProduct('${p.id}', '${p.name.replace(/'/g, "\\'")}')">Delete</button>
                             </div>
-                            <!-- Mobile 3-Dots -->
-                            <button class="mobile-menu-btn" onclick="openMobileMenu('${product.id}')">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="1"></circle>
-                                    <circle cx="12" cy="5" r="1"></circle>
-                                    <circle cx="12" cy="19" r="1"></circle>
-                                </svg>
+                            <button class="menu-btn" onclick="openMobileSheet('${p.id}', '${p.name.replace(/'/g, "\\'")}', '${img}', '${p.category}', '${p.price}')">
+                                <i class='bx bx-dots-vertical-rounded'></i>
                             </button>
-                        </div>
-                    </td>
-                </tr>`;
+                        </td>
+                    </tr>
+                `;
             }).join('');
-
-            document.querySelectorAll('.availability-toggle').forEach(toggle => {
-                toggle.addEventListener('change', async (e) => {
-                    await updateProductAvailability(e.target.dataset.id, e.target.checked);
-                });
-            });
         }
 
-        function openMobileMenu(productId) {
-            const product = allProducts.find(p => p.id === productId);
-            if (!product) return;
-
-            const imageUrl = (product.images && product.images.length > 0) ? product.images[0] : 'https://via.placeholder.com/50';
-            
-            const sheetContent = document.getElementById('sheet-content');
-            sheetContent.innerHTML = `
-                <div class="sheet-header">
-                    <img src="${imageUrl}" class="sheet-img">
-                    <div class="sheet-info">
-                        <h3>${product.name}</h3>
-                        <div class="sheet-meta">
-                            <span>Category: ${product.category || 'Uncategorized'}</span>
-                            <span style="color:var(--dark-color); font-weight:600;">Price: $${(product.price || 0).toFixed(2)}</span>
-                            <span>Colors Variants: ${product.colorsCount || 0}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="sheet-actions">
-                    <button class="btn-secondary sheet-btn" onclick="editProduct('${product.id}')">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                        Edit Product
-                    </button>
-                    <button class="btn-danger sheet-btn" onclick="deleteProduct('${product.id}', '${product.name.replace(/'/g, "\\'")}')">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                        Delete Product
-                    </button>
-                </div>
-            `;
-
-            document.getElementById('mobile-overlay').classList.add('active');
-            document.getElementById('mobile-sheet').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeMobileMenu() {
-            document.getElementById('mobile-overlay').classList.remove('active');
-            document.getElementById('mobile-sheet').classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        async function updateProductAvailability(productId, isAvailable) {
+        async function toggleStatus(id, status) {
             try {
-                await db.collection('products').doc(productId).update({ 
-                    isAvailable: isAvailable,
+                await db.collection('products').doc(id).update({ 
+                    isAvailable: status,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
-                const p = allProducts.find(p => p.id === productId);
-                if(p) p.isAvailable = isAvailable;
-                showToast(isAvailable ? 'Product Available' : 'Product Unavailable');
-            } catch (error) {
-                showToast("Update failed", "error");
-                const toggle = document.querySelector(`.availability-toggle[data-id="${productId}"]`);
-                if (toggle) toggle.checked = !isAvailable;
+                showToast(status ? 'Product visible' : 'Product hidden');
+            } catch (e) {
+                showToast('Status update failed', 'error');
             }
         }
 
-        function editProduct(productId) {
-            window.location.href = `product.html?id=${productId}`;
-        }
-
-        async function deleteProduct(productId, productName) {
-            closeMobileMenu();
-            if (confirm(`Delete "${productName}"?`)) {
+        async function deleteProduct(id, name) {
+            closeMobileSheet();
+            if(confirm(`Delete "${name}"?`)) {
                 try {
-                    await db.collection('products').doc(productId).delete();
-                    showToast('Deleted successfully', 'success');
-                    allProducts = allProducts.filter(p => p.id !== productId);
-                    filterProducts(document.getElementById('search-products').value);
-                } catch(error) { 
-                    showToast("Delete failed", "error"); 
+                    await db.collection('products').doc(id).delete();
+                    allProducts = allProducts.filter(p => p.id !== id);
+                    filterProducts(document.getElementById('search-input').value);
+                    showToast('Product deleted');
+                } catch(e) {
+                    showToast('Delete failed', 'error');
                 }
             }
         }
-        
-        function renderNav() {
-            const navRight = document.getElementById('nav-right');
-            if (currentUser && currentUser.email === ADMIN_EMAIL) {
-                navRight.innerHTML = `
-                    <button class="nav-icon" onclick="window.location.href='manage-category.html'">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+
+        // Mobile Sheet Logic
+        function openMobileSheet(id, name, img, cat, price) {
+            const content = document.getElementById('sheet-content');
+            content.innerHTML = `
+                <div class="sheet-header">
+                    <img src="${img}" class="sheet-img">
+                    <div class="sheet-info">
+                        <h3>${name}</h3>
+                        <p>${cat} • ₹${Number(price).toFixed(2)}</p>
+                    </div>
+                </div>
+                <div class="sheet-actions">
+                    <button class="sheet-btn" onclick="window.location.href='product.html?id=${id}'">
+                        <i class='bx bx-edit'></i> Edit Product
                     </button>
-                    <button class="nav-icon" onclick="auth.signOut()">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                    </button>`;
-            }
+                    <button class="sheet-btn delete" onclick="deleteProduct('${id}', '${name.replace(/'/g, "\\'")}')">
+                        <i class='bx bx-trash'></i> Delete Product
+                    </button>
+                </div>
+            `;
+            document.getElementById('mobile-overlay').classList.add('active');
+            document.getElementById('mobile-sheet').classList.add('active');
         }
 
-        function showToast(message, type = 'success') {
+        function closeMobileSheet() {
+            document.getElementById('mobile-overlay').classList.remove('active');
+            document.getElementById('mobile-sheet').classList.remove('active');
+        }
+
+        function showToast(msg, type='success') {
             const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.textContent = message;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.innerHTML = `<i class='bx ${type==='success'?'bx-check-circle':'bx-error-circle'}'></i> <span>${msg}</span>`;
+            container.appendChild(el);
+            setTimeout(() => el.remove(), 3000);
         }
     </script>
 </body>
