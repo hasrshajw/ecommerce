@@ -125,6 +125,7 @@
         .page-container { max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%; padding-bottom: 3rem; }
         .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; gap: 1rem; }
         .page-title { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); }
+        .header-actions { display: flex; gap: 1rem; }
 
         .form-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
         .form-col { display: flex; flex-direction: column; gap: 2rem; }
@@ -251,8 +252,9 @@
             
             .page-container { padding: 1rem; padding-bottom: 100px; }
             .content-header { flex-direction: column; align-items: flex-start; }
-            .content-header div { width: 100%; display: flex; gap: 0.5rem; margin-top: 0.5rem; }
-            .content-header div .btn { flex: 1; }
+            
+            /* Hide Desktop Header Actions on Mobile */
+            .header-actions { display: none; }
 
             .form-grid { display: flex; flex-direction: column; }
             .form-col { display: contents; }
@@ -335,7 +337,7 @@
             <div class="page-container">
                 <div class="content-header">
                     <h1 class="page-title" id="editor-title">Product Editor</h1>
-                    <div>
+                    <div class="header-actions">
                         <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
                         <button type="button" class="btn btn-primary" id="save-btn">Save Product</button>
                     </div>
@@ -502,7 +504,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="closeReviewModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="addReview()">Save Review</button>
+                <button type="button" class="btn btn-primary" id="review-save-btn" onclick="addReview()">Add Review</button>
             </div>
         </div>
     </div>
@@ -684,25 +686,33 @@
         function openReviewModal(index = null) {
             editingReviewIndex = index;
             const isEdit = index !== null;
-            document.getElementById('review-modal-title').textContent = isEdit ? 'Edit Review' : 'Add Customer Review';
+            const title = document.getElementById('review-modal-title');
+            const btn = document.getElementById('review-save-btn');
             
             if(isEdit) {
-                const rev = productReviews[index];
-                document.getElementById('review-name').value = rev.name;
-                document.getElementById('review-text').value = rev.comment;
-                document.getElementById('review-rating').value = rev.rating;
-                updateStars(rev.rating);
+                if (productReviews[index]) {
+                    const rev = productReviews[index];
+                    document.getElementById('review-name').value = rev.name;
+                    document.getElementById('review-text').value = rev.comment;
+                    document.getElementById('review-rating').value = rev.rating;
+                    updateStars(rev.rating);
+                    title.textContent = 'Edit Review';
+                    btn.textContent = 'Update Review';
+                }
             } else {
                 document.getElementById('review-name').value = '';
                 document.getElementById('review-text').value = '';
                 document.getElementById('review-rating').value = '0';
                 updateStars(0);
+                title.textContent = 'Add Customer Review';
+                btn.textContent = 'Add Review';
             }
             document.getElementById('review-modal').style.display = 'flex';
         }
 
         function closeReviewModal() {
             document.getElementById('review-modal').style.display = 'none';
+            editingReviewIndex = null;
         }
 
         document.querySelectorAll('#star-rating i').forEach(star => {
@@ -728,7 +738,7 @@
             
             const reviewData = { name, rating, comment, date: new Date().toISOString() };
             
-            if(editingReviewIndex !== null) {
+            if(editingReviewIndex !== null && productReviews[editingReviewIndex]) {
                 productReviews[editingReviewIndex] = reviewData;
                 showToast('Review updated');
             } else {
@@ -741,7 +751,7 @@
 
         function renderReviewsList() {
             const container = document.getElementById('reviews-list');
-            if (productReviews.length === 0) {
+            if (!productReviews || productReviews.length === 0) {
                 container.innerHTML = `<div style="color:var(--text-secondary); font-style:italic; padding:1rem; text-align:center;">No reviews added yet.</div>`;
                 return;
             }
@@ -750,8 +760,8 @@
                     <div class="review-header">
                         <span>${r.name}</span>
                         <div style="display:flex; gap:0.5rem;">
-                            <button class="btn-icon" onclick="openReviewModal(${i})"><i class='bx bx-edit-alt'></i></button>
-                            <button class="btn-icon" onclick="removeReview(${i})" style="color:var(--danger-color);"><i class='bx bx-trash'></i></button>
+                            <button type="button" class="btn-icon" onclick="openReviewModal(${i})"><i class='bx bx-edit-alt'></i></button>
+                            <button type="button" class="btn-icon" onclick="removeReview(${i})" style="color:var(--danger-color);"><i class='bx bx-trash'></i></button>
                         </div>
                     </div>
                     <div class="star-display">
@@ -848,6 +858,7 @@
 
         function closeColorModal() {
             document.getElementById('color-modal').style.display = 'none';
+            editingVariantIndex = null;
         }
 
         document.getElementById('color-swatch-input').onchange = (e) => {
