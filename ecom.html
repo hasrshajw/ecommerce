@@ -21,169 +21,632 @@
             --red-light: #fef2f2;
             --border-color: #eaeaea;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--text); background-color: var(--bg-light); }
-        .promo-banner { background: var(--red); color: var(--white); padding: 0.5rem; position: fixed; top: 0; left: 0; width: 100%; z-index: 1100; overflow: hidden; }
-        .promo-text { display: inline-block; white-space: nowrap; animation: scroll-text 15s linear infinite; font-size: 0.875rem; font-weight: 500; }
-        @keyframes scroll-text { 0% { transform: translateX(100vw); } 100% { transform: translateX(-100%); } }
-        .navbar { position: fixed; top: 32px; left: 0; width: 100%; background: var(--white); box-shadow: var(--shadow); z-index: 1000; padding: 1rem; }
-        .nav-container { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; }
-        .desktop-nav { display: flex; align-items: center; width: 100%; }
-        .nav-logo { font-weight: bold; font-size: 1.5rem; color: var(--primary); margin-right: 2rem; display: flex; align-items: center; }
-        .nav-logo img { height: 40px; width: auto; }
-        .nav-links { display: flex; gap: 2rem; margin-right: auto; }
-        .nav-links a { text-decoration: none; color: var(--text); font-weight: 500; transition: color 0.3s ease; }
-        .nav-links a:hover { color: var(--primary); }
-        .nav-search { display: flex; align-items: center; background: var(--bg-light); border-radius: 8px; padding: 0.5rem 1rem; margin-right: 1rem; transition: all 0.3s ease; border: 1px solid transparent; width: 300px; }
-        .nav-search:focus-within { border-color: var(--primary); background: var(--white); }
-        .nav-search input { border: none; background: transparent; outline: none; padding: 0 0.5rem; width: 100%; }
-        .nav-icons { display: flex; gap: 0.5rem; }
-        .nav-icon { background: none; border: none; cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: background-color 0.3s ease; position: relative; }
-        .nav-icon:hover { background: var(--bg-light); }
-        .cart-count { position: absolute; top: 0; right: 0; background: var(--red); color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; }
-        .mobile-nav { display: none; align-items: center; justify-content: space-between; width: 100%; }
-        .mobile-nav-left, .mobile-nav-right { display: flex; gap: 0.5rem; }
-        .mobile-nav-center { flex: 1; text-align: center; }
-        .mobile-logo { font-weight: bold; font-size: 1.5rem; color: var(--primary); display: flex; align-items: center; justify-content: center; }
-        .mobile-logo img { height: 35px; width: auto; }
-        .hamburger { background: none; border: none; cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: background-color 0.3s ease; }
-        .hamburger:hover { background: var(--bg-light); }
-        .hamburger span { display: block; width: 20px; height: 2px; background: var(--text); margin: 4px 0; transition: all 0.3s ease; }
-        .search-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); z-index: 1200; display: none; flex-direction: column; }
-        .search-header { display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid var(--bg-light); }
-        .search-input { flex: 1; display: flex; align-items: center; background: var(--bg-light); border-radius: 8px; padding: 0.75rem 1rem; margin: 0 1rem; }
-        .search-input input { border: none; background: transparent; outline: none; padding: 0 0.5rem; width: 100%; font-size: 1rem; }
-        .close-search { background: none; border: none; cursor: pointer; padding: 0.5rem; }
-        .mobile-menu { position: fixed; top: 0; left: 0; width: 80%; max-width: 300px; height: 100%; background: var(--white); z-index: 1200; transform: translateX(-100%); transition: transform 0.3s ease; padding: 2rem; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); overflow-y: auto; }
-        .mobile-menu.active { transform: translateX(0); }
-        .mobile-menu-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--bg-light); }
-        .mobile-menu-title { font-size: 1.25rem; font-weight: 600; }
-        .close-menu { background: none; border: none; cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: background-color 0.3s ease; }
-        .close-menu:hover { background: var(--bg-light); }
-        .mobile-menu-links { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
-        .mobile-menu-links a { text-decoration: none; color: var(--text); font-size: 1.125rem; font-weight: 500; padding: 0.75rem 0; border-bottom: 1px solid var(--bg-light); transition: color 0.3s ease; }
-        .mobile-menu-links a:hover { color: var(--primary); }
-        .cart-sidebar { position: fixed; top: 0; right: 0; width: 80%; max-width: 400px; height: 100%; background: var(--white); z-index: 1200; transform: translateX(100%); transition: transform 0.3s ease; padding: 2rem; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); overflow-y: auto; }
-        .cart-sidebar.active { transform: translateX(0); }
-        .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--bg-light); }
-        .cart-title { font-size: 1.25rem; font-weight: 600; }
-        .close-cart { background: none; border: none; cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: background-color 0.3s ease; }
-        .close-cart:hover { background: var(--bg-light); }
-        .cart-items { display: flex; flex-direction: column; gap: 1rem; }
-        .cart-item { display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--bg-light); }
-        .cart-item img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }
-        .cart-item-details { flex: 1; }
-        .cart-item-title { font-weight: 500; margin-bottom: 0.5rem; }
-        .cart-item-price { color: var(--primary); font-weight: 600; }
-        .cart-footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--bg-light); }
-        .cart-total { display: flex; justify-content: space-between; font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem; }
-        .checkout-btn { width: 100%; padding: 1rem; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease; }
-        .checkout-btn:hover { background: var(--primary-dark); }
-        .hero { position: relative; width: 100%; height: 100vh; max-height: 800px; overflow: hidden; background-color: var(--bg-light); margin-top: 110px; }
-        .carousel { position: relative; width: 100%; height: 100%; }
-        .carousel-slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); transform: translateX(100%) scale(0.9); }
-        .carousel-slide.active { opacity: 1; transform: translateX(0) scale(1); z-index: 1; }
-        .carousel-slide.prev { opacity: 0.7; transform: translateX(-100%) scale(0.9); z-index: 0; }
-        .carousel-slide.next { opacity: 0.7; transform: translateX(100%) scale(0.9); z-index: 0; }
-        .slide-image { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .mobile-image { display: none; }
-        .carousel-controls { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.5rem; z-index: 3; }
-        .carousel-indicator { width: 40px; height: 4px; border-radius: 2px; background-color: rgba(255, 255, 255, 0.5); border: none; cursor: pointer; transition: background-color 0.3s ease; overflow: hidden; position: relative; }
-        .carousel-indicator.active { background-color: rgba(255, 255, 255, 0.8); }
-        .carousel-indicator.active::after { content: ''; position: absolute; top: 0; left: 0; height: 100%; width: 100%; background-color: var(--white); animation: loading 5s linear; transform-origin: left; }
-        @keyframes loading { 0% { transform: scaleX(0); } 100% { transform: scaleX(1); } }
-        .carousel-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; display: flex; justify-content: space-between; padding: 0 1.5rem; z-index: 3; }
-        .carousel-button { width: 50px; height: 50px; border-radius: 50%; background-color: rgba(255, 255, 255, 0.8); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background-color 0.3s ease; box-shadow: var(--shadow); }
-        .carousel-button:hover { background-color: var(--white); }
-        .carousel-button svg { width: 24px; height: 24px; fill: var(--text); }
-        .category-section { padding: 3rem 1rem; max-width: 1200px; margin: 0 auto; }
-        .section-title { text-align: center; font-size: 2rem; margin-bottom: 2rem; color: var(--text); }
-        .category-wrapper { position: relative; max-width: 100%; overflow: hidden; }
-        .category-container { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 2rem; transition: transform 0.3s ease; }
-        .category { text-align: center; cursor: pointer; transition: transform 0.3s ease; flex-shrink: 0; position: relative; }
-        .category:hover { transform: scale(1.05); }
-        .category .category-image-wrapper { position: relative; }
-        .category img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; transition: 0.3s; border: 2px solid var(--bg-light); }
-        .category:hover img { border-color: var(--primary); }
-        .category span { display: block; margin-top: 0.75rem; font-size: 1rem; color: var(--text); font-weight: 500; }
-        .category-wishlist-btn { position: absolute; top: 5px; right: 5px; width: 32px; height: 32px; border-radius: 50%; background-color: white; display: flex; align-items: center; justify-content: center; border: none; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); cursor: pointer; transition: all 0.2s; z-index: 1; }
-        .category-wishlist-btn:hover { background-color: var(--bg-light); transform: scale(1.1); }
-        .category-wishlist-btn i { color: var(--text-light); font-size: 14px; }
-        .category-wishlist-btn.active i { color: var(--red); }
-        .category-swatches { position: absolute; bottom: 10px; left: 10px; background-color: rgba(255, 255, 255, 0.7); backdrop-filter: blur(5px); border-radius: 8px; padding: 4px; display: flex; gap: 4px; }
-        .category-swatch { width: 12px; height: 12px; border-radius: 4px; }
-        .arrow { position: absolute; top: 50%; transform: translateY(-50%); background: var(--white); border: 1px solid var(--bg-light); border-radius: 50%; width: 40px; height: 40px; justify-content: center; align-items: center; cursor: pointer; display: none; z-index: 10; box-shadow: var(--shadow); transition: all 0.3s ease; }
-        .arrow:hover { background: var(--primary); color: var(--white); }
-        .arrow.left { left: 10px; }
-        .arrow.right { right: 10px; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1100; display: none; }
-        .overlay.active { display: block; }
-        .slide-link { display: block; width: 100%; height: 100%; }
-        .category-link { display: block; text-decoration: none; color: inherit; }
-        .bestsellers-section { padding: 3rem 1rem; max-width: 1200px; margin: 0 auto; background-color: var(--bg-light); }
-        .heading-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .heading-row h2 { margin: 0; font-size: 26px; font-weight: 700; }
-        .heading-row a { text-decoration: none; font-weight: 600; color: var(--primary); transition: color 0.2s; }
-        .heading-row a:hover { color: var(--red); }
-        .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
-        .product-card { background: var(--white); border-radius: 28px; overflow: hidden; box-shadow: 0 16px 50px rgba(0, 0, 0, 0.08); transition: all 0.3s ease; position: relative; display: flex; flex-direction: column; }
-        .product-card:hover { box-shadow: 0 24px 60px rgba(0, 0, 0, 0.1); transform: translateY(-5px); }
-        .image-container { position: relative; width: 100%; padding-top: 125%; overflow: hidden; }
-        .product-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
-        .product-card:hover .product-image { transform: scale(1.05); }
-        .badge { position: absolute; top: 16px; left: 16px; background-color: var(--red); color: white; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 8px; z-index: 1; }
-        .badge.new { background-color: #2ecc71; }
-        .wishlist-btn { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%; background-color: rgba(255, 255, 255, 0.8); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); cursor: pointer; transition: all 0.2s; z-index: 1; }
-        .wishlist-btn:hover { transform: scale(1.1); }
-        .wishlist-btn i { color: var(--text); font-size: 15px; }
-        .wishlist-btn.active i { color: var(--red); font-weight: 900; }
-        .color-swatches { position: absolute; bottom: 12px; left: 12px; background-color: rgba(255, 255, 255, 0.7); backdrop-filter: blur(8px); border-radius: 12px; padding: 6px; display: flex; gap: 6px; border: 1px solid rgba(255, 255, 255, 0.2); }
-        .swatch { width: 20px; height: 20px; border-radius: 6px; cursor: pointer; border: 1px solid rgba(0,0,0,0.1); }
-        .product-info { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
-        .title-block h1 { font-size: 16px; font-weight: 500; color: var(--text); line-height: 1.4; margin: 0; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 44px; }
-        .price-container { display: flex; align-items: baseline; gap: 8px; margin-bottom: 16px; }
-        .current-price { font-weight: 700; font-size: 18px; color: var(--text); }
-        .old-price { font-size: 14px; color: var(--text-light); text-decoration: line-through; }
-        .discount { font-size: 12px; color: var(--red); font-weight: 700; }
-        .rating { display: flex; align-items: center; margin-bottom: 12px; }
-        .stars { color: #ffb300; font-size: 13px; margin-right: 6px; }
-        .rating-count { font-size: 12px; color: var(--text-light); }
-        .size-selector { display: none; }
-        .product-footer { display: flex; gap: 12px; margin-top: auto; }
-        .btn { border: none; padding: 14px 0; border-radius: 14px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.25s ease; flex-grow: 1; text-align: center; }
-        .add-to-cart-btn { background-color: transparent; color: var(--text); border: 2px solid var(--border-color); }
-        .add-to-cart-btn:hover { background-color: var(--border-color); transform: translateY(-2px); }
-        .buy-now-btn { background-color: var(--text); color: var(--white); }
-        .buy-now-btn:hover { background-color: #333; transform: translateY(-2px); }
-        .scroll-section { padding: 3rem 1rem; max-width: 1200px; margin: 0 auto; background-color: var(--white); }
-        .scroll-container { position: relative; overflow: hidden; }
-        .scroll-products { display: flex; gap: 20px; overflow-x: auto; scroll-behavior: smooth; padding: 10px 0; scrollbar-width: none; }
-        .scroll-products::-webkit-scrollbar { display: none; }
-        .scroll-product { flex: 0 0 280px; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); transition: all 0.3s ease; display: flex; flex-direction: column; }
-        .scroll-product:hover { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12); transform: translateY(-5px); }
-        .scroll-image-container { position: relative; width: 100%; padding-top: 125%; overflow: hidden; background-color: #f8f9fa; }
-        .scroll-product-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
-        .scroll-product:hover .scroll-product-image { transform: scale(1.05); }
-        .scroll-product-info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
-        .scroll-product-title { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .scroll-product-price { display: flex; align-items: center; margin-bottom: 8px; }
-        .scroll-current-price { font-weight: 700; font-size: 16px; color: var(--text); }
-        .scroll-original-price { font-size: 13px; color: var(--text-light); text-decoration: line-through; margin-left: 6px; }
-        .scroll-discount { font-size: 11px; color: var(--red); font-weight: 700; margin-left: 6px; background-color: rgba(220, 38, 38, 0.1); padding: 2px 6px; border-radius: 10px; }
-        .scroll-product-footer { display: flex; gap: 10px; margin-top: auto; padding-top: 10px; }
-        .scroll-section .arrow { display: flex; top: 50%; transform: translateY(-50%); }
-        .handpicked-section { display: flex; justify-content: center; align-items: center; gap: 60px; padding: 60px 20px; background-color: var(--white); max-width: 1200px; margin: 0 auto; }
-        .row-images { display: flex; gap: 25px; }
-        .row-images img { width: 240px; height: 420px; object-fit: cover; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
-        .left-up { transform: translateY(-35px); }
-        .right-up { transform: translateY(-35px); }
-        .center-box { text-align: center; max-width: 360px; }
-        .center-box h2 { font-size: 40px; font-family: "Playfair Display", serif; color: #0a9b9b; }
-        .center-box h3 { font-size: 40px; color: #ff4b91; font-family: "Playfair Display", serif; margin-top: -10px; }
-        .center-box p { margin-top: 15px; font-weight: 500; color: #444; }
-        .handpicked-section .btn { background: linear-gradient(135deg, #ff4b91, #ff6fb0); color: white; padding: 14px 35px; border-radius: 30px; border: none; cursor: pointer; margin-top: 25px; font-size: 16px; box-shadow: 0 4px 12px rgba(255, 75, 145, 0.4); transition: 0.2s ease; }
-        .handpicked-section .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 18px rgba(255, 75, 145, 0.45); }
-        .mobile-row { display: none; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text);
+            background-color: var(--bg-light);
+        }
+
+        .promo-banner {
+            background: var(--red);
+            color: var(--white);
+            padding: 0.5rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1100;
+            overflow: hidden;
+        }
+
+        .promo-text {
+            display: inline-block;
+            white-space: nowrap;
+            animation: scroll-text 15s linear infinite;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        @keyframes scroll-text {
+            0% { transform: translateX(100vw); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .navbar {
+            position: fixed;
+            top: 32px;
+            left: 0;
+            width: 100%;
+            background: var(--white);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .desktop-nav {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .nav-logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-right: 2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            margin-right: auto;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-search {
+            display: flex;
+            align-items: center;
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            width: 300px;
+        }
+
+        .nav-search:focus-within {
+            border-color: var(--primary);
+            background: var(--white);
+        }
+
+        .nav-search input {
+            border: none;
+            background: transparent;
+            outline: none;
+            padding: 0 0.5rem;
+            width: 100%;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .nav-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-icon:hover {
+            background: var(--bg-light);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--red);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-nav {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .mobile-nav-left, .mobile-nav-right {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .mobile-nav-center {
+            flex: 1;
+            text-align: center;
+        }
+
+        .mobile-logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-logo img {
+            height: 35px;
+            width: auto;
+        }
+
+        .hamburger {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .hamburger:hover {
+            background: var(--bg-light);
+        }
+
+        .hamburger span {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: var(--text);
+            margin: 4px 0;
+            transition: all 0.3s ease;
+        }
+
+        .search-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            z-index: 1200;
+            display: none;
+            flex-direction: column;
+        }
+
+        .search-header {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--bg-light);
+        }
+
+        .search-input {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin: 0 1rem;
+        }
+
+        .search-input input {
+            border: none;
+            background: transparent;
+            outline: none;
+            padding: 0 0.5rem;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        .close-search {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 80%;
+            max-width: 300px;
+            height: 100%;
+            background: var(--white);
+            z-index: 1200;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--bg-light);
+        }
+
+        .mobile-menu-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .close-menu {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .close-menu:hover {
+            background: var(--bg-light);
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .mobile-menu-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-size: 1.125rem;
+            font-weight: 500;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--bg-light);
+            transition: color 0.3s ease;
+        }
+
+        .mobile-menu-links a:hover {
+            color: var(--primary);
+        }
+
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 80%;
+            max-width: 400px;
+            height: 100%;
+            background: var(--white);
+            z-index: 1200;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .cart-sidebar.active {
+            transform: translateX(0);
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--bg-light);
+        }
+
+        .cart-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .close-cart {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .close-cart:hover {
+            background: var(--bg-light);
+        }
+
+        .cart-items {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--bg-light);
+        }
+
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-title {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-item-price {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .cart-footer {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--bg-light);
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .checkout-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            max-height: 800px;
+            overflow: hidden;
+            background-color: var(--bg-light);
+            margin-top: 110px;
+        }
+
+        .carousel {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .carousel-slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateX(100%) scale(0.9);
+        }
+
+        .carousel-slide.active {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+            z-index: 1;
+        }
+
+        .carousel-slide.prev {
+            opacity: 0.7;
+            transform: translateX(-100%) scale(0.9);
+            z-index: 0;
+        }
+
+        .carousel-slide.next {
+            opacity: 0.7;
+            transform: translateX(100%) scale(0.9);
+            z-index: 0;
+        }
+
+        .slide-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .mobile-image {
+            display: none;
+        }
+
+        .carousel-controls {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.5rem;
+            z-index: 3;
+        }
+
+        .carousel-indicator {
+            width: 40px;
+            height: 4px;
+            border-radius: 2px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .carousel-indicator.active {
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .carousel-indicator.active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: var(--white);
+            animation: loading 5s linear;
+            transform-origin: left;
+        }
+
+        @keyframes loading {
+            0% { transform: scaleX(0); }
+            100% { transform: scaleX(1); }
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            z-index: 3;
+        }
+
+        .carousel-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .carousel-button:hover {
+            background-color: var(--white);
+        }
+
+        .carousel-button svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--text);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .category-section {
+            padding: 3rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--text);
+        }
+
+        .category-wrapper {
+            position: relative;
+            max-width: 100%;
+        }
+
+        .category-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .category {
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .category:hover {
+            transform: scale(1.05);
+        }
+
+        .category img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            transition: 0.3s;
+            border: 2px solid var(--bg-light);
+        }
+
+        .category:hover img {
+            border-color: var(--primary);
+        }
+
+        .category span {
+            display: block;
+            margin-top: 0.75rem;
+            font-size: 1rem;
+            color: var(--text);
+            font-weight: 500;
+        }
+
         @media (max-width: 768px) {
             .desktop-nav { display: none; }
             .mobile-nav { display: flex; }
@@ -193,40 +656,320 @@
             .carousel-button { width: 40px; height: 40px; }
             .hero { margin-top: 110px; }
             .category-wrapper { padding: 0; }
-            .category-container { flex-wrap: nowrap; overflow-x: auto; scroll-behavior: smooth; gap: 1.5rem; justify-content: flex-start; padding: 0 1.5rem; }
+            .category-container {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                scroll-behavior: smooth;
+                gap: 1.5rem;
+                justify-content: flex-start;
+                padding: 0 1.5rem;
+            }
             .category-container::-webkit-scrollbar { display: none; }
             .category img { width: 90px; height: 90px; }
             .category span { font-size: 0.875rem; }
             .arrow { display: flex; }
-            .bestsellers-section { padding: 2rem 1rem; }
-            .heading-row { margin-bottom: 20px; }
-            .heading-row h2 { font-size: 22px; }
-            .heading-row a { font-size: 14px; }
-            .bestsellers-section .product-grid { display: flex; gap: 16px; overflow-x: auto; scroll-behavior: smooth; padding-bottom: 10px; scrollbar-width: none; }
-            .bestsellers-section .product-grid::-webkit-scrollbar { display: none; }
-            .bestsellers-section .product-card { flex: 0 0 220px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); }
-            .image-container { padding-top: 130%; }
-            .badge { top: 12px; left: 12px; font-size: 10px; }
-            .wishlist-btn { top: 12px; right: 12px; width: 32px; height: 32px; }
-            .product-info { padding: 12px; }
-            .rating { margin-bottom: 6px; }
-            .stars { font-size: 11px; }
-            .rating-count { font-size: 11px; }
-            .title-block h1 { font-size: 13px; margin-bottom: 4px; min-height: 38px; }
-            .price-container { margin-bottom: 10px; }
-            .current-price { font-size: 15px; }
-            .old-price { font-size: 12px; }
-            .size-selector { display: none; }
-            .product-footer { flex-direction: row; gap: 8px; }
-            .btn { font-size: 13px; padding: 12px 0; border-radius: 12px; }
-            .scroll-product { flex: 0 0 220px; }
-            .scroll-product-info { padding: 12px; }
-            .scroll-product-title { font-size: 13px; }
-            .scroll-current-price { font-size: 15px; }
-            .scroll-original-price { font-size: 12px; }
-            .scroll-product-footer .btn { font-size: 12px; padding: 10px 0; border-radius: 10px; }
         }
-        @media(max-width: 900px) {
+
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--white);
+            border: 1px solid var(--bg-light);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            display: none;
+            z-index: 10;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .arrow:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+        .arrow.left { left: 10px; }
+        .arrow.right { right: 10px; }
+
+        @media (max-width: 768px) {
+            .arrow { display: flex; }
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1100;
+            display: none;
+        }
+        .overlay.active { display: block; }
+
+        .slide-link { display: block; width: 100%; height: 100%; }
+        .category-link { display: block; text-decoration: none; color: inherit; }
+
+        .bestsellers-section {
+            padding: 3rem 0;
+            background-color: var(--white);
+        }
+
+        .heading-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .heading-row h2 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 700;
+        }
+        
+        .heading-row a {
+            text-decoration: none;
+            font-weight: 600;
+            color: var(--primary);
+            transition: color 0.2s;
+        }
+        
+        .heading-row a:hover { color: var(--red); }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            padding: 10px 0;
+        }
+        
+        .product-card {
+            background: var(--white);
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 16px 50px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-card:hover {
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+        }
+        
+        .image-container {
+            position: relative;
+            width: 100%;
+            padding-top: 125%;
+            overflow: hidden;
+        }
+        
+        .product-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+        
+        .badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background-color: var(--red);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 8px;
+            z-index: 1;
+        }
+        
+        .badge.new {
+            background-color: #2ecc71;
+        }
+        
+        .wishlist-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 1;
+        }
+        
+        .wishlist-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .wishlist-btn i {
+            color: var(--text);
+            font-size: 15px;
+        }
+        
+        .wishlist-btn.active i {
+            color: var(--red);
+            font-weight: 900;
+        }
+
+        .color-swatches {
+            position: absolute;
+            bottom: 12px;      
+            left: 12px;       
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
+            padding: 6px;
+            display: flex;
+            gap: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .swatch {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .product-info {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .title-block h1 {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text);
+            line-height: 1.4;
+            margin: 0;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 44px;
+        }
+        
+        .price-container {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .current-price {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text);
+        }
+        
+        .old-price {
+            font-size: 14px;
+            color: var(--text-light);
+            text-decoration: line-through;
+        }
+        
+        .discount {
+            font-size: 12px;
+            color: var(--red);
+            font-weight: 700;
+        }
+        
+        .rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .stars {
+            color: #ffb300;
+            font-size: 13px;
+            margin-right: 6px;
+        }
+        
+        .rating-count {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .size-selector { display: none; margin-bottom: 16px; }
+        .product-footer { display: flex; gap: 12px; margin-top: auto; }
+
+        .btn {
+            border: none;
+            padding: 14px 0;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .add-to-cart-btn {
+            background-color: transparent;
+            color: var(--text);
+            border: 2px solid var(--border-color);
+        }
+        .add-to-cart-btn:hover { background-color: var(--border-color); transform: translateY(-2px); }
+
+        .buy-now-btn { background-color: var(--text); color: var(--white); }
+        .buy-now-btn:hover { background-color: #333; transform: translateY(-2px); }
+
+        .scroll-section {
+            padding: 3rem 0;
+            background-color: var(--bg-light);
+        }
+
+        .scroll-container { 
+            position: relative; 
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .scroll-products {
+            display: flex;
+            gap: 24px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 10px 1rem;
+            scrollbar-width: none;
+        }
+
+        .scroll-products::-webkit-scrollbar { display: none; }
+
+        .scroll-product {
+            flex: 0 0 280px;
+        }
+
+        @media (max-width: 900px) {
             .handpicked-section { flex-direction: column; gap: 20px; padding: 30px 12px; }
             .row-images { display: none; }
             .mobile-row { display: flex; justify-content: space-between; width: 100%; padding: 0 4px; gap: 6px; }
@@ -237,21 +980,262 @@
             .center-box p { font-size: 13px; color: #555; margin: 8px 0 15px; }
             .handpicked-section .btn { width: 100%; padding: 13px 0; font-size: 15px; border-radius: 12px; background: linear-gradient(135deg, #ff4b91, #ff78b2); box-shadow: 0 4px 14px rgba(255, 75, 145, 0.35); }
         }
+
+        @media (max-width: 768px) {
+            .bestsellers-section { padding: 2rem 0; }
+            .scroll-section { padding: 2rem 0; }
+            .heading-row { margin-bottom: 1rem; }
+            .heading-row h2 { font-size: 22px; }
+            .heading-row a { font-size: 14px; }
+            
+            .bestsellers-section .product-grid {
+                display: flex;
+                gap: 16px;
+                overflow-x: auto;
+                scroll-behavior: smooth;
+                padding: 10px 1rem;
+                scrollbar-width: none;
+                grid-template-columns: none;
+            }
+            .bestsellers-section .product-grid::-webkit-scrollbar { display: none; }
+            
+            .product-card { border-radius: 20px !important; }
+            .scroll-product, .bestsellers-section .product-card { flex: 0 0 220px; }
+
+            .image-container { padding-top: 130%; }
+            .badge { top: 12px; left: 12px; font-size: 10px; }
+            .wishlist-btn { top: 12px; right: 12px; width: 32px; height: 32px; }
+            .product-info { padding: 12px; }
+            .rating { margin-bottom: 6px; }
+            .stars { font-size: 11px; }
+            .rating-count { font-size: 11px; }
+            .title-block h1 { font-size: 14px; margin-bottom: 4px; min-height: 40px; }
+            .price-container { margin-bottom: 12px; }
+            .current-price { font-size: 16px; }
+            .old-price { font-size: 12px; }
+            .size-selector { display: none; }
+            .product-footer { flex-direction: row; gap: 8px; }
+            .btn { font-size: 13px; padding: 12px 0; border-radius: 12px; }
+            
+            .scroll-products { gap: 16px; }
+        }
+
+        .handpicked-section {
+            padding: 60px 0;
+            background-color: var(--white);
+        }
+        .row-images { display: flex; gap: 25px; }
+        .row-images img {
+            width: 240px;
+            height: 420px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .left-up { transform: translateY(-35px); }
+        .right-up { transform: translateY(-35px); }
+        .center-box { text-align: center; max-width: 360px; }
+        .center-box h2 { font-size: 40px; font-family: "Playfair Display", serif; color: #0a9b9b; }
+        .center-box h3 { font-size: 40px; color: #ff4b91; font-family: "Playfair Display", serif; margin-top: -10px; }
+        .center-box p { margin-top: 15px; font-weight: 500; color: #444; }
+        .handpicked-section .btn {
+            background: linear-gradient(135deg, #ff4b91, #ff6fb0);
+            color: white;
+            padding: 14px 35px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            margin-top: 25px;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(255, 75, 145, 0.4);
+            transition: 0.2s ease;
+        }
+        .handpicked-section .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 18px rgba(255, 75, 145, 0.45);
+        }
+        .mobile-row { display: none; }
     </style>
 </head>
 <body>
-    <div class="promo-banner"><div class="promo-text">🎉 Special Offer: Get 30% off on all electronics! Free shipping on orders over $50. Limited time only! 🎉</div></div>
-    <nav class="navbar"><div class="nav-container"><div class="desktop-nav"><div class="nav-logo"><img src="http://photography.wixo.in/yellow.png" alt="Shop Logo"></div><div class="nav-links"><a href="#">Home</a><a href="#">Shop</a><a href="#">Categories</a><a href="#">Deals</a></div><div class="nav-search" id="desktopSearch"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><input type="text" placeholder="Search products..."></div><div class="nav-icons"><button class="nav-icon" id="desktopSearchBtn" aria-label="Search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></button><button class="nav-icon" onclick="window.location.href='/wishlist'" aria-label="Wishlist"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></button><button class="nav-icon" id="desktopCartBtn" aria-label="Shopping cart"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg><span class="cart-count">3</span></button></div></div><div class="mobile-nav"><div class="mobile-nav-left"><button class="hamburger" id="mobileMenuBtn" aria-label="Menu"><span></span><span></span><span></span></button></div><div class="mobile-nav-center"><div class="mobile-logo"><img src="http://photography.wixo.in/yellow.png" alt="Shop Logo"></div></div><div class="mobile-nav-right"><button class="nav-icon" id="mobileSearchBtn" aria-label="Search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></button><button class="nav-icon" onclick="window.location.href='/wishlist'" aria-label="Wishlist"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></button><button class="nav-icon" id="mobileCartBtn" aria-label="Shopping cart"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg><span class="cart-count">3</span></button></div></div></div></nav>
-    <div class="search-overlay" id="searchOverlay"><div class="search-header"><button class="close-search" id="closeSearch"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg></button><div class="search-input"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><input type="text" placeholder="Search products..." autofocus></div></div></div>
-    <div class="mobile-menu" id="mobileMenu"><div class="mobile-menu-header"><div class="mobile-menu-title">Menu</div><button class="close-menu" id="closeMenu"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg></button></div><div class="mobile-menu-links"><a href="#">Home</a><a href="#">Shop All</a><a href="#">Categories</a><a href="#">Deals</a><a href="#">New Arrivals</a><a href="#">Best Sellers</a><a href="#">My Account</a><a href="#">Order History</a></div></div>
-    <div class="cart-sidebar" id="cartSidebar"><div class="cart-header"><div class="cart-title">Your Cart</div><button class="close-cart" id="closeCart"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg></button></div><div class="cart-items"><div class="cart-item"><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_1_300x300.png?v=1757510383" alt="Product"><div class="cart-item-details"><div class="cart-item-title">Premium Kurta Set</div><div class="cart-item-price">$89.99</div></div></div><div class="cart-item"><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_2_300x300.jpg?v=1757915662" alt="Product"><div class="cart-item-details"><div class="cart-item-title">Lehenga Set</div><div class="cart-item-price">$129.99</div></div></div></div><div class="cart-footer"><div class="cart-total"><span>Total:</span><span>$219.98</span></div><button class="checkout-btn">Proceed to Checkout</button></div></div>
+    <div class="promo-banner">
+        <div class="promo-text">
+            🎉 Special Offer: Get 30% off on all electronics! Free shipping on orders over $50. Limited time only! 🎉
+        </div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="desktop-nav">
+                <div class="nav-logo">
+                    <img src="http://photography.wixo.in/yellow.png" alt="Shop Logo">
+                </div>
+                <div class="nav-links">
+                    <a href="#">Home</a>
+                    <a href="#">Shop</a>
+                    <a href="#">Categories</a>
+                    <a href="#">Deals</a>
+                </div>
+                <div class="nav-search" id="desktopSearch">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                    <input type="text" placeholder="Search products...">
+                </div>
+                <div class="nav-icons">
+                    <button class="nav-icon" id="desktopSearchBtn" aria-label="Search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></button>
+                    <button class="nav-icon" onclick="window.location.href='/wishlist'" aria-label="Wishlist"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></button>
+                    <button class="nav-icon" id="desktopCartBtn" aria-label="Shopping cart"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg><span class="cart-count">3</span></button>
+                </div>
+            </div>
+
+            <div class="mobile-nav">
+                <div class="mobile-nav-left">
+                    <button class="hamburger" id="mobileMenuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+                </div>
+                <div class="mobile-nav-center">
+                    <div class="mobile-logo"><img src="http://photography.wixo.in/yellow.png" alt="Shop Logo"></div>
+                </div>
+                <div class="mobile-nav-right">
+                    <button class="nav-icon" id="mobileSearchBtn" aria-label="Search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></button>
+                    <button class="nav-icon" onclick="window.location.href='/wishlist'" aria-label="Wishlist"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></button>
+                    <button class="nav-icon" id="mobileCartBtn" aria-label="Shopping cart"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg><span class="cart-count">3</span></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-header">
+            <button class="close-search" id="closeSearch"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg></button>
+            <div class="search-input"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><input type="text" placeholder="Search products..." autofocus></div>
+        </div>
+    </div>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <div class="mobile-menu-title">Menu</div>
+            <button class="close-menu" id="closeMenu"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg></button>
+        </div>
+        <div class="mobile-menu-links">
+            <a href="#">Home</a><a href="#">Shop All</a><a href="#">Categories</a><a href="#">Deals</a><a href="#">New Arrivals</a><a href="#">Best Sellers</a><a href="#">My Account</a><a href="#">Order History</a>
+        </div>
+    </div>
+
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <div class="cart-title">Your Cart</div>
+            <button class="close-cart" id="closeCart"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg></button>
+        </div>
+        <div class="cart-items">
+            <div class="cart-item"><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_1_300x300.png?v=1757510383" alt="Product"><div class="cart-item-details"><div class="cart-item-title">Premium Kurta Set</div><div class="cart-item-price">$89.99</div></div></div>
+            <div class="cart-item"><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_2_300x300.jpg?v=1757915662" alt="Product"><div class="cart-item-details"><div class="cart-item-title">Lehenga Set</div><div class="cart-item-price">$129.99</div></div></div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total"><span>Total:</span><span>$219.98</span></div>
+            <button class="checkout-btn">Proceed to Checkout</button>
+        </div>
+    </div>
+
     <div class="overlay" id="overlay"></div>
-    <section class="hero" aria-label="Featured Products"><div class="carousel" role="region" aria-roledescription="carousel" aria-label="Product highlights"><div class="carousel-slide active" role="group" aria-roledescription="slide" aria-label="1 of 4"><a href="/product1" class="slide-link"><img src="https://www.shauryasanadhya.com/cdn/shop/files/3rd_Banner_1.jpg?v=1757699591&width=1920" alt="Premium Wireless Headphones" class="slide-image desktop-image" loading="lazy"><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_7_1.png?height=1164&v=1757699780" alt="Premium Wireless Headphones" class="slide-image mobile-image" loading="lazy"></a></div><div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="2 of 4"><a href="/product2" class="slide-link"><img src="https://www.shauryasanadhya.com/cdn/shop/files/3rd_Banner_1.jpg?v=1757699591&width=1920" alt="Smart Fitness Watch" class="slide-image desktop-image" loading="lazy"><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_7_1.png?height=1164&v=1757699780" alt="Smart Fitness Watch" class="slide-image mobile-image" loading="lazy"></a></div><div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="3 of 4"><a href="/product3" class="slide-link"><img src="https://www.shauryasanadhya.com/cdn/shop/files/3rd_Banner_1.jpg?v=1757699591&width=1920" alt="Ultra-Thin Laptop" class="slide-image desktop-image" loading="lazy"><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_7_1.png?height=1164&v=1757699780" alt="Ultra-Thin Laptop" class="slide-image mobile-image" loading="lazy"></a></div><div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="4 of 4"><a href="/product4" class="slide-link"><img src="https://www.shauryasanadhya.com/cdn/shop/files/3rd_Banner_1.jpg?v=1757699591&width=1920" alt="Wireless Earbuds" class="slide-image desktop-image" loading="lazy"><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_7_1.png?height=1164&v=1757699780" alt="Wireless Earbuds" class="slide-image mobile-image" loading="lazy"></a></div><div class="carousel-nav"><button class="carousel-button prev" aria-label="Previous slide"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><button class="carousel-button next" aria-label="Next slide"><svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></button></div><div class="carousel-controls"><button class="carousel-indicator active" aria-label="Show slide 1"></button><button class="carousel-indicator" aria-label="Show slide 2"></button><button class="carousel-indicator" aria-label="Show slide 3"></button><button class="carousel-indicator" aria-label="Show slide 4"></button></div></div></section>
-    <section class="category-section"><h2 class="section-title">Shop by Category</h2><div class="category-wrapper"><div class="arrow left" id="leftArrow">&#10094;</div><div class="arrow right" id="rightArrow">&#10095;</div><div class="category-container" id="scrollContainer"><div class="category"><a href="/category/new-arrivals" class="category-link"><div class="category-image-wrapper"><button class="category-wishlist-btn"><i class="far fa-heart"></i></button><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_8_95b3416a-8008-4e80-9576-2e7da8cad1c3_300x300.jpg?v=1757915706" alt="New Arrivals" loading="lazy"><div class="category-swatches"><div class="category-swatch" style="background-color: #E6A4B4;"></div><div class="category-swatch" style="background-color: #F3D7CA;"></div></div></div><span>New Arrivals</span></a></div><div class="category"><a href="/category/kurta-sets" class="category-link"><div class="category-image-wrapper"><button class="category-wishlist-btn"><i class="far fa-heart"></i></button><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_1_300x300.png?v=1757510383" alt="Kurta Sets" loading="lazy"><div class="category-swatches"><div class="category-swatch" style="background-color: #A94438;"></div><div class="category-swatch" style="background-color: #F3D7CA;"></div></div></div><span>Kurta Sets</span></a></div><div class="category"><a href="/category/indo-western" class="category-link"><div class="category-image-wrapper"><button class="category-wishlist-btn"><i class="far fa-heart"></i></button><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_1_e9d7eed1-789b-4465-8a87-66a1b8038708_300x300.jpg?v=1757915661" alt="Indo Western" loading="lazy"><div class="category-swatches"><div class="category-swatch" style="background-color: #F1E5D1;"></div><div class="category-swatch" style="background-color: #967E76;"></div></div></div><span>Indo Western</span></a></div><div class="category"><a href="/category/saree" class="category-link"><div class="category-image-wrapper"><button class="category-wishlist-btn"><i class="far fa-heart"></i></button><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_4_300x300.jpg?v=1757915661" alt="Saree" loading="lazy"><div class="category-swatches"><div class="category-swatch" style="background-color: #944E63;"></div><div class="category-swatch" style="background-color: #B47B84;"></div></div></div><span>Saree</span></a></div><div class="category"><a href="/category/lehenga-sets" class="category-link"><div class="category-image-wrapper"><button class="category-wishlist-btn"><i class="far fa-heart"></i></button><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_2_300x300.jpg?v=1757915662" alt="Lehenga Sets" loading="lazy"><div class="category-swatches"><div class="category-swatch" style="background-color: #9DBC98;"></div><div class="category-swatch" style="background-color: #658864;"></div></div></div><span>Lehenga Sets</span></a></div><div class="category"><a href="/category/shauryas-favs" class="category-link"><div class="category-image-wrapper"><button class="category-wishlist-btn"><i class="far fa-heart"></i></button><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_5_300x300.png?v=1757511181" alt="Shaurya's Favs" loading="lazy"><div class="category-swatches"><div class="category-swatch" style="background-color: #B9B4C7;"></div><div class="category-swatch" style="background-color: #5C5470;"></div></div></div><span>Shaurya's Favs</span></a></div></div></div></section>
-    <section class="bestsellers-section"><div class="heading-row"><h2>Best Sellers</h2><a href="#">View More</a></div><div class="product-grid"><div class="product-card scroll-product"><div class="image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/files/DSC1051.jpg" alt="Master Piece Green" class="product-image"><div class="badge sale">SALE</div><button class="wishlist-btn"><i class="far fa-heart"></i></button><div class="color-swatches"><div style="background-color: #d1c8c1;" class="swatch"></div><div style="background-color: #6d8aab;" class="swatch"></div></div></div><div class="product-info"><div class="rating"><div class="stars">★★★★★</div><span class="rating-count">4.6 (128)</span></div><div class="title-block"><h1>Master Piece Green Premium Cotton T-Shirt</h1></div><div class="price-container"><span class="current-price">₹999</span><del class="old-price">₹1299</del><span class="discount">23% OFF</span></div><div class="product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div><div class="product-card scroll-product"><div class="image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/products/DSC3187.jpg" alt="Mustang Green" class="product-image"><div class="badge new">NEW</div><button class="wishlist-btn active"><i class="fas fa-heart"></i></button><div class="color-swatches"><div style="background-color: #d1c8c1;" class="swatch"></div><div style="background-color: #6d8aab;" class="swatch"></div></div></div><div class="product-info"><div class="rating"><div class="stars">★★★★☆</div><span class="rating-count">4.5 (96)</span></div><div class="title-block"><h1>Mustang Green Classic Fit Shirt</h1></div><div class="price-container"><span class="current-price">₹999</span><del class="old-price">₹1299</del><span class="discount">23% OFF</span></div><div class="product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div><div class="product-card scroll-product"><div class="image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/products/DSC3612.jpg" alt="Mustang White" class="product-image"><div class="badge sale">SALE</div><button class="wishlist-btn"><i class="far fa-heart"></i></button><div class="color-swatches"><div style="background-color: #d1c8c1;" class="swatch"></div><div style="background-color: #6d8aab;" class="swatch"></div></div></div><div class="product-info"><div class="rating"><div class="stars">★★★★☆</div><span class="rating-count">4.6 (87)</span></div><div class="title-block"><h1>Mustang White Premium Cotton T-Shirt</h1></div><div class="price-container"><span class="current-price">₹999</span><del class="old-price">₹1299</del><span class="discount">23% OFF</span></div><div class="product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div><div class="product-card scroll-product"><div class="image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/products/DSC4866.jpg" alt="Master Piece White" class="product-image"><button class="wishlist-btn"><i class="far fa-heart"></i></button><div class="color-swatches"><div style="background-color: #d1c8c1;" class="swatch"></div><div style="background-color: #6d8aab;" class="swatch"></div></div></div><div class="product-info"><div class="rating"><div class="stars">★★★★★</div><span class="rating-count">4.8 (142)</span></div><div class="title-block"><h1>Master Piece White Premium Cotton T-Shirt</h1></div><div class="price-container"><span class="current-price">₹999</span><del class="old-price">₹1299</del><span class="discount">23% OFF</span></div><div class="product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div></div></section>
-    <section class="scroll-section"><div class="heading-row"><h2>Beautiful Sarees</h2><a href="#">View All</a></div><div class="scroll-container"><div class="arrow left" id="sareesLeftArrow">&#10094;</div><div class="arrow right" id="sareesRightArrow">&#10095;</div><div class="scroll-products" id="sareesScroll"><div class="scroll-product"><div class="scroll-image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0063.jpg" alt="Silk Saree" class="scroll-product-image"><div class="badge sale">SALE</div></div><div class="scroll-product-info"><div class="scroll-product-title">Pure Silk Banarasi Saree</div><div class="scroll-product-price"><span class="scroll-current-price">₹2,499</span><span class="scroll-original-price">₹3,999</span><span class="scroll-discount">38% OFF</span></div><div class="scroll-product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div><div class="scroll-product"><div class="scroll-image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0064.jpg" alt="Cotton Saree" class="scroll-product-image"><div class="badge new">NEW</div></div><div class="scroll-product-info"><div class="scroll-product-title">Handwoven Cotton Saree</div><div class="scroll-product-price"><span class="scroll-current-price">₹1,799</span><span class="scroll-original-price">₹2,499</span><span class="scroll-discount">28% OFF</span></div><div class="scroll-product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div><div class="scroll-product"><div class="scroll-image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0065.jpg" alt="Designer Saree" class="scroll-product-image"></div><div class="scroll-product-info"><div class="scroll-product-title">Designer Net Saree with Blouse</div><div class="scroll-product-price"><span class="scroll-current-price">₹3,299</span><span class="scroll-original-price">₹4,599</span><span class="scroll-discount">28% OFF</span></div><div class="scroll-product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div><div class="scroll-product"><div class="scroll-image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0066.jpg" alt="Printed Saree" class="scroll-product-image"><div class="badge sale">SALE</div></div><div class="scroll-product-info"><div class="scroll-product-title">Printed Georgette Saree</div><div class="scroll-product-price"><span class="scroll-current-price">₹1,999</span><span class="scroll-original-price">₹2,999</span><span class="scroll-discount">33% OFF</span></div><div class="scroll-product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div></div></div></section>
-    <section class="scroll-section"><div class="heading-row"><h2>Stunning Lehengas</h2><a href="#">View All</a></div><div class="scroll-container"><div class="arrow left" id="lehengasLeftArrow">&#10094;</div><div class="arrow right" id="lehengasRightArrow">&#10095;</div><div class="scroll-products" id="lehengasScroll"><div class="scroll-product"><div class="scroll-image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0073.jpg" alt="Bridal Lehenga" class="scroll-product-image"><div class="badge sale">SALE</div></div><div class="scroll-product-info"><div class="scroll-product-title">Bridal Red Lehenga Set</div><div class="scroll-product-price"><span class="scroll-current-price">₹8,999</span><span class="scroll-original-price">₹12,999</span><span class="scroll-discount">31% OFF</span></div><div class="scroll-product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div><div class="scroll-product"><div class="scroll-image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0074.jpg" alt="Designer Lehenga" class="scroll-product-image"><div class="badge new">NEW</div></div><div class="scroll-product-info"><div class="scroll-product-title">Designer Lehenga Choli</div><div class="scroll-product-price"><span class="scroll-current-price">₹6,499</span><span class="scroll-original-price">₹9,299</span><span class="scroll-discount">30% OFF</span></div><div class="scroll-product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div><div class="scroll-product"><div class="scroll-image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0075.jpg" alt="Party Lehenga" class="scroll-product-image"></div><div class="scroll-product-info"><div class="scroll-product-title">Party Wear Lehenga</div><div class="scroll-product-price"><span class="scroll-current-price">₹4,999</span><span class="scroll-original-price">₹7,199</span><span class="scroll-discount">31% OFF</span></div><div class="scroll-product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div><div class="scroll-product"><div class="scroll-image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0076.jpg" alt="Traditional Lehenga" class="scroll-product-image"><div class="badge sale">SALE</div></div><div class="scroll-product-info"><div class="scroll-product-title">Traditional Silk Lehenga</div><div class="scroll-product-price"><span class="scroll-current-price">₹7,299</span><span class="scroll-original-price">₹10,499</span><span class="scroll-discount">30% OFF</span></div><div class="scroll-product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div></div></div></section>
-    <section class="handpicked-section"><div class="row-images"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0083.jpg" class="left-up"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0084.jpg"></div><div class="mobile-row"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0083.jpg"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0084.jpg"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0085.jpg"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0086.jpg"></div><div class="center-box"><h2>Handpicked</h2><h3>Styles, just for You!</h3><p>BECAUSE YOU DESERVE THE BEST LOOKS!</p><button class="btn">SHOP NOW</button></div><div class="row-images"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0085.jpg"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0086.jpg" class="right-up"></div></section>
+
+    <section class="hero" aria-label="Featured Products">
+        <div class="carousel" role="region" aria-roledescription="carousel" aria-label="Product highlights">
+            <div class="carousel-slide active" role="group" aria-roledescription="slide" aria-label="1 of 4"><a href="/product1" class="slide-link"><img src="https://www.shauryasanadhya.com/cdn/shop/files/3rd_Banner_1.jpg?v=1757699591&width=1920" alt="Premium Wireless Headphones" class="slide-image desktop-image" loading="lazy"><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_7_1.png?height=1164&v=1757699780" alt="Premium Wireless Headphones" class="slide-image mobile-image" loading="lazy"></a></div>
+            <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="2 of 4"><a href="/product2" class="slide-link"><img src="https://www.shauryasanadhya.com/cdn/shop/files/3rd_Banner_1.jpg?v=1757699591&width=1920" alt="Smart Fitness Watch" class="slide-image desktop-image" loading="lazy"><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_7_1.png?height=1164&v=1757699780" alt="Smart Fitness Watch" class="slide-image mobile-image" loading="lazy"></a></div>
+            <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="3 of 4"><a href="/product3" class="slide-link"><img src="https://www.shauryasanadhya.com/cdn/shop/files/3rd_Banner_1.jpg?v=1757699591&width=1920" alt="Ultra-Thin Laptop" class="slide-image desktop-image" loading="lazy"><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_7_1.png?height=1164&v=1757699780" alt="Ultra-Thin Laptop" class="slide-image mobile-image" loading="lazy"></a></div>
+            <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="4 of 4"><a href="/product4" class="slide-link"><img src="https://www.shauryasanadhya.com/cdn/shop/files/3rd_Banner_1.jpg?v=1757699591&width=1920" alt="Wireless Earbuds" class="slide-image desktop-image" loading="lazy"><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_7_1.png?height=1164&v=1757699780" alt="Wireless Earbuds" class="slide-image mobile-image" loading="lazy"></a></div>
+            <div class="carousel-nav"><button class="carousel-button prev" aria-label="Previous slide"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><button class="carousel-button next" aria-label="Next slide"><svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></button></div>
+            <div class="carousel-controls"><button class="carousel-indicator active" aria-label="Show slide 1"></button><button class="carousel-indicator" aria-label="Show slide 2"></button><button class="carousel-indicator" aria-label="Show slide 3"></button><button class="carousel-indicator" aria-label="Show slide 4"></button></div>
+        </div>
+    </section>
+
+    <section class="category-section">
+       <div class="container">
+            <h2 class="section-title">Shop by Category</h2>
+            <div class="category-wrapper">
+                <div class="arrow left" id="leftArrow">&#10094;</div>
+                <div class="arrow right" id="rightArrow">&#10095;</div>
+                <div class="category-container" id="scrollContainer">
+                    <div class="category"><a href="/category/new-arrivals" class="category-link"><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_8_95b3416a-8008-4e80-9576-2e7da8cad1c3_300x300.jpg?v=1757915706" alt="New Arrivals" loading="lazy"><span>New Arrivals</span></a></div>
+                    <div class="category"><a href="/category/kurta-sets" class="category-link"><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_1_300x300.png?v=1757510383" alt="Kurta Sets" loading="lazy"><span>Kurta Sets</span></a></div>
+                    <div class="category"><a href="/category/indo-western" class="category-link"><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_1_e9d7eed1-789b-4465-8a87-66a1b8038708_300x300.jpg?v=1757915661" alt="Indo Western" loading="lazy"><span>Indo Western</span></a></div>
+                    <div class="category"><a href="/category/saree" class="category-link"><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_4_300x300.jpg?v=1757915661" alt="Saree" loading="lazy"><span>Saree</span></a></div>
+                    <div class="category"><a href="/category/lehenga-sets" class="category-link"><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_2_300x300.jpg?v=1757915662" alt="Lehenga Sets" loading="lazy"><span>Lehenga Sets</span></a></div>
+                    <div class="category"><a href="/category/shauryas-favs" class="category-link"><img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_5_300x300.png?v=1757511181" alt="Shaurya's Favs" loading="lazy"><span>Shaurya's Favs</span></a></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bestsellers-section">
+        <div class="container">
+            <div class="heading-row">
+                <h2>Best Sellers</h2>
+                <a href="#">View More</a>
+            </div>
+            <div class="product-grid">
+                <div class="product-card"><div class="image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/files/DSC1051.jpg" alt="Master Piece Green" class="product-image"><div class="badge sale">SALE</div><button class="wishlist-btn"><i class="far fa-heart"></i></button><div class="color-swatches"><div style="background-color: #d1c8c1;" class="swatch"></div><div style="background-color: #6d8aab;" class="swatch"></div></div></div><div class="product-info"><div class="rating"><div class="stars">★★★★★</div><span class="rating-count">4.6 (128)</span></div><div class="title-block"><h1>Master Piece Green Premium Cotton T-Shirt</h1></div><div class="price-container"><span class="current-price">₹999</span><del class="old-price">₹1299</del><span class="discount">23% OFF</span></div><div class="size-selector"></div><div class="product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div>
+                <div class="product-card"><div class="image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/products/DSC3187.jpg" alt="Mustang Green" class="product-image"><div class="badge new">NEW</div><button class="wishlist-btn active"><i class="fas fa-heart"></i></button><div class="color-swatches"><div style="background-color: #d1c8c1;" class="swatch"></div><div style="background-color: #6d8aab;" class="swatch"></div></div></div><div class="product-info"><div class="rating"><div class="stars">★★★★☆</div><span class="rating-count">4.5 (96)</span></div><div class="title-block"><h1>Mustang Green Classic Fit Shirt</h1></div><div class="price-container"><span class="current-price">₹999</span><del class="old-price">₹1299</del><span class="discount">23% OFF</span></div><div class="size-selector"></div><div class="product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div>
+                <div class="product-card"><div class="image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/products/DSC3612.jpg" alt="Mustang White" class="product-image"><div class="badge sale">SALE</div><button class="wishlist-btn"><i class="far fa-heart"></i></button><div class="color-swatches"><div style="background-color: #d1c8c1;" class="swatch"></div><div style="background-color: #6d8aab;" class="swatch"></div></div></div><div class="product-info"><div class="rating"><div class="stars">★★★★☆</div><span class="rating-count">4.6 (87)</span></div><div class="title-block"><h1>Mustang White Premium Cotton T-Shirt</h1></div><div class="price-container"><span class="current-price">₹999</span><del class="old-price">₹1299</del><span class="discount">23% OFF</span></div><div class="size-selector"></div><div class="product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div>
+                <div class="product-card"><div class="image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/products/DSC4866.jpg" alt="Master Piece White" class="product-image"><button class="wishlist-btn"><i class="far fa-heart"></i></button><div class="color-swatches"><div style="background-color: #d1c8c1;" class="swatch"></div><div style="background-color: #6d8aab;" class="swatch"></div></div></div><div class="product-info"><div class="rating"><div class="stars">★★★★★</div><span class="rating-count">4.8 (142)</span></div><div class="title-block"><h1>Master Piece White Premium Cotton T-Shirt</h1></div><div class="price-container"><span class="current-price">₹999</span><del class="old-price">₹1299</del><span class="discount">23% OFF</span></div><div class="size-selector"></div><div class="product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="scroll-section">
+        <div class="container">
+            <div class="heading-row"><h2>Beautiful Sarees</h2><a href="#">View All</a></div>
+        </div>
+        <div class="scroll-container">
+            <div class="scroll-products" id="sareesScroll">
+                <div class="product-card scroll-product"><div class="image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/files/DSC1051.jpg" alt="Silk Saree" class="product-image"><div class="badge sale">SALE</div><button class="wishlist-btn"><i class="far fa-heart"></i></button><div class="color-swatches"><div style="background-color: #eab308;" class="swatch"></div><div style="background-color: #22c55e;" class="swatch"></div></div></div><div class="product-info"><div class="title-block"><h1>Pure Silk Banarasi Saree</h1></div><div class="price-container"><span class="current-price">₹2,499</span><del class="old-price">₹3,999</del><span class="discount">38% OFF</span></div><div class="product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div>
+                <div class="product-card scroll-product"><div class="image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/files/DSC1051.jpg" alt="Cotton Saree" class="product-image"><div class="badge new">NEW</div><button class="wishlist-btn"><i class="far fa-heart"></i></button><div class="color-swatches"><div style="background-color: #d1c8c1;" class="swatch"></div></div></div><div class="product-info"><div class="title-block"><h1>Handwoven Cotton Saree</h1></div><div class="price-container"><span class="current-price">₹1,799</span><del class="old-price">₹2,499</del><span class="discount">28% OFF</span></div><div class="product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div>
+                <div class="product-card scroll-product"><div class="image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0065.jpg" alt="Designer Saree" class="product-image"><button class="wishlist-btn active"><i class="fas fa-heart"></i></button><div class="color-swatches"><div style="background-color: #6d8aab;" class="swatch"></div></div></div><div class="product-info"><div class="title-block"><h1>Designer Net Saree with Blouse</h1></div><div class="price-container"><span class="current-price">₹3,299</span><del class="old-price">₹4,599</del><span class="discount">28% OFF</span></div><div class="product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div>
+                <div class="product-card scroll-product"><div class="image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0066.jpg" alt="Printed Saree" class="product-image"><div class="badge sale">SALE</div><button class="wishlist-btn"><i class="far fa-heart"></i></button><div class="color-swatches"><div style="background-color: #4a4a4c;" class="swatch"></div></div></div><div class="product-info"><div class="title-block"><h1>Printed Georgette Saree</h1></div><div class="price-container"><span class="current-price">₹1,999</span><del class="old-price">₹2,999</del><span class="discount">33% OFF</span></div><div class="product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div>
+                <div class="product-card scroll-product"><div class="image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0067.jpg" alt="Bridal Saree" class="product-image"><button class="wishlist-btn"><i class="far fa-heart"></i></button><div class="color-swatches"><div style="background-color: #d1c8c1;" class="swatch"></div><div style="background-color: #ef4444;" class="swatch"></div></div></div><div class="product-info"><div class="title-block"><h1>Bridal Wedding Saree</h1></div><div class="price-container"><span class="current-price">₹5,999</span><del class="old-price">₹8,499</del><span class="discount">29% OFF</span></div><div class="product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="scroll-section">
+        <div class="container">
+            <div class="heading-row"><h2>Stunning Lehengas</h2><a href="#">View All</a></div>
+        </div>
+        <div class="scroll-container">
+            <div class="scroll-products" id="lehengasScroll">
+                <div class="product-card scroll-product"><div class="image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/files/DSC1051.jpg" alt="Bridal Lehenga" class="product-image"><div class="badge sale">SALE</div><button class="wishlist-btn"><i class="far fa-heart"></i></button><div class="color-swatches"><div style="background-color: #dc2626;" class="swatch"></div><div style="background-color: #f59e0b;" class="swatch"></div></div></div><div class="product-info"><div class="title-block"><h1>Bridal Red Lehenga Set</h1></div><div class="price-container"><span class="current-price">₹8,999</span><del class="old-price">₹12,999</del><span class="discount">31% OFF</span></div><div class="product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div>
+                <div class="product-card scroll-product"><div class="image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/files/DSC1051.jpg" alt="Designer Lehenga" class="product-image"><div class="badge new">NEW</div><button class="wishlist-btn"><i class="far fa-heart"></i></button><div class="color-swatches"><div style="background-color: #8b5cf6;" class="swatch"></div></div></div><div class="product-info"><div class="title-block"><h1>Designer Lehenga Choli</h1></div><div class="price-container"><span class="current-price">₹6,499</span><del class="old-price">₹9,299</del><span class="discount">30% OFF</span></div><div class="product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div>
+                <div class="product-card scroll-product"><div class="image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0075.jpg" alt="Party Lehenga" class="product-image"><button class="wishlist-btn"><i class="far fa-heart"></i></button><div class="color-swatches"><div style="background-color: #ec4899;" class="swatch"></div><div style="background-color: #3b82f6;" class="swatch"></div></div></div><div class="product-info"><div class="title-block"><h1>Party Wear Lehenga</h1></div><div class="price-container"><span class="current-price">₹4,999</span><del class="old-price">₹7,199</del><span class="discount">31% OFF</span></div><div class="product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div>
+                <div class="product-card scroll-product"><div class="image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0076.jpg" alt="Traditional Lehenga" class="product-image"><div class="badge sale">SALE</div><button class="wishlist-btn"><i class="far fa-heart"></i></button><div class="color-swatches"><div style="background-color: #16a34a;" class="swatch"></div></div></div><div class="product-info"><div class="title-block"><h1>Traditional Silk Lehenga</h1></div><div class="price-container"><span class="current-price">₹7,299</span><del class="old-price">₹10,499</del><span class="discount">30% OFF</span></div><div class="product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div>
+                <div class="product-card scroll-product"><div class="image-container"><img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0077.jpg" alt="Wedding Lehenga" class="product-image"><button class="wishlist-btn"><i class="far fa-heart"></i></button><div class="color-swatches"><div style="background-color: #d1c8c1;" class="swatch"></div></div></div><div class="product-info"><div class="title-block"><h1>Wedding Lehenga with Dupatta</h1></div><div class="price-container"><span class="current-price">₹9,999</span><del class="old-price">₹14,999</del><span class="discount">33% OFF</span></div><div class="product-footer"><button class="btn add-to-cart-btn">Add to cart</button><button class="btn buy-now-btn">Buy Now</button></div></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="handpicked-section">
+        <div class="container" style="display: flex; justify-content: center; align-items: center; gap: 60px; flex-wrap: wrap;">
+            <div class="row-images">
+                <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0083.jpg" class="left-up">
+                <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0084.jpg">
+            </div>
+            <div class="mobile-row">
+                <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0083.jpg">
+                <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0084.jpg">
+                <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0085.jpg">
+                <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0086.jpg">
+            </div>
+            <div class="center-box">
+                <h2>Handpicked</h2>
+                <h3>Styles, just for You!</h3>
+                <p>BECAUSE YOU DESERVE THE BEST LOOKS!</p>
+                <button class="btn">SHOP NOW</button>
+            </div>
+            <div class="row-images">
+                <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0085.jpg">
+                <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0086.jpg" class="right-up">
+            </div>
+        </div>
+    </section>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -297,6 +1281,7 @@
             const autoScrollDelay = 5000;
             
             function updateCarousel() {
+                if (slides.length === 0) return;
                 slides.forEach((slide, i) => {
                     slide.classList.remove('active', 'prev', 'next');
                     if (i === currentIndex) slide.classList.add('active');
@@ -314,7 +1299,7 @@
             }
             
             function goToSlide(index) {
-                if (isTransitioning || index === currentIndex) return;
+                if (isTransitioning || index === currentIndex || slides.length === 0) return;
                 isTransitioning = true;
                 currentIndex = index;
                 updateCarousel();
@@ -327,16 +1312,22 @@
             function startAutoScroll() { stopAutoScroll(); autoScrollInterval = setInterval(nextSlide, autoScrollDelay); }
             function stopAutoScroll() { clearInterval(autoScrollInterval); }
             
-            prevButton.addEventListener('click', () => { prevSlide(); startAutoScroll(); });
-            nextButton.addEventListener('click', () => { nextSlide(); startAutoScroll(); });
+            if (prevButton && nextButton) {
+                prevButton.addEventListener('click', () => { prevSlide(); startAutoScroll(); });
+                nextButton.addEventListener('click', () => { nextSlide(); startAutoScroll(); });
+            }
             indicators.forEach((indicator, index) => indicator.addEventListener('click', () => { goToSlide(index); startAutoScroll(); }));
             
             const carousel = document.querySelector('.carousel');
-            carousel.addEventListener('mouseenter', stopAutoScroll);
-            carousel.addEventListener('mouseleave', startAutoScroll);
+            if(carousel) {
+                carousel.addEventListener('mouseenter', stopAutoScroll);
+                carousel.addEventListener('mouseleave', startAutoScroll);
+            }
             
-            updateCarousel();
-            startAutoScroll();
+            if(slides.length > 0) {
+                updateCarousel();
+                startAutoScroll();
+            }
 
             function setupScroller(containerId, leftArrowId, rightArrowId) {
                 const scrollContainer = document.getElementById(containerId);
@@ -346,22 +1337,21 @@
 
                 function updateArrowVisibility() {
                     const show = window.innerWidth <= 768;
+                    if (!leftArrow || !rightArrow) return;
                     leftArrow.style.display = show && scrollContainer.scrollLeft > 10 ? 'flex' : 'none';
                     rightArrow.style.display = show && scrollContainer.scrollLeft + scrollContainer.clientWidth < scrollContainer.scrollWidth - 10 ? 'flex' : 'none';
                 }
 
-                rightArrow.addEventListener('click', () => scrollContainer.scrollBy({ left: 200, behavior: 'smooth' }));
-                leftArrow.addEventListener('click', () => scrollContainer.scrollBy({ left: -200, behavior: 'smooth' }));
+                if (rightArrow) rightArrow.addEventListener('click', () => scrollContainer.scrollBy({ left: 200, behavior: 'smooth' }));
+                if (leftArrow) leftArrow.addEventListener('click', () => scrollContainer.scrollBy({ left: -200, behavior: 'smooth' }));
                 scrollContainer.addEventListener('scroll', updateArrowVisibility);
                 window.addEventListener('resize', updateArrowVisibility);
                 updateArrowVisibility();
             }
 
             setupScroller('scrollContainer', 'leftArrow', 'rightArrow');
-            setupScroller('sareesScroll', 'sareesLeftArrow', 'sareesRightArrow');
-            setupScroller('lehengasScroll', 'lehengasLeftArrow', 'lehengasRightArrow');
-
-            const wishlistButtons = document.querySelectorAll('.wishlist-btn, .category-wishlist-btn');
+            
+            const wishlistButtons = document.querySelectorAll('.wishlist-btn');
             wishlistButtons.forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.stopPropagation();
