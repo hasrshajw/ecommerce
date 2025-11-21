@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Manage Landing Page - Vastramaya</title>
+    <title>Customize Site - Vastramaya</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -23,329 +23,414 @@
             --warning-color: #F59E0B;
             --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --radius-sm: 6px;
             --radius-md: 8px;
             --radius-lg: 12px;
+            --radius-xl: 24px;
             --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--body-bg); color: var(--text-primary); line-height: 1.5; }
-        
-        .dashboard-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--body-bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        input, button, select, textarea { font-family: inherit; font-size: inherit; outline: none; }
+        button:focus, a:focus { outline: none; }
+
+        .dashboard-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; position: relative; }
         .main-area { display: flex; flex-direction: column; overflow-y: auto; height: 100vh; background-color: var(--body-bg); }
         
-        .sidebar { background-color: var(--widget-bg); border-right: 1px solid var(--border-color); padding: 2rem 1.5rem; display: flex; flex-direction: column; }
-        .logo-container { display: flex; align-items: center; margin-bottom: 2.5rem; }
+        .main-header { 
+            padding: 12px 2.5rem; 
+            border-bottom: 1px solid var(--border-color); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background-color: var(--widget-bg); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            box-shadow: var(--shadow-sm); 
+            min-height: 70px;
+        }
+        .nav-logo { height: 42px; width: auto; object-fit: contain; display: none; }
+        
+        .sidebar { 
+            background-color: var(--widget-bg); 
+            border-right: 1px solid var(--border-color); 
+            padding: 2rem 1.5rem; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            transition: transform 0.3s ease-in-out;
+            box-shadow: var(--shadow-sm);
+            z-index: 1001;
+        }
+        .sidebar-header { display: flex; align-items: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); } 
+        .logo-container { display: flex; align-items: center; width: 100%; }
         .logo-image { height: 40px; width: auto; object-fit: contain; }
         .main-nav ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
-        .main-nav a { display: flex; align-items: center; gap: 1rem; text-decoration: none; color: var(--text-secondary); font-weight: 500; padding: 0.875rem 1rem; border-radius: var(--radius-md); transition: var(--transition); }
-        .main-nav a:hover { background-color: var(--hover-bg); color: var(--text-primary); } 
-        .main-nav a.active { background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%); color: var(--brand-primary); font-weight: 600; } 
-        .main-nav a i { font-size: 1.3rem; }
-
-        .profile-section { margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
-        .profile-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); }
-        .profile-popup { position: absolute; bottom: 80px; left: 1.5rem; background: white; border-radius: 12px; box-shadow: 0 10px 15px rgba(0,0,0,0.1); padding: 0.5rem; display: none; width: 200px; }
-        .profile-popup.active { display: block; }
-        .popup-list { list-style: none; }
-        .popup-list a { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; text-decoration: none; color: var(--text-primary); border-radius: 6px; }
-        .popup-list a:hover { background: var(--hover-bg); }
-
-        .main-header { padding: 12px 2.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background-color: var(--widget-bg); position: sticky; top: 0; z-index: 10; min-height: 70px; }
-        .nav-logo { height: 42px; display: none; }
-        .menu-toggle { display: none; font-size: 1.5rem; background: none; border: none; cursor: pointer; }
-
-        .page-container { max-width: 1400px; margin: 0 auto; padding: 2rem; width: 100%; }
-        .page-title { font-size: 1.75rem; font-weight: 700; margin-bottom: 1.5rem; }
-
-        .card { background: var(--widget-bg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); margin-bottom: 1.5rem; overflow: hidden; }
-        .card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #FAFAFA; }
-        .card-title { font-size: 1.1rem; font-weight: 600; margin: 0; display: flex; align-items: center; gap: 0.5rem; }
-        .card-body { padding: 1.5rem; }
-
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-        .form-group { margin-bottom: 1.25rem; }
-        .form-group label { display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-secondary); }
-        .form-control { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: inherit; }
-        .form-control:focus { outline: none; border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        .main-nav a { 
+            display: flex; align-items: center; gap: 1rem; text-decoration: none; color: var(--text-secondary); 
+            font-weight: 500; padding: 0.875rem 1rem; border-radius: var(--radius-md); transition: var(--transition); position: relative;
+        }
+        .main-nav a i { font-size: 1.375rem; color: var(--text-secondary); transition: var(--transition); width: 24px; text-align: center; }
+        .main-nav a:hover { background-color: var(--hover-bg); color: var(--text-primary); transform: translateY(-1px); } 
+        .main-nav a:hover i { color: var(--brand-primary); }
+        .main-nav a.active { 
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%); 
+            color: var(--brand-primary); font-weight: 600; box-shadow: var(--shadow-sm);
+        } 
+        .main-nav a.active i { color: var(--brand-primary); }
+        .main-nav a.active::before {
+            content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 4px; height: 60%; background: var(--brand-gradient); border-radius: 0 4px 4px 0;
+        }
         
-        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; border-radius: var(--radius-md); font-weight: 500; cursor: pointer; border: 1px solid transparent; transition: var(--transition); font-size: 0.9rem; }
-        .btn-primary { background: var(--brand-primary); color: white; }
-        .btn-primary:hover { background: #2563EB; }
-        .btn-secondary { background: white; border-color: var(--border-color); color: var(--text-primary); }
-        .btn-secondary:hover { background: var(--hover-bg); }
-        .btn-danger { background: #FEF2F2; color: var(--danger-color); border-color: #FECACA; }
-        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
-        .btn-icon { padding: 0.4rem; }
-
-        .list-item { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 0.5rem; background: white; }
-        .list-item:last-child { margin-bottom: 0; }
-        .list-content { display: flex; align-items: center; gap: 1rem; flex: 1; }
-        .list-img { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border-color); }
-        .list-actions { display: flex; gap: 0.5rem; }
-
-        .color-picker-wrapper { display: flex; align-items: center; gap: 1rem; }
-        input[type="color"] { -webkit-appearance: none; border: none; width: 40px; height: 40px; border-radius: 8px; cursor: pointer; padding: 0; overflow: hidden; }
+        .profile-section { 
+            margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-color); 
+            display: flex; align-items: center; gap: 0.75rem; cursor: pointer; 
+            border-radius: var(--radius-md); transition: var(--transition); padding: 1rem;
+        }
+        .profile-section:hover { background-color: var(--hover-bg); }
+        .profile-content-wrapper { display: flex; align-items: center; gap: 0.75rem; width: 100%; }
+        .profile-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid var(--border-color); transition: var(--transition); }
+        .profile-section:hover .profile-avatar { border-color: var(--brand-primary); }
+        .profile-details { flex-grow: 1; min-width: 0; }
+        .profile-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; font-size: 0.9rem; }
+        .profile-email { font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+        .profile-options i { font-size: 1.25rem; color: var(--text-secondary); transition: var(--transition); }
+        .profile-section.active .profile-options i { transform: rotate(180deg); }
         
-        .status-toggle { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.9rem; }
-        .toggle-switch { appearance: none; width: 36px; height: 20px; background: #CBD5E1; border-radius: 20px; position: relative; transition: 0.2s; cursor: pointer; }
-        .toggle-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: white; border-radius: 50%; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .profile-popup { 
+            position: absolute; bottom: 90px; left: 1.5rem; right: 1.5rem; 
+            background-color: var(--widget-bg); border-radius: var(--radius-lg); 
+            box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); 
+            padding: 0.75rem; z-index: 100; opacity: 0; pointer-events: none; 
+            transform: translateY(10px) scale(0.95); transition: var(--transition); 
+        }
+        .profile-popup.active { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
+        .popup-header { display: flex; align-items: center; gap: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); margin-bottom: 0.5rem; }
+        .popup-list { list-style: none; } 
+        .popup-list a { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem; border-radius: var(--radius-sm); text-decoration: none; color: var(--text-primary); transition: var(--transition); cursor: pointer; }
+        .popup-list a:hover { background-color: var(--hover-bg); } 
+        .popup-list a i { font-size: 1.2rem; color: var(--text-secondary); }
+        .popup-list a.logout i { color: var(--danger-color); } 
+        .popup-list a.logout { color: var(--danger-color); }
+        
+        .menu-toggle, .sidebar-close-btn { display: none; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .overlay.active { opacity: 1; pointer-events: auto; }
+
+        .page-container { max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%; }
+        .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; gap: 1rem; }
+        .page-title { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); margin: 0; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 2rem; }
+        .form-col { display: flex; flex-direction: column; gap: 2rem; }
+        
+        .editor-card { background: var(--widget-bg); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 1.5rem; border: 1px solid var(--border-color); }
+        .section-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; color: var(--text-primary); }
+        
+        .input-group { margin-bottom: 1.25rem; }
+        .input-label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 0.5rem; }
+        .form-control { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: #fff; transition: var(--transition); font-size: 0.95rem; }
+        .form-control:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.6rem 1rem; font-weight: 600; border-radius: var(--radius-md); cursor: pointer; transition: var(--transition); border: none; font-size: 0.9rem; }
+        .btn-primary { background: var(--brand-gradient); color: white; box-shadow: var(--shadow-md); }
+        .btn-primary:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+        .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-primary); }
+        .btn-secondary:hover { background: #F8FAFC; border-color: #CBD5E1; }
+        .btn-icon { padding: 0.5rem; background: transparent; border: none; color: var(--text-secondary); cursor: pointer; border-radius: 6px; font-size: 1.2rem; }
+        .btn-icon:hover { background: #F1F5F9; color: var(--text-primary); }
+        
+        .swatch-upload-container { width: 120px; height: 120px; border-radius: var(--radius-md); border: 2px dashed #CBD5E1; background: #F8FAFC; display: flex; align-items: center; justify-content: center; flex-direction: column; cursor: pointer; overflow: hidden; position: relative; }
+        .swatch-upload-container img { width: 100%; height: 100%; object-fit: contain; padding: 5px; display: none; }
+        
+        /* List Items */
+        .sortable-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .sortable-item { display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid var(--border-color); padding: 0.75rem 1rem; border-radius: var(--radius-md); }
+        .sortable-item:hover { border-color: var(--brand-primary); }
+        .item-content { display: flex; align-items: center; gap: 1rem; flex: 1; }
+        .item-handle { cursor: grab; color: var(--text-secondary); }
+        .item-actions { display: flex; gap: 0.5rem; }
+        
+        /* Toggle Switch */
+        .toggle-switch { appearance: none; width: 36px; height: 20px; background: #CBD5E1; border-radius: 20px; position: relative; cursor: pointer; transition: 0.3s; }
+        .toggle-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: white; border-radius: 50%; transition: 0.3s; }
         .toggle-switch:checked { background: var(--success-color); }
         .toggle-switch:checked::after { transform: translateX(16px); }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: none; justify-content: center; align-items: center; }
-        .modal { background: white; width: 90%; max-width: 500px; border-radius: 12px; padding: 1.5rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        .modal-title { font-size: 1.2rem; font-weight: 600; }
+        /* Color Picker */
+        .color-input-wrapper { display: flex; align-items: center; gap: 0.5rem; }
+        .color-preview-box { width: 40px; height: 40px; border-radius: var(--radius-md); border: 1px solid var(--border-color); cursor: pointer; position: relative; overflow: hidden; }
+        .color-preview-box input[type="color"] { position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; cursor: pointer; opacity: 0; }
         
-        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
-        .toast { padding: 1rem 1.5rem; background: white; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border-left: 4px solid var(--brand-primary); margin-top: 10px; animation: slideIn 0.3s; display: flex; align-items: center; gap: 0.5rem; }
-        .toast.success { border-color: var(--success-color); }
-        .toast.error { border-color: var(--danger-color); }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        /* Modals */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 1rem; }
+        .modal-content { background: white; width: 100%; max-width: 500px; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); display: flex; flex-direction: column; overflow: hidden; animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes modalPop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #fff; }
+        .modal-body { padding: 1.5rem; overflow-y: auto; background: #F8FAFC; }
+        .modal-footer { padding: 1.25rem 1.5rem; background: white; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; }
 
-        .empty-state { text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 0.9rem; background: #F8FAFC; border-radius: 8px; border: 1px dashed var(--border-color); }
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; pointer-events: none; display: flex; flex-direction: column; gap: 10px; }
+        .toast { padding: 1rem 1.5rem; background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); animation: slideUp 0.3s ease; display: flex; align-items: center; gap: 1rem; border-left: 4px solid var(--brand-primary); min-width: 300px; pointer-events: auto; }
+        .toast.success { border-left-color: var(--success-color); }
+        .toast.error { border-left-color: var(--danger-color); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         @media (max-width: 1024px) {
             .dashboard-container { grid-template-columns: 1fr; }
-            .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 280px; z-index: 1000; transform: translateX(-100%); transition: transform 0.3s; }
+            .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 85%; max-width: 320px; z-index: 1000; transform: translateX(-100%); box-shadow: var(--shadow-lg); padding: 2rem 1.25rem; }
             .sidebar.active { transform: translateX(0); }
             .main-header { padding: 12px 1.5rem; justify-content: space-between; }
-            .nav-logo { display: block; }
-            .menu-toggle { display: block; }
+            .nav-logo { display: block; height: 36px; }
+            .menu-toggle { display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; font-size: 1.6rem; color: var(--text-primary); cursor: pointer; border: 1px solid var(--border-color); border-radius: var(--radius-md); background-color: white; }
+            .sidebar-close-btn { display: flex; align-items: center; justify-content: center; position: absolute; top: 1.5rem; right: 1.25rem; font-size: 1.75rem; color: var(--text-secondary); cursor: pointer; border: none; background: none; width: 36px; height: 36px; }
             .page-container { padding: 1rem; }
             .form-grid { grid-template-columns: 1fr; }
+            .modal-overlay { align-items: flex-end; padding: 0; }
+            .modal-content { width: 100%; max-width: 100%; border-radius: var(--radius-xl) var(--radius-xl) 0 0 !important; max-height: 85vh; animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+            @keyframes slideUpModal { from { transform: translateY(100%); } to { transform: translateY(0); } }
         }
+        @media (min-width: 1025px) { .nav-logo { display: none; } }
     </style>
 </head>
 <body>
-    <div id="toast-container"></div>
+    <div class="overlay" id="overlay"></div>
     <div class="dashboard-container">
-        
-        <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
+            <button class="sidebar-close-btn" id="sidebar-close-btn"><i class='bx bx-x'></i></button>
             <div class="sidebar-header">
                 <div class="logo-container">
-                    <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya" class="logo-image">
+                    <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" class="logo-image">
                 </div>
             </div>
             <nav class="main-nav">
                 <ul>
                     <li><a href="index.html"><i class='bx bx-home-alt'></i> Dashboard</a></li>
-                    <li><a href="#" class="active"><i class='bx bx-layout'></i> Landing Page</a></li>
-                    <li><a href="manage-category.html"><i class='bx bx-category'></i> Categories</a></li>
-                    <li><a href="manage-products.html"><i class='bx bx-package'></i> Products</a></li>
+                    <li><a href="manage-category.html"><i class='bx bx-package'></i> Inventory</a></li>
+                    <li><a href="#" class="active"><i class='bx bx-palette'></i> Customize Site</a></li>
+                    <li><a href="#"><i class='bx bx-clipboard'></i> All Orders</a></li>
                 </ul>
             </nav>
             <div class="profile-section" id="profile-section">
-                <div class="profile-avatar" style="background: #E2E8F0;"></div>
-                <div style="flex:1;">
-                    <div style="font-weight:600; font-size:0.9rem;" id="sidebar-name">Admin</div>
-                    <div style="font-size:0.8rem; color:var(--text-secondary);" id="sidebar-email">Loading...</div>
+                <div class="profile-content-wrapper">
+                    <img id="sidebar-avatar" src="" class="profile-avatar">
+                    <div class="profile-details">
+                        <span class="profile-name" id="sidebar-name">Loading...</span>
+                        <span class="profile-email" id="sidebar-email">Admin</span>
+                    </div>
+                    <div class="profile-options"><i class='bx bx-chevron-down'></i></div>
                 </div>
             </div>
+            <div class="profile-popup" id="profile-popup">
+                <div class="popup-header">
+                    <img id="popup-avatar" src="" class="profile-avatar">
+                    <div class="profile-details">
+                        <span class="profile-name" id="popup-name">Loading...</span>
+                        <span class="profile-email" id="popup-email">Admin</span>
+                    </div>
+                </div>
+                <ul class="popup-list">
+                    <li><a href="#"><i class='bx bx-user'></i> Profile</a></li>
+                    <li><a href="#"><i class='bx bx-cog'></i> Settings</a></li>
+                    <li><a href="#" onclick="auth.signOut()" class="logout"><i class='bx bx-log-out'></i> Logout</a></li>
+                </ul>
+            </div>
         </aside>
-
+        
         <main class="main-area">
             <header class="main-header">
                 <button class="menu-toggle" id="menu-toggle"><i class='bx bx-menu'></i></button>
-                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya" class="nav-logo">
-                <div></div>
+                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" class="nav-logo">
             </header>
-
+            
             <div class="page-container">
-                <h1 class="page-title">Landing Page Management</h1>
+                <div class="content-header">
+                    <h1 class="page-title">Customize Site</h1>
+                    <button class="btn btn-primary" onclick="saveAllChanges()">Save Changes</button>
+                </div>
 
-                <!-- 1. Branding & Theme -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title"><i class='bx bx-palette'></i> Branding & Theme</div>
-                        <button class="btn btn-primary btn-sm" onclick="saveBranding()">Save Changes</button>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label>Store Name</label>
+                <div class="form-grid">
+                    <!-- Left Column -->
+                    <div class="form-col">
+                        <!-- Branding -->
+                        <div class="editor-card">
+                            <h3 class="section-title">Branding & Theme</h3>
+                            <div class="input-group">
+                                <label class="input-label">Store Name</label>
                                 <input type="text" class="form-control" id="store-name" placeholder="Vastramaya">
                             </div>
-                            <div class="form-group">
-                                <label>Logo URL</label>
-                                <input type="text" class="form-control" id="logo-url" placeholder="https://...">
+                            <div class="input-group">
+                                <label class="input-label">Store Logo</label>
+                                <div style="display:flex; gap:1rem; align-items:center;">
+                                    <div class="swatch-upload-container" onclick="document.getElementById('logo-upload').click()">
+                                        <img id="logo-preview" src="">
+                                        <i class='bx bx-image-add' id="logo-icon"></i>
+                                        <span id="logo-text">Upload</span>
+                                    </div>
+                                    <input type="file" id="logo-upload" accept="image/*" style="display:none;">
+                                    <div style="flex:1; font-size:0.85rem; color:var(--text-secondary);">
+                                        Recommended size: 200x60px.<br>Transparent PNG preferred.
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label>Primary Brand Color</label>
-                                <div class="color-picker-wrapper">
-                                    <input type="color" id="primary-color" value="#3B82F6">
-                                    <span id="color-value" style="font-family:monospace;">#3B82F6</span>
+                            <div class="input-group">
+                                <label class="input-label">Primary Brand Color</label>
+                                <div class="color-input-wrapper">
+                                    <div class="color-preview-box" id="color-preview">
+                                        <input type="color" id="primary-color" onchange="updateColor(this.value)">
+                                    </div>
+                                    <input type="text" class="form-control" id="color-hex" readonly>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- 2. Navigation Menu -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title"><i class='bx bx-menu'></i> Navigation Menu</div>
-                        <button class="btn btn-primary btn-sm" onclick="openNavModal()">+ Add Link</button>
+                        <!-- Navigation -->
+                        <div class="editor-card">
+                            <div class="section-title">
+                                <span>Navigation Menu</span>
+                                <button class="btn btn-secondary btn-sm" onclick="openLinkModal()">+ Add Link</button>
+                            </div>
+                            <div id="nav-list" class="sortable-list"></div>
+                        </div>
+
+                        <!-- Hero Section -->
+                        <div class="editor-card">
+                            <div class="section-title">
+                                <span>Hero Carousel</span>
+                                <button class="btn btn-secondary btn-sm" onclick="openHeroModal()">+ Add Image</button>
+                            </div>
+                            <div id="hero-list" class="sortable-list"></div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div id="nav-links-list">
-                            <!-- Dynamic Links -->
+
+                    <!-- Right Column -->
+                    <div class="form-col">
+                        <!-- Featured Categories -->
+                        <div class="editor-card">
+                            <h3 class="section-title">Featured Categories (Circles)</h3>
+                            <div id="featured-cats-list" style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem;">
+                                <!-- Checkboxes injected here -->
+                            </div>
+                        </div>
+
+                        <!-- Category Sections (Rows) -->
+                        <div class="editor-card">
+                            <h3 class="section-title">Home Page Sections</h3>
+                            <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1rem;">Reorder and toggle visibility of product rows.</p>
+                            <div id="section-list" class="sortable-list"></div>
+                        </div>
+
+                        <!-- Promo Banner -->
+                        <div class="editor-card">
+                            <div class="section-title">
+                                <span>Promo Banner</span>
+                                <input type="checkbox" class="toggle-switch" id="promo-active">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Banner Text</label>
+                                <input type="text" class="form-control" id="promo-text" placeholder="Free Shipping on Orders Over ₹999">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Link URL (Optional)</label>
+                                <input type="text" class="form-control" id="promo-link" placeholder="/shop">
+                            </div>
+                        </div>
+                        
+                        <!-- Best Sellers -->
+                        <div class="editor-card">
+                            <div class="section-title">
+                                <span>Best Sellers</span>
+                                <button class="btn btn-secondary btn-sm" onclick="openBestSellerModal()">Select Products</button>
+                            </div>
+                            <p style="font-size:0.85rem; color:var(--text-secondary);">Select products to display in the Best Sellers grid.</p>
                         </div>
                     </div>
                 </div>
-
-                <!-- 3. Hero Section -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title"><i class='bx bx-images'></i> Hero Carousel</div>
-                        <button class="btn btn-primary btn-sm" onclick="openHeroModal()">+ Add Image</button>
-                    </div>
-                    <div class="card-body">
-                        <div id="hero-list">
-                            <!-- Dynamic Hero Images -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 4. Featured Categories (Circles) -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title"><i class='bx bx-purchase-tag-alt'></i> Featured Categories (Circles)</div>
-                        <button class="btn btn-primary btn-sm" onclick="saveFeaturedCats()">Save Selection</button>
-                    </div>
-                    <div class="card-body">
-                        <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:1rem;">Select categories to display in the top scrollable circle list.</p>
-                        <div id="featured-cats-list" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:1rem;">
-                            <!-- Checkboxes -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 5. Category Sections (Rows) -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title"><i class='bx bx-list-ul'></i> Category Sections (Rows)</div>
-                        <button class="btn btn-primary btn-sm" onclick="saveCategorySections()">Save Configuration</button>
-                    </div>
-                    <div class="card-body">
-                        <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:1rem;">Manage visible product rows on the homepage. Reorder and rename them.</p>
-                        <div id="cat-sections-list">
-                            <!-- Sortable List -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 6. Promo Banner -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title"><i class='bx bx-news'></i> Promo Banner</div>
-                        <div class="status-toggle">
-                            <input type="checkbox" class="toggle-switch" id="promo-active">
-                            <span>Active</span>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label>Banner Text</label>
-                            <input type="text" class="form-control" id="promo-text" placeholder="Free Shipping on orders over $50!">
-                        </div>
-                        <div class="form-group">
-                            <label>Link URL (Optional)</label>
-                            <input type="text" class="form-control" id="promo-link">
-                        </div>
-                        <button class="btn btn-primary btn-sm" onclick="savePromo()">Update Banner</button>
-                    </div>
-                </div>
-
-                <!-- 7. Best Sellers -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title"><i class='bx bx-star'></i> Best Sellers</div>
-                        <button class="btn btn-primary btn-sm" onclick="openBestSellerModal()">Select Products</button>
-                    </div>
-                    <div class="card-body">
-                        <div id="bestseller-preview" class="empty-state">No products selected</div>
-                    </div>
-                </div>
-
             </div>
         </main>
     </div>
 
     <!-- Modals -->
-    <!-- Nav Link Modal -->
-    <div class="modal-overlay" id="nav-modal">
-        <div class="modal">
+    <div class="modal-overlay" id="link-modal">
+        <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title">Add Navigation Link</div>
-                <button class="btn btn-icon" onclick="closeModal('nav-modal')"><i class='bx bx-x' style="font-size:1.5rem;"></i></button>
+                <h3 class="modal-title">Add Menu Link</h3>
+                <button class="btn-icon" onclick="closeModal('link-modal')"><i class='bx bx-x'></i></button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label>Label</label>
-                    <input type="text" class="form-control" id="nav-label">
+                <div class="input-group">
+                    <label class="input-label">Label Name</label>
+                    <input type="text" class="form-control" id="link-label" placeholder="e.g. Men's Wear">
                 </div>
-                <div class="form-group">
-                    <label>URL / Path</label>
-                    <input type="text" class="form-control" id="nav-url" placeholder="/shop or https://...">
+                <div class="input-group">
+                    <label class="input-label">Destination URL</label>
+                    <input type="text" class="form-control" id="link-url" placeholder="/category/mens">
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" onclick="saveNavLink()">Add Link</button>
+                <button class="btn btn-secondary" onclick="closeModal('link-modal')">Cancel</button>
+                <button class="btn btn-primary" onclick="addNavLink()">Add Link</button>
             </div>
         </div>
     </div>
 
-    <!-- Hero Modal -->
     <div class="modal-overlay" id="hero-modal">
-        <div class="modal">
+        <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title">Add Hero Image</div>
-                <button class="btn btn-icon" onclick="closeModal('hero-modal')"><i class='bx bx-x' style="font-size:1.5rem;"></i></button>
+                <h3 class="modal-title">Add Hero Image</h3>
+                <button class="btn-icon" onclick="closeModal('hero-modal')"><i class='bx bx-x'></i></button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label>Desktop Image URL</label>
-                    <input type="text" class="form-control" id="hero-desktop">
+                <div class="input-group">
+                    <label class="input-label">Desktop Image URL</label>
+                    <input type="text" class="form-control" id="hero-desktop" placeholder="https://...">
                 </div>
-                <div class="form-group">
-                    <label>Mobile Image URL</label>
-                    <input type="text" class="form-control" id="hero-mobile">
+                <div class="input-group">
+                    <label class="input-label">Mobile Image URL</label>
+                    <input type="text" class="form-control" id="hero-mobile" placeholder="https://...">
                 </div>
-                <div class="form-group">
-                    <label>Link (Optional)</label>
-                    <input type="text" class="form-control" id="hero-link">
+                <div class="input-group">
+                    <label class="input-label">Link (Optional)</label>
+                    <input type="text" class="form-control" id="hero-link" placeholder="/shop">
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" onclick="saveHeroImage()">Save Slide</button>
+                <button class="btn btn-secondary" onclick="closeModal('hero-modal')">Cancel</button>
+                <button class="btn btn-primary" onclick="addHeroImage()">Add Slide</button>
             </div>
         </div>
     </div>
 
-    <!-- Best Seller Modal -->
     <div class="modal-overlay" id="bestseller-modal">
-        <div class="modal" style="max-width: 600px;">
+        <div class="modal-content" style="max-height:80vh;">
             <div class="modal-header">
-                <div class="modal-title">Select Best Sellers</div>
-                <button class="btn btn-icon" onclick="closeModal('bestseller-modal')"><i class='bx bx-x' style="font-size:1.5rem;"></i></button>
+                <h3 class="modal-title">Select Best Sellers</h3>
+                <button class="btn-icon" onclick="closeModal('bestseller-modal')"><i class='bx bx-x'></i></button>
             </div>
-            <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
-                <input type="text" class="form-control" placeholder="Search products..." id="bs-search" style="margin-bottom: 1rem;">
-                <div id="bs-product-list"></div>
+            <div class="modal-body">
+                <input type="text" class="form-control" id="bs-search" placeholder="Search products..." style="margin-bottom:1rem;">
+                <div id="bs-list" style="display:flex; flex-direction:column; gap:0.5rem;"></div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" onclick="saveBestSellers()">Save Selection</button>
+                <button class="btn btn-primary" onclick="closeModal('bestseller-modal')">Done</button>
             </div>
         </div>
     </div>
+
+    <div id="toast-container"></div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <script>
+        // --- Init & Config ---
         const firebaseConfig = {
             apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
             authDomain: "vastramaya---magic.firebaseapp.com",
@@ -357,334 +442,375 @@
         };
         
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
         const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
         const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
 
-        // State
+        // --- State ---
+        let branding = { name: 'Vastramaya', color: '#3B82F6', logo: '' };
+        let navigation = [];
+        let heroImages = [];
+        let featuredCats = [];
+        let categorySections = [];
         let allCategories = [];
         let allProducts = [];
-        let navLinks = [];
-        let heroImages = [];
-        let categorySections = [];
-        let featuredCatIds = [];
-        let selectedBestSellers = [];
+        let bestSellersIds = [];
+        let logoFile = null;
 
-        // Init
+        // --- Auth ---
         auth.onAuthStateChanged(user => {
             if (!user || user.email !== ADMIN_EMAIL) {
                 window.location.href = 'index.html';
                 return;
             }
-            document.getElementById('sidebar-email').textContent = user.email;
+            initUI(user);
             loadAllData();
         });
 
-        // Menu Toggle
-        document.getElementById('menu-toggle').onclick = () => {
-            document.getElementById('sidebar').classList.toggle('active');
-            document.querySelector('.overlay').classList.toggle('active');
-        };
-        document.querySelector('.overlay').onclick = () => {
-            document.getElementById('sidebar').classList.remove('active');
-            document.querySelector('.overlay').classList.remove('active');
-        };
+        function initUI(user) {
+            const name = user.displayName || 'Admin';
+            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3B82F6&color=fff`;
+            document.getElementById('sidebar-name').textContent = name;
+            document.getElementById('sidebar-email').textContent = user.email;
+            document.getElementById('sidebar-avatar').src = avatar;
+            document.getElementById('popup-name').textContent = name;
+            document.getElementById('popup-email').textContent = user.email;
+            document.getElementById('popup-avatar').src = avatar;
+            
+            // Mobile Menu Logic
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menu-toggle');
+            const closeBtn = document.getElementById('sidebar-close-btn');
+            const overlay = document.getElementById('overlay');
+            const profileSection = document.getElementById('profile-section');
+            const profilePopup = document.getElementById('profile-popup');
 
-        // Color Picker
-        document.getElementById('primary-color').addEventListener('input', (e) => {
-            document.getElementById('color-value').textContent = e.target.value;
-        });
+            const toggleMenu = () => {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            };
+
+            menuToggle.addEventListener('click', toggleMenu);
+            closeBtn.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', toggleMenu);
+
+            profileSection.addEventListener('click', e => { 
+                e.stopPropagation(); 
+                profilePopup.classList.toggle('active'); 
+            });
+            document.addEventListener('click', e => { 
+                if (!profileSection.contains(e.target)) profilePopup.classList.remove('active'); 
+            });
+        }
 
         // --- Data Loading ---
         async function loadAllData() {
             try {
-                const [catsSnap, prodsSnap, settingsSnap, navSnap, heroSnap, promoSnap, featSnap, catSecSnap, bestSnap] = await Promise.all([
-                    db.collection('categories').get(),
-                    db.collection('products').get(),
-                    db.collection('landingPage').doc('settings').get(),
+                // Fetch Collections
+                const [brandDoc, navDoc, featCatDoc, sectionsDoc, heroDoc, promoDoc, bestDoc, catsSnap, prodSnap] = await Promise.all([
+                    db.collection('landingPage').doc('branding').get(),
                     db.collection('landingPage').doc('navigation').get(),
-                    db.collection('landingPage').doc('heroImages').get(),
-                    db.collection('landingPage').doc('promoBanner').get(),
                     db.collection('landingPage').doc('featuredCategories').get(),
                     db.collection('landingPage').doc('categorySections').get(),
-                    db.collection('landingPage').doc('bestSellers').get()
+                    db.collection('landingPage').doc('heroImages').get(),
+                    db.collection('landingPage').doc('promoBanner').get(),
+                    db.collection('landingPage').doc('bestSellers').get(),
+                    db.collection('categories').orderBy('name').get(),
+                    db.collection('products').select('name', 'category').get() // Optimize fetch
                 ]);
 
-                allCategories = catsSnap.docs.map(d => ({id: d.id, ...d.data()}));
-                allProducts = prodsSnap.docs.map(d => ({id: d.id, ...d.data()}));
+                // Categories & Products
+                allCategories = catsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                allProducts = prodSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
-                // Settings
-                if(settingsSnap.exists) {
-                    const s = settingsSnap.data();
-                    document.getElementById('store-name').value = s.storeName || '';
-                    document.getElementById('logo-url').value = s.logoUrl || '';
-                    document.getElementById('primary-color').value = s.primaryColor || '#3B82F6';
-                    document.getElementById('color-value').textContent = s.primaryColor || '#3B82F6';
+                // Branding
+                if(brandDoc.exists) {
+                    branding = brandDoc.data();
+                    document.getElementById('store-name').value = branding.name;
+                    updateColor(branding.color);
+                    if(branding.logo) {
+                        document.getElementById('logo-preview').src = branding.logo;
+                        document.getElementById('logo-preview').style.display = 'block';
+                        document.getElementById('logo-icon').style.display = 'none';
+                        document.getElementById('logo-text').style.display = 'none';
+                    }
                 }
 
                 // Navigation
-                navLinks = navSnap.exists ? (navSnap.data().links || []) : [];
-                renderNavLinks();
+                if(navDoc.exists) navigation = navDoc.data().links || [];
+                renderNavigation();
 
                 // Hero
-                heroImages = heroSnap.exists ? (heroSnap.data().images || []) : [];
+                if(heroDoc.exists) heroImages = heroDoc.data().images || [];
                 renderHeroList();
 
-                // Promo
-                if(promoSnap.exists) {
-                    const p = promoSnap.data();
-                    document.getElementById('promo-text').value = p.text || '';
-                    document.getElementById('promo-link').value = p.link || '';
-                    document.getElementById('promo-active').checked = p.active || false;
-                }
-
-                // Featured Categories
-                featuredCatIds = featSnap.exists ? (featSnap.data().categoryIds || []) : [];
+                // Featured Cats
+                if(featCatDoc.exists) featuredCats = featCatDoc.data().categoryIds || [];
                 renderFeaturedCats();
 
                 // Category Sections
-                const savedSections = catSecSnap.exists ? (catSecSnap.data().sections || []) : [];
-                // Merge existing categories with saved config
+                // Merge existing config with all available categories
+                const savedSections = sectionsDoc.exists ? sectionsDoc.data().sections : [];
+                
+                // Map all categories to section objects
                 categorySections = allCategories.map(cat => {
                     const saved = savedSections.find(s => s.categoryId === cat.id);
                     return {
                         categoryId: cat.id,
                         name: cat.name,
-                        displayTitle: saved ? saved.displayTitle : cat.name,
-                        isVisible: saved ? saved.isVisible : true,
-                        order: saved ? saved.order : 99
+                        visible: saved ? saved.visible : true,
+                        order: saved ? saved.order : 999
                     };
                 }).sort((a, b) => a.order - b.order);
                 renderCategorySections();
 
+                // Promo Banner
+                if(promoDoc.exists) {
+                    const data = promoDoc.data();
+                    document.getElementById('promo-active').checked = data.active;
+                    document.getElementById('promo-text').value = data.text;
+                    document.getElementById('promo-link').value = data.link || '';
+                }
+
                 // Best Sellers
-                const bsIds = bestSnap.exists ? (bestSnap.data().productIds || []) : [];
-                selectedBestSellers = bsIds; // IDs only
-                renderBestSellerPreview();
-
-            } catch (e) {
+                if(bestDoc.exists) bestSellersIds = (bestDoc.data().products || []).map(p => p.id);
+                
+            } catch(e) {
                 console.error(e);
-                showToast('Error loading data', 'error');
+                showToast('Error loading settings', 'error');
             }
         }
 
-        // --- Branding ---
-        async function saveBranding() {
-            const data = {
-                storeName: document.getElementById('store-name').value,
-                logoUrl: document.getElementById('logo-url').value,
-                primaryColor: document.getElementById('primary-color').value
-            };
-            await db.collection('landingPage').doc('settings').set(data, {merge: true});
-            showToast('Branding saved');
-        }
+        // --- Render Functions ---
 
-        // --- Navigation ---
-        function renderNavLinks() {
-            const list = document.getElementById('nav-links-list');
-            if(navLinks.length === 0) {
-                list.innerHTML = '<div class="empty-state">No links added</div>';
-                return;
+        // Branding
+        function updateColor(hex) {
+            document.getElementById('primary-color').value = hex;
+            document.getElementById('color-hex').value = hex;
+            document.getElementById('color-preview').style.backgroundColor = hex;
+        }
+        document.getElementById('logo-upload').addEventListener('change', e => {
+            const file = e.target.files[0];
+            if(file) {
+                logoFile = file;
+                document.getElementById('logo-preview').src = URL.createObjectURL(file);
+                document.getElementById('logo-preview').style.display = 'block';
+                document.getElementById('logo-icon').style.display = 'none';
+                document.getElementById('logo-text').style.display = 'none';
             }
-            list.innerHTML = navLinks.map((l, i) => `
-                <div class="list-item">
-                    <div class="list-content"><strong>${l.label}</strong> <span style="color:var(--text-secondary); font-size:0.9rem;">${l.url}</span></div>
-                    <div class="list-actions">
-                        <button class="btn btn-secondary btn-sm" onclick="moveLink(${i}, -1)"><i class='bx bx-up-arrow-alt'></i></button>
-                        <button class="btn btn-secondary btn-sm" onclick="moveLink(${i}, 1)"><i class='bx bx-down-arrow-alt'></i></button>
-                        <button class="btn btn-danger btn-sm" onclick="removeLink(${i})"><i class='bx bx-trash'></i></button>
+        });
+
+        // Navigation
+        function renderNavigation() {
+            const list = document.getElementById('nav-list');
+            list.innerHTML = navigation.map((link, i) => `
+                <div class="sortable-item">
+                    <div class="item-content">
+                        <div style="font-weight:600;">${link.label}</div>
+                        <div style="font-size:0.85rem; color:var(--text-secondary);">${link.url}</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-icon" onclick="moveNav(${i}, -1)"><i class='bx bx-chevron-up'></i></button>
+                        <button class="btn-icon" onclick="moveNav(${i}, 1)"><i class='bx bx-chevron-down'></i></button>
+                        <button class="btn-icon" onclick="deleteNav(${i})" style="color:var(--danger-color);"><i class='bx bx-trash'></i></button>
                     </div>
                 </div>
             `).join('');
         }
-
-        function openNavModal() { document.getElementById('nav-modal').style.display = 'flex'; }
         
-        function saveNavLink() {
-            const label = document.getElementById('nav-label').value;
-            const url = document.getElementById('nav-url').value;
+        function addNavLink() {
+            const label = document.getElementById('link-label').value;
+            const url = document.getElementById('link-url').value;
             if(!label || !url) return showToast('Fields required', 'error');
-            navLinks.push({label, url});
-            db.collection('landingPage').doc('navigation').set({links: navLinks});
-            renderNavLinks();
-            closeModal('nav-modal');
-            document.getElementById('nav-label').value = '';
-            document.getElementById('nav-url').value = '';
+            navigation.push({label, url});
+            renderNavigation();
+            closeModal('link-modal');
+        }
+        
+        function moveNav(i, dir) {
+            if (i + dir < 0 || i + dir >= navigation.length) return;
+            [navigation[i], navigation[i+dir]] = [navigation[i+dir], navigation[i]];
+            renderNavigation();
+        }
+        
+        function deleteNav(i) {
+            navigation.splice(i, 1);
+            renderNavigation();
         }
 
-        function removeLink(i) {
-            navLinks.splice(i, 1);
-            db.collection('landingPage').doc('navigation').set({links: navLinks});
-            renderNavLinks();
-        }
-
-        function moveLink(i, dir) {
-            if(i+dir < 0 || i+dir >= navLinks.length) return;
-            [navLinks[i], navLinks[i+dir]] = [navLinks[i+dir], navLinks[i]];
-            db.collection('landingPage').doc('navigation').set({links: navLinks});
-            renderNavLinks();
-        }
-
-        // --- Hero Images ---
+        // Hero
         function renderHeroList() {
             const list = document.getElementById('hero-list');
-            if(heroImages.length === 0) {
-                list.innerHTML = '<div class="empty-state">No hero images</div>';
-                return;
-            }
-            list.innerHTML = heroImages.map((h, i) => `
-                <div class="list-item">
-                    <img src="${h.desktop}" class="list-img">
-                    <div class="list-content"><div style="font-size:0.9rem;">Slide ${i+1}</div></div>
-                    <div class="list-actions">
-                        <button class="btn btn-danger btn-sm" onclick="removeHero(${i})"><i class='bx bx-trash'></i></button>
+            list.innerHTML = heroImages.map((img, i) => `
+                <div class="sortable-item">
+                    <img src="${img.desktop}" style="width:60px; height:40px; object-fit:cover; border-radius:4px;">
+                    <div class="item-content" style="margin-left:1rem;">
+                        <div style="font-size:0.85rem;">Slide ${i+1}</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-icon" onclick="moveHero(${i}, -1)"><i class='bx bx-chevron-up'></i></button>
+                        <button class="btn-icon" onclick="moveHero(${i}, 1)"><i class='bx bx-chevron-down'></i></button>
+                        <button class="btn-icon" onclick="deleteHero(${i})" style="color:var(--danger-color);"><i class='bx bx-trash'></i></button>
                     </div>
                 </div>
             `).join('');
         }
 
-        function openHeroModal() { document.getElementById('hero-modal').style.display = 'flex'; }
-
-        function saveHeroImage() {
-            const d = document.getElementById('hero-desktop').value;
-            const m = document.getElementById('hero-mobile').value;
-            const l = document.getElementById('hero-link').value;
-            if(!d) return showToast('Desktop image required', 'error');
-            heroImages.push({desktop: d, mobile: m || d, link: l || '#'});
-            db.collection('landingPage').doc('heroImages').set({images: heroImages});
+        function addHeroImage() {
+            const desktop = document.getElementById('hero-desktop').value;
+            const mobile = document.getElementById('hero-mobile').value;
+            const link = document.getElementById('hero-link').value;
+            if(!desktop) return showToast('Desktop URL required', 'error');
+            
+            heroImages.push({ desktop, mobile: mobile || desktop, link });
             renderHeroList();
             closeModal('hero-modal');
-            document.getElementById('hero-desktop').value = '';
-            document.getElementById('hero-mobile').value = '';
-            document.getElementById('hero-link').value = '';
         }
 
-        function removeHero(i) {
-            heroImages.splice(i, 1);
-            db.collection('landingPage').doc('heroImages').set({images: heroImages});
+        function moveHero(i, dir) {
+            if (i + dir < 0 || i + dir >= heroImages.length) return;
+            [heroImages[i], heroImages[i+dir]] = [heroImages[i+dir], heroImages[i]];
             renderHeroList();
         }
 
-        // --- Featured Categories ---
+        function deleteHero(i) {
+            heroImages.splice(i, 1);
+            renderHeroList();
+        }
+
+        // Featured Cats
         function renderFeaturedCats() {
             const list = document.getElementById('featured-cats-list');
             list.innerHTML = allCategories.map(cat => `
-                <label class="list-item" style="cursor:pointer; justify-content:flex-start; gap:0.5rem;">
-                    <input type="checkbox" value="${cat.id}" ${featuredCatIds.includes(cat.id) ? 'checked' : ''}>
-                    <span>${cat.name}</span>
+                <label style="display:flex; align-items:center; gap:0.5rem; padding:0.5rem; background:white; border:1px solid var(--border-color); border-radius:6px; cursor:pointer;">
+                    <input type="checkbox" onchange="toggleFeatured('${cat.id}')" ${featuredCats.includes(cat.id) ? 'checked' : ''}>
+                    <span style="font-size:0.9rem;">${cat.name}</span>
                 </label>
             `).join('');
         }
 
-        async function saveFeaturedCats() {
-            const checked = Array.from(document.querySelectorAll('#featured-cats-list input:checked')).map(c => c.value);
-            await db.collection('landingPage').doc('featuredCategories').set({categoryIds: checked});
-            showToast('Featured categories saved');
+        function toggleFeatured(id) {
+            if(featuredCats.includes(id)) featuredCats = featuredCats.filter(c => c !== id);
+            else featuredCats.push(id);
         }
 
-        // --- Category Sections ---
+        // Category Sections
         function renderCategorySections() {
-            const list = document.getElementById('cat-sections-list');
+            const list = document.getElementById('section-list');
             list.innerHTML = categorySections.map((sec, i) => `
-                <div class="list-item" style="display:grid; grid-template-columns: 40px 1fr 1fr 100px; gap:1rem; align-items:center;">
-                    <div class="status-toggle">
-                        <input type="checkbox" class="toggle-switch" onchange="toggleSection(${i}, this.checked)" ${sec.isVisible ? 'checked' : ''}>
+                <div class="sortable-item">
+                    <div class="item-content">
+                        <div style="font-weight:600;">${sec.name}</div>
                     </div>
-                    <div style="font-weight:600;">${sec.name}</div>
-                    <input type="text" class="form-control" value="${sec.displayTitle}" onchange="updateSecTitle(${i}, this.value)" placeholder="Display Title">
-                    <div class="list-actions" style="justify-content:flex-end;">
-                        <button class="btn btn-secondary btn-sm" onclick="moveSection(${i}, -1)"><i class='bx bx-up-arrow-alt'></i></button>
-                        <button class="btn btn-secondary btn-sm" onclick="moveSection(${i}, 1)"><i class='bx bx-down-arrow-alt'></i></button>
+                    <div class="item-actions" style="align-items:center;">
+                        <input type="checkbox" class="toggle-switch" ${sec.visible ? 'checked' : ''} onchange="toggleSection(${i})">
+                        <div style="width:10px;"></div>
+                        <button class="btn-icon" onclick="moveSection(${i}, -1)"><i class='bx bx-chevron-up'></i></button>
+                        <button class="btn-icon" onclick="moveSection(${i}, 1)"><i class='bx bx-chevron-down'></i></button>
                     </div>
                 </div>
             `).join('');
         }
 
-        function toggleSection(i, val) { categorySections[i].isVisible = val; }
-        function updateSecTitle(i, val) { categorySections[i].displayTitle = val; }
-        
+        function toggleSection(i) {
+            categorySections[i].visible = !categorySections[i].visible;
+        }
+
         function moveSection(i, dir) {
-            if(i+dir < 0 || i+dir >= categorySections.length) return;
+            if (i + dir < 0 || i + dir >= categorySections.length) return;
             [categorySections[i], categorySections[i+dir]] = [categorySections[i+dir], categorySections[i]];
-            // Update order property based on new index
-            categorySections.forEach((s, idx) => s.order = idx);
             renderCategorySections();
         }
 
-        async function saveCategorySections() {
-            const data = categorySections.map((s, i) => ({
-                categoryId: s.categoryId,
-                displayTitle: s.displayTitle,
-                isVisible: s.isVisible,
-                order: i
-            }));
-            await db.collection('landingPage').doc('categorySections').set({sections: data});
-            showToast('Sections configuration saved');
-        }
-
-        // --- Promo Banner ---
-        async function savePromo() {
-            const data = {
-                text: document.getElementById('promo-text').value,
-                link: document.getElementById('promo-link').value,
-                active: document.getElementById('promo-active').checked
-            };
-            await db.collection('landingPage').doc('promoBanner').set(data);
-            showToast('Promo banner saved');
-        }
-
-        // --- Best Sellers ---
+        // Best Sellers
         function openBestSellerModal() {
-            renderBSList();
             document.getElementById('bestseller-modal').style.display = 'flex';
+            renderBSList();
         }
 
-        function renderBSList() {
-            const term = document.getElementById('bs-search').value.toLowerCase();
-            const container = document.getElementById('bs-product-list');
-            const filtered = allProducts.filter(p => p.name.toLowerCase().includes(term));
+        function renderBSList(search = '') {
+            const list = document.getElementById('bs-list');
+            const filtered = allProducts.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
             
-            container.innerHTML = filtered.map(p => `
-                <label class="list-item" style="cursor:pointer; justify-content:flex-start; gap:1rem;">
-                    <input type="checkbox" value="${p.id}" ${selectedBestSellers.includes(p.id) ? 'checked' : ''} onchange="toggleBS('${p.id}')">
-                    <img src="${p.images?.[0] || ''}" class="list-img">
-                    <span>${p.name}</span>
+            list.innerHTML = filtered.map(p => `
+                <label style="display:flex; justify-content:space-between; padding:0.5rem; border-bottom:1px solid #eee;">
+                    <span>${p.name} <span style="color:var(--text-secondary); font-size:0.8rem;">(${p.category})</span></span>
+                    <input type="checkbox" ${bestSellersIds.includes(p.id) ? 'checked' : ''} onchange="toggleBS('${p.id}')">
                 </label>
             `).join('');
         }
 
-        document.getElementById('bs-search').addEventListener('input', renderBSList);
-
         function toggleBS(id) {
-            const idx = selectedBestSellers.indexOf(id);
-            if(idx > -1) selectedBestSellers.splice(idx, 1);
-            else selectedBestSellers.push(id);
+            if(bestSellersIds.includes(id)) bestSellersIds = bestSellersIds.filter(i => i !== id);
+            else bestSellersIds.push(id);
         }
 
-        async function saveBestSellers() {
-            await db.collection('landingPage').doc('bestSellers').set({productIds: selectedBestSellers});
-            renderBestSellerPreview();
-            closeModal('bestseller-modal');
-            showToast('Best sellers updated');
-        }
+        document.getElementById('bs-search').addEventListener('input', e => renderBSList(e.target.value));
 
-        function renderBestSellerPreview() {
-            const container = document.getElementById('bestseller-preview');
-            const count = selectedBestSellers.length;
-            if(count === 0) {
-                container.textContent = "No products selected";
-                return;
-            }
-            container.textContent = `${count} product${count > 1 ? 's' : ''} selected`;
-        }
-
-        // --- Utils ---
+        // --- Modals ---
+        function openLinkModal() { document.getElementById('link-modal').style.display = 'flex'; document.getElementById('link-label').value=''; document.getElementById('link-url').value=''; }
+        function openHeroModal() { document.getElementById('hero-modal').style.display = 'flex'; document.getElementById('hero-desktop').value=''; document.getElementById('hero-mobile').value=''; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        // --- Main Save ---
+        async function saveAllChanges() {
+            const btn = document.querySelector('.content-header .btn-primary');
+            btn.textContent = 'Saving...'; btn.disabled = true;
+
+            try {
+                // Upload Logo if needed
+                if(logoFile) {
+                    const ref = storage.ref().child(`branding/${Date.now()}-logo`);
+                    await ref.put(logoFile);
+                    branding.logo = await ref.getDownloadURL();
+                }
+                
+                branding.name = document.getElementById('store-name').value;
+                branding.color = document.getElementById('primary-color').value;
+
+                // Prepare Data
+                const promoData = {
+                    active: document.getElementById('promo-active').checked,
+                    text: document.getElementById('promo-text').value,
+                    link: document.getElementById('promo-link').value
+                };
+
+                // Best Sellers Objects
+                const bestSellersObjs = bestSellersIds.map(id => {
+                    const p = allProducts.find(x => x.id === id);
+                    return p ? {id: p.id, ...p} : null;
+                }).filter(Boolean);
+
+                // Batch Write (simulated via promises)
+                await Promise.all([
+                    db.collection('landingPage').doc('branding').set(branding),
+                    db.collection('landingPage').doc('navigation').set({ links: navigation }),
+                    db.collection('landingPage').doc('heroImages').set({ images: heroImages }),
+                    db.collection('landingPage').doc('featuredCategories').set({ categoryIds: featuredCats }),
+                    db.collection('landingPage').doc('categorySections').set({ 
+                        sections: categorySections.map((s, idx) => ({...s, order: idx})) 
+                    }),
+                    db.collection('landingPage').doc('promoBanner').set(promoData),
+                    db.collection('landingPage').doc('bestSellers').set({ products: bestSellersObjs })
+                ]);
+
+                showToast('Site customization saved successfully!');
+
+            } catch(e) {
+                console.error(e);
+                showToast('Save failed', 'error');
+            } finally {
+                btn.textContent = 'Save Changes'; btn.disabled = false;
+            }
+        }
+
         function showToast(msg, type='success') {
+            const container = document.getElementById('toast-container');
             const el = document.createElement('div');
             el.className = `toast ${type}`;
-            el.innerHTML = `<i class='bx ${type==='success'?'bx-check-circle':'bx-error-circle'}'></i> ${msg}`;
-            document.getElementById('toast-container').appendChild(el);
+            el.innerHTML = `<i class='bx ${type==='success'?'bx-check-circle':'bx-error-circle'}'></i> <span>${msg}</span>`;
+            container.appendChild(el);
             setTimeout(() => el.remove(), 3000);
         }
     </script>
