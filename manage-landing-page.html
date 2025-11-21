@@ -23,7 +23,7 @@
         body { font-family: var(--font-family); background-color: var(--bg-color); color: var(--dark-color); line-height: 1.5; }
         .container { max-width: 1400px; margin: 0 auto; padding: 1.5rem; }
         
-        /* Navigation (Same as before) */
+        /* Navigation */
         nav { 
             background: #fff; padding: 1rem 1.5rem; 
             display: flex; justify-content: space-between; align-items: center; 
@@ -47,590 +47,900 @@
             font-family: var(--font-family); font-weight: 600; 
             transition: all 0.2s ease-in-out; display: inline-flex; align-items: center; gap: 0.5rem;
         }
-        .btn-primary { background-color: var(--primary-color); color: white; padding: 0.75rem 1.5rem; font-size: 0.875rem; }
+        .btn-primary { 
+            background-color: var(--primary-color); color: white; 
+            padding: 0.75rem 1.5rem; font-size: 0.875rem;
+        }
         .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
-        .btn-secondary { background-color: white; color: var(--secondary-color); border: 1px solid #d1d5db; padding: 0.5rem 1rem; font-size: 0.75rem; }
+        .btn-success { 
+            background-color: var(--success-color); color: white; 
+            padding: 0.75rem 1.5rem; font-size: 0.875rem;
+        }
+        .btn-success:hover { background-color: #0da271; transform: translateY(-1px); }
+        .btn-danger { 
+            background-color: var(--danger-color); color: white; 
+            padding: 0.5rem 1rem; font-size: 0.75rem;
+        }
+        .btn-danger:hover { background-color: #dc2626; }
+        .btn-secondary { 
+            background-color: white; color: var(--secondary-color); border: 1px solid #d1d5db;
+            padding: 0.5rem 1rem; font-size: 0.75rem;
+        }
         .btn-secondary:hover { background-color: #f9fafb; border-color: var(--secondary-color); }
-        .btn-icon { padding: 0.4rem; background: transparent; color: var(--secondary-color); }
-        .btn-icon:hover { background: var(--bg-color); color: var(--primary-color); }
+        .btn-warning { 
+            background-color: var(--warning-color); color: white; 
+            padding: 0.5rem 1rem; font-size: 0.75rem;
+        }
+        .btn-warning:hover { background-color: #d97706; }
         
         /* Page Layout */
-        .page { animation: fadeIn 0.5s; padding-bottom: 4rem; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
+        .page { animation: fadeIn 0.5s; }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
         .card { 
             background-color: #fff; border-radius: var(--border-radius); 
             box-shadow: var(--box-shadow); border: 1px solid #e5e7eb;
-            margin-bottom: 1.5rem; overflow: hidden;
+            margin-bottom: 1.5rem;
         }
         .card-header { 
-            padding: 1.25rem 1.5rem; border-bottom: 1px solid #e5e7eb; background: #fff;
+            padding: 1.5rem; border-bottom: 1px solid #e5e7eb;
             display: flex; justify-content: space-between; align-items: center;
         }
-        .card-title { font-size: 1.1rem; font-weight: 700; color: var(--dark-color); display: flex; align-items: center; gap: 0.5rem; }
+        .card-title { font-size: 1.25rem; font-weight: 600; color: var(--dark-color); }
         .card-body { padding: 1.5rem; }
         
-        /* Grid Layout for settings */
-        .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-        
         /* Form Elements */
-        .form-group { margin-bottom: 1.25rem; }
-        .form-group label { display: block; font-weight: 500; margin-bottom: 0.5rem; font-size: 0.85rem; color: var(--secondary-color); }
-        .form-control { 
-            display: block; width: 100%; padding: 0.6rem 0.8rem; 
-            font-size: 0.9rem; background-color: #fff; 
-            border: 1px solid #d1d5db; border-radius: var(--border-radius);
-            transition: all 0.2s;
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { 
+            display: block; font-weight: 600; margin-bottom: 0.5rem; 
+            font-size: 0.9rem; color: var(--dark-color);
         }
-        .form-control:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); outline: none; }
+        .form-group input, .form-group textarea { 
+            display: block; width: 100%; padding: 0.75rem 1rem; 
+            font-size: 0.95rem; line-height: 1.5; background-color: #fff; 
+            border: 1px solid #ced4da; border-radius: var(--border-radius);
+            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+            font-family: var(--font-family);
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--primary-color); outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+        }
+        .form-group textarea { resize: vertical; min-height: 100px; }
         
-        /* Color Picker Group */
-        .color-group { display: flex; align-items: center; gap: 0.75rem; border: 1px solid #e5e7eb; padding: 0.5rem; border-radius: var(--border-radius); }
-        .color-input { width: 40px; height: 40px; padding: 0; border: none; border-radius: 4px; cursor: pointer; background: none; }
-        .color-text { flex: 1; border: none; outline: none; font-family: monospace; color: var(--dark-color); text-transform: uppercase; }
-
-        /* List Items (Nav & Sections) */
-        .list-item { 
-            display: flex; align-items: center; justify-content: space-between; 
-            padding: 0.75rem; background: var(--bg-color); border: 1px solid #e5e7eb;
-            border-radius: var(--border-radius); margin-bottom: 0.5rem; transition: transform 0.2s;
+        /* Image Preview */
+        .image-preview-container { display: flex; gap: 1rem; margin-top: 1rem; }
+        .image-preview { 
+            flex: 1; border: 2px dashed #d1d5db; border-radius: var(--border-radius);
+            padding: 1rem; text-align: center;
         }
-        .list-item:hover { border-color: var(--primary-color); }
-        .item-drag-handle { color: #9ca3af; cursor: grab; padding-right: 0.5rem; }
-        .item-content { flex: 1; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; }
-        .item-actions { display: flex; gap: 0.25rem; }
-
-        /* Toggle Switch */
-        .toggle-wrapper { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+        .image-preview img { 
+            max-width: 100%; max-height: 200px; border-radius: var(--border-radius);
+            margin-bottom: 0.5rem;
+        }
+        .image-preview p { 
+            font-size: 0.875rem; color: var(--secondary-color); margin: 0;
+        }
+        
+        /* Status Toggle */
+        .status-toggle { 
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.375rem 0.75rem; border-radius: 999px;
+            font-size: 0.75rem; font-weight: 600;
+        }
+        .status-toggle.active { 
+            background: #f0fdf4; color: var(--success-color); 
+            border: 1px solid #bbf7d0;
+        }
+        .status-toggle.inactive { 
+            background: #fef2f2; color: var(--danger-color);
+            border: 1px solid #fecaca;
+        }
         .toggle-switch { 
-            appearance: none; width: 40px; height: 22px; background: #d1d5db; 
-            border-radius: 20px; position: relative; transition: 0.3s; cursor: pointer;
+            appearance: none; width: 36px; height: 20px; 
+            background-color: #d1d5db; border-radius: 999px; 
+            position: relative; cursor: pointer; transition: all 0.2s;
         }
-        .toggle-switch::after { 
-            content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; 
-            background: white; border-radius: 50%; transition: 0.3s; box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        .toggle-switch::before { 
+            content: ''; position: absolute; width: 16px; height: 16px; 
+            border-radius: 50%; background-color: white; top: 2px; left: 2px; 
+            transition: transform 0.2s; box-shadow: var(--box-shadow);
         }
-        .toggle-switch:checked { background: var(--success-color); }
-        .toggle-switch:checked::after { transform: translateX(18px); }
-
-        /* Category Checklist */
-        .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.75rem; }
-        .check-card { 
-            position: relative; border: 1px solid #e5e7eb; border-radius: var(--border-radius); 
-            overflow: hidden; cursor: pointer; transition: 0.2s;
+        .toggle-switch:checked { background-color: var(--success-color); }
+        .toggle-switch:checked::before { transform: translateX(16px); }
+        
+        /* Products Grid */
+        .products-grid { 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 1.5rem; margin-top: 1.5rem;
         }
-        .check-card:hover { border-color: var(--primary-color); }
-        .check-card input { position: absolute; opacity: 0; }
-        .check-card-content { padding: 0.75rem; text-align: center; background: #fff; }
-        .check-card input:checked + .check-card-content { background: var(--primary-light); color: var(--primary-color); font-weight: 600; }
+        .product-card { 
+            background: white; border-radius: var(--border-radius); 
+            padding: 1.5rem; border: 1px solid #e5e7eb; 
+            transition: all 0.2s ease-in-out; position: relative;
+        }
+        .product-card.selected { border-color: var(--primary-color); background: var(--primary-light); }
+        .product-card:hover { transform: translateY(-2px); box-shadow: var(--box-shadow-lg); }
+        .product-card-header { 
+            display: flex; align-items: flex-start; gap: 1rem; 
+            margin-bottom: 1rem;
+        }
+        .product-image { 
+            width: 60px; height: 60px; border-radius: var(--border-radius); 
+            object-fit: cover; border: 1px solid #e5e7eb; flex-shrink: 0;
+        }
+        .product-info { flex: 1; }
+        .product-name { 
+            font-weight: 600; color: var(--dark-color); margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+        .product-category { 
+            color: var(--secondary-color); font-size: 0.75rem; 
+            font-weight: 500; margin-bottom: 0.25rem;
+        }
+        .product-price { 
+            font-weight: 700; color: var(--primary-color); 
+            font-size: 0.95rem;
+        }
+        .product-checkbox { 
+            position: absolute; top: 1rem; right: 1rem;
+            width: 20px; height: 20px; cursor: pointer;
+        }
         
         /* Modal */
         .modal-overlay { 
             position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
-            background: rgba(0,0,0,0.5); display: none; align-items: center; 
-            justify-content: center; z-index: 2000; backdrop-filter: blur(2px);
+            background: rgba(0,0,0,0.5); display: flex; align-items: center; 
+            justify-content: center; z-index: 2000; padding: 1rem;
         }
         .modal { 
             background: white; border-radius: var(--border-radius); 
-            width: 90%; max-width: 500px; box-shadow: var(--box-shadow-lg); 
-            animation: slideUp 0.3s ease;
+            max-width: 800px; width: 100%; max-height: 90vh; 
+            overflow-y: auto; box-shadow: var(--box-shadow-lg);
         }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .modal-header { padding: 1.25rem; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; }
+        .modal-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 1.5rem; border-bottom: 1px solid #e5e7eb;
+        }
+        .modal-title { font-size: 1.25rem; font-weight: 600; margin: 0; }
+        .close-modal { 
+            background: none; border: none; font-size: 1.5rem; cursor: pointer; 
+            padding: 0; color: var(--secondary-color); width: 30px; height: 30px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .close-modal:hover { color: var(--dark-color); }
         .modal-body { padding: 1.5rem; }
-        .modal-footer { padding: 1.25rem; border-top: 1px solid #e5e7eb; display: flex; justify-content: flex-end; gap: 0.5rem; }
-
-        /* Toast */
-        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
+        .modal-actions { 
+            display: flex; gap: 1rem; justify-content: flex-end; 
+            padding: 1.5rem; border-top: 1px solid #e5e7eb;
+        }
+        
+        /* Toast Notifications */
+        #toast-container { 
+            position: fixed; bottom: 20px; right: 20px; z-index: 3000; 
+        }
         .toast { 
             padding: 1rem 1.5rem; border-radius: var(--border-radius); 
-            color: white; box-shadow: var(--box-shadow-lg); margin-top: 0.5rem;
-            animation: slideIn 0.3s;
+            color: white; box-shadow: var(--box-shadow-lg); 
+            animation: slideIn 0.3s, fadeOut 0.3s 2.7s; 
+            font-size: 0.875rem; font-weight: 500;
         }
+        @keyframes slideIn { 
+            from { transform: translateX(100%); opacity: 0; } 
+            to { transform: translateX(0); opacity: 1; } 
+        }
+        @keyframes fadeOut { to { opacity: 0; } }
         .toast.success { background-color: var(--success-color); }
         .toast.error { background-color: var(--danger-color); }
+        .toast.warning { background-color: var(--warning-color); }
         
-        @media (max-width: 768px) {
-            .settings-grid { grid-template-columns: 1fr; }
-            .container { padding: 1rem; }
+        /* Empty State */
+        .empty-state { 
+            text-align: center; padding: 3rem; color: var(--secondary-color); 
         }
+        .empty-state-icon { 
+            width: 64px; height: 64px; color: #d1d5db; 
+            margin-bottom: 1rem;
+        }
+        .empty-state h3 { 
+            margin: 0 0 0.5rem 0; color: var(--dark-color); 
+            font-size: 1.125rem; font-weight: 600;
+        }
+        .empty-state p { margin-bottom: 1.5rem; font-size: 0.875rem; }
     </style>
 </head>
 <body>
     <div id="toast-container"></div>
 
     <nav>
-        <div class="nav-left"><h1 onclick="window.location.href='index.html'">ShopSphere</h1></div>
+        <div class="nav-left">
+            <h1 onclick="window.location.href='index.html'">ShopSphere</h1>
+        </div>
         <div id="nav-right" class="nav-right"></div>
     </nav>
 
     <div class="container page">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-            <h1 style="font-size: 1.8rem; font-weight: 700;">Store Customization</h1>
-            <button class="btn-primary" onclick="saveAllSettings()" id="global-save-btn">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                Save Changes
-            </button>
+        <h1 style="margin-bottom: 1.5rem;">Landing Page Management</h1>
+        
+        <!-- Hero Section -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Hero Section</h2>
+                <button class="btn-primary" onclick="openHeroModal()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Manage Hero Images
+                </button>
+            </div>
+            <div class="card-body">
+                <div id="hero-images-container">
+                    <div class="empty-state">
+                        <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        <h3>No Hero Images</h3>
+                        <p>Add images to display in your hero section</p>
+                        <button class="btn-primary" onclick="openHeroModal()">Add Hero Images</button>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div class="settings-grid">
-            
-            <!-- 1. Branding Configuration -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
-                        Branding & Logo
-                    </div>
+        
+        <!-- Promo Banner -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Promo Banner</h2>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <span id="promo-status" class="status-toggle inactive">
+                        <input type="checkbox" class="toggle-switch" id="promo-toggle">
+                        Inactive
+                    </span>
+                    <button class="btn-secondary" onclick="openPromoModal()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        Edit
+                    </button>
                 </div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <label>Site Title (Text)</label>
-                        <input type="text" class="form-control" id="site-title" placeholder="e.g. Vastramaya">
-                    </div>
-                    <div class="form-group">
-                        <label>Desktop Logo URL</label>
-                        <input type="url" class="form-control" id="logo-desktop" placeholder="https://...">
-                        <button class="btn-secondary" style="width:100%; margin-top:0.5rem;" onclick="triggerUpload('logo-desktop')">Upload Image</button>
-                        <input type="file" id="file-logo-desktop" hidden onchange="handleUpload(this, 'logo-desktop')">
-                    </div>
-                    <div class="form-group">
-                        <label>Mobile Logo URL</label>
-                        <input type="url" class="form-control" id="logo-mobile" placeholder="https://...">
-                        <button class="btn-secondary" style="width:100%; margin-top:0.5rem;" onclick="triggerUpload('logo-mobile')">Upload Image</button>
-                        <input type="file" id="file-logo-mobile" hidden onchange="handleUpload(this, 'logo-mobile')">
+            </div>
+            <div class="card-body">
+                <div id="promo-preview">
+                    <p style="color: var(--secondary-color); font-style: italic;">No promo banner configured</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Best Sellers -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Best Sellers</h2>
+                <button class="btn-primary" onclick="openBestSellersModal()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Manage Products
+                </button>
+            </div>
+            <div class="card-body">
+                <div id="best-sellers-container">
+                    <div class="empty-state">
+                        <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                        </svg>
+                        <h3>No Best Sellers Selected</h3>
+                        <p>Add products to display in your best sellers section</p>
+                        <button class="btn-primary" onclick="openBestSellersModal()">Select Products</button>
                     </div>
                 </div>
             </div>
-
-            <!-- 2. Theme & Colors -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
-                        Color Theme
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <label>Navbar Background</label>
-                        <div class="color-group">
-                            <input type="color" class="color-input" id="col-nav-bg" oninput="syncColor(this)">
-                            <input type="text" class="color-text" id="val-nav-bg" oninput="syncColorInput(this)">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Promo Banner Background</label>
-                        <div class="color-group">
-                            <input type="color" class="color-input" id="col-promo-bg" oninput="syncColor(this)">
-                            <input type="text" class="color-text" id="val-promo-bg" oninput="syncColorInput(this)">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Promo Banner Text</label>
-                        <div class="color-group">
-                            <input type="color" class="color-input" id="col-promo-text" oninput="syncColor(this)">
-                            <input type="text" class="color-text" id="val-promo-text" oninput="syncColorInput(this)">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Primary Brand Color</label>
-                        <div class="color-group">
-                            <input type="color" class="color-input" id="col-primary" oninput="syncColor(this)">
-                            <input type="text" class="color-text" id="val-primary" oninput="syncColorInput(this)">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 3. Navigation Menu -->
-            <div class="card" style="grid-row: span 2;">
-                <div class="card-header">
-                    <div class="card-title">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-                        Navigation Menu
-                    </div>
-                    <button class="btn-secondary" onclick="openLinkModal()">+ Add</button>
-                </div>
-                <div class="card-body">
-                    <div id="nav-list-container">
-                        <!-- Nav items injected here -->
-                    </div>
-                    <p style="font-size: 0.8rem; color: var(--secondary-color); margin-top: 1rem;">Drag items to reorder (Coming soon). Use arrow buttons for now.</p>
-                </div>
-            </div>
-
-            <!-- 4. Homepage Sections -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-                        Homepage Sections
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div id="sections-list">
-                        <!-- Sections injected here -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- 5. Curated Categories -->
-            <div class="card" style="grid-column: 1 / -1;">
-                <div class="card-header">
-                    <div class="card-title">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7"/><path d="M15 7h6v6"/></svg>
-                        Featured Category Rows
-                    </div>
-                </div>
-                <div class="card-body">
-                    <p style="margin-bottom: 1rem; color: var(--secondary-color);">Select categories to display as horizontal product rows on the homepage.</p>
-                    <div class="category-grid" id="featured-cats-container">
-                        <div class="loading">Loading categories...</div>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
 
-    <!-- Navigation Link Modal -->
-    <div class="modal-overlay" id="link-modal">
+    <!-- Hero Images Modal -->
+    <div id="hero-modal" class="modal-overlay" style="display: none;">
         <div class="modal">
             <div class="modal-header">
-                <h3 class="modal-title">Manage Link</h3>
-                <button class="close-modal" onclick="closeLinkModal()">&times;</button>
+                <h3 class="modal-title">Manage Hero Images</h3>
+                <button class="close-modal" onclick="closeHeroModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <input type="hidden" id="link-index">
-                <div class="form-group">
-                    <label>Label Name</label>
-                    <input type="text" class="form-control" id="link-label" placeholder="e.g. New Arrivals">
-                </div>
-                <div class="form-group">
-                    <label>Destination URL</label>
-                    <input type="text" class="form-control" id="link-url" placeholder="/category/new or https://...">
+                <form id="hero-form">
+                    <div class="form-group">
+                        <label for="desktop-image">Desktop Image URL</label>
+                        <input type="url" id="desktop-image" placeholder="https://example.com/desktop-hero.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label for="mobile-image">Mobile Image URL</label>
+                        <input type="url" id="mobile-image" placeholder="https://example.com/mobile-hero.jpg">
+                    </div>
+                    <div class="image-preview-container">
+                        <div class="image-preview">
+                            <img id="desktop-preview" src="" alt="Desktop preview" style="display: none;">
+                            <p>Desktop Preview</p>
+                        </div>
+                        <div class="image-preview">
+                            <img id="mobile-preview" src="" alt="Mobile preview" style="display: none;">
+                            <p>Mobile Preview</p>
+                        </div>
+                    </div>
+                </form>
+                <div id="existing-hero-images" style="margin-top: 2rem;">
+                    <h4 style="margin-bottom: 1rem;">Existing Hero Images</h4>
+                    <div id="hero-images-list"></div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="closeLinkModal()">Cancel</button>
-                <button class="btn-primary" onclick="saveLink()">Save Link</button>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" onclick="closeHeroModal()">Cancel</button>
+                <button type="button" class="btn-primary" onclick="saveHeroImage()">Add Hero Image</button>
             </div>
         </div>
     </div>
 
+    <!-- Promo Banner Modal -->
+    <div id="promo-modal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Promo Banner</h3>
+                <button class="close-modal" onclick="closePromoModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="promo-form">
+                    <div class="form-group">
+                        <label for="promo-text">Promo Banner Text</label>
+                        <textarea id="promo-text" placeholder="Enter your promotional message..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="promo-link">Promo Link (Optional)</label>
+                        <input type="url" id="promo-link" placeholder="https://example.com/promo">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" onclick="closePromoModal()">Cancel</button>
+                <button type="button" class="btn-primary" onclick="savePromoBanner()">Save Promo Banner</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Best Sellers Modal -->
+    <div id="best-sellers-modal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Select Best Sellers</h3>
+                <button class="close-modal" onclick="closeBestSellersModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="search-container" style="margin-bottom: 1.5rem;">
+                    <input type="text" id="search-products" class="search-input" placeholder="Search products...">
+                </div>
+                <div id="products-selection" class="products-grid"></div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" onclick="closeBestSellersModal()">Cancel</button>
+                <button type="button" class="btn-primary" onclick="saveBestSellers()">Save Selection</button>
+            </div>
+        </div>
+    </div>
+    
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
-            authDomain: "vastramaya---magic.firebaseapp.com",
-            projectId: "vastramaya---magic",
-            storageBucket: "vastramaya---magic.firebasestorage.app",
-            messagingSenderId: "543460072082",
-            appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
-            measurementId: "G-E39VNDCFVE"
-        };
+const firebaseConfig = {
+  apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
+  authDomain: "vastramaya---magic.firebaseapp.com",
+  projectId: "vastramaya---magic",
+  storageBucket: "vastramaya---magic.firebasestorage.app",
+  messagingSenderId: "543460072082",
+  appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
+  measurementId: "G-E39VNDCFVE"
+};
         const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
-        
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        const storage = firebase.storage();
 
-        let appSettings = {
-            branding: { title: 'ShopSphere', logoDesktop: '', logoMobile: '' },
-            theme: { navBg: '#ffffff', promoBg: '#dc2626', promoText: '#ffffff', primary: '#4F46E5' },
-            navigation: [],
-            sections: [
-                {id: 'hero', label: 'Hero Carousel', visible: true},
-                {id: 'categories', label: 'Category Circles', visible: true},
-                {id: 'best_sellers', label: 'Best Sellers Grid', visible: true},
-                {id: 'featured_rows', label: 'Category Rows', visible: true}
-            ],
-            featuredCategories: [] // Array of Category IDs
-        };
-
-        let allCategoriesList = [];
+        let currentUser = null;
+        let allProducts = [];
+        let heroImages = [];
+        let promoBanner = null;
+        let bestSellers = [];
+        let selectedProducts = new Set();
 
         document.addEventListener('DOMContentLoaded', () => {
             auth.onAuthStateChanged(user => {
-                if (!user || user.email !== ADMIN_EMAIL) {
+                currentUser = user;
+                renderNav();
+                if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
+                    sessionStorage.setItem('toastMessage', JSON.stringify({ message: 'Access Denied: Admin area.', type: 'error' }));
                     window.location.href = 'index.html';
                     return;
                 }
-                renderNav(user);
-                initData();
+                initializePage();
             });
         });
 
-        async function initData() {
-            await Promise.all([loadCategories(), loadSettings()]);
-            renderUI();
+        async function initializePage() {
+            await loadAllData();
+            setupEventListeners();
         }
 
-        async function loadCategories() {
+        async function loadAllData() {
             try {
-                const snap = await db.collection('categories').orderBy('name').get();
-                allCategoriesList = snap.docs.map(d => ({id: d.id, name: d.data().name}));
-            } catch (e) { console.error(e); }
-        }
-
-        async function loadSettings() {
-            try {
-                const doc = await db.collection('landingPage').doc('settings').get();
-                if (doc.exists) {
-                    const data = doc.data();
-                    // Merge with defaults to avoid undefined errors
-                    appSettings = { ...appSettings, ...data };
-                    // Ensure sections order exists if new sections added later
-                    if(!data.sections || data.sections.length === 0) {
-                        appSettings.sections = [
-                            {id: 'hero', label: 'Hero Carousel', visible: true},
-                            {id: 'categories', label: 'Category Circles', visible: true},
-                            {id: 'best_sellers', label: 'Best Sellers Grid', visible: true},
-                            {id: 'featured_rows', label: 'Category Rows', visible: true}
-                        ];
-                    }
+                // Load hero images
+                const heroSnapshot = await db.collection('landingPage').doc('heroImages').get();
+                if (heroSnapshot.exists) {
+                    heroImages = heroSnapshot.data().images || [];
                 }
-            } catch (e) { console.error(e); }
+                renderHeroImages();
+
+                // Load promo banner
+                const promoScreenshot = await db.collection('landingPage').doc('promoBanner').get();
+                if (promoScreenshot.exists) {
+                    promoBanner = promoScreenshot.data();
+                    renderPromoBanner();
+                }
+
+                // Load best sellers
+                const bestSellersSnapshot = await db.collection('landingPage').doc('bestSellers').get();
+                if (bestSellersSnapshot.exists) {
+                    bestSellers = bestSellersSnapshot.data().products || [];
+                }
+                renderBestSellers();
+
+                // Load all products for selection
+                const productsSnapshot = await db.collection('products').orderBy('name').get();
+                allProducts = productsSnapshot.docs.map(doc => ({ 
+                    id: doc.id, 
+                    ...doc.data()
+                }));
+
+            } catch (error) {
+                console.error("Error loading landing page data:", error);
+                showToast("Failed to load landing page data.", "error");
+            }
         }
 
-        function renderUI() {
-            // Branding
-            document.getElementById('site-title').value = appSettings.branding.title || '';
-            document.getElementById('logo-desktop').value = appSettings.branding.logoDesktop || '';
-            document.getElementById('logo-mobile').value = appSettings.branding.logoMobile || '';
+        function setupEventListeners() {
+            // Hero image preview
+            document.getElementById('desktop-image').addEventListener('input', (e) => {
+                updateImagePreview(e.target.value, 'desktop-preview');
+            });
+            document.getElementById('mobile-image').addEventListener('input', (e) => {
+                updateImagePreview(e.target.value, 'mobile-preview');
+            });
 
-            // Theme
-            setColVal('nav-bg', appSettings.theme.navBg);
-            setColVal('promo-bg', appSettings.theme.promoBg);
-            setColVal('promo-text', appSettings.theme.promoText);
-            setColVal('primary', appSettings.theme.primary);
+            // Promo toggle
+            document.getElementById('promo-toggle').addEventListener('change', (e) => {
+                togglePromoBanner(e.target.checked);
+            });
 
-            // Navigation
-            renderNavList();
-
-            // Sections
-            renderSectionsList();
-
-            // Featured Categories
-            renderFeaturedCategories();
+            // Product search
+            document.getElementById('search-products').addEventListener('input', (e) => {
+                filterProducts(e.target.value);
+            });
         }
 
-        // --- Helper: Color Sync ---
-        function setColVal(id, val) {
-            document.getElementById(`col-${id}`).value = val || '#000000';
-            document.getElementById(`val-${id}`).value = val || '#000000';
-        }
-        function syncColor(input) {
-            const id = input.id.replace('col-', '');
-            document.getElementById(`val-${id}`).value = input.value;
-        }
-        function syncColorInput(input) {
-            const id = input.id.replace('val-', '');
-            document.getElementById(`col-${id}`).value = input.value;
-        }
-
-        // --- Navigation Management ---
-        function renderNavList() {
-            const container = document.getElementById('nav-list-container');
-            container.innerHTML = appSettings.navigation.map((link, i) => `
-                <div class="list-item">
-                    <div class="item-content">
-                        <span style="font-weight:600">${link.label}</span>
-                        <span style="color:var(--secondary-color); font-size:0.85rem;">${link.url}</span>
-                    </div>
-                    <div class="item-actions">
-                        <button class="btn-icon" onclick="moveLink(${i}, -1)">↑</button>
-                        <button class="btn-icon" onclick="moveLink(${i}, 1)">↓</button>
-                        <button class="btn-icon" onclick="editLink(${i})">✎</button>
-                        <button class="btn-icon" style="color:var(--danger-color)" onclick="deleteLink(${i})">×</button>
-                    </div>
-                </div>
-            `).join('') || '<p style="color:#999; text-align:center;">No links added</p>';
-        }
-
-        function openLinkModal() {
-            document.getElementById('link-index').value = '-1'; // New
-            document.getElementById('link-label').value = '';
-            document.getElementById('link-url').value = '';
-            document.getElementById('link-modal').style.display = 'flex';
-        }
-        function editLink(i) {
-            const link = appSettings.navigation[i];
-            document.getElementById('link-index').value = i;
-            document.getElementById('link-label').value = link.label;
-            document.getElementById('link-url').value = link.url;
-            document.getElementById('link-modal').style.display = 'flex';
-        }
-        function closeLinkModal() { document.getElementById('link-modal').style.display = 'none'; }
-        
-        function saveLink() {
-            const idx = parseInt(document.getElementById('link-index').value);
-            const label = document.getElementById('link-label').value.trim();
-            const url = document.getElementById('link-url').value.trim();
-            if(!label || !url) return alert("Fill all fields");
-
-            if(idx === -1) {
-                appSettings.navigation.push({label, url});
+        function updateImagePreview(imageUrl, previewId) {
+            const preview = document.getElementById(previewId);
+            if (imageUrl && isValidUrl(imageUrl)) {
+                preview.src = imageUrl;
+                preview.style.display = 'block';
             } else {
-                appSettings.navigation[idx] = {label, url};
-            }
-            renderNavList();
-            closeLinkModal();
-        }
-        function deleteLink(i) {
-            if(confirm("Delete this link?")) {
-                appSettings.navigation.splice(i, 1);
-                renderNavList();
+                preview.style.display = 'none';
             }
         }
-        function moveLink(i, dir) {
-            if(i + dir < 0 || i + dir >= appSettings.navigation.length) return;
-            const temp = appSettings.navigation[i];
-            appSettings.navigation[i] = appSettings.navigation[i+dir];
-            appSettings.navigation[i+dir] = temp;
-            renderNavList();
+
+        function isValidUrl(string) {
+            try {
+                new URL(string);
+                return true;
+            } catch (_) {
+                return false;
+            }
         }
 
-        // --- Section Management ---
-        function renderSectionsList() {
-            const container = document.getElementById('sections-list');
-            container.innerHTML = appSettings.sections.map((sec, i) => `
-                <div class="list-item">
-                    <div class="item-content">
-                        <span class="toggle-wrapper">
-                            <input type="checkbox" class="toggle-switch" 
-                                ${sec.visible ? 'checked' : ''} 
-                                onchange="toggleSection(${i})">
-                        </span>
-                        <span>${sec.label}</span>
-                    </div>
-                    <div class="item-actions">
-                        <button class="btn-icon" onclick="moveSection(${i}, -1)">↑</button>
-                        <button class="btn-icon" onclick="moveSection(${i}, 1)">↓</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-        function toggleSection(i) { appSettings.sections[i].visible = !appSettings.sections[i].visible; }
-        function moveSection(i, dir) {
-            if(i + dir < 0 || i + dir >= appSettings.sections.length) return;
-            const temp = appSettings.sections[i];
-            appSettings.sections[i] = appSettings.sections[i+dir];
-            appSettings.sections[i+dir] = temp;
-            renderSectionsList();
+        // Hero Images Functions
+        function openHeroModal() {
+            document.getElementById('hero-modal').style.display = 'flex';
+            renderExistingHeroImages();
         }
 
-        // --- Curated Categories ---
-        function renderFeaturedCategories() {
-            const container = document.getElementById('featured-cats-container');
-            if(allCategoriesList.length === 0) {
-                container.innerHTML = '<p>No categories found. Create some first.</p>';
+        function closeHeroModal() {
+            document.getElementById('hero-modal').style.display = 'none';
+            document.getElementById('hero-form').reset();
+            document.getElementById('desktop-preview').style.display = 'none';
+            document.getElementById('mobile-preview').style.display = 'none';
+        }
+
+        function renderExistingHeroImages() {
+            const container = document.getElementById('hero-images-list');
+            if (heroImages.length === 0) {
+                container.innerHTML = '<p style="color: var(--secondary-color); font-style: italic;">No hero images added yet.</p>';
                 return;
             }
-            // Ensure array exists
-            if(!appSettings.featuredCategories) appSettings.featuredCategories = [];
 
-            container.innerHTML = allCategoriesList.map(cat => `
-                <label class="check-card">
-                    <input type="checkbox" value="${cat.id}" 
-                        ${appSettings.featuredCategories.includes(cat.id) ? 'checked' : ''}
-                        onchange="toggleFeaturedCat('${cat.id}')">
-                    <div class="check-card-content">
-                        ${cat.name}
+            container.innerHTML = heroImages.map((image, index) => `
+                <div class="product-card" style="margin-bottom: 1rem;">
+                    <div class="product-card-header">
+                        <img src="${image.desktop}" alt="Hero image" class="product-image"
+                             onerror="this.src='https://via.placeholder.com/60?text=Error'">
+                        <div class="product-info">
+                            <div class="product-name">Hero Image ${index + 1}</div>
+                            <div class="product-category">Desktop: ${image.desktop.substring(0, 50)}...</div>
+                            <div class="product-category">Mobile: ${image.mobile.substring(0, 50)}...</div>
+                        </div>
+                        <button class="btn-danger" onclick="removeHeroImage(${index})">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M3 6h18"></path>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                            Remove
+                        </button>
                     </div>
-                </label>
+                </div>
             `).join('');
         }
-        function toggleFeaturedCat(id) {
-            if(appSettings.featuredCategories.includes(id)) {
-                appSettings.featuredCategories = appSettings.featuredCategories.filter(c => c !== id);
+
+        async function saveHeroImage() {
+            const desktopUrl = document.getElementById('desktop-image').value.trim();
+            const mobileUrl = document.getElementById('mobile-image').value.trim();
+
+            if (!desktopUrl || !mobileUrl) {
+                showToast('Please provide both desktop and mobile image URLs.', 'error');
+                return;
+            }
+
+            if (!isValidUrl(desktopUrl) || !isValidUrl(mobileUrl)) {
+                showToast('Please provide valid image URLs.', 'error');
+                return;
+            }
+
+            try {
+                heroImages.push({ desktop: desktopUrl, mobile: mobileUrl });
+                await db.collection('landingPage').doc('heroImages').set({ images: heroImages });
+                
+                showToast('Hero image added successfully!', 'success');
+                renderHeroImages();
+                renderExistingHeroImages();
+                closeHeroModal();
+                
+            } catch (error) {
+                console.error("Error saving hero image:", error);
+                showToast("Failed to save hero image.", "error");
+            }
+        }
+
+        async function removeHeroImage(index) {
+            if (confirm('Are you sure you want to remove this hero image?')) {
+                heroImages.splice(index, 1);
+                try {
+                    await db.collection('landingPage').doc('heroImages').set({ images: heroImages });
+                    showToast('Hero image removed successfully!', 'success');
+                    renderHeroImages();
+                    renderExistingHeroImages();
+                } catch (error) {
+                    console.error("Error removing hero image:", error);
+                    showToast("Failed to remove hero image.", "error");
+                }
+            }
+        }
+
+        function renderHeroImages() {
+            const container = document.getElementById('hero-images-container');
+            if (heroImages.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        <h3>No Hero Images</h3>
+                        <p>Add images to display in your hero section</p>
+                        <button class="btn-primary" onclick="openHeroModal()">Add Hero Images</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="products-grid">
+                    ${heroImages.map((image, index) => `
+                        <div class="product-card">
+                            <div class="product-card-header">
+                                <img src="${image.desktop}" alt="Hero image" class="product-image"
+                                     onerror="this.src='https://via.placeholder.com/60?text=Error'">
+                                <div class="product-info">
+                                    <div class="product-name">Hero Image ${index + 1}</div>
+                                    <div class="product-category">Desktop & Mobile Versions</div>
+                                </div>
+                            </div>
+                            <button class="btn-danger" onclick="removeHeroImage(${index})" style="width: 100%; margin-top: 1rem;">
+                                Remove
+                            </button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Promo Banner Functions
+        function openPromoModal() {
+            document.getElementById('promo-modal').style.display = 'flex';
+            if (promoBanner) {
+                document.getElementById('promo-text').value = promoBanner.text || '';
+                document.getElementById('promo-link').value = promoBanner.link || '';
+            }
+        }
+
+        function closePromoModal() {
+            document.getElementById('promo-modal').style.display = 'none';
+        }
+
+        async function savePromoBanner() {
+            const text = document.getElementById('promo-text').value.trim();
+            const link = document.getElementById('promo-link').value.trim();
+
+            if (!text) {
+                showToast('Please provide promo banner text.', 'error');
+                return;
+            }
+
+            if (link && !isValidUrl(link)) {
+                showToast('Please provide a valid link URL.', 'error');
+                return;
+            }
+
+            try {
+                promoBanner = { text, link, active: promoBanner ? promoBanner.active : false };
+                await db.collection('landingPage').doc('promoBanner').set(promoBanner);
+                
+                showToast('Promo banner saved successfully!', 'success');
+                renderPromoBanner();
+                closePromoModal();
+                
+            } catch (error) {
+                console.error("Error saving promo banner:", error);
+                showToast("Failed to save promo banner.", "error");
+            }
+        }
+
+        async function togglePromoBanner(active) {
+            if (!promoBanner) {
+                showToast('Please create a promo banner first.', 'warning');
+                document.getElementById('promo-toggle').checked = false;
+                return;
+            }
+
+            try {
+                promoBanner.active = active;
+                await db.collection('landingPage').doc('promoBanner').set(promoBanner);
+                
+                showToast(`Promo banner ${active ? 'activated' : 'deactivated'}!`, 'success');
+                renderPromoBanner();
+                
+            } catch (error) {
+                console.error("Error toggling promo banner:", error);
+                showToast("Failed to update promo banner.", "error");
+            }
+        }
+
+        function renderPromoBanner() {
+            const statusElement = document.getElementById('promo-status');
+            const toggle = document.getElementById('promo-toggle');
+            const preview = document.getElementById('promo-preview');
+
+            if (promoBanner) {
+                toggle.checked = promoBanner.active || false;
+                
+                if (promoBanner.active) {
+                    statusElement.className = 'status-toggle active';
+                    statusElement.innerHTML = `
+                        <input type="checkbox" class="toggle-switch" id="promo-toggle" checked>
+                        Active
+                    `;
+                } else {
+                    statusElement.className = 'status-toggle inactive';
+                    statusElement.innerHTML = `
+                        <input type="checkbox" class="toggle-switch" id="promo-toggle">
+                        Inactive
+                    `;
+                }
+
+                preview.innerHTML = `
+                    <div style="background: #f3f4f6; padding: 1rem; border-radius: var(--border-radius);">
+                        <p style="margin: 0 0 0.5rem 0; font-weight: 500;">${promoBanner.text}</p>
+                        ${promoBanner.link ? `<a href="${promoBanner.link}" style="color: var(--primary-color); font-size: 0.875rem;">Learn more →</a>` : ''}
+                    </div>
+                `;
+
+                // Re-attach event listener
+                document.getElementById('promo-toggle').addEventListener('change', (e) => {
+                    togglePromoBanner(e.target.checked);
+                });
             } else {
-                appSettings.featuredCategories.push(id);
+                statusElement.className = 'status-toggle inactive';
+                statusElement.innerHTML = `
+                    <input type="checkbox" class="toggle-switch" id="promo-toggle">
+                    Inactive
+                `;
+                preview.innerHTML = '<p style="color: var(--secondary-color); font-style: italic;">No promo banner configured</p>';
             }
-            renderFeaturedCategories(); // Re-render to update UI classes
         }
 
-        // --- Image Upload Logic ---
-        function triggerUpload(id) { document.getElementById(`file-${id}`).click(); }
-        async function handleUpload(input, targetId) {
-            const file = input.files[0];
-            if(!file) return;
+        // Best Sellers Functions
+        function openBestSellersModal() {
+            document.getElementById('best-sellers-modal').style.display = 'flex';
+            selectedProducts = new Set(bestSellers.map(p => p.id));
+            renderProductSelection();
+        }
+
+        function closeBestSellersModal() {
+            document.getElementById('best-sellers-modal').style.display = 'none';
+            document.getElementById('search-products').value = '';
+        }
+
+        function renderProductSelection() {
+            const container = document.getElementById('products-selection');
+            const searchTerm = document.getElementById('search-products').value.toLowerCase();
             
-            const btn = input.previousElementSibling; // The Upload button
-            btn.innerText = "Uploading...";
-            btn.disabled = true;
+            let filteredProducts = allProducts;
+            if (searchTerm) {
+                filteredProducts = allProducts.filter(p => 
+                    p.name.toLowerCase().includes(searchTerm) || 
+                    (p.category && p.category.toLowerCase().includes(searchTerm))
+                );
+            }
 
-            try {
-                const ref = storage.ref(`branding/${Date.now()}-${file.name}`);
-                await ref.put(file);
-                const url = await ref.getDownloadURL();
-                document.getElementById(targetId).value = url;
-                showToast("Image uploaded!");
-            } catch(e) {
-                console.error(e);
-                alert("Upload failed");
-            } finally {
-                btn.innerText = "Upload Image";
-                btn.disabled = false;
+            if (filteredProducts.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <h3>No Products Found</h3>
+                        <p>${searchTerm ? 'Try adjusting your search' : 'No products available'}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredProducts.map(product => {
+                const isSelected = selectedProducts.has(product.id);
+                const imageUrl = (product.images && product.images.length > 0) 
+                    ? product.images[0] 
+                    : 'https://via.placeholder.com/60?text=No+Image';
+                
+                return `
+                    <div class="product-card ${isSelected ? 'selected' : ''}">
+                        <div class="product-card-header">
+                            <img src="${imageUrl}" alt="${product.name}" class="product-image"
+                                 onerror="this.src='https://via.placeholder.com/60?text=Error'">
+                            <div class="product-info">
+                                <div class="product-name">${product.name}</div>
+                                <div class="product-category">${product.category || 'Uncategorized'}</div>
+                                <div class="product-price">$${(product.price || 0).toFixed(2)}</div>
+                            </div>
+                        </div>
+                        <input type="checkbox" class="product-checkbox" 
+                               ${isSelected ? 'checked' : ''}
+                               onchange="toggleProductSelection('${product.id}', this.checked)">
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterProducts(searchTerm) {
+            renderProductSelection();
+        }
+
+        function toggleProductSelection(productId, isSelected) {
+            if (isSelected) {
+                selectedProducts.add(productId);
+            } else {
+                selectedProducts.delete(productId);
+            }
+            
+            // Update UI
+            const productCard = document.querySelector(`.product-card input[value="${productId}"]`)?.closest('.product-card');
+            if (productCard) {
+                if (isSelected) {
+                    productCard.classList.add('selected');
+                } else {
+                    productCard.classList.remove('selected');
+                }
             }
         }
 
-        // --- Global Save ---
-        async function saveAllSettings() {
-            const btn = document.getElementById('global-save-btn');
-            btn.disabled = true;
-            btn.innerHTML = "Saving...";
-
-            // Gather Inputs
-            appSettings.branding.title = document.getElementById('site-title').value;
-            appSettings.branding.logoDesktop = document.getElementById('logo-desktop').value;
-            appSettings.branding.logoMobile = document.getElementById('logo-mobile').value;
-
-            appSettings.theme.navBg = document.getElementById('val-nav-bg').value;
-            appSettings.theme.promoBg = document.getElementById('val-promo-bg').value;
-            appSettings.theme.promoText = document.getElementById('val-promo-text').value;
-            appSettings.theme.primary = document.getElementById('val-primary').value;
-
+        async function saveBestSellers() {
+            const selectedProductsArray = allProducts.filter(p => selectedProducts.has(p.id));
+            
             try {
-                await db.collection('landingPage').doc('settings').set(appSettings);
-                showToast("Settings saved successfully!", 'success');
-            } catch(e) {
-                console.error(e);
-                showToast("Error saving settings", 'error');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = `
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                Save Changes`;
+                await db.collection('landingPage').doc('bestSellers').set({ 
+                    products: selectedProductsArray,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                bestSellers = selectedProductsArray;
+                showToast('Best sellers updated successfully!', 'success');
+                renderBestSellers();
+                closeBestSellersModal();
+                
+            } catch (error) {
+                console.error("Error saving best sellers:", error);
+                showToast("Failed to save best sellers.", "error");
             }
         }
 
-        function renderNav(user) {
+        function renderBestSellers() {
+            const container = document.getElementById('best-sellers-container');
+            if (bestSellers.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                        </svg>
+                        <h3>No Best Sellers Selected</h3>
+                        <p>Add products to display in your best sellers section</p>
+                        <button class="btn-primary" onclick="openBestSellersModal()">Select Products</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="products-grid">
+                    ${bestSellers.map(product => {
+                        const imageUrl = (product.images && product.images.length > 0) 
+                            ? product.images[0] 
+                            : 'https://via.placeholder.com/60?text=No+Image';
+                        
+                        return `
+                            <div class="product-card">
+                                <div class="product-card-header">
+                                    <img src="${imageUrl}" alt="${product.name}" class="product-image"
+                                         onerror="this.src='https://via.placeholder.com/60?text=Error'">
+                                    <div class="product-info">
+                                        <div class="product-name">${product.name}</div>
+                                        <div class="product-category">${product.category || 'Uncategorized'}</div>
+                                        <div class="product-price">$${(product.price || 0).toFixed(2)}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        function renderNav() {
             const navRight = document.getElementById('nav-right');
-            if (user && user.email === ADMIN_EMAIL) {
+            const logoutIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg>`;
+            const categoriesIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>`;
+            const productsIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/></svg>`;
+            
+            if (currentUser && currentUser.email === ADMIN_EMAIL) {
                 navRight.innerHTML = `
-                    <button class="nav-icon" onclick="window.location.href='manage-category.html'" title="Categories">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    <button title="Manage Categories" class="nav-icon" onclick="window.location.href='manage-category.html'">
+                        ${categoriesIcon}
                     </button>
-                    <button class="nav-icon" onclick="auth.signOut()" title="Logout">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    <button title="Manage Products" class="nav-icon" onclick="window.location.href='manage-products.html'">
+                        ${productsIcon}
+                    </button>
+                    <button title="Logout" class="nav-icon" onclick="auth.signOut()">
+                        ${logoutIcon}
                     </button>`;
             }
         }
 
-        function showToast(msg, type='success') {
+        function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
-            const el = document.createElement('div');
-            el.className = `toast ${type}`;
-            el.innerText = msg;
-            container.appendChild(el);
-            setTimeout(() => el.remove(), 3000);
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
         }
     </script>
 </body>
