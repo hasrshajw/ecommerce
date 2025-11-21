@@ -2,945 +2,690 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Landing Page - ShopSphere Admin</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Manage Landing Page - Vastramaya</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         :root {
-            --primary-color: #4F46E5; --primary-hover: #4338CA; --primary-light: #eef2ff;
-            --secondary-color: #6B7280; --success-color: #10B981; --danger-color: #EF4444;
-            --warning-color: #F59E0B; --light-color: #F9FAFB; --dark-color: #1F2937;
-            --bg-color: #F3F4F6; --font-family: 'Inter', sans-serif; --border-radius: 0.5rem;
-            --box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px 0 rgba(0,0,0,0.06);
-            --box-shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --body-bg: #F8FAFC;
+            --widget-bg: #FFFFFF;
+            --border-color: #F1F5F9;
+            --text-primary: #0F172A;
+            --text-secondary: #64748B;
+            --brand-primary: #3B82F6;
+            --brand-gradient: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+            --hover-bg: #F8FAFC;
+            --danger-color: #EF4444;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--body-bg); color: var(--text-primary); line-height: 1.5; }
         
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: var(--font-family); background-color: var(--bg-color); color: var(--dark-color); line-height: 1.5; }
-        .container { max-width: 1400px; margin: 0 auto; padding: 1.5rem; }
+        .dashboard-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; }
+        .main-area { display: flex; flex-direction: column; overflow-y: auto; height: 100vh; background-color: var(--body-bg); }
         
-        /* Navigation */
-        nav { 
-            background: #fff; padding: 1rem 1.5rem; 
-            display: flex; justify-content: space-between; align-items: center; 
-            box-shadow: var(--box-shadow); position: sticky; top: 0; z-index: 1000; 
-            border-bottom: 1px solid #e5e7eb;
-        }
-        .nav-left h1 { 
-            margin: 0; font-size: 1.75rem; font-weight: 700; 
-            color: var(--primary-color); cursor: pointer; 
-        }
-        .nav-right { display: flex; align-items: center; gap: 0.75rem; }
-        .nav-icon { 
-            cursor: pointer; background: none; border: none; padding: 0.5rem; 
-            border-radius: 50%; transition: all 0.2s ease-in-out; color: var(--secondary-color);
-        }
-        .nav-icon:hover { background-color: #f3f4f6; color: var(--dark-color); }
-        
-        /* Buttons */
-        button { 
-            border: none; border-radius: var(--border-radius); cursor: pointer; 
-            font-family: var(--font-family); font-weight: 600; 
-            transition: all 0.2s ease-in-out; display: inline-flex; align-items: center; gap: 0.5rem;
-        }
-        .btn-primary { 
-            background-color: var(--primary-color); color: white; 
-            padding: 0.75rem 1.5rem; font-size: 0.875rem;
-        }
-        .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
-        .btn-success { 
-            background-color: var(--success-color); color: white; 
-            padding: 0.75rem 1.5rem; font-size: 0.875rem;
-        }
-        .btn-success:hover { background-color: #0da271; transform: translateY(-1px); }
-        .btn-danger { 
-            background-color: var(--danger-color); color: white; 
-            padding: 0.5rem 1rem; font-size: 0.75rem;
-        }
-        .btn-danger:hover { background-color: #dc2626; }
-        .btn-secondary { 
-            background-color: white; color: var(--secondary-color); border: 1px solid #d1d5db;
-            padding: 0.5rem 1rem; font-size: 0.75rem;
-        }
-        .btn-secondary:hover { background-color: #f9fafb; border-color: var(--secondary-color); }
-        .btn-warning { 
-            background-color: var(--warning-color); color: white; 
-            padding: 0.5rem 1rem; font-size: 0.75rem;
-        }
-        .btn-warning:hover { background-color: #d97706; }
-        
-        /* Page Layout */
-        .page { animation: fadeIn 0.5s; }
-        @keyframes fadeIn { 
-            from { opacity: 0; transform: translateY(10px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
-        .card { 
-            background-color: #fff; border-radius: var(--border-radius); 
-            box-shadow: var(--box-shadow); border: 1px solid #e5e7eb;
-            margin-bottom: 1.5rem;
-        }
-        .card-header { 
-            padding: 1.5rem; border-bottom: 1px solid #e5e7eb;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .card-title { font-size: 1.25rem; font-weight: 600; color: var(--dark-color); }
+        .sidebar { background-color: var(--widget-bg); border-right: 1px solid var(--border-color); padding: 2rem 1.5rem; display: flex; flex-direction: column; }
+        .logo-container { display: flex; align-items: center; margin-bottom: 2.5rem; }
+        .logo-image { height: 40px; width: auto; object-fit: contain; }
+        .main-nav ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+        .main-nav a { display: flex; align-items: center; gap: 1rem; text-decoration: none; color: var(--text-secondary); font-weight: 500; padding: 0.875rem 1rem; border-radius: var(--radius-md); transition: var(--transition); }
+        .main-nav a:hover { background-color: var(--hover-bg); color: var(--text-primary); } 
+        .main-nav a.active { background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%); color: var(--brand-primary); font-weight: 600; } 
+        .main-nav a i { font-size: 1.3rem; }
+
+        .profile-section { margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
+        .profile-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); }
+        .profile-popup { position: absolute; bottom: 80px; left: 1.5rem; background: white; border-radius: 12px; box-shadow: 0 10px 15px rgba(0,0,0,0.1); padding: 0.5rem; display: none; width: 200px; }
+        .profile-popup.active { display: block; }
+        .popup-list { list-style: none; }
+        .popup-list a { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; text-decoration: none; color: var(--text-primary); border-radius: 6px; }
+        .popup-list a:hover { background: var(--hover-bg); }
+
+        .main-header { padding: 12px 2.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background-color: var(--widget-bg); position: sticky; top: 0; z-index: 10; min-height: 70px; }
+        .nav-logo { height: 42px; display: none; }
+        .menu-toggle { display: none; font-size: 1.5rem; background: none; border: none; cursor: pointer; }
+
+        .page-container { max-width: 1400px; margin: 0 auto; padding: 2rem; width: 100%; }
+        .page-title { font-size: 1.75rem; font-weight: 700; margin-bottom: 1.5rem; }
+
+        .card { background: var(--widget-bg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); margin-bottom: 1.5rem; overflow: hidden; }
+        .card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #FAFAFA; }
+        .card-title { font-size: 1.1rem; font-weight: 600; margin: 0; display: flex; align-items: center; gap: 0.5rem; }
         .card-body { padding: 1.5rem; }
+
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label { display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-secondary); }
+        .form-control { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: inherit; }
+        .form-control:focus { outline: none; border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
         
-        /* Form Elements */
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label { 
-            display: block; font-weight: 600; margin-bottom: 0.5rem; 
-            font-size: 0.9rem; color: var(--dark-color);
-        }
-        .form-group input, .form-group textarea { 
-            display: block; width: 100%; padding: 0.75rem 1rem; 
-            font-size: 0.95rem; line-height: 1.5; background-color: #fff; 
-            border: 1px solid #ced4da; border-radius: var(--border-radius);
-            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-            font-family: var(--font-family);
-        }
-        .form-group input:focus, .form-group textarea:focus {
-            border-color: var(--primary-color); outline: 0;
-            box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
-        }
-        .form-group textarea { resize: vertical; min-height: 100px; }
+        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; border-radius: var(--radius-md); font-weight: 500; cursor: pointer; border: 1px solid transparent; transition: var(--transition); font-size: 0.9rem; }
+        .btn-primary { background: var(--brand-primary); color: white; }
+        .btn-primary:hover { background: #2563EB; }
+        .btn-secondary { background: white; border-color: var(--border-color); color: var(--text-primary); }
+        .btn-secondary:hover { background: var(--hover-bg); }
+        .btn-danger { background: #FEF2F2; color: var(--danger-color); border-color: #FECACA; }
+        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+        .btn-icon { padding: 0.4rem; }
+
+        .list-item { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 0.5rem; background: white; }
+        .list-item:last-child { margin-bottom: 0; }
+        .list-content { display: flex; align-items: center; gap: 1rem; flex: 1; }
+        .list-img { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border-color); }
+        .list-actions { display: flex; gap: 0.5rem; }
+
+        .color-picker-wrapper { display: flex; align-items: center; gap: 1rem; }
+        input[type="color"] { -webkit-appearance: none; border: none; width: 40px; height: 40px; border-radius: 8px; cursor: pointer; padding: 0; overflow: hidden; }
         
-        /* Image Preview */
-        .image-preview-container { display: flex; gap: 1rem; margin-top: 1rem; }
-        .image-preview { 
-            flex: 1; border: 2px dashed #d1d5db; border-radius: var(--border-radius);
-            padding: 1rem; text-align: center;
-        }
-        .image-preview img { 
-            max-width: 100%; max-height: 200px; border-radius: var(--border-radius);
-            margin-bottom: 0.5rem;
-        }
-        .image-preview p { 
-            font-size: 0.875rem; color: var(--secondary-color); margin: 0;
-        }
+        .status-toggle { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.9rem; }
+        .toggle-switch { appearance: none; width: 36px; height: 20px; background: #CBD5E1; border-radius: 20px; position: relative; transition: 0.2s; cursor: pointer; }
+        .toggle-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: white; border-radius: 50%; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .toggle-switch:checked { background: var(--success-color); }
+        .toggle-switch:checked::after { transform: translateX(16px); }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: none; justify-content: center; align-items: center; }
+        .modal { background: white; width: 90%; max-width: 500px; border-radius: 12px; padding: 1.5rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .modal-title { font-size: 1.2rem; font-weight: 600; }
         
-        /* Status Toggle */
-        .status-toggle { 
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            padding: 0.375rem 0.75rem; border-radius: 999px;
-            font-size: 0.75rem; font-weight: 600;
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
+        .toast { padding: 1rem 1.5rem; background: white; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border-left: 4px solid var(--brand-primary); margin-top: 10px; animation: slideIn 0.3s; display: flex; align-items: center; gap: 0.5rem; }
+        .toast.success { border-color: var(--success-color); }
+        .toast.error { border-color: var(--danger-color); }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+        .empty-state { text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 0.9rem; background: #F8FAFC; border-radius: 8px; border: 1px dashed var(--border-color); }
+
+        @media (max-width: 1024px) {
+            .dashboard-container { grid-template-columns: 1fr; }
+            .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 280px; z-index: 1000; transform: translateX(-100%); transition: transform 0.3s; }
+            .sidebar.active { transform: translateX(0); }
+            .main-header { padding: 12px 1.5rem; justify-content: space-between; }
+            .nav-logo { display: block; }
+            .menu-toggle { display: block; }
+            .page-container { padding: 1rem; }
+            .form-grid { grid-template-columns: 1fr; }
         }
-        .status-toggle.active { 
-            background: #f0fdf4; color: var(--success-color); 
-            border: 1px solid #bbf7d0;
-        }
-        .status-toggle.inactive { 
-            background: #fef2f2; color: var(--danger-color);
-            border: 1px solid #fecaca;
-        }
-        .toggle-switch { 
-            appearance: none; width: 36px; height: 20px; 
-            background-color: #d1d5db; border-radius: 999px; 
-            position: relative; cursor: pointer; transition: all 0.2s;
-        }
-        .toggle-switch::before { 
-            content: ''; position: absolute; width: 16px; height: 16px; 
-            border-radius: 50%; background-color: white; top: 2px; left: 2px; 
-            transition: transform 0.2s; box-shadow: var(--box-shadow);
-        }
-        .toggle-switch:checked { background-color: var(--success-color); }
-        .toggle-switch:checked::before { transform: translateX(16px); }
-        
-        /* Products Grid */
-        .products-grid { 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-            gap: 1.5rem; margin-top: 1.5rem;
-        }
-        .product-card { 
-            background: white; border-radius: var(--border-radius); 
-            padding: 1.5rem; border: 1px solid #e5e7eb; 
-            transition: all 0.2s ease-in-out; position: relative;
-        }
-        .product-card.selected { border-color: var(--primary-color); background: var(--primary-light); }
-        .product-card:hover { transform: translateY(-2px); box-shadow: var(--box-shadow-lg); }
-        .product-card-header { 
-            display: flex; align-items: flex-start; gap: 1rem; 
-            margin-bottom: 1rem;
-        }
-        .product-image { 
-            width: 60px; height: 60px; border-radius: var(--border-radius); 
-            object-fit: cover; border: 1px solid #e5e7eb; flex-shrink: 0;
-        }
-        .product-info { flex: 1; }
-        .product-name { 
-            font-weight: 600; color: var(--dark-color); margin-bottom: 0.25rem;
-            font-size: 0.95rem;
-        }
-        .product-category { 
-            color: var(--secondary-color); font-size: 0.75rem; 
-            font-weight: 500; margin-bottom: 0.25rem;
-        }
-        .product-price { 
-            font-weight: 700; color: var(--primary-color); 
-            font-size: 0.95rem;
-        }
-        .product-checkbox { 
-            position: absolute; top: 1rem; right: 1rem;
-            width: 20px; height: 20px; cursor: pointer;
-        }
-        
-        /* Modal */
-        .modal-overlay { 
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
-            background: rgba(0,0,0,0.5); display: flex; align-items: center; 
-            justify-content: center; z-index: 2000; padding: 1rem;
-        }
-        .modal { 
-            background: white; border-radius: var(--border-radius); 
-            max-width: 800px; width: 100%; max-height: 90vh; 
-            overflow-y: auto; box-shadow: var(--box-shadow-lg);
-        }
-        .modal-header { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 1.5rem; border-bottom: 1px solid #e5e7eb;
-        }
-        .modal-title { font-size: 1.25rem; font-weight: 600; margin: 0; }
-        .close-modal { 
-            background: none; border: none; font-size: 1.5rem; cursor: pointer; 
-            padding: 0; color: var(--secondary-color); width: 30px; height: 30px;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .close-modal:hover { color: var(--dark-color); }
-        .modal-body { padding: 1.5rem; }
-        .modal-actions { 
-            display: flex; gap: 1rem; justify-content: flex-end; 
-            padding: 1.5rem; border-top: 1px solid #e5e7eb;
-        }
-        
-        /* Toast Notifications */
-        #toast-container { 
-            position: fixed; bottom: 20px; right: 20px; z-index: 3000; 
-        }
-        .toast { 
-            padding: 1rem 1.5rem; border-radius: var(--border-radius); 
-            color: white; box-shadow: var(--box-shadow-lg); 
-            animation: slideIn 0.3s, fadeOut 0.3s 2.7s; 
-            font-size: 0.875rem; font-weight: 500;
-        }
-        @keyframes slideIn { 
-            from { transform: translateX(100%); opacity: 0; } 
-            to { transform: translateX(0); opacity: 1; } 
-        }
-        @keyframes fadeOut { to { opacity: 0; } }
-        .toast.success { background-color: var(--success-color); }
-        .toast.error { background-color: var(--danger-color); }
-        .toast.warning { background-color: var(--warning-color); }
-        
-        /* Empty State */
-        .empty-state { 
-            text-align: center; padding: 3rem; color: var(--secondary-color); 
-        }
-        .empty-state-icon { 
-            width: 64px; height: 64px; color: #d1d5db; 
-            margin-bottom: 1rem;
-        }
-        .empty-state h3 { 
-            margin: 0 0 0.5rem 0; color: var(--dark-color); 
-            font-size: 1.125rem; font-weight: 600;
-        }
-        .empty-state p { margin-bottom: 1.5rem; font-size: 0.875rem; }
     </style>
 </head>
 <body>
     <div id="toast-container"></div>
-
-    <nav>
-        <div class="nav-left">
-            <h1 onclick="window.location.href='index.html'">ShopSphere</h1>
-        </div>
-        <div id="nav-right" class="nav-right"></div>
-    </nav>
-
-    <div class="container page">
-        <h1 style="margin-bottom: 1.5rem;">Landing Page Management</h1>
+    <div class="dashboard-container">
         
-        <!-- Hero Section -->
-        <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">Hero Section</h2>
-                <button class="btn-primary" onclick="openHeroModal()">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 4v16m8-8H4"/>
-                    </svg>
-                    Manage Hero Images
-                </button>
-            </div>
-            <div class="card-body">
-                <div id="hero-images-container">
-                    <div class="empty-state">
-                        <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                        <h3>No Hero Images</h3>
-                        <p>Add images to display in your hero section</p>
-                        <button class="btn-primary" onclick="openHeroModal()">Add Hero Images</button>
-                    </div>
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya" class="logo-image">
                 </div>
             </div>
-        </div>
-        
-        <!-- Promo Banner -->
-        <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">Promo Banner</h2>
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <span id="promo-status" class="status-toggle inactive">
-                        <input type="checkbox" class="toggle-switch" id="promo-toggle">
-                        Inactive
-                    </span>
-                    <button class="btn-secondary" onclick="openPromoModal()">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                        </svg>
-                        Edit
-                    </button>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html"><i class='bx bx-home-alt'></i> Dashboard</a></li>
+                    <li><a href="#" class="active"><i class='bx bx-layout'></i> Landing Page</a></li>
+                    <li><a href="manage-category.html"><i class='bx bx-category'></i> Categories</a></li>
+                    <li><a href="manage-products.html"><i class='bx bx-package'></i> Products</a></li>
+                </ul>
+            </nav>
+            <div class="profile-section" id="profile-section">
+                <div class="profile-avatar" style="background: #E2E8F0;"></div>
+                <div style="flex:1;">
+                    <div style="font-weight:600; font-size:0.9rem;" id="sidebar-name">Admin</div>
+                    <div style="font-size:0.8rem; color:var(--text-secondary);" id="sidebar-email">Loading...</div>
                 </div>
             </div>
-            <div class="card-body">
-                <div id="promo-preview">
-                    <p style="color: var(--secondary-color); font-style: italic;">No promo banner configured</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Best Sellers -->
-        <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">Best Sellers</h2>
-                <button class="btn-primary" onclick="openBestSellersModal()">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 4v16m8-8H4"/>
-                    </svg>
-                    Manage Products
-                </button>
-            </div>
-            <div class="card-body">
-                <div id="best-sellers-container">
-                    <div class="empty-state">
-                        <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-                        </svg>
-                        <h3>No Best Sellers Selected</h3>
-                        <p>Add products to display in your best sellers section</p>
-                        <button class="btn-primary" onclick="openBestSellersModal()">Select Products</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+        </aside>
 
-    <!-- Hero Images Modal -->
-    <div id="hero-modal" class="modal-overlay" style="display: none;">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 class="modal-title">Manage Hero Images</h3>
-                <button class="close-modal" onclick="closeHeroModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="hero-form">
-                    <div class="form-group">
-                        <label for="desktop-image">Desktop Image URL</label>
-                        <input type="url" id="desktop-image" placeholder="https://example.com/desktop-hero.jpg">
+        <main class="main-area">
+            <header class="main-header">
+                <button class="menu-toggle" id="menu-toggle"><i class='bx bx-menu'></i></button>
+                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya" class="nav-logo">
+                <div></div>
+            </header>
+
+            <div class="page-container">
+                <h1 class="page-title">Landing Page Management</h1>
+
+                <!-- 1. Branding & Theme -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class='bx bx-palette'></i> Branding & Theme</div>
+                        <button class="btn btn-primary btn-sm" onclick="saveBranding()">Save Changes</button>
                     </div>
-                    <div class="form-group">
-                        <label for="mobile-image">Mobile Image URL</label>
-                        <input type="url" id="mobile-image" placeholder="https://example.com/mobile-hero.jpg">
-                    </div>
-                    <div class="image-preview-container">
-                        <div class="image-preview">
-                            <img id="desktop-preview" src="" alt="Desktop preview" style="display: none;">
-                            <p>Desktop Preview</p>
-                        </div>
-                        <div class="image-preview">
-                            <img id="mobile-preview" src="" alt="Mobile preview" style="display: none;">
-                            <p>Mobile Preview</p>
+                    <div class="card-body">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Store Name</label>
+                                <input type="text" class="form-control" id="store-name" placeholder="Vastramaya">
+                            </div>
+                            <div class="form-group">
+                                <label>Logo URL</label>
+                                <input type="text" class="form-control" id="logo-url" placeholder="https://...">
+                            </div>
+                            <div class="form-group">
+                                <label>Primary Brand Color</label>
+                                <div class="color-picker-wrapper">
+                                    <input type="color" id="primary-color" value="#3B82F6">
+                                    <span id="color-value" style="font-family:monospace;">#3B82F6</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </form>
-                <div id="existing-hero-images" style="margin-top: 2rem;">
-                    <h4 style="margin-bottom: 1rem;">Existing Hero Images</h4>
-                    <div id="hero-images-list"></div>
+                </div>
+
+                <!-- 2. Navigation Menu -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class='bx bx-menu'></i> Navigation Menu</div>
+                        <button class="btn btn-primary btn-sm" onclick="openNavModal()">+ Add Link</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="nav-links-list">
+                            <!-- Dynamic Links -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Hero Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class='bx bx-images'></i> Hero Carousel</div>
+                        <button class="btn btn-primary btn-sm" onclick="openHeroModal()">+ Add Image</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="hero-list">
+                            <!-- Dynamic Hero Images -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Featured Categories (Circles) -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class='bx bx-purchase-tag-alt'></i> Featured Categories (Circles)</div>
+                        <button class="btn btn-primary btn-sm" onclick="saveFeaturedCats()">Save Selection</button>
+                    </div>
+                    <div class="card-body">
+                        <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:1rem;">Select categories to display in the top scrollable circle list.</p>
+                        <div id="featured-cats-list" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:1rem;">
+                            <!-- Checkboxes -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Category Sections (Rows) -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class='bx bx-list-ul'></i> Category Sections (Rows)</div>
+                        <button class="btn btn-primary btn-sm" onclick="saveCategorySections()">Save Configuration</button>
+                    </div>
+                    <div class="card-body">
+                        <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:1rem;">Manage visible product rows on the homepage. Reorder and rename them.</p>
+                        <div id="cat-sections-list">
+                            <!-- Sortable List -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Promo Banner -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class='bx bx-news'></i> Promo Banner</div>
+                        <div class="status-toggle">
+                            <input type="checkbox" class="toggle-switch" id="promo-active">
+                            <span>Active</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Banner Text</label>
+                            <input type="text" class="form-control" id="promo-text" placeholder="Free Shipping on orders over $50!">
+                        </div>
+                        <div class="form-group">
+                            <label>Link URL (Optional)</label>
+                            <input type="text" class="form-control" id="promo-link">
+                        </div>
+                        <button class="btn btn-primary btn-sm" onclick="savePromo()">Update Banner</button>
+                    </div>
+                </div>
+
+                <!-- 7. Best Sellers -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class='bx bx-star'></i> Best Sellers</div>
+                        <button class="btn btn-primary btn-sm" onclick="openBestSellerModal()">Select Products</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="bestseller-preview" class="empty-state">No products selected</div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Nav Link Modal -->
+    <div class="modal-overlay" id="nav-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Add Navigation Link</div>
+                <button class="btn btn-icon" onclick="closeModal('nav-modal')"><i class='bx bx-x' style="font-size:1.5rem;"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Label</label>
+                    <input type="text" class="form-control" id="nav-label">
+                </div>
+                <div class="form-group">
+                    <label>URL / Path</label>
+                    <input type="text" class="form-control" id="nav-url" placeholder="/shop or https://...">
                 </div>
             </div>
-            <div class="modal-actions">
-                <button type="button" class="btn-secondary" onclick="closeHeroModal()">Cancel</button>
-                <button type="button" class="btn-primary" onclick="saveHeroImage()">Add Hero Image</button>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="saveNavLink()">Add Link</button>
             </div>
         </div>
     </div>
 
-    <!-- Promo Banner Modal -->
-    <div id="promo-modal" class="modal-overlay" style="display: none;">
+    <!-- Hero Modal -->
+    <div class="modal-overlay" id="hero-modal">
         <div class="modal">
             <div class="modal-header">
-                <h3 class="modal-title">Edit Promo Banner</h3>
-                <button class="close-modal" onclick="closePromoModal()">&times;</button>
+                <div class="modal-title">Add Hero Image</div>
+                <button class="btn btn-icon" onclick="closeModal('hero-modal')"><i class='bx bx-x' style="font-size:1.5rem;"></i></button>
             </div>
             <div class="modal-body">
-                <form id="promo-form">
-                    <div class="form-group">
-                        <label for="promo-text">Promo Banner Text</label>
-                        <textarea id="promo-text" placeholder="Enter your promotional message..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="promo-link">Promo Link (Optional)</label>
-                        <input type="url" id="promo-link" placeholder="https://example.com/promo">
-                    </div>
-                </form>
+                <div class="form-group">
+                    <label>Desktop Image URL</label>
+                    <input type="text" class="form-control" id="hero-desktop">
+                </div>
+                <div class="form-group">
+                    <label>Mobile Image URL</label>
+                    <input type="text" class="form-control" id="hero-mobile">
+                </div>
+                <div class="form-group">
+                    <label>Link (Optional)</label>
+                    <input type="text" class="form-control" id="hero-link">
+                </div>
             </div>
-            <div class="modal-actions">
-                <button type="button" class="btn-secondary" onclick="closePromoModal()">Cancel</button>
-                <button type="button" class="btn-primary" onclick="savePromoBanner()">Save Promo Banner</button>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="saveHeroImage()">Save Slide</button>
             </div>
         </div>
     </div>
 
-    <!-- Best Sellers Modal -->
-    <div id="best-sellers-modal" class="modal-overlay" style="display: none;">
-        <div class="modal">
+    <!-- Best Seller Modal -->
+    <div class="modal-overlay" id="bestseller-modal">
+        <div class="modal" style="max-width: 600px;">
             <div class="modal-header">
-                <h3 class="modal-title">Select Best Sellers</h3>
-                <button class="close-modal" onclick="closeBestSellersModal()">&times;</button>
+                <div class="modal-title">Select Best Sellers</div>
+                <button class="btn btn-icon" onclick="closeModal('bestseller-modal')"><i class='bx bx-x' style="font-size:1.5rem;"></i></button>
             </div>
-            <div class="modal-body">
-                <div class="search-container" style="margin-bottom: 1.5rem;">
-                    <input type="text" id="search-products" class="search-input" placeholder="Search products...">
-                </div>
-                <div id="products-selection" class="products-grid"></div>
+            <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+                <input type="text" class="form-control" placeholder="Search products..." id="bs-search" style="margin-bottom: 1rem;">
+                <div id="bs-product-list"></div>
             </div>
-            <div class="modal-actions">
-                <button type="button" class="btn-secondary" onclick="closeBestSellersModal()">Cancel</button>
-                <button type="button" class="btn-primary" onclick="saveBestSellers()">Save Selection</button>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="saveBestSellers()">Save Selection</button>
             </div>
         </div>
     </div>
-    
+
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
-  authDomain: "vastramaya---magic.firebaseapp.com",
-  projectId: "vastramaya---magic",
-  storageBucket: "vastramaya---magic.firebasestorage.app",
-  messagingSenderId: "543460072082",
-  appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
-  measurementId: "G-E39VNDCFVE"
-};
-        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
+        const firebaseConfig = {
+            apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
+            authDomain: "vastramaya---magic.firebaseapp.com",
+            projectId: "vastramaya---magic",
+            storageBucket: "vastramaya---magic.firebasestorage.app",
+            messagingSenderId: "543460072082",
+            appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
+            measurementId: "G-E39VNDCFVE"
+        };
+        
         firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
         const db = firebase.firestore();
+        const auth = firebase.auth();
+        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
 
-        let currentUser = null;
+        // State
+        let allCategories = [];
         let allProducts = [];
+        let navLinks = [];
         let heroImages = [];
-        let promoBanner = null;
-        let bestSellers = [];
-        let selectedProducts = new Set();
+        let categorySections = [];
+        let featuredCatIds = [];
+        let selectedBestSellers = [];
 
-        document.addEventListener('DOMContentLoaded', () => {
-            auth.onAuthStateChanged(user => {
-                currentUser = user;
-                renderNav();
-                if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
-                    sessionStorage.setItem('toastMessage', JSON.stringify({ message: 'Access Denied: Admin area.', type: 'error' }));
-                    window.location.href = 'index.html';
-                    return;
-                }
-                initializePage();
-            });
-        });
-
-        async function initializePage() {
-            await loadAllData();
-            setupEventListeners();
-        }
-
-        async function loadAllData() {
-            try {
-                // Load hero images
-                const heroSnapshot = await db.collection('landingPage').doc('heroImages').get();
-                if (heroSnapshot.exists) {
-                    heroImages = heroSnapshot.data().images || [];
-                }
-                renderHeroImages();
-
-                // Load promo banner
-                const promoScreenshot = await db.collection('landingPage').doc('promoBanner').get();
-                if (promoScreenshot.exists) {
-                    promoBanner = promoScreenshot.data();
-                    renderPromoBanner();
-                }
-
-                // Load best sellers
-                const bestSellersSnapshot = await db.collection('landingPage').doc('bestSellers').get();
-                if (bestSellersSnapshot.exists) {
-                    bestSellers = bestSellersSnapshot.data().products || [];
-                }
-                renderBestSellers();
-
-                // Load all products for selection
-                const productsSnapshot = await db.collection('products').orderBy('name').get();
-                allProducts = productsSnapshot.docs.map(doc => ({ 
-                    id: doc.id, 
-                    ...doc.data()
-                }));
-
-            } catch (error) {
-                console.error("Error loading landing page data:", error);
-                showToast("Failed to load landing page data.", "error");
-            }
-        }
-
-        function setupEventListeners() {
-            // Hero image preview
-            document.getElementById('desktop-image').addEventListener('input', (e) => {
-                updateImagePreview(e.target.value, 'desktop-preview');
-            });
-            document.getElementById('mobile-image').addEventListener('input', (e) => {
-                updateImagePreview(e.target.value, 'mobile-preview');
-            });
-
-            // Promo toggle
-            document.getElementById('promo-toggle').addEventListener('change', (e) => {
-                togglePromoBanner(e.target.checked);
-            });
-
-            // Product search
-            document.getElementById('search-products').addEventListener('input', (e) => {
-                filterProducts(e.target.value);
-            });
-        }
-
-        function updateImagePreview(imageUrl, previewId) {
-            const preview = document.getElementById(previewId);
-            if (imageUrl && isValidUrl(imageUrl)) {
-                preview.src = imageUrl;
-                preview.style.display = 'block';
-            } else {
-                preview.style.display = 'none';
-            }
-        }
-
-        function isValidUrl(string) {
-            try {
-                new URL(string);
-                return true;
-            } catch (_) {
-                return false;
-            }
-        }
-
-        // Hero Images Functions
-        function openHeroModal() {
-            document.getElementById('hero-modal').style.display = 'flex';
-            renderExistingHeroImages();
-        }
-
-        function closeHeroModal() {
-            document.getElementById('hero-modal').style.display = 'none';
-            document.getElementById('hero-form').reset();
-            document.getElementById('desktop-preview').style.display = 'none';
-            document.getElementById('mobile-preview').style.display = 'none';
-        }
-
-        function renderExistingHeroImages() {
-            const container = document.getElementById('hero-images-list');
-            if (heroImages.length === 0) {
-                container.innerHTML = '<p style="color: var(--secondary-color); font-style: italic;">No hero images added yet.</p>';
+        // Init
+        auth.onAuthStateChanged(user => {
+            if (!user || user.email !== ADMIN_EMAIL) {
+                window.location.href = 'index.html';
                 return;
             }
+            document.getElementById('sidebar-email').textContent = user.email;
+            loadAllData();
+        });
 
-            container.innerHTML = heroImages.map((image, index) => `
-                <div class="product-card" style="margin-bottom: 1rem;">
-                    <div class="product-card-header">
-                        <img src="${image.desktop}" alt="Hero image" class="product-image"
-                             onerror="this.src='https://via.placeholder.com/60?text=Error'">
-                        <div class="product-info">
-                            <div class="product-name">Hero Image ${index + 1}</div>
-                            <div class="product-category">Desktop: ${image.desktop.substring(0, 50)}...</div>
-                            <div class="product-category">Mobile: ${image.mobile.substring(0, 50)}...</div>
-                        </div>
-                        <button class="btn-danger" onclick="removeHeroImage(${index})">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M3 6h18"></path>
-                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                            </svg>
-                            Remove
-                        </button>
+        // Menu Toggle
+        document.getElementById('menu-toggle').onclick = () => {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.querySelector('.overlay').classList.toggle('active');
+        };
+        document.querySelector('.overlay').onclick = () => {
+            document.getElementById('sidebar').classList.remove('active');
+            document.querySelector('.overlay').classList.remove('active');
+        };
+
+        // Color Picker
+        document.getElementById('primary-color').addEventListener('input', (e) => {
+            document.getElementById('color-value').textContent = e.target.value;
+        });
+
+        // --- Data Loading ---
+        async function loadAllData() {
+            try {
+                const [catsSnap, prodsSnap, settingsSnap, navSnap, heroSnap, promoSnap, featSnap, catSecSnap, bestSnap] = await Promise.all([
+                    db.collection('categories').get(),
+                    db.collection('products').get(),
+                    db.collection('landingPage').doc('settings').get(),
+                    db.collection('landingPage').doc('navigation').get(),
+                    db.collection('landingPage').doc('heroImages').get(),
+                    db.collection('landingPage').doc('promoBanner').get(),
+                    db.collection('landingPage').doc('featuredCategories').get(),
+                    db.collection('landingPage').doc('categorySections').get(),
+                    db.collection('landingPage').doc('bestSellers').get()
+                ]);
+
+                allCategories = catsSnap.docs.map(d => ({id: d.id, ...d.data()}));
+                allProducts = prodsSnap.docs.map(d => ({id: d.id, ...d.data()}));
+
+                // Settings
+                if(settingsSnap.exists) {
+                    const s = settingsSnap.data();
+                    document.getElementById('store-name').value = s.storeName || '';
+                    document.getElementById('logo-url').value = s.logoUrl || '';
+                    document.getElementById('primary-color').value = s.primaryColor || '#3B82F6';
+                    document.getElementById('color-value').textContent = s.primaryColor || '#3B82F6';
+                }
+
+                // Navigation
+                navLinks = navSnap.exists ? (navSnap.data().links || []) : [];
+                renderNavLinks();
+
+                // Hero
+                heroImages = heroSnap.exists ? (heroSnap.data().images || []) : [];
+                renderHeroList();
+
+                // Promo
+                if(promoSnap.exists) {
+                    const p = promoSnap.data();
+                    document.getElementById('promo-text').value = p.text || '';
+                    document.getElementById('promo-link').value = p.link || '';
+                    document.getElementById('promo-active').checked = p.active || false;
+                }
+
+                // Featured Categories
+                featuredCatIds = featSnap.exists ? (featSnap.data().categoryIds || []) : [];
+                renderFeaturedCats();
+
+                // Category Sections
+                const savedSections = catSecSnap.exists ? (catSecSnap.data().sections || []) : [];
+                // Merge existing categories with saved config
+                categorySections = allCategories.map(cat => {
+                    const saved = savedSections.find(s => s.categoryId === cat.id);
+                    return {
+                        categoryId: cat.id,
+                        name: cat.name,
+                        displayTitle: saved ? saved.displayTitle : cat.name,
+                        isVisible: saved ? saved.isVisible : true,
+                        order: saved ? saved.order : 99
+                    };
+                }).sort((a, b) => a.order - b.order);
+                renderCategorySections();
+
+                // Best Sellers
+                const bsIds = bestSnap.exists ? (bestSnap.data().productIds || []) : [];
+                selectedBestSellers = bsIds; // IDs only
+                renderBestSellerPreview();
+
+            } catch (e) {
+                console.error(e);
+                showToast('Error loading data', 'error');
+            }
+        }
+
+        // --- Branding ---
+        async function saveBranding() {
+            const data = {
+                storeName: document.getElementById('store-name').value,
+                logoUrl: document.getElementById('logo-url').value,
+                primaryColor: document.getElementById('primary-color').value
+            };
+            await db.collection('landingPage').doc('settings').set(data, {merge: true});
+            showToast('Branding saved');
+        }
+
+        // --- Navigation ---
+        function renderNavLinks() {
+            const list = document.getElementById('nav-links-list');
+            if(navLinks.length === 0) {
+                list.innerHTML = '<div class="empty-state">No links added</div>';
+                return;
+            }
+            list.innerHTML = navLinks.map((l, i) => `
+                <div class="list-item">
+                    <div class="list-content"><strong>${l.label}</strong> <span style="color:var(--text-secondary); font-size:0.9rem;">${l.url}</span></div>
+                    <div class="list-actions">
+                        <button class="btn btn-secondary btn-sm" onclick="moveLink(${i}, -1)"><i class='bx bx-up-arrow-alt'></i></button>
+                        <button class="btn btn-secondary btn-sm" onclick="moveLink(${i}, 1)"><i class='bx bx-down-arrow-alt'></i></button>
+                        <button class="btn btn-danger btn-sm" onclick="removeLink(${i})"><i class='bx bx-trash'></i></button>
                     </div>
                 </div>
             `).join('');
         }
 
-        async function saveHeroImage() {
-            const desktopUrl = document.getElementById('desktop-image').value.trim();
-            const mobileUrl = document.getElementById('mobile-image').value.trim();
-
-            if (!desktopUrl || !mobileUrl) {
-                showToast('Please provide both desktop and mobile image URLs.', 'error');
-                return;
-            }
-
-            if (!isValidUrl(desktopUrl) || !isValidUrl(mobileUrl)) {
-                showToast('Please provide valid image URLs.', 'error');
-                return;
-            }
-
-            try {
-                heroImages.push({ desktop: desktopUrl, mobile: mobileUrl });
-                await db.collection('landingPage').doc('heroImages').set({ images: heroImages });
-                
-                showToast('Hero image added successfully!', 'success');
-                renderHeroImages();
-                renderExistingHeroImages();
-                closeHeroModal();
-                
-            } catch (error) {
-                console.error("Error saving hero image:", error);
-                showToast("Failed to save hero image.", "error");
-            }
+        function openNavModal() { document.getElementById('nav-modal').style.display = 'flex'; }
+        
+        function saveNavLink() {
+            const label = document.getElementById('nav-label').value;
+            const url = document.getElementById('nav-url').value;
+            if(!label || !url) return showToast('Fields required', 'error');
+            navLinks.push({label, url});
+            db.collection('landingPage').doc('navigation').set({links: navLinks});
+            renderNavLinks();
+            closeModal('nav-modal');
+            document.getElementById('nav-label').value = '';
+            document.getElementById('nav-url').value = '';
         }
 
-        async function removeHeroImage(index) {
-            if (confirm('Are you sure you want to remove this hero image?')) {
-                heroImages.splice(index, 1);
-                try {
-                    await db.collection('landingPage').doc('heroImages').set({ images: heroImages });
-                    showToast('Hero image removed successfully!', 'success');
-                    renderHeroImages();
-                    renderExistingHeroImages();
-                } catch (error) {
-                    console.error("Error removing hero image:", error);
-                    showToast("Failed to remove hero image.", "error");
-                }
-            }
+        function removeLink(i) {
+            navLinks.splice(i, 1);
+            db.collection('landingPage').doc('navigation').set({links: navLinks});
+            renderNavLinks();
         }
 
-        function renderHeroImages() {
-            const container = document.getElementById('hero-images-container');
-            if (heroImages.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                        <h3>No Hero Images</h3>
-                        <p>Add images to display in your hero section</p>
-                        <button class="btn-primary" onclick="openHeroModal()">Add Hero Images</button>
+        function moveLink(i, dir) {
+            if(i+dir < 0 || i+dir >= navLinks.length) return;
+            [navLinks[i], navLinks[i+dir]] = [navLinks[i+dir], navLinks[i]];
+            db.collection('landingPage').doc('navigation').set({links: navLinks});
+            renderNavLinks();
+        }
+
+        // --- Hero Images ---
+        function renderHeroList() {
+            const list = document.getElementById('hero-list');
+            if(heroImages.length === 0) {
+                list.innerHTML = '<div class="empty-state">No hero images</div>';
+                return;
+            }
+            list.innerHTML = heroImages.map((h, i) => `
+                <div class="list-item">
+                    <img src="${h.desktop}" class="list-img">
+                    <div class="list-content"><div style="font-size:0.9rem;">Slide ${i+1}</div></div>
+                    <div class="list-actions">
+                        <button class="btn btn-danger btn-sm" onclick="removeHero(${i})"><i class='bx bx-trash'></i></button>
                     </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = `
-                <div class="products-grid">
-                    ${heroImages.map((image, index) => `
-                        <div class="product-card">
-                            <div class="product-card-header">
-                                <img src="${image.desktop}" alt="Hero image" class="product-image"
-                                     onerror="this.src='https://via.placeholder.com/60?text=Error'">
-                                <div class="product-info">
-                                    <div class="product-name">Hero Image ${index + 1}</div>
-                                    <div class="product-category">Desktop & Mobile Versions</div>
-                                </div>
-                            </div>
-                            <button class="btn-danger" onclick="removeHeroImage(${index})" style="width: 100%; margin-top: 1rem;">
-                                Remove
-                            </button>
-                        </div>
-                    `).join('')}
                 </div>
-            `;
+            `).join('');
         }
 
-        // Promo Banner Functions
-        function openPromoModal() {
-            document.getElementById('promo-modal').style.display = 'flex';
-            if (promoBanner) {
-                document.getElementById('promo-text').value = promoBanner.text || '';
-                document.getElementById('promo-link').value = promoBanner.link || '';
-            }
+        function openHeroModal() { document.getElementById('hero-modal').style.display = 'flex'; }
+
+        function saveHeroImage() {
+            const d = document.getElementById('hero-desktop').value;
+            const m = document.getElementById('hero-mobile').value;
+            const l = document.getElementById('hero-link').value;
+            if(!d) return showToast('Desktop image required', 'error');
+            heroImages.push({desktop: d, mobile: m || d, link: l || '#'});
+            db.collection('landingPage').doc('heroImages').set({images: heroImages});
+            renderHeroList();
+            closeModal('hero-modal');
+            document.getElementById('hero-desktop').value = '';
+            document.getElementById('hero-mobile').value = '';
+            document.getElementById('hero-link').value = '';
         }
 
-        function closePromoModal() {
-            document.getElementById('promo-modal').style.display = 'none';
+        function removeHero(i) {
+            heroImages.splice(i, 1);
+            db.collection('landingPage').doc('heroImages').set({images: heroImages});
+            renderHeroList();
         }
 
-        async function savePromoBanner() {
-            const text = document.getElementById('promo-text').value.trim();
-            const link = document.getElementById('promo-link').value.trim();
-
-            if (!text) {
-                showToast('Please provide promo banner text.', 'error');
-                return;
-            }
-
-            if (link && !isValidUrl(link)) {
-                showToast('Please provide a valid link URL.', 'error');
-                return;
-            }
-
-            try {
-                promoBanner = { text, link, active: promoBanner ? promoBanner.active : false };
-                await db.collection('landingPage').doc('promoBanner').set(promoBanner);
-                
-                showToast('Promo banner saved successfully!', 'success');
-                renderPromoBanner();
-                closePromoModal();
-                
-            } catch (error) {
-                console.error("Error saving promo banner:", error);
-                showToast("Failed to save promo banner.", "error");
-            }
+        // --- Featured Categories ---
+        function renderFeaturedCats() {
+            const list = document.getElementById('featured-cats-list');
+            list.innerHTML = allCategories.map(cat => `
+                <label class="list-item" style="cursor:pointer; justify-content:flex-start; gap:0.5rem;">
+                    <input type="checkbox" value="${cat.id}" ${featuredCatIds.includes(cat.id) ? 'checked' : ''}>
+                    <span>${cat.name}</span>
+                </label>
+            `).join('');
         }
 
-        async function togglePromoBanner(active) {
-            if (!promoBanner) {
-                showToast('Please create a promo banner first.', 'warning');
-                document.getElementById('promo-toggle').checked = false;
-                return;
-            }
-
-            try {
-                promoBanner.active = active;
-                await db.collection('landingPage').doc('promoBanner').set(promoBanner);
-                
-                showToast(`Promo banner ${active ? 'activated' : 'deactivated'}!`, 'success');
-                renderPromoBanner();
-                
-            } catch (error) {
-                console.error("Error toggling promo banner:", error);
-                showToast("Failed to update promo banner.", "error");
-            }
+        async function saveFeaturedCats() {
+            const checked = Array.from(document.querySelectorAll('#featured-cats-list input:checked')).map(c => c.value);
+            await db.collection('landingPage').doc('featuredCategories').set({categoryIds: checked});
+            showToast('Featured categories saved');
         }
 
-        function renderPromoBanner() {
-            const statusElement = document.getElementById('promo-status');
-            const toggle = document.getElementById('promo-toggle');
-            const preview = document.getElementById('promo-preview');
-
-            if (promoBanner) {
-                toggle.checked = promoBanner.active || false;
-                
-                if (promoBanner.active) {
-                    statusElement.className = 'status-toggle active';
-                    statusElement.innerHTML = `
-                        <input type="checkbox" class="toggle-switch" id="promo-toggle" checked>
-                        Active
-                    `;
-                } else {
-                    statusElement.className = 'status-toggle inactive';
-                    statusElement.innerHTML = `
-                        <input type="checkbox" class="toggle-switch" id="promo-toggle">
-                        Inactive
-                    `;
-                }
-
-                preview.innerHTML = `
-                    <div style="background: #f3f4f6; padding: 1rem; border-radius: var(--border-radius);">
-                        <p style="margin: 0 0 0.5rem 0; font-weight: 500;">${promoBanner.text}</p>
-                        ${promoBanner.link ? `<a href="${promoBanner.link}" style="color: var(--primary-color); font-size: 0.875rem;">Learn more →</a>` : ''}
+        // --- Category Sections ---
+        function renderCategorySections() {
+            const list = document.getElementById('cat-sections-list');
+            list.innerHTML = categorySections.map((sec, i) => `
+                <div class="list-item" style="display:grid; grid-template-columns: 40px 1fr 1fr 100px; gap:1rem; align-items:center;">
+                    <div class="status-toggle">
+                        <input type="checkbox" class="toggle-switch" onchange="toggleSection(${i}, this.checked)" ${sec.isVisible ? 'checked' : ''}>
                     </div>
-                `;
-
-                // Re-attach event listener
-                document.getElementById('promo-toggle').addEventListener('change', (e) => {
-                    togglePromoBanner(e.target.checked);
-                });
-            } else {
-                statusElement.className = 'status-toggle inactive';
-                statusElement.innerHTML = `
-                    <input type="checkbox" class="toggle-switch" id="promo-toggle">
-                    Inactive
-                `;
-                preview.innerHTML = '<p style="color: var(--secondary-color); font-style: italic;">No promo banner configured</p>';
-            }
+                    <div style="font-weight:600;">${sec.name}</div>
+                    <input type="text" class="form-control" value="${sec.displayTitle}" onchange="updateSecTitle(${i}, this.value)" placeholder="Display Title">
+                    <div class="list-actions" style="justify-content:flex-end;">
+                        <button class="btn btn-secondary btn-sm" onclick="moveSection(${i}, -1)"><i class='bx bx-up-arrow-alt'></i></button>
+                        <button class="btn btn-secondary btn-sm" onclick="moveSection(${i}, 1)"><i class='bx bx-down-arrow-alt'></i></button>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        // Best Sellers Functions
-        function openBestSellersModal() {
-            document.getElementById('best-sellers-modal').style.display = 'flex';
-            selectedProducts = new Set(bestSellers.map(p => p.id));
-            renderProductSelection();
+        function toggleSection(i, val) { categorySections[i].isVisible = val; }
+        function updateSecTitle(i, val) { categorySections[i].displayTitle = val; }
+        
+        function moveSection(i, dir) {
+            if(i+dir < 0 || i+dir >= categorySections.length) return;
+            [categorySections[i], categorySections[i+dir]] = [categorySections[i+dir], categorySections[i]];
+            // Update order property based on new index
+            categorySections.forEach((s, idx) => s.order = idx);
+            renderCategorySections();
         }
 
-        function closeBestSellersModal() {
-            document.getElementById('best-sellers-modal').style.display = 'none';
-            document.getElementById('search-products').value = '';
+        async function saveCategorySections() {
+            const data = categorySections.map((s, i) => ({
+                categoryId: s.categoryId,
+                displayTitle: s.displayTitle,
+                isVisible: s.isVisible,
+                order: i
+            }));
+            await db.collection('landingPage').doc('categorySections').set({sections: data});
+            showToast('Sections configuration saved');
         }
 
-        function renderProductSelection() {
-            const container = document.getElementById('products-selection');
-            const searchTerm = document.getElementById('search-products').value.toLowerCase();
+        // --- Promo Banner ---
+        async function savePromo() {
+            const data = {
+                text: document.getElementById('promo-text').value,
+                link: document.getElementById('promo-link').value,
+                active: document.getElementById('promo-active').checked
+            };
+            await db.collection('landingPage').doc('promoBanner').set(data);
+            showToast('Promo banner saved');
+        }
+
+        // --- Best Sellers ---
+        function openBestSellerModal() {
+            renderBSList();
+            document.getElementById('bestseller-modal').style.display = 'flex';
+        }
+
+        function renderBSList() {
+            const term = document.getElementById('bs-search').value.toLowerCase();
+            const container = document.getElementById('bs-product-list');
+            const filtered = allProducts.filter(p => p.name.toLowerCase().includes(term));
             
-            let filteredProducts = allProducts;
-            if (searchTerm) {
-                filteredProducts = allProducts.filter(p => 
-                    p.name.toLowerCase().includes(searchTerm) || 
-                    (p.category && p.category.toLowerCase().includes(searchTerm))
-                );
-            }
-
-            if (filteredProducts.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1 / -1;">
-                        <h3>No Products Found</h3>
-                        <p>${searchTerm ? 'Try adjusting your search' : 'No products available'}</p>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = filteredProducts.map(product => {
-                const isSelected = selectedProducts.has(product.id);
-                const imageUrl = (product.images && product.images.length > 0) 
-                    ? product.images[0] 
-                    : 'https://via.placeholder.com/60?text=No+Image';
-                
-                return `
-                    <div class="product-card ${isSelected ? 'selected' : ''}">
-                        <div class="product-card-header">
-                            <img src="${imageUrl}" alt="${product.name}" class="product-image"
-                                 onerror="this.src='https://via.placeholder.com/60?text=Error'">
-                            <div class="product-info">
-                                <div class="product-name">${product.name}</div>
-                                <div class="product-category">${product.category || 'Uncategorized'}</div>
-                                <div class="product-price">$${(product.price || 0).toFixed(2)}</div>
-                            </div>
-                        </div>
-                        <input type="checkbox" class="product-checkbox" 
-                               ${isSelected ? 'checked' : ''}
-                               onchange="toggleProductSelection('${product.id}', this.checked)">
-                    </div>
-                `;
-            }).join('');
+            container.innerHTML = filtered.map(p => `
+                <label class="list-item" style="cursor:pointer; justify-content:flex-start; gap:1rem;">
+                    <input type="checkbox" value="${p.id}" ${selectedBestSellers.includes(p.id) ? 'checked' : ''} onchange="toggleBS('${p.id}')">
+                    <img src="${p.images?.[0] || ''}" class="list-img">
+                    <span>${p.name}</span>
+                </label>
+            `).join('');
         }
 
-        function filterProducts(searchTerm) {
-            renderProductSelection();
-        }
+        document.getElementById('bs-search').addEventListener('input', renderBSList);
 
-        function toggleProductSelection(productId, isSelected) {
-            if (isSelected) {
-                selectedProducts.add(productId);
-            } else {
-                selectedProducts.delete(productId);
-            }
-            
-            // Update UI
-            const productCard = document.querySelector(`.product-card input[value="${productId}"]`)?.closest('.product-card');
-            if (productCard) {
-                if (isSelected) {
-                    productCard.classList.add('selected');
-                } else {
-                    productCard.classList.remove('selected');
-                }
-            }
+        function toggleBS(id) {
+            const idx = selectedBestSellers.indexOf(id);
+            if(idx > -1) selectedBestSellers.splice(idx, 1);
+            else selectedBestSellers.push(id);
         }
 
         async function saveBestSellers() {
-            const selectedProductsArray = allProducts.filter(p => selectedProducts.has(p.id));
-            
-            try {
-                await db.collection('landingPage').doc('bestSellers').set({ 
-                    products: selectedProductsArray,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                bestSellers = selectedProductsArray;
-                showToast('Best sellers updated successfully!', 'success');
-                renderBestSellers();
-                closeBestSellersModal();
-                
-            } catch (error) {
-                console.error("Error saving best sellers:", error);
-                showToast("Failed to save best sellers.", "error");
-            }
+            await db.collection('landingPage').doc('bestSellers').set({productIds: selectedBestSellers});
+            renderBestSellerPreview();
+            closeModal('bestseller-modal');
+            showToast('Best sellers updated');
         }
 
-        function renderBestSellers() {
-            const container = document.getElementById('best-sellers-container');
-            if (bestSellers.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-                        </svg>
-                        <h3>No Best Sellers Selected</h3>
-                        <p>Add products to display in your best sellers section</p>
-                        <button class="btn-primary" onclick="openBestSellersModal()">Select Products</button>
-                    </div>
-                `;
+        function renderBestSellerPreview() {
+            const container = document.getElementById('bestseller-preview');
+            const count = selectedBestSellers.length;
+            if(count === 0) {
+                container.textContent = "No products selected";
                 return;
             }
-
-            container.innerHTML = `
-                <div class="products-grid">
-                    ${bestSellers.map(product => {
-                        const imageUrl = (product.images && product.images.length > 0) 
-                            ? product.images[0] 
-                            : 'https://via.placeholder.com/60?text=No+Image';
-                        
-                        return `
-                            <div class="product-card">
-                                <div class="product-card-header">
-                                    <img src="${imageUrl}" alt="${product.name}" class="product-image"
-                                         onerror="this.src='https://via.placeholder.com/60?text=Error'">
-                                    <div class="product-info">
-                                        <div class="product-name">${product.name}</div>
-                                        <div class="product-category">${product.category || 'Uncategorized'}</div>
-                                        <div class="product-price">$${(product.price || 0).toFixed(2)}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            `;
+            container.textContent = `${count} product${count > 1 ? 's' : ''} selected`;
         }
 
-        function renderNav() {
-            const navRight = document.getElementById('nav-right');
-            const logoutIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg>`;
-            const categoriesIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>`;
-            const productsIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/></svg>`;
-            
-            if (currentUser && currentUser.email === ADMIN_EMAIL) {
-                navRight.innerHTML = `
-                    <button title="Manage Categories" class="nav-icon" onclick="window.location.href='manage-category.html'">
-                        ${categoriesIcon}
-                    </button>
-                    <button title="Manage Products" class="nav-icon" onclick="window.location.href='manage-products.html'">
-                        ${productsIcon}
-                    </button>
-                    <button title="Logout" class="nav-icon" onclick="auth.signOut()">
-                        ${logoutIcon}
-                    </button>`;
-            }
-        }
-
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.textContent = message;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+        // --- Utils ---
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function showToast(msg, type='success') {
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.innerHTML = `<i class='bx ${type==='success'?'bx-check-circle':'bx-error-circle'}'></i> ${msg}`;
+            document.getElementById('toast-container').appendChild(el);
+            setTimeout(() => el.remove(), 3000);
         }
     </script>
 </body>
