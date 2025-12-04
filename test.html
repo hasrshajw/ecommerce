@@ -44,7 +44,7 @@
             font-size: 14px;
             line-height: 20px;
             color: var(--text-color);
-            overflow-x: hidden; /* Prevent horizontal scroll */
+            overflow-x: hidden;
         }
 
         /* ============= DESKTOP LAYOUT ============= */
@@ -375,12 +375,12 @@
             width: 100%;
         }
 
-        /* Table area */
+        /* Table area - FIXED Z-INDEX ISSUE */
         .table-wrapper {
             width: 100%;
             overflow-x: auto;
             position: relative;
-            z-index: 1; /* Lower z-index for table wrapper */
+            z-index: 1;
         }
 
         .domain-table {
@@ -399,6 +399,7 @@
             padding: 12px 20px;
             text-align: left;
             vertical-align: middle;
+            position: relative; /* Added for popup positioning */
         }
 
         .domain-table thead th {
@@ -410,7 +411,7 @@
             background: #ffffff;
             position: sticky;
             top: 0;
-            z-index: 2;
+            z-index: 10;
         }
 
         .th-image,
@@ -505,7 +506,7 @@
             box-shadow: 0 -6px 0 0 #a855f7, 0 6px 0 0 #a855f7;
         }
 
-        /* Desktop Popup Menu - FIXED Z-INDEX ISSUE */
+        /* Desktop Popup Menu - FIXED Z-INDEX AND POSITIONING */
         .desktop-popup {
             position: absolute;
             top: 100%;
@@ -515,9 +516,10 @@
             border: 1px solid #e5e7eb;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
             min-width: 160px;
-            z-index: 1000; /* Increased z-index */
+            z-index: 1000;
             display: none;
             overflow: hidden;
+            margin-top: 4px;
         }
 
         .desktop-popup.open {
@@ -633,7 +635,7 @@
             flex: 1;
             background: var(--page-bg);
             padding-bottom: 20px;
-            overflow-x: hidden; /* Prevent horizontal scroll */
+            overflow-x: hidden;
             width: 100%;
         }
 
@@ -886,7 +888,7 @@
         .mobile-search-wrap {
             flex: 1;
             position: relative;
-            min-width: 0; /* This allows the element to shrink below its content size */
+            min-width: 0;
         }
 
         .mobile-search-input-wrap {
@@ -1427,21 +1429,21 @@
             background: #FEE2E2;
         }
 
-        /* Profile Popup - REDESIGNED with fixed width */
+        /* Profile Popup - UPDATED DESIGN */
         .profile-popup {
             position: absolute;
             bottom: 100%;
-            left: 0;
-            width: 280px; /* Fixed width */
+            left: 50%;
+            transform: translateX(-50%) translateY(10px) scale(0.95);
+            width: 300px;
             background: #ffffff;
             border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-            border: 1px solid #e5e7eb;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.08);
             padding: 0;
             z-index: 2000;
             opacity: 0;
             pointer-events: none;
-            transform: translateY(10px) scale(0.95);
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             margin-bottom: 10px;
             overflow: hidden;
@@ -1450,16 +1452,16 @@
         .profile-popup.active {
             opacity: 1;
             pointer-events: all;
-            transform: translateY(0) scale(1);
+            transform: translateX(-50%) translateY(0) scale(1);
         }
 
         .popup-header {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 16px;
+            padding: 20px;
             border-bottom: 1px solid #f3f4f6;
-            background: #fafafa;
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
         }
 
         .popup-list {
@@ -1471,34 +1473,59 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 14px 16px;
+            padding: 14px 20px;
             text-decoration: none;
             color: var(--text-color);
             transition: all 0.15s ease;
             cursor: pointer;
             font-size: 14px;
             font-weight: 500;
+            position: relative;
         }
 
         .popup-list a:hover {
             background: #f8fafc;
         }
 
-        .popup-list a i {
-            font-size: 1.2rem;
-            color: #6b7280;
-            width: 20px;
-            text-align: center;
+        .popup-list a:hover::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 20px;
+            background: var(--brand-primary);
+            border-radius: 0 2px 2px 0;
         }
 
-        .popup-list a.logout i {
-            color: var(--danger-color);
+        .popup-list a svg {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+            transition: stroke 0.15s ease;
+        }
+
+        .popup-list a:hover svg {
+            stroke: var(--brand-primary);
         }
 
         .popup-list a.logout {
             color: var(--danger-color);
             border-top: 1px solid #f3f4f6;
             margin-top: 4px;
+        }
+
+        .popup-list a.logout svg {
+            stroke: var(--danger-color);
+        }
+
+        .popup-list a.logout:hover {
+            background: #fef2f2;
+        }
+
+        .popup-list a.logout:hover svg {
+            stroke: #dc2626;
         }
 
         /* Empty state */
@@ -1556,13 +1583,16 @@
 
             /* Mobile profile popup adjustment */
             .profile-popup {
-                width: 260px;
-                left: 50%;
-                transform: translateX(-50%) translateY(10px) scale(0.95);
+                width: 280px;
+                left: 16px;
+                right: auto;
+                transform: translateY(10px) scale(0.95);
             }
             
             .profile-popup.active {
-                transform: translateX(-50%) translateY(0) scale(1);
+                transform: translateY(0) scale(1);
+                left: 16px;
+                transform: translateX(0) translateY(0) scale(1);
             }
             
             /* Mobile controls row adjustment */
@@ -1598,6 +1628,16 @@
             
             .mobile-page-title {
                 font-size: 20px;
+            }
+            
+            .profile-popup {
+                left: 50%;
+                transform: translateX(-50%) translateY(10px) scale(0.95);
+                width: calc(100vw - 32px);
+            }
+            
+            .profile-popup.active {
+                transform: translateX(-50%) translateY(0) scale(1);
             }
         }
 
@@ -1801,7 +1841,7 @@
                                 <div class="account-email" id="sidebar-email">Admin</div>
                             </div>
                         </div>
-                        <!-- Profile Popup -->
+                        <!-- Profile Popup - UPDATED WITH NEW SVGs -->
                         <div class="profile-popup" id="profile-popup">
                             <div class="popup-header">
                                 <img id="popup-avatar" src="" class="account-avatar">
@@ -1811,9 +1851,34 @@
                                 </div>
                             </div>
                             <ul class="popup-list">
-                                <li><a href="#"><i class='bx bx-user'></i> Profile</a></li>
-                                <li><a href="#"><i class='bx bx-cog'></i> Settings</a></li>
-                                <li><a href="#" onclick="auth.signOut()" class="logout"><i class='bx bx-log-out'></i> Logout</a></li>
+                                <li>
+                                    <a href="#">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-icon lucide-user-round">
+                                            <circle cx="12" cy="8" r="5"/>
+                                            <path d="M20 21a8 8 0 0 0-16 0"/>
+                                        </svg>
+                                        <span>Profile</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings-icon lucide-settings">
+                                            <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                        <span>Settings</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" onclick="auth.signOut()" class="logout">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out">
+                                            <path d="m16 17 5-5-5-5"/>
+                                            <path d="M21 12H9"/>
+                                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                        </svg>
+                                        <span>Logout</span>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -1922,7 +1987,7 @@
                         </div>
                     </div>
                     
-                    <!-- Mobile Search and Add Button Row - FIXED OVERFLOW -->
+                    <!-- Mobile Search and Add Button Row -->
                     <div class="mobile-controls-row">
                         <div class="mobile-search-wrap">
                             <div class="mobile-search-input-wrap">
@@ -2229,7 +2294,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-    <script src='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css'></script>
 
     <script>
         // --- UI INTERACTIONS ---
@@ -2323,6 +2387,13 @@
                     e.stopPropagation();
                     profilePopup.classList.toggle('active');
                 });
+                
+                // Close popup when clicking outside on mobile
+                document.addEventListener('click', e => {
+                    if (!mobileProfileSection.contains(e.target) && !profilePopup.contains(e.target)) {
+                        profilePopup.classList.remove('active');
+                    }
+                });
             }
 
             // Advanced Menu functionality
@@ -2335,11 +2406,13 @@
                 advancedMenuClose.addEventListener('click', () => {
                     advancedMenu.classList.remove('open');
                     advancedMenuOverlay.classList.remove('open');
+                    document.body.style.overflow = 'auto';
                 });
 
                 advancedMenuOverlay.addEventListener('click', () => {
                     advancedMenu.classList.remove('open');
                     advancedMenuOverlay.classList.remove('open');
+                    document.body.style.overflow = 'auto';
                 });
             }
             
@@ -2353,6 +2426,13 @@
                 modal.addEventListener('hidden', () => {
                     document.body.style.overflow = 'auto';
                 });
+            });
+            
+            // Close desktop popups when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.kebab') && !e.target.closest('.desktop-popup')) {
+                    document.querySelectorAll('.desktop-popup').forEach(p => p.classList.remove('open'));
+                }
             });
         });
 
@@ -2519,13 +2599,6 @@
                     // Toggle current popup
                     popup.classList.toggle('open');
                 });
-            });
-            
-            // Close desktop popups when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.kebab') && !e.target.closest('.desktop-popup')) {
-                    document.querySelectorAll('.desktop-popup').forEach(p => p.classList.remove('open'));
-                }
             });
             
             // Attach event listeners for mobile menu buttons
