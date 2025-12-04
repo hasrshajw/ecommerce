@@ -1,2487 +1,2502 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Vastramaya - Ecommerce Dashboard</title>
-
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-
-<style>
-:root {
-  --header-height-desktop: 70px;
-  --sidebar-width: 260px;
-  --row-height: 48px;
-
-  --sidebar-bg: #ffffff;
-  --header-bg: #ffffff;
-  --page-bg: #f4f5f7;
-
-  --text-color: rgb(24, 24, 26);
-  --icon-color: #6b7280;
-  --icon-active: #5127ba;
-
-  --active-bg: #f3f4f6;
-  --hover-bg: #f3f4f6;
-
-  --border-subtle: #e5e7eb;
-}
-
-/* RESET */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  min-height: 100vh;
-  background: var(--page-bg);
-  font-family: "DM Sans", Roboto, sans-serif;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 20px;
-  color: var(--text-color);
-}
-
-/* ============= DESKTOP LAYOUT ============= */
-
-.page-desktop {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Desktop header */
-.d-topbar {
-  height: var(--header-height-desktop);
-  background: var(--header-bg);
-  border-bottom: 1px solid var(--border-subtle);
-  border-top: 1px solid var(--border-subtle);
-  display: flex;
-  align-items: center;
-  padding-left: 40px;
-}
-
-.d-topbar-logo {
-  height: 52px;
-  width: auto;
-  object-fit: contain;
-}
-
-/* Desktop main area */
-.d-app {
-  flex: 1;
-  display: flex;
-}
-
-/* Desktop sidebar */
-.d-sidebar {
-  width: var(--sidebar-width);
-  background: var(--sidebar-bg);
-  border-right: 1px solid var(--border-subtle);
-  display: flex;
-  flex-direction: column;
-}
-
-.d-sidebar-inner {
-  padding: 32px 16px 16px 12px;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-/* Desktop nav */
-.d-nav {
-  display: flex;
-  flex-direction: column;
-}
-
-.d-nav-group + .d-nav-group {
-  margin-top: 6px;
-}
-
-.d-nav-item {
-  display: flex;
-  align-items: center;
-  height: var(--row-height);
-  padding: 0 20px 0 12px;
-  margin: 2px 0;
-  border-radius: 8px;
-  gap: 12px;
-  cursor: pointer;
-  font-weight: 500;
-  font-size: 14px;
-  color: var(--text-color);
-  line-height: 20px;
-  transition: background 0.15s ease;
-}
-
-/* label takes remaining space so chevron sticks right */
-.d-nav-item .label {
-  flex: 1;
-}
-
-.d-nav-item .icon svg {
-  width: 22px;
-  height: 22px;
-  stroke: var(--icon-color);
-}
-
-/* chevron icon (desktop + mobile shared class) */
-.chevron-icon {
-  width: 18px;
-  height: 18px;
-  stroke: var(--icon-color);
-  transition: transform 0.2s ease;
-}
-
-/* rotated when open */
-.dropdown-open .chevron-icon {
-  transform: rotate(90deg);
-}
-
-/* Desktop active */
-.d-nav-item--active {
-  background: var(--active-bg);
-}
-.d-nav-item--active .icon svg {
-  stroke: var(--icon-active);
-}
-
-/* Desktop hover */
-.d-nav-item:hover {
-  background: var(--hover-bg);
-}
-
-/* Desktop Customize Site submenu */
-.d-submenu {
-  display: none;
-  margin-left: 28px;
-  padding-left: 16px;
-  border-left: 1px solid var(--border-subtle);
-  margin-top: 4px;
-}
-.d-submenu.open {
-  display: block;
-}
-.d-submenu-item {
-  height: 44px; /* Increased height */
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-  border-radius: 8px;
-  margin: 2px 0;
-  cursor: pointer;
-  gap: 12px; /* Space for icon */
-  font-size: 15px; /* Slightly larger font */
-  font-weight: 500; /* Increased weight */
-}
-.d-submenu-item:hover {
-  background: var(--hover-bg);
-}
-/* Remove default active highlight */
-.d-submenu-item {
-  background: none;
-}
-.d-submenu-item.active {
-  background: var(--active-bg);
-}
-
-/* Submenu icon styles */
-.d-submenu-item .submenu-icon {
-  width: 18px;
-  height: 18px;
-  stroke: #6b7280;
-  flex-shrink: 0;
-}
-
-/* Desktop account section */
-.d-account-section {
-  margin-top: auto;
-  padding: 16px;
-  border-top: 1px solid var(--border-subtle);
-}
-
-/* Shared Account card styles (desktop + mobile) */
-.account-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.account-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.account-text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.account-name {
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.account-email {
-  font-size: 12px;
-  color: #6b7280;
-}
-
-/* Desktop content */
-.d-content {
-  flex: 1;
-  background: var(--page-bg);
-}
-
-/* ============= BODY CONTENT (desktop + mobile shared) ============= */
-
-.content-inner {
-  max-width: 1110px;
-  margin: 0 auto;
-  padding: 24px 24px 40px;
-}
-
-/* Top title + button row */
-.page-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 24px;
-}
-
-.page-title-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-/* "Manage Categories" main title */
-.page-title {
-  font-family: "DM Sans", Roboto, sans-serif;
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 32px;
-  color: rgb(29, 30, 32);
-}
-
-/* Breadcrumb */
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  line-height: 20px;
-  color: #6b7280;
-}
-
-.breadcrumb-icon svg {
-  width: 16px;
-  height: 16px;
-  stroke: #9ca3af;
-}
-
-.breadcrumb-divider {
-  color: #d1d5db;
-}
-
-/* Add domain button */
-.primary-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-family: "DM Sans", Roboto, sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 20px;
-  color: #ffffff;
-  background: #5127ba;
-  transition: background 0.15s ease;
-}
-.primary-btn svg {
-  width: 18px;
-  height: 18px;
-  stroke: #ffffff;
-}
-.primary-btn:hover {
-  background: #471ea7;
-}
-
-/* Card */
-.card {
-  background: #ffffff;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  overflow: hidden;
-}
-
-/* Card search header */
-.card-header {
-  padding: 16px 20px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.search-input-wrap {
-  background: #f9fafb;
-  border-radius: 999px;
-  border: 1px solid #e5e7eb;
-  padding: 0 16px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: border-color 0.15s ease;
-}
-
-.search-input-wrap:focus-within {
-  border-color: #673de6;
-}
-
-.search-icon {
-  width: 16px;
-  height: 16px;
-  stroke: #9ca3af;
-}
-
-.search-input-wrap input {
-  border: none;
-  background: transparent;
-  outline: none;
-  flex: 1;
-  font-family: "DM Sans", Roboto, sans-serif;
-  font-size: 14px;
-}
-
-/* Table area */
-.table-wrapper {
-  width: 100%;
-  overflow-x: auto;
-  position: relative;
-}
-
-.domain-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-}
-
-/* table header row */
-.domain-table thead tr {
-  height: 48px;
-}
-
-.domain-table th,
-.domain-table td {
-  padding: 12px 20px;
-}
-
-/* header cells */
-.domain-table thead th {
-  font-family: "DM Sans", Roboto, sans-serif;
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 24px;
-  color: rgb(29, 30, 32);
-  text-align: left;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-/* image column */
-.th-image,
-.td-image {
-  width: 64px;
-}
-
-/* body rows */
-.domain-table tbody tr {
-  border-bottom: 1px solid #f3f4f6;
-}
-
-.domain-table tbody tr:last-child {
-  border-bottom: none;
-}
-
-/* product image */
-.product-thumb {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  object-fit: cover;
-  background: #e5e7eb;
-}
-
-/* text styles for rows */
-.product-name {
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 24px;
-  color: rgb(29, 30, 32);
-}
-
-.product-count,
-.product-status,
-.product-actions {
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 24px;
-  color: rgb(59, 61, 74);
-}
-
-/* Toggle switch - UPDATED COLOR */
-.toggle {
-  position: relative;
-  width: 40px;
-  height: 22px;
-  border-radius: 999px;
-  background: #e5e7eb;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  padding: 0 2px;
-  transition: background 0.15s ease;
-}
-.toggle-inner {
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  background: #ffffff;
-  transition: transform 0.15s ease;
-}
-
-/* active toggle - UPDATED TO #5127ba */
-.toggle.on {
-  background: #5127ba;
-}
-.toggle.on .toggle-inner {
-  transform: translateX(18px);
-}
-
-/* Buttons in actions */
-.action-buttons {
-  display: inline-flex;
-  gap: 8px;
-  align-items: center;
-  position: relative;
-}
-
-.btn-secondary {
-  padding: 6px 12px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
-  font-family: "DM Sans", Roboto, sans-serif;
-  font-size: 13px;
-  line-height: 20px;
-  color: #673de6;
-  cursor: pointer;
-  transition: background 0.15s ease;
-}
-.btn-secondary:hover {
-  background: #f2efff;
-}
-
-/* kebab menu */
-.kebab {
-  width: 24px;
-  height: 24px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  position: relative;
-}
-.kebab-dots {
-  width: 4px;
-  height: 4px;
-  border-radius: 999px;
-  background: #a855f7;
-  box-shadow: 0 -6px 0 0 #a855f7, 0 6px 0 0 #a855f7;
-}
-
-/* Desktop Popup Menu */
-.desktop-popup {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: #ffffff;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  min-width: 160px;
-  z-index: 100;
-  display: none;
-  overflow: hidden;
-}
-
-.desktop-popup.open {
-  display: block;
-}
-
-.desktop-popup-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  width: 100%;
-  border: none;
-  background: none;
-  text-align: left;
-  cursor: pointer;
-  font-family: "DM Sans", Roboto, sans-serif;
-  font-size: 14px;
-  line-height: 20px;
-  color: rgb(29, 30, 32);
-  transition: background 0.15s ease;
-}
-
-.desktop-popup-item:hover {
-  background: #f9fafb;
-}
-
-.desktop-popup-item svg {
-  width: 16px;
-  height: 16px;
-  stroke: #6b7280;
-}
-
-.desktop-popup-item:last-child {
-  color: #ef4444;
-}
-
-.desktop-popup-item:last-child svg {
-  stroke: #ef4444;
-}
-
-/* Modal for Add/Edit Category */
-.category-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-.category-modal.open {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.modal-content {
-  background: #ffffff;
-  border-radius: 16px;
-  width: 90%;
-  max-width: 500px;
-  padding: 32px;
-  position: relative;
-  transform: translateY(20px);
-  transition: transform 0.3s ease;
-}
-
-.category-modal.open .modal-content {
-  transform: translateY(0);
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.modal-title {
-  font-family: "DM Sans", Roboto, sans-serif;
-  font-weight: 700;
-  font-size: 24px;
-  line-height: 32px;
-  color: rgb(29, 30, 32);
-}
-
-.modal-close {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  background: #f9fafb;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.modal-close:hover {
-  background: #f3f4f6;
-}
-
-.modal-close-icon {
-  width: 16px;
-  height: 16px;
-  position: relative;
-}
-
-.modal-close-icon::before,
-.modal-close-icon::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  width: 16px;
-  height: 2px;
-  border-radius: 999px;
-  background: #111827;
-}
-
-.modal-close-icon::before {
-  transform: rotate(45deg);
-}
-
-.modal-close-icon::after {
-  transform: rotate(-45deg);
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-label {
-  display: block;
-  margin-bottom: 8px;
-  font-family: "DM Sans", Roboto, sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 20px;
-  color: rgb(29, 30, 32);
-}
-
-.form-input {
-  width: 100%;
-  padding: 12px 16px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
-  font-family: "DM Sans", Roboto, sans-serif;
-  font-size: 14px;
-  line-height: 20px;
-  color: rgb(29, 30, 32);
-  transition: border-color 0.15s ease;
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: #5127ba;
-}
-
-.form-toggle-group {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 24px;
-}
-
-.form-toggle-label {
-  font-family: "DM Sans", Roboto, sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 20px;
-  color: rgb(29, 30, 32);
-}
-
-.modal-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 32px;
-}
-
-.modal-btn {
-  flex: 1;
-  padding: 12px 24px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-family: "DM Sans", Roboto, sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 20px;
-  transition: all 0.15s ease;
-}
-
-.modal-btn-primary {
-  background: #5127ba;
-  color: #ffffff;
-}
-
-.modal-btn-primary:hover {
-  background: #471ea7;
-}
-
-.modal-btn-secondary {
-  background: #f3f4f6;
-  color: rgb(29, 30, 32);
-  border: 1px solid #e5e7eb;
-}
-
-.modal-btn-secondary:hover {
-  background: #e5e7eb;
-}
-
-/* Loading state */
-.loading {
-  text-align: center;
-  padding: 40px;
-  font-family: "DM Sans", Roboto, sans-serif;
-  font-size: 16px;
-  color: #6b7280;
-}
-
-/* ============= MOBILE LAYOUT ============= */
-
-.page-mobile {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Mobile header */
-.m-header {
-  height: 72px;
-  background: var(--header-bg);
-  border-bottom: 1px solid var(--border-subtle);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-}
-
-/* Menu button left - rounded 6px */
-.m-menu-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 6px;
-  border: 1px solid var(--border-subtle);
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.m-menu-lines {
-  width: 18px;
-  height: 14px;
-  position: relative;
-}
-.m-menu-lines::before,
-.m-menu-lines::after,
-.m-menu-lines span {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 2px;
-  border-radius: 999px;
-  background: #111827;
-}
-.m-menu-lines::before {
-  top: 0;
-}
-.m-menu-lines span {
-  top: 6px;
-}
-.m-menu-lines::after {
-  bottom: 0;
-}
-
-/* Logo right (48px) */
-.m-logo {
-  height: 48px;
-  width: auto;
-  object-fit: contain;
-}
-
-/* Mobile main bg */
-.m-main {
-  flex: 1;
-  background: var(--page-bg);
-  padding-bottom: 20px;
-}
-
-/* Overlay & drawer (smooth animation) */
-.m-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.45);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease-out;
-  z-index: 40;
-}
-
-.m-overlay.open {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.m-drawer {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 320px;
-  max-width: 90vw;
-  height: 100%;
-  background: #ffffff;
-  display: flex;
-  flex-direction: column;
-  transform: translateX(-100%);
-  transition: transform 0.25s ease-out;
-}
-
-.m-overlay.open .m-drawer {
-  transform: translateX(0);
-}
-
-/* Drawer header */
-.m-drawer-header {
-  height: 72px;
-  border-bottom: 1px solid var(--border-subtle);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-}
-
-/* Drawer logo also 48px */
-.m-drawer-logo {
-  height: 48px;
-  width: auto;
-  object-fit: contain;
-}
-
-.m-drawer-close {
-  width: 40px;
-  height: 40px;
-  border: 0px;
-  background: #f9fafb;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-.m-drawer-close-icon {
-  width: 14px;
-  height: 14px;
-  position: relative;
-}
-.m-drawer-close-icon::before,
-.m-drawer-close-icon::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  width: 14px;
-  height: 2px;
-  border-radius: 999px;
-  background: #111827;
-}
-.m-drawer-close-icon::before {
-  transform: rotate(45deg);
-}
-.m-drawer-close-icon::after {
-  transform: rotate(-45deg);
-}
-
-/* Drawer nav - INCREASED FONT SIZE, WEIGHT AND HEIGHT */
-.m-drawer-nav {
-  padding: 32px 8px;
-  display: flex;
-  flex-direction: column;
-}
-
-.m-nav-item {
-  display: flex;
-  align-items: center;
-  height: 52px; /* Increased height */
-  padding: 0 16px;
-  margin: 2px 0;
-  border-radius: 8px;
-  gap: 12px;
-  cursor: pointer;
-  color: var(--text-color);
-  transition: background 0.15s ease;
-  font-size: 16px; /* Increased font size */
-  font-weight: 600; /* Increased weight */
-}
-
-.m-nav-item .label {
-  flex: 1;
-}
-
-.m-nav-item .icon svg {
-  width: 22px;
-  height: 22px;
-  stroke: var(--icon-color);
-}
-
-/* active mobile */
-.m-nav-item.active {
-  background: var(--active-bg);
-}
-.m-nav-item.active .icon svg {
-  stroke: var(--icon-active);
-}
-
-/* Mobile submenu */
-.m-submenu {
-  display: none;
-  margin-left: 28px;
-  padding-left: 16px;
-  border-left: 1px solid var(--border-subtle);
-  margin-top: 4px;
-}
-.m-submenu.open {
-  display: block;
-}
-.m-submenu-item {
-  height: 48px; /* Increased height */
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-  border-radius: 8px;
-  margin: 2px 0;
-  cursor: pointer;
-  gap: 12px; /* Space for icon */
-  font-size: 15px; /* Increased font size */
-  font-weight: 500; /* Increased weight */
-}
-.m-submenu-item:hover {
-  background: var(--hover-bg);
-}
-/* Remove default active highlight */
-.m-submenu-item {
-  background: none;
-}
-.m-submenu-item.active {
-  background: var(--active-bg);
-}
-
-/* Submenu icon styles for mobile */
-.m-submenu-item .submenu-icon {
-  width: 18px;
-  height: 18px;
-  stroke: #6b7280;
-  flex-shrink: 0;
-}
-
-/* Drawer footer account - same style as desktop */
-.m-account-section {
-  margin-top: auto;
-  padding: 16px;
-  border-top: 1px solid var(--border-subtle);
-}
-
-/* ============= MOBILE SPECIFIC DOMAIN CARDS ============= */
-
-/* Mobile content layout */
-.mobile-content-inner {
-  padding: 16px;
-}
-
-/* Mobile page header - stacked vertically */
-.mobile-page-header {
-  margin-bottom: 20px;
-}
-
-.mobile-page-title-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.mobile-page-title {
-  font-family: "DM Sans", Roboto, sans-serif;
-  font-weight: 700;
-  font-size: 22px;
-  line-height: 32px;
-  color: rgb(29, 30, 32);
-}
-
-.mobile-breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  line-height: 20px;
-  color: #6b7280;
-}
-
-.mobile-breadcrumb-icon svg {
-  width: 16px;
-  height: 16px;
-  stroke: #9ca3af;
-}
-
-.mobile-breadcrumb-divider {
-  color: #d1d5db;
-}
-
-/* Mobile search and add button row - UPDATED UI */
-.mobile-controls-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.mobile-search-wrap {
-  flex: 1;
-  position: relative;
-}
-
-.mobile-search-input-wrap {
-  background: #ffffff;
-  border-radius: 12px;
-  border: 2px solid #e5e7eb;
-  padding: 0 16px 0 44px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.mobile-search-input-wrap:focus-within {
-  border-color: #5127ba;
-  box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
-}
-
-.mobile-search-icon {
-  position: absolute;
-  left: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
-  stroke: #6b7280;
-  z-index: 2;
-}
-
-.mobile-search-input-wrap input {
-  border: none;
-  background: transparent;
-  outline: none;
-  flex: 1;
-  font-family: "DM Sans", Roboto, sans-serif;
-  font-size: 16px;
-  color: #111827;
-  font-weight: 500;
-}
-
-.mobile-search-input-wrap input::placeholder {
-  color: #9ca3af;
-  font-weight: 400;
-}
-
-.mobile-add-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 18px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  font-family: "DM Sans", Roboto, sans-serif;
-  font-weight: 600;
-  font-size: 15px;
-  line-height: 20px;
-  color: #ffffff;
-  background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
-  white-space: nowrap;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(81, 39, 186, 0.2);
-}
-
-.mobile-add-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(81, 39, 186, 0.25);
-}
-
-.mobile-add-btn svg {
-  width: 20px;
-  height: 20px;
-  stroke: #ffffff;
-}
-
-/* Mobile category cards */
-.mobile-category-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.category-card {
-  background: #ffffff;
-  border-radius: 16px;
-  border: 1px solid #e5e7eb;
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.category-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.category-card-image {
-  width: 56px;
-  height: 56px;
-  border-radius: 12px;
-  object-fit: cover;
-  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-  flex-shrink: 0;
-  padding: 8px;
-}
-
-.category-card-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.category-card-name {
-  font-family: "DM Sans", Roboto, sans-serif;
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 24px;
-  color: rgb(29, 30, 32);
-}
-
-.category-card-products {
-  font-family: "DM Sans", Roboto, sans-serif;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 18px;
-  color: #6b7280;
-}
-
-.category-card-status {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.category-card-toggle {
-  width: 40px;
-  height: 24px;
-  border-radius: 999px;
-  background: #e5e7eb;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  padding: 0 2px;
-  transition: background 0.15s ease;
-  position: relative;
-}
-
-/* UPDATED TOGGLE COLOR TO #5127ba */
-.category-card-toggle.on {
-  background: #5127ba;
-}
-
-.category-card-toggle-inner {
-  width: 20px;
-  height: 20px;
-  border-radius: 999px;
-  background: #ffffff;
-  transition: transform 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.category-card-toggle.on .category-card-toggle-inner {
-  transform: translateX(16px);
-}
-
-.category-card-menu-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.category-card-menu-btn:hover {
-  background: #f9fafb;
-  border-color: #d1d5db;
-}
-
-.category-card-menu-dots {
-  width: 4px;
-  height: 4px;
-  border-radius: 999px;
-  background: #6b7280;
-  box-shadow: 0 -6px 0 0 #6b7280, 0 6px 0 0 #6b7280;
-}
-
-/* Advanced Menu (Bottom Sheet) */
-.advanced-menu {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #ffffff;
-  border-radius: 24px 24px 0 0;
-  padding: 24px 0;
-  transform: translateY(100%);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 100;
-  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
-  max-height: 80vh;
-  overflow-y: auto;
-}
-
-.advanced-menu.open {
-  transform: translateY(0);
-}
-
-.advanced-menu-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  z-index: 99;
-}
-
-.advanced-menu-overlay.open {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.advanced-menu-header {
-  padding: 0 24px 20px 24px;
-  border-bottom: 1px solid #f3f4f6;
-  margin-bottom: 16px;
-  position: relative;
-}
-
-.advanced-menu-title {
-  font-family: "DM Sans", Roboto, sans-serif;
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 28px;
-  color: rgb(29, 30, 32);
-  text-align: center;
-}
-
-.advanced-menu-items {
-  display: flex;
-  flex-direction: column;
-}
-
-.advanced-menu-item {
-  padding: 18px 24px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background: none;
-  border: none;
-  width: 100%;
-  text-align: left;
-  cursor: pointer;
-  font-family: "DM Sans", Roboto, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  color: rgb(29, 30, 32);
-  transition: background 0.15s ease;
-  border-bottom: 1px solid #f9fafb;
-}
-
-.advanced-menu-item:last-child {
-  border-bottom: none;
-  color: #ef4444;
-}
-
-.advanced-menu-item:last-child svg {
-  stroke: #ef4444;
-}
-
-.advanced-menu-item:hover {
-  background: #f9fafb;
-}
-
-.advanced-menu-item svg {
-  width: 22px;
-  height: 22px;
-  stroke: #6b7280;
-  flex-shrink: 0;
-}
-
-.advanced-menu-close {
-  position: absolute;
-  top: 0;
-  right: 20px;
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  background: #f9fafb;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.advanced-menu-close:hover {
-  background: #f3f4f6;
-}
-
-.advanced-menu-close-icon {
-  width: 16px;
-  height: 16px;
-  position: relative;
-}
-
-.advanced-menu-close-icon::before,
-.advanced-menu-close-icon::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  width: 16px;
-  height: 2px;
-  border-radius: 999px;
-  background: #111827;
-}
-
-.advanced-menu-close-icon::before {
-  transform: rotate(45deg);
-}
-
-.advanced-menu-close-icon::after {
-  transform: rotate(-45deg);
-}
-
-/* Handle bar at top of menu */
-.menu-handle {
-  width: 40px;
-  height: 4px;
-  border-radius: 999px;
-  background: #e5e7eb;
-  margin: 0 auto 20px auto;
-}
-
-/* ============= RESPONSIVE SWITCH ============= */
-
-/* Desktop default, hide mobile */
-.page-desktop { display: flex; }
-.page-mobile  { display: none; }
-
-@media (max-width: 768px) {
-  .page-desktop { display: none; }
-  .page-mobile  { display: flex; }
-  
-  /* Hide desktop-style card in mobile */
-  .card {
-    display: none;
-  }
-  
-  .content-inner {
-    padding: 0;
-  }
-  
-  .page-header {
-    display: none;
-  }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Manage Categories - Vastramaya</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --header-height-desktop: 70px;
+            --sidebar-width: 260px;
+            --row-height: 48px;
+            --sidebar-bg: #ffffff;
+            --header-bg: #ffffff;
+            --page-bg: #f4f5f7;
+            --text-color: rgb(24, 24, 26);
+            --icon-color: #6b7280;
+            --icon-active: #5127ba;
+            --active-bg: #f3f4f6;
+            --hover-bg: #f3f4f6;
+            --border-subtle: #e5e7eb;
+            --brand-primary: #5127ba;
+            --brand-gradient: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
+            --danger-color: #ef4444;
+            --success-color: #10B981;
+            --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--page-bg);
+            font-family: "DM Sans", Roboto, sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 20px;
+            color: var(--text-color);
+        }
+
+        /* ============= DESKTOP LAYOUT ============= */
+        .page-desktop {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Desktop header */
+        .d-topbar {
+            height: var(--header-height-desktop);
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--border-subtle);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            padding-left: 40px;
+        }
+
+        .d-topbar-logo {
+            height: 52px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* Desktop main area */
+        .d-app {
+            flex: 1;
+            display: flex;
+        }
+
+        /* Desktop sidebar */
+        .d-sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .d-sidebar-inner {
+            padding: 32px 16px 16px 12px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        /* Desktop nav */
+        .d-nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .d-nav-group + .d-nav-group {
+            margin-top: 6px;
+        }
+
+        .d-nav-item {
+            display: flex;
+            align-items: center;
+            height: var(--row-height);
+            padding: 0 20px 0 12px;
+            margin: 2px 0;
+            border-radius: 8px;
+            gap: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-color);
+            line-height: 20px;
+            transition: background 0.15s ease;
+        }
+
+        .d-nav-item .label {
+            flex: 1;
+        }
+
+        .d-nav-item .icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--icon-color);
+        }
+
+        .chevron-icon {
+            width: 18px;
+            height: 18px;
+            stroke: var(--icon-color);
+            transition: transform 0.2s ease;
+        }
+
+        .dropdown-open .chevron-icon {
+            transform: rotate(90deg);
+        }
+
+        /* Desktop active */
+        .d-nav-item--active {
+            background: var(--active-bg);
+        }
+        .d-nav-item--active .icon svg {
+            stroke: var(--icon-active);
+        }
+
+        /* Desktop hover */
+        .d-nav-item:hover {
+            background: var(--hover-bg);
+        }
+
+        /* Desktop submenus */
+        .d-submenu {
+            display: none;
+            margin-left: 28px;
+            padding-left: 16px;
+            border-left: 1px solid var(--border-subtle);
+            margin-top: 4px;
+        }
+        .d-submenu.open {
+            display: block;
+        }
+        .d-submenu-item {
+            height: 44px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            border-radius: 8px;
+            margin: 2px 0;
+            cursor: pointer;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .d-submenu-item:hover {
+            background: var(--hover-bg);
+        }
+        .d-submenu-item.active {
+            background: var(--active-bg);
+        }
+
+        .d-submenu-item .submenu-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+        }
+
+        /* Desktop account section */
+        .d-account-section {
+            margin-top: auto;
+            padding: 16px;
+            border-top: 1px solid var(--border-subtle);
+            cursor: pointer;
+        }
+
+        .account-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .account-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .account-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .account-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .account-email {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        /* Desktop content */
+        .d-content {
+            flex: 1;
+            background: var(--page-bg);
+            overflow-y: auto;
+        }
+
+        /* ============= BODY CONTENT ============= */
+        .content-inner {
+            max-width: 1110px;
+            margin: 0 auto;
+            padding: 24px 24px 40px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .page-title-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .page-title {
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 32px;
+            color: rgb(29, 30, 32);
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            line-height: 20px;
+            color: #6b7280;
+        }
+
+        .breadcrumb-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: #9ca3af;
+        }
+
+        .breadcrumb-divider {
+            color: #d1d5db;
+        }
+
+        .primary-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 20px;
+            color: #ffffff;
+            background: var(--brand-primary);
+            transition: background 0.15s ease;
+        }
+        .primary-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: #ffffff;
+        }
+        .primary-btn:hover {
+            background: #471ea7;
+        }
+
+        /* Card */
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .search-input-wrap {
+            background: #f9fafb;
+            border-radius: 999px;
+            border: 1px solid #e5e7eb;
+            padding: 0 16px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: border-color 0.15s ease;
+        }
+
+        .search-input-wrap:focus-within {
+            border-color: #673de6;
+        }
+
+        .search-icon {
+            width: 16px;
+            height: 16px;
+            stroke: #9ca3af;
+        }
+
+        .search-input-wrap input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            font-family: "DM Sans", Roboto, sans-serif;
+            font-size: 14px;
+        }
+
+        /* Table area */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .domain-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .domain-table thead tr {
+            height: 48px;
+        }
+
+        .domain-table th,
+        .domain-table td {
+            padding: 12px 20px;
+        }
+
+        .domain-table thead th {
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 24px;
+            color: rgb(29, 30, 32);
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .th-image,
+        .td-image {
+            width: 64px;
+        }
+
+        .domain-table tbody tr {
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .domain-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .product-thumb {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #e5e7eb;
+        }
+
+        .product-name {
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 24px;
+            color: rgb(29, 30, 32);
+        }
+
+        .product-count,
+        .product-status,
+        .product-actions {
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 24px;
+            color: rgb(59, 61, 74);
+        }
+
+        .action-buttons {
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            position: relative;
+        }
+
+        .btn-secondary {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            font-size: 13px;
+            line-height: 20px;
+            color: #673de6;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        .btn-secondary:hover {
+            background: #f2efff;
+        }
+
+        .kebab {
+            width: 24px;
+            height: 24px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+        }
+        .kebab-dots {
+            width: 4px;
+            height: 4px;
+            border-radius: 999px;
+            background: #a855f7;
+            box-shadow: 0 -6px 0 0 #a855f7, 0 6px 0 0 #a855f7;
+        }
+
+        /* Desktop Popup Menu */
+        .desktop-popup {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            min-width: 160px;
+            z-index: 100;
+            display: none;
+            overflow: hidden;
+        }
+
+        .desktop-popup.open {
+            display: block;
+        }
+
+        .desktop-popup-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            width: 100%;
+            border: none;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 20px;
+            color: rgb(29, 30, 32);
+            transition: background 0.15s ease;
+        }
+
+        .desktop-popup-item:hover {
+            background: #f9fafb;
+        }
+
+        .desktop-popup-item svg {
+            width: 16px;
+            height: 16px;
+            stroke: #6b7280;
+        }
+
+        .desktop-popup-item:last-child {
+            color: var(--danger-color);
+        }
+
+        .desktop-popup-item:last-child svg {
+            stroke: var(--danger-color);
+        }
+
+        /* ============= MOBILE LAYOUT ============= */
+        .page-mobile {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            display: none;
+        }
+
+        /* Mobile header */
+        .m-header {
+            height: 72px;
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+
+        .m-menu-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            border: 1px solid var(--border-subtle);
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .m-menu-lines {
+            width: 18px;
+            height: 14px;
+            position: relative;
+        }
+        .m-menu-lines::before,
+        .m-menu-lines::after,
+        .m-menu-lines span {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            border-radius: 999px;
+            background: #111827;
+        }
+        .m-menu-lines::before {
+            top: 0;
+        }
+        .m-menu-lines span {
+            top: 6px;
+        }
+        .m-menu-lines::after {
+            bottom: 0;
+        }
+
+        .m-logo {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* Mobile main bg */
+        .m-main {
+            flex: 1;
+            background: var(--page-bg);
+            padding-bottom: 20px;
+        }
+
+        /* Overlay & drawer */
+        .m-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.45);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease-out;
+            z-index: 40;
+        }
+
+        .m-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .m-drawer {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 320px;
+            max-width: 90vw;
+            height: 100%;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(-100%);
+            transition: transform 0.25s ease-out;
+        }
+
+        .m-overlay.open .m-drawer {
+            transform: translateX(0);
+        }
+
+        /* Drawer header */
+        .m-drawer-header {
+            height: 72px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+
+        .m-drawer-logo {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .m-drawer-close {
+            width: 40px;
+            height: 40px;
+            border: 0px;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .m-drawer-close-icon {
+            width: 14px;
+            height: 14px;
+            position: relative;
+        }
+        .m-drawer-close-icon::before,
+        .m-drawer-close-icon::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: 14px;
+            height: 2px;
+            border-radius: 999px;
+            background: #111827;
+        }
+        .m-drawer-close-icon::before {
+            transform: rotate(45deg);
+        }
+        .m-drawer-close-icon::after {
+            transform: rotate(-45deg);
+        }
+
+        /* Drawer nav */
+        .m-drawer-nav {
+            padding: 32px 8px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .m-nav-item {
+            display: flex;
+            align-items: center;
+            height: 52px;
+            padding: 0 16px;
+            margin: 2px 0;
+            border-radius: 8px;
+            gap: 12px;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: background 0.15s ease;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .m-nav-item .label {
+            flex: 1;
+        }
+
+        .m-nav-item .icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--icon-color);
+        }
+
+        /* active mobile */
+        .m-nav-item.active {
+            background: var(--active-bg);
+        }
+        .m-nav-item.active .icon svg {
+            stroke: var(--icon-active);
+        }
+
+        /* Mobile submenu */
+        .m-submenu {
+            display: none;
+            margin-left: 28px;
+            padding-left: 16px;
+            border-left: 1px solid var(--border-subtle);
+            margin-top: 4px;
+        }
+        .m-submenu.open {
+            display: block;
+        }
+        .m-submenu-item {
+            height: 48px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            border-radius: 8px;
+            margin: 2px 0;
+            cursor: pointer;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .m-submenu-item:hover {
+            background: var(--hover-bg);
+        }
+        .m-submenu-item.active {
+            background: var(--active-bg);
+        }
+
+        .m-submenu-item .submenu-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+        }
+
+        /* Drawer footer account */
+        .m-account-section {
+            margin-top: auto;
+            padding: 16px;
+            border-top: 1px solid var(--border-subtle);
+            cursor: pointer;
+        }
+
+        /* Mobile content layout */
+        .mobile-content-inner {
+            padding: 16px;
+        }
+
+        /* Mobile page header */
+        .mobile-page-header {
+            margin-bottom: 20px;
+        }
+
+        .mobile-page-title-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .mobile-page-title {
+            font-weight: 700;
+            font-size: 22px;
+            line-height: 32px;
+            color: rgb(29, 30, 32);
+        }
+
+        .mobile-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            line-height: 20px;
+            color: #6b7280;
+        }
+
+        .mobile-breadcrumb-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: #9ca3af;
+        }
+
+        .mobile-breadcrumb-divider {
+            color: #d1d5db;
+        }
+
+        /* Mobile search and add button row */
+        .mobile-controls-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .mobile-search-wrap {
+            flex: 1;
+            position: relative;
+        }
+
+        .mobile-search-input-wrap {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+            padding: 0 16px 0 44px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .mobile-search-input-wrap:focus-within {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
+        }
+
+        .mobile-search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            stroke: #6b7280;
+            z-index: 2;
+        }
+
+        .mobile-search-input-wrap input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            font-size: 16px;
+            color: #111827;
+            font-weight: 500;
+        }
+
+        .mobile-search-input-wrap input::placeholder {
+            color: #9ca3af;
+            font-weight: 400;
+        }
+
+        .mobile-add-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 18px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+            line-height: 20px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(81, 39, 186, 0.2);
+        }
+
+        .mobile-add-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(81, 39, 186, 0.25);
+        }
+
+        .mobile-add-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: #ffffff;
+        }
+
+        /* Mobile category cards */
+        .mobile-category-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .category-card-mobile {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .category-card-mobile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .category-card-image {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            flex-shrink: 0;
+            padding: 8px;
+        }
+
+        .category-card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .category-card-name {
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 24px;
+            color: rgb(29, 30, 32);
+        }
+
+        .category-card-products {
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 18px;
+            color: #6b7280;
+        }
+
+        .category-card-menu-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .category-card-menu-btn:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
+
+        .category-card-menu-dots {
+            width: 4px;
+            height: 4px;
+            border-radius: 999px;
+            background: #6b7280;
+            box-shadow: 0 -6px 0 0 #6b7280, 0 6px 0 0 #6b7280;
+        }
+
+        /* Advanced Menu (Bottom Sheet) */
+        .advanced-menu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-radius: 24px 24px 0 0;
+            padding: 24px 0;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2000;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .advanced-menu.open {
+            transform: translateY(0);
+        }
+
+        .advanced-menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 1999;
+        }
+
+        .advanced-menu-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .advanced-menu-header {
+            padding: 0 24px 20px 24px;
+            border-bottom: 1px solid #f3f4f6;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .advanced-menu-title {
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 28px;
+            color: rgb(29, 30, 32);
+            text-align: center;
+        }
+
+        .advanced-menu-items {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .advanced-menu-item {
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 24px;
+            color: rgb(29, 30, 32);
+            transition: background 0.15s ease;
+            border-bottom: 1px solid #f9fafb;
+        }
+
+        .advanced-menu-item:last-child {
+            border-bottom: none;
+            color: var(--danger-color);
+        }
+
+        .advanced-menu-item:last-child svg {
+            stroke: var(--danger-color);
+        }
+
+        .advanced-menu-item:hover {
+            background: #f9fafb;
+        }
+
+        .advanced-menu-item svg {
+            width: 22px;
+            height: 22px;
+            stroke: #6b7280;
+        }
+
+        .advanced-menu-close {
+            position: absolute;
+            top: 0;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .advanced-menu-close:hover {
+            background: #f3f4f6;
+        }
+
+        .advanced-menu-close-icon {
+            width: 16px;
+            height: 16px;
+            position: relative;
+        }
+
+        .advanced-menu-close-icon::before,
+        .advanced-menu-close-icon::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: 16px;
+            height: 2px;
+            border-radius: 999px;
+            background: #111827;
+        }
+
+        .advanced-menu-close-icon::before {
+            transform: rotate(45deg);
+        }
+
+        .advanced-menu-close-icon::after {
+            transform: rotate(-45deg);
+        }
+
+        .menu-handle {
+            width: 40px;
+            height: 4px;
+            border-radius: 999px;
+            background: #e5e7eb;
+            margin: 0 auto 20px auto;
+        }
+
+        /* --- MODALS --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-premium);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            background: #F8FAFC;
+        }
+
+        .modal-footer {
+            padding: 1.25rem 1.5rem;
+            background: white;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .modal-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--radius-md);
+            background: white;
+            transition: all 0.15s ease;
+            font-family: "DM Sans", Roboto, sans-serif;
+        }
+
+        .form-input:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
+        }
+
+        .image-upload-box {
+            border: 2px dashed #CBD5E1;
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            background: white;
+            transition: all 0.15s ease;
+            position: relative;
+        }
+
+        .image-upload-box:hover {
+            border-color: var(--brand-primary);
+            background: #F8FAFC;
+        }
+
+        .preview-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: var(--radius-md);
+            display: none;
+            margin: 0.5rem auto 0;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Toast */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 3000;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 1rem 1.5rem;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-premium);
+            animation: slideUp 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-left: 4px solid var(--brand-primary);
+            min-width: 300px;
+            pointer-events: auto;
+        }
+
+        .toast.success {
+            border-left-color: var(--success-color);
+        }
+
+        .toast.error {
+            border-left-color: var(--danger-color);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: var(--brand-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #471ea7;
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 1px solid #e5e7eb;
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+
+        .btn-danger {
+            background: #FEF2F2;
+            color: var(--danger-color);
+            border: 1px solid #FECACA;
+        }
+
+        .btn-danger:hover {
+            background: #FEE2E2;
+        }
+
+        /* Profile Popup */
+        .profile-popup {
+            position: absolute;
+            bottom: 90px;
+            left: 1.5rem;
+            right: 1.5rem;
+            background-color: #ffffff;
+            border-radius: var(--radius-md);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 0.75rem;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px) scale(0.95);
+            transition: all 0.2s ease;
+        }
+
+        .profile-popup.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0) scale(1);
+        }
+
+        .popup-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 0.5rem;
+        }
+
+        .popup-list {
+            list-style: none;
+        }
+
+        .popup-list a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem;
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: background 0.15s ease;
+            cursor: pointer;
+        }
+
+        .popup-list a:hover {
+            background: #F8FAFC;
+        }
+
+        .popup-list a i {
+            font-size: 1.2rem;
+            color: #6b7280;
+        }
+
+        .popup-list a.logout i {
+            color: var(--danger-color);
+        }
+
+        .popup-list a.logout {
+            color: var(--danger-color);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: #6b7280;
+            grid-column: 1/-1;
+        }
+
+        /* Responsive switch */
+        @media (max-width: 768px) {
+            .page-desktop { display: none; }
+            .page-mobile  { display: flex; }
+            
+            .card {
+                display: none;
+            }
+            
+            .content-inner {
+                padding: 0;
+            }
+            
+            .page-header {
+                display: none;
+            }
+
+            .modal-overlay {
+                align-items: flex-end;
+                padding: 0;
+            }
+            
+            .modal-content {
+                width: 100%;
+                border-radius: 24px 24px 0 0;
+                animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            
+            @keyframes slideUpModal {
+                from { transform: translateY(100%); }
+                to { transform: translateY(0); }
+            }
+        }
+
+        @media (min-width: 769px) {
+            .page-desktop { display: flex; }
+            .page-mobile { display: none; }
+        }
+    </style>
 </head>
 <body>
+    <!-- ================= DESKTOP VIEW ================= -->
+    <div class="page-desktop">
+        <header class="d-topbar">
+            <img class="d-topbar-logo"
+                 src="https://product-ecommerces.netlify.app/vastramaya.png"
+                 alt="Vastramaya Logo" />
+        </header>
 
-<!-- ================= DESKTOP VIEW ================= -->
-<div class="page-desktop">
+        <div class="d-app">
+            <aside class="d-sidebar">
+                <div class="d-sidebar-inner">
+                    <nav class="d-nav">
+                        <div class="d-nav-group">
+                            <!-- Dashboard -->
+                            <div class="d-nav-item" onclick="window.location.href='index.html'">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="7" height="7" x="3" y="3" rx="1"/>
+                                        <rect width="7" height="7" x="14" y="3" rx="1"/>
+                                        <rect width="7" height="7" x="14" y="14" rx="1"/>
+                                        <rect width="7" height="7" x="3" y="14" rx="1"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Dashboard</span>
+                            </div>
 
-  <header class="d-topbar">
-    <img class="d-topbar-logo"
-         src="https://product-ecommerces.netlify.app/vastramaya.png"
-         alt="Vastramaya Logo" />
-  </header>
+                            <!-- Inventory (Active) -->
+                            <div class="d-nav-item d-nav-item--active">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 7v10"/>
+                                        <path d="M6 5v14"/>
+                                        <rect width="12" height="18" x="10" y="3" rx="2"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Inventory</span>
+                            </div>
 
-  <div class="d-app">
+                            <!-- Customize Site -->
+                            <div class="d-nav-item" id="d-customize-toggle">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
+                                        <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Customize Site</span>
+                                <span class="chevron">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round"
+                                         class="chevron-icon">
+                                        <path d="m9 18 6-6-6-6"/>
+                                    </svg>
+                                </span>
+                            </div>
 
-    <aside class="d-sidebar">
-      <div class="d-sidebar-inner">
+                            <!-- Desktop Customize Site submenu -->
+                            <div class="d-submenu" id="d-customize-submenu">
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                        <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+                                        <path d="M9.5 12.5 11 14"/>
+                                        <path d="M14 10l-3.5 4"/>
+                                        <path d="m5 15 4.5-4"/>
+                                    </svg>
+                                    <span>Theme & layout</span>
+                                </div>
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                        <path d="M3 9h18"/>
+                                        <path d="M9 21V9"/>
+                                    </svg>
+                                    <span>Sections</span>
+                                </div>
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="18" cy="5" r="3"/>
+                                        <circle cx="6" cy="12" r="3"/>
+                                        <circle cx="18" cy="19" r="3"/>
+                                        <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
+                                        <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
+                                    </svg>
+                                    <span>Navigation</span>
+                                </div>
+                            </div>
 
-        <nav class="d-nav">
-          <div class="d-nav-group">
+                            <!-- MANAGE ORDERS -->
+                            <div class="d-nav-item" id="d-orders-toggle">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                        <path d="M8 14v2.2l1.6 1"/>
+                                        <circle cx="8" cy="16" r="6"/>
+                                    </svg>
+                                </span>
+                                <span class="label">MANAGE ORDERS</span>
+                                <span class="chevron">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round"
+                                         class="chevron-icon">
+                                        <path d="m9 18 6-6-6-6"/>
+                                    </svg>
+                                </span>
+                            </div>
 
-            <!-- Dashboard -->
-            <div class="d-nav-item">
-              <span class="icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                     fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect width="7" height="7" x="3" y="3" rx="1"/>
-                  <rect width="7" height="7" x="14" y="3" rx="1"/>
-                  <rect width="7" height="7" x="14" y="14" rx="1"/>
-                  <rect width="7" height="7" x="3" y="14" rx="1"/>
-                </svg>
-              </span>
-              <span class="label">Dashboard</span>
-            </div>
+                            <!-- Desktop MANAGE ORDERS submenu -->
+                            <div class="d-submenu" id="d-orders-submenu">
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 6v6l4 2"/>
+                                        <path d="M22 12a10 10 0 1 0-11 9.95"/>
+                                        <path d="m22 16-5.5 5.5L14 19"/>
+                                    </svg>
+                                    <span>Today</span>
+                                </div>
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M8 2v4"/>
+                                        <path d="M16 2v4"/>
+                                        <rect width="18" height="18" x="3" y="4" rx="2"/>
+                                        <path d="M3 10h18"/>
+                                        <path d="M8 14h.01"/>
+                                        <path d="M12 14h.01"/>
+                                        <path d="M16 14h.01"/>
+                                        <path d="M8 18h.01"/>
+                                        <path d="M12 18h.01"/>
+                                        <path d="M16 18h.01"/>
+                                    </svg>
+                                    <span>This Month</span>
+                                </div>
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2v2"/>
+                                        <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
+                                        <path d="M18 2v2"/>
+                                        <path d="M2 13h2"/>
+                                        <path d="M8 8h14"/>
+                                        <rect x="8" y="3" width="14" height="14" rx="2"/>
+                                    </svg>
+                                    <span>All Orders</span>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
 
-            <!-- Inventory (Active) -->
-            <div class="d-nav-item d-nav-item--active">
-              <span class="icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                     fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M2 7v10"/>
-                  <path d="M6 5v14"/>
-                  <rect width="12" height="18" x="10" y="3" rx="2"/>
-                </svg>
-              </span>
-              <span class="label">Inventory</span>
-            </div>
+                    <!-- Desktop Account section -->
+                    <div class="d-account-section" id="profile-section">
+                        <div class="account-card">
+                            <img id="sidebar-avatar" class="account-avatar"
+                                 src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
+                                 alt="Profile" />
+                            <div class="account-text">
+                                <div class="account-name" id="sidebar-name">Loading...</div>
+                                <div class="account-email" id="sidebar-email">Admin</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
 
-            <!-- Customize Site (with dropdown chevron) -->
-            <div class="d-nav-item" id="d-customize-toggle">
-              <span class="icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                     fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
-                  <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
-                </svg>
-              </span>
-              <span class="label">Customize Site</span>
-              <span class="chevron">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2"
-                     stroke-linecap="round" stroke-linejoin="round"
-                     class="chevron-icon">
-                  <path d="m9 18 6-6-6-6"/>
-                </svg>
-              </span>
-            </div>
+            <main class="d-content">
+                <div class="content-inner">
+                    <!-- PAGE HEADER -->
+                    <div class="page-header">
+                        <div class="page-title-wrap">
+                            <div class="page-title">Manage Categories</div>
+                            <div class="breadcrumb">
+                                <span class="breadcrumb-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                    </svg>
+                                </span>
+                                <span>Home</span>
+                                <span class="breadcrumb-divider">/</span>
+                                <span>Manage Categories</span>
+                            </div>
+                        </div>
 
-            <!-- Desktop Customize Site submenu -->
-            <div class="d-submenu" id="d-customize-submenu">
-              <div class="d-submenu-item">
-                <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
-                  <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
-                  <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
-                  <path d="M9.5 12.5 11 14"/>
-                  <path d="M14 10l-3.5 4"/>
-                  <path d="m5 15 4.5-4"/>
-                </svg>
-                <span>Theme & layout</span>
-              </div>
-              <div class="d-submenu-item">
-                <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect width="18" height="18" x="3" y="3" rx="2"/>
-                  <path d="M3 9h18"/>
-                  <path d="M9 21V9"/>
-                </svg>
-                <span>Sections</span>
-              </div>
-              <div class="d-submenu-item">
-                <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="18" cy="5" r="3"/>
-                  <circle cx="6" cy="12" r="3"/>
-                  <circle cx="18" cy="19" r="3"/>
-                  <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
-                  <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
-                </svg>
-                <span>Navigation</span>
-              </div>
-            </div>
+                        <button class="primary-btn" onclick="openAddModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14"/>
+                                <path d="M12 5v14"/>
+                            </svg>
+                            <span>Add Category</span>
+                        </button>
+                    </div>
 
-            <!-- MANAGE ORDERS (with dropdown chevron) -->
-            <div class="d-nav-item" id="d-orders-toggle">
-              <span class="icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                     fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
-                  <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
-                  <path d="M8 14v2.2l1.6 1"/>
-                  <circle cx="8" cy="16" r="6"/>
-                </svg>
-              </span>
-              <span class="label">MANAGE ORDERS</span>
-              <span class="chevron">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2"
-                     stroke-linecap="round" stroke-linejoin="round"
-                     class="chevron-icon">
-                  <path d="m9 18 6-6-6-6"/>
-                </svg>
-              </span>
-            </div>
+                    <!-- CARD -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="search-input-wrap">
+                                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="7"></circle>
+                                    <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+                                </svg>
+                                <input type="text" id="search-input" placeholder="Search categories..." />
+                            </div>
+                        </div>
 
-            <!-- Desktop MANAGE ORDERS submenu with SVGs -->
-            <div class="d-submenu" id="d-orders-submenu">
-              <div class="d-submenu-item">
-                <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 6v6l4 2"/>
-                  <path d="M22 12a10 10 0 1 0-11 9.95"/>
-                  <path d="m22 16-5.5 5.5L14 19"/>
-                </svg>
-                <span>Today</span>
-              </div>
-              <div class="d-submenu-item">
-                <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M8 2v4"/>
-                  <path d="M16 2v4"/>
-                  <rect width="18" height="18" x="3" y="4" rx="2"/>
-                  <path d="M3 10h18"/>
-                  <path d="M8 14h.01"/>
-                  <path d="M12 14h.01"/>
-                  <path d="M16 14h.01"/>
-                  <path d="M8 18h.01"/>
-                  <path d="M12 18h.01"/>
-                  <path d="M16 18h.01"/>
-                </svg>
-                <span>This Month</span>
-              </div>
-              <div class="d-submenu-item">
-                <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 2v2"/>
-                  <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
-                  <path d="M18 2v2"/>
-                  <path d="M2 13h2"/>
-                  <path d="M8 8h14"/>
-                  <rect x="8" y="3" width="14" height="14" rx="2"/>
-                </svg>
-                <span>All Orders</span>
-              </div>
-            </div>
+                        <div class="table-wrapper">
+                            <table class="domain-table">
+                                <thead>
+                                    <tr>
+                                        <th class="th-image"></th>
+                                        <th>Name</th>
+                                        <th>No. of products</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="desktop-categories-table">
+                                    <!-- Categories will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
 
-          </div>
-        </nav>
+    <!-- ================= MOBILE VIEW ================= -->
+    <div class="page-mobile">
+        <!-- Mobile header: menu left, logo right -->
+        <header class="m-header">
+            <button class="m-menu-btn" id="m-menu-toggle" aria-label="Open menu">
+                <div class="m-menu-lines"><span></span></div>
+            </button>
 
-        <!-- Desktop Account sharing -->
-        <div class="d-account-section">
-          <div class="account-card">
             <img
-              class="account-avatar"
-              src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
-              alt="Profile" />
+              class="m-logo"
+              src="https://product-ecommerces.netlify.app/vastramaya.png"
+              alt="Vastramaya Logo" />
+        </header>
+
+        <main class="m-main">
+            <div class="mobile-content-inner">
+                <!-- Mobile Page Header -->
+                <div class="mobile-page-header">
+                    <div class="mobile-page-title-wrap">
+                        <div class="mobile-page-title">Manage Categories</div>
+                        <div class="mobile-breadcrumb">
+                            <span class="mobile-breadcrumb-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                                    <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                </svg>
+                            </span>
+                            <span>Home</span>
+                            <span class="mobile-breadcrumb-divider">/</span>
+                            <span>Manage Categories</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Mobile Search and Add Button Row -->
+                    <div class="mobile-controls-row">
+                        <div class="mobile-search-wrap">
+                            <div class="mobile-search-input-wrap">
+                                <svg class="mobile-search-icon" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="7"></circle>
+                                    <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+                                </svg>
+                                <input type="text" id="mobile-search-input" placeholder="Search categories..." />
+                            </div>
+                        </div>
+                        <button class="mobile-add-btn" onclick="openAddModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14"/>
+                                <path d="M12 5v14"/>
+                            </svg>
+                            <span>Add</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mobile Category Cards -->
+                <div class="mobile-category-cards" id="mobile-category-cards">
+                    <!-- Categories will be loaded here -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Overlay & drawer -->
+        <div class="m-overlay" id="m-overlay">
+            <div class="m-drawer">
+                <div class="m-drawer-header">
+                    <img
+                      class="m-drawer-logo"
+                      src="https://product-ecommerces.netlify.app/vastramaya.png"
+                      alt="Vastramaya Logo" />
+                    <button class="m-drawer-close" id="m-drawer-close" aria-label="Close menu">
+                        <div class="m-drawer-close-icon"></div>
+                    </button>
+                </div>
+
+                <nav class="m-drawer-nav">
+                    <!-- Dashboard -->
+                    <div class="m-nav-item" onclick="window.location.href='index.html'">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="7" height="7" x="3" y="3" rx="1"/>
+                                <rect width="7" height="7" x="14" y="3" rx="1"/>
+                                <rect width="7" height="7" x="14" y="14" rx="1"/>
+                                <rect width="7" height="7" x="3" y="14" rx="1"/>
+                            </svg>
+                        </span>
+                        <span class="label">Dashboard</span>
+                    </div>
+
+                    <!-- Inventory (Active) -->
+                    <div class="m-nav-item active">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 7v10"/>
+                                <path d="M6 5v14"/>
+                                <rect width="12" height="18" x="10" y="3" rx="2"/>
+                            </svg>
+                        </span>
+                        <span class="label">Inventory</span>
+                    </div>
+
+                    <!-- Customize Site with dropdown -->
+                    <div class="m-nav-item" id="m-customize-toggle">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
+                                <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+                            </svg>
+                        </span>
+                        <span class="label">Customize Site</span>
+                        <span class="chevron">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round"
+                                 class="chevron-icon">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <!-- Mobile Customize Site submenu -->
+                    <div class="m-submenu" id="m-customize-submenu">
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+                                <path d="M9.5 12.5 11 14"/>
+                                <path d="M14 10l-3.5 4"/>
+                                <path d="m5 15 4.5-4"/>
+                            </svg>
+                            <span>Theme & layout</span>
+                        </div>
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                <path d="M3 9h18"/>
+                                <path d="M9 21V9"/>
+                            </svg>
+                            <span>Sections</span>
+                        </div>
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="18" cy="5" r="3"/>
+                                <circle cx="6" cy="12" r="3"/>
+                                <circle cx="18" cy="19" r="3"/>
+                                <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
+                                <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
+                            </svg>
+                            <span>Navigation</span>
+                        </div>
+                    </div>
+
+                    <!-- MANAGE ORDERS with dropdown -->
+                    <div class="m-nav-item" id="m-orders-toggle">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                <path d="M8 14v2.2l1.6 1"/>
+                                <circle cx="8" cy="16" r="6"/>
+                            </svg>
+                        </span>
+                        <span class="label">MANAGE ORDERS</span>
+                        <span class="chevron">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round"
+                                 class="chevron-icon">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <!-- Mobile MANAGE ORDERS submenu -->
+                    <div class="m-submenu" id="m-orders-submenu">
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 6v6l4 2"/>
+                                <path d="M22 12a10 10 0 1 0-11 9.95"/>
+                                <path d="m22 16-5.5 5.5L14 19"/>
+                            </svg>
+                            <span>Today</span>
+                        </div>
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M8 2v4"/>
+                                <path d="M16 2v4"/>
+                                <rect width="18" height="18" x="3" y="4" rx="2"/>
+                                <path d="M3 10h18"/>
+                                <path d="M8 14h.01"/>
+                                <path d="M12 14h.01"/>
+                                <path d="M16 14h.01"/>
+                                <path d="M8 18h.01"/>
+                                <path d="M12 18h.01"/>
+                                <path d="M16 18h.01"/>
+                            </svg>
+                            <span>This Month</span>
+                        </div>
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2v2"/>
+                                <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
+                                <path d="M18 2v2"/>
+                                <path d="M2 13h2"/>
+                                <path d="M8 8h14"/>
+                                <rect x="8" y="3" width="14" height="14" rx="2"/>
+                            </svg>
+                            <span>All Orders</span>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Mobile account sharing -->
+                <div class="m-account-section" id="mobile-profile-section">
+                    <div class="account-card">
+                        <img id="mobile-sidebar-avatar" class="account-avatar"
+                             src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
+                             alt="Profile" />
+                        <div class="account-text">
+                            <div class="account-name" id="mobile-sidebar-name">Loading...</div>
+                            <div class="account-email" id="mobile-sidebar-email">Admin</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Advanced Menu (Bottom Sheet) -->
+        <div class="advanced-menu-overlay" id="advanced-menu-overlay"></div>
+        <div class="advanced-menu" id="advanced-menu">
+            <div class="menu-handle"></div>
+            <div class="advanced-menu-header">
+                <div class="advanced-menu-title">Category Actions</div>
+                <button class="advanced-menu-close" id="advanced-menu-close">
+                    <div class="advanced-menu-close-icon"></div>
+                </button>
+            </div>
+            <div class="advanced-menu-items">
+                <button class="advanced-menu-item" id="mobile-edit-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 21h8"/>
+                        <path d="m15 5 4 4"/>
+                        <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                    </svg>
+                    <span>Edit</span>
+                </button>
+                <button class="advanced-menu-item" id="mobile-delete-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10 11v6"/>
+                        <path d="M14 11v6"/>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                        <path d="M3 6h18"/>
+                        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                    <span>Delete Category</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Popup -->
+    <div class="profile-popup" id="profile-popup">
+        <div class="popup-header">
+            <img id="popup-avatar" src="" class="account-avatar">
             <div class="account-text">
-              <div class="account-name">Account sharing</div>
-              <div class="account-email">admin@vastramaya.com</div>
+                <span class="account-name" id="popup-name">Loading...</span>
+                <span class="account-email" id="popup-email">Admin</span>
             </div>
-          </div>
         </div>
+        <ul class="popup-list">
+            <li><a href="#"><i class='bx bx-user'></i> Profile</a></li>
+            <li><a href="#"><i class='bx bx-cog'></i> Settings</a></li>
+            <li><a href="#" onclick="auth.signOut()" class="logout"><i class='bx bx-log-out'></i> Logout</a></li>
+        </ul>
+    </div>
 
-      </div>
-    </aside>
-
-    <main class="d-content">
-      <div class="content-inner">
-
-        <!-- PAGE HEADER -->
-        <div class="page-header">
-          <div class="page-title-wrap">
-            <div class="page-title">Manage Categories</div>
-            <div class="breadcrumb">
-              <span class="breadcrumb-icon">
-                <!-- home icon svg -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2"
-                     stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
-                  <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                </svg>
-              </span>
-              <span>Home</span>
-              <span class="breadcrumb-divider">/</span>
-              <span>Manage Categories</span>
+    <!-- ADD/EDIT MODAL -->
+    <div class="modal-overlay" id="category-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modal-title">Add Category</div>
+                <button class="btn-icon" onclick="closeModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18"/>
+                        <path d="m6 6 12 12"/>
+                    </svg>
+                </button>
             </div>
-          </div>
-
-          <button class="primary-btn" id="add-category-btn">
-            <!-- plus icon svg -->
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                 fill="none" stroke="currentColor" stroke-width="2"
-                 stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 12h14"/>
-              <path d="M12 5v14"/>
-            </svg>
-            <span>Add Category</span>
-          </button>
+            <form id="category-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Category Name</label>
+                        <input type="text" class="form-input" id="cat-name-input" required placeholder="e.g. Ethnic Wear">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category Image</label>
+                        <div class="image-upload-box" onclick="document.getElementById('cat-file-input').click()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke: #5127ba;">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                            <div style="margin-top:0.5rem; font-size:0.9rem; color:#6b7280;">Click to upload image</div>
+                            <img id="cat-preview" class="preview-img">
+                        </div>
+                        <input type="file" id="cat-file-input" accept="image/*" style="display:none;">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="modal-submit-btn">Save Category</button>
+                </div>
+            </form>
         </div>
+    </div>
 
-        <!-- CARD -->
-        <div class="card">
-          <div class="card-header">
-            <div class="search-input-wrap">
-              <!-- search icon -->
-              <svg class="search-icon" xmlns="http://www.w3.org/2000/svg"
-                   viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="7"></circle>
-                <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
-              </svg>
-              <input type="text" placeholder="Search categories..." id="search-input" />
+    <!-- DELETE MODAL -->
+    <div class="modal-overlay" id="delete-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" style="color: var(--danger-color);">Delete Category</div>
+                <button class="btn-icon" onclick="closeDeleteModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18"/>
+                        <path d="m6 6 12 12"/>
+                    </svg>
+                </button>
             </div>
-          </div>
-
-          <div class="table-wrapper">
-            <table class="domain-table">
-              <thead>
-                <tr>
-                  <th class="th-image"></th>
-                  <th>Name</th>
-                  <th>No. of products</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="categories-table-body">
-                <!-- Categories will be loaded here dynamically -->
-              </tbody>
-            </table>
-          </div>
-
-        </div>
-      </div>
-    </main>
-  </div>
-</div>
-
-<!-- ================= MOBILE VIEW ================= -->
-<div class="page-mobile">
-
-  <!-- Mobile header: menu left, logo right -->
-  <header class="m-header">
-    <button class="m-menu-btn" id="m-menu-toggle" aria-label="Open menu">
-      <div class="m-menu-lines"><span></span></div>
-    </button>
-
-    <img
-      class="m-logo"
-      src="https://product-ecommerces.netlify.app/vastramaya.png"
-      alt="Vastramaya Logo" />
-  </header>
-
-  <main class="m-main">
-    <div class="mobile-content-inner">
-      
-      <!-- Mobile Page Header - Stacked up and down -->
-      <div class="mobile-page-header">
-        <div class="mobile-page-title-wrap">
-          <div class="mobile-page-title">Manage Categories</div>
-          <div class="mobile-breadcrumb">
-            <span class="mobile-breadcrumb-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                   fill="none" stroke="currentColor" stroke-width="2"
-                   stroke-linecap="round" stroke-linejoin="round">
-                <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
-                <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-              </svg>
-            </span>
-            <span>Home</span>
-            <span class="mobile-breadcrumb-divider">/</span>
-            <span>Manage Categories</span>
-          </div>
-        </div>
-        
-        <!-- Mobile Search and Add Button Row - UPDATED UI -->
-        <div class="mobile-controls-row">
-          <div class="mobile-search-wrap">
-            <div class="mobile-search-input-wrap">
-              <svg class="mobile-search-icon" xmlns="http://www.w3.org/2000/svg"
-                   viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="7"></circle>
-                <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
-              </svg>
-              <input type="text" placeholder="Search categories..." id="mobile-search-input" />
+            <div class="modal-body">
+                <p style="color: #6b7280; margin-bottom: 1rem;">Are you sure you want to delete <strong id="del-cat-name" style="color: rgb(29, 30, 32);"></strong>?</p>
+                <div class="form-group">
+                    <label class="form-label">Type category name to confirm</label>
+                    <input type="text" class="form-input" id="confirm-del-input" placeholder="Category Name">
+                </div>
             </div>
-          </div>
-          <button class="mobile-add-btn" id="mobile-add-category-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                 fill="none" stroke="currentColor" stroke-width="2"
-                 stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 12h14"/>
-              <path d="M12 5v14"/>
-            </svg>
-            <span>Add</span>
-          </button>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn btn-danger" id="confirm-del-btn" disabled>Delete</button>
+            </div>
         </div>
-      </div>
-
-      <!-- Mobile Category Cards -->
-      <div class="mobile-category-cards" id="mobile-categories-container">
-        <!-- Categories will be loaded here dynamically -->
-      </div>
     </div>
-  </main>
 
-  <!-- Overlay & drawer -->
-  <div class="m-overlay" id="m-overlay">
-    <div class="m-drawer">
+    <div id="toast-container"></div>
 
-      <div class="m-drawer-header">
-        <img
-          class="m-drawer-logo"
-          src="https://product-ecommerces.netlify.app/vastramaya.png"
-          alt="Vastramaya Logo" />
-        <button class="m-drawer-close" id="m-drawer-close" aria-label="Close menu">
-          <div class="m-drawer-close-icon"></div>
-        </button>
-      </div>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script src='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css'></script>
 
-      <nav class="m-drawer-nav">
+    <script>
+        // --- UI INTERACTIONS ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile drawer behaviour
+            const mOverlay = document.getElementById('m-overlay');
+            const mMenuToggle = document.getElementById('m-menu-toggle');
+            const mDrawerClose = document.getElementById('m-drawer-close');
 
-        <!-- Dashboard -->
-        <div class="m-nav-item">
-          <span class="icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect width="7" height="7" x="3" y="3" rx="1"/>
-              <rect width="7" height="7" x="14" y="3" rx="1"/>
-              <rect width="7" height="7" x="14" y="14" rx="1"/>
-              <rect width="7" height="7" x="3" y="14" rx="1"/>
-            </svg>
-          </span>
-          <span class="label">Dashboard</span>
-        </div>
+            if (mMenuToggle && mOverlay && mDrawerClose) {
+                mMenuToggle.addEventListener('click', () => {
+                    mOverlay.classList.add('open');
+                });
 
-        <!-- Inventory (Active) -->
-        <div class="m-nav-item active">
-          <span class="icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M2 7v10"/>
-              <path d="M6 5v14"/>
-              <rect width="12" height="18" x="10" y="3" rx="2"/>
-            </svg>
-          </span>
-          <span class="label">Inventory</span>
-        </div>
+                mDrawerClose.addEventListener('click', () => {
+                    mOverlay.classList.remove('open');
+                });
 
-        <!-- Customize Site with dropdown -->
-        <div class="m-nav-item" id="m-customize-toggle">
-          <span class="icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
-              <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
-            </svg>
-          </span>
-          <span class="label">Customize Site</span>
-          <span class="chevron">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                 fill="none" stroke="currentColor" stroke-width="2"
-                 stroke-linecap="round" stroke-linejoin="round"
-                 class="chevron-icon">
-              <path d="m9 18 6-6-6-6"/>
-            </svg>
-          </span>
-        </div>
+                mOverlay.addEventListener('click', (e) => {
+                    if (e.target === mOverlay) {
+                        mOverlay.classList.remove('open');
+                    }
+                });
+            }
 
-        <!-- Mobile Customize Site submenu -->
-        <div class="m-submenu" id="m-customize-submenu">
-          <div class="m-submenu-item">
-            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
-              <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
-              <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
-              <path d="M9.5 12.5 11 14"/>
-              <path d="M14 10l-3.5 4"/>
-              <path d="m5 15 4.5-4"/>
-            </svg>
-            <span>Theme & layout</span>
-          </div>
-          <div class="m-submenu-item">
-            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect width="18" height="18" x="3" y="3" rx="2"/>
-              <path d="M3 9h18"/>
-              <path d="M9 21V9"/>
-            </svg>
-            <span>Sections</span>
-          </div>
-          <div class="m-submenu-item">
-            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="18" cy="5" r="3"/>
-              <circle cx="6" cy="12" r="3"/>
-              <circle cx="18" cy="19" r="3"/>
-              <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
-              <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
-            </svg>
-            <span>Navigation</span>
-          </div>
-        </div>
+            // Desktop Customize Site dropdown
+            const dCustomizeToggle = document.getElementById('d-customize-toggle');
+            const dCustomizeSubmenu = document.getElementById('d-customize-submenu');
 
-        <!-- MANAGE ORDERS with dropdown -->
-        <div class="m-nav-item" id="m-orders-toggle">
-          <span class="icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
-              <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
-              <path d="M8 14v2.2l1.6 1"/>
-              <circle cx="8" cy="16" r="6"/>
-            </svg>
-          </span>
-          <span class="label">MANAGE ORDERS</span>
-          <span class="chevron">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                 fill="none" stroke="currentColor" stroke-width="2"
-                 stroke-linecap="round" stroke-linejoin="round"
-                 class="chevron-icon">
-              <path d="m9 18 6-6-6-6"/>
-            </svg>
-          </span>
-        </div>
+            if (dCustomizeToggle && dCustomizeSubmenu) {
+                dCustomizeToggle.addEventListener('click', () => {
+                    dCustomizeSubmenu.classList.toggle('open');
+                    dCustomizeToggle.classList.toggle('dropdown-open');
+                });
+            }
 
-        <!-- Mobile MANAGE ORDERS submenu with SVGs -->
-        <div class="m-submenu" id="m-orders-submenu">
-          <div class="m-submenu-item">
-            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 6v6l4 2"/>
-              <path d="M22 12a10 10 0 1 0-11 9.95"/>
-              <path d="m22 16-5.5 5.5L14 19"/>
-            </svg>
-            <span>Today</span>
-          </div>
-          <div class="m-submenu-item">
-            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M8 2v4"/>
-              <path d="M16 2v4"/>
-              <rect width="18" height="18" x="3" y="4" rx="2"/>
-              <path d="M3 10h18"/>
-              <path d="M8 14h.01"/>
-              <path d="M12 14h.01"/>
-              <path d="M16 14h.01"/>
-              <path d="M8 18h.01"/>
-              <path d="M12 18h.01"/>
-              <path d="M16 18h.01"/>
-            </svg>
-            <span>This Month</span>
-          </div>
-          <div class="m-submenu-item">
-            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2v2"/>
-              <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
-              <path d="M18 2v2"/>
-              <path d="M2 13h2"/>
-              <path d="M8 8h14"/>
-              <rect x="8" y="3" width="14" height="14" rx="2"/>
-            </svg>
-            <span>All Orders</span>
-          </div>
-        </div>
+            // Desktop MANAGE ORDERS dropdown
+            const dOrdersToggle = document.getElementById('d-orders-toggle');
+            const dOrdersSubmenu = document.getElementById('d-orders-submenu');
 
-      </nav>
+            if (dOrdersToggle && dOrdersSubmenu) {
+                dOrdersToggle.addEventListener('click', () => {
+                    dOrdersSubmenu.classList.toggle('open');
+                    dOrdersToggle.classList.toggle('dropdown-open');
+                });
+            }
 
-      <!-- Mobile account sharing -->
-      <div class="m-account-section">
-        <div class="account-card">
-          <img
-            class="account-avatar"
-            src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
-            alt="Profile" />
-          <div class="account-text">
-            <div class="account-name">Account sharing</div>
-            <div class="account-email">admin@vastramaya.com</div>
-          </div>
-        </div>
-      </div>
+            // Mobile Customize Site dropdown
+            const mCustomizeToggle = document.getElementById('m-customize-toggle');
+            const mCustomizeSubmenu = document.getElementById('m-customize-submenu');
 
-    </div>
-  </div>
-  
-  <!-- Advanced Menu (Bottom Sheet) -->
-  <div class="advanced-menu-overlay" id="advanced-menu-overlay"></div>
-  <div class="advanced-menu" id="advanced-menu">
-    <div class="menu-handle"></div>
-    <div class="advanced-menu-header">
-      <div class="advanced-menu-title">Category Actions</div>
-      <button class="advanced-menu-close" id="advanced-menu-close">
-        <div class="advanced-menu-close-icon"></div>
-      </button>
-    </div>
-    <div class="advanced-menu-items">
-      <button class="advanced-menu-item" id="mobile-edit-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M13 21h8"/>
-          <path d="m15 5 4 4"/>
-          <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
-        </svg>
-        <span>Edit</span>
-      </button>
-      <button class="advanced-menu-item" id="mobile-delete-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M10 11v6"/>
-          <path d="M14 11v6"/>
-          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
-          <path d="M3 6h18"/>
-          <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-        </svg>
-        <span>Delete Category</span>
-      </button>
-    </div>
-  </div>
-</div>
+            if (mCustomizeToggle && mCustomizeSubmenu) {
+                mCustomizeToggle.addEventListener('click', () => {
+                    mCustomizeSubmenu.classList.toggle('open');
+                    mCustomizeToggle.classList.toggle('dropdown-open');
+                });
+            }
 
-<!-- Category Modal -->
-<div class="category-modal" id="category-modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <div class="modal-title" id="modal-title">Add New Category</div>
-      <button class="modal-close" id="modal-close">
-        <div class="modal-close-icon"></div>
-      </button>
-    </div>
-    <form id="category-form">
-      <input type="hidden" id="category-id">
-      <div class="form-group">
-        <label for="category-name" class="form-label">Category Name</label>
-        <input type="text" id="category-name" class="form-input" placeholder="Enter category name" required>
-      </div>
-      <div class="form-group">
-        <label for="category-image" class="form-label">Image URL</label>
-        <input type="text" id="category-image" class="form-input" placeholder="Enter image URL" required>
-      </div>
-      <div class="form-group">
-        <label for="category-products" class="form-label">Number of Products</label>
-        <input type="number" id="category-products" class="form-input" placeholder="Enter number of products" required>
-      </div>
-      <div class="form-toggle-group">
-        <span class="form-toggle-label">Active Status</span>
-        <div class="toggle" id="modal-toggle">
-          <div class="toggle-inner"></div>
-        </div>
-      </div>
-      <div class="modal-actions">
-        <button type="button" class="modal-btn modal-btn-secondary" id="modal-cancel">Cancel</button>
-        <button type="submit" class="modal-btn modal-btn-primary" id="modal-save">Save Category</button>
-      </div>
-    </form>
-  </div>
-</div>
+            // Mobile MANAGE ORDERS dropdown
+            const mOrdersToggle = document.getElementById('m-orders-toggle');
+            const mOrdersSubmenu = document.getElementById('m-orders-submenu');
 
-<script>
-  // Firebase Configuration
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
-  };
+            if (mOrdersToggle && mOrdersSubmenu) {
+                mOrdersToggle.addEventListener('click', () => {
+                    mOrdersSubmenu.classList.toggle('open');
+                    mOrdersToggle.classList.toggle('dropdown-open');
+                });
+            }
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-  const auth = firebase.auth();
+            // Profile section
+            const profileSection = document.getElementById('profile-section');
+            const mobileProfileSection = document.getElementById('mobile-profile-section');
+            const profilePopup = document.getElementById('profile-popup');
 
-  // Database collections
-  const categoriesCollection = db.collection('categories');
+            if (profileSection) {
+                profileSection.addEventListener('click', e => {
+                    e.stopPropagation();
+                    profilePopup.classList.toggle('active');
+                });
+                
+                document.addEventListener('click', e => {
+                    if (!profileSection.contains(e.target) && !profilePopup.contains(e.target)) {
+                        profilePopup.classList.remove('active');
+                    }
+                });
+            }
 
-  // State variables
-  let categories = [];
-  let currentCategoryId = null;
-  let editingCategoryId = null;
-  let selectedCategoryId = null;
+            if (mobileProfileSection) {
+                mobileProfileSection.addEventListener('click', e => {
+                    e.stopPropagation();
+                    profilePopup.classList.toggle('active');
+                });
+            }
 
-  // DOM Elements
-  const categoriesTableBody = document.getElementById('categories-table-body');
-  const mobileCategoriesContainer = document.getElementById('mobile-categories-container');
-  const searchInput = document.getElementById('search-input');
-  const mobileSearchInput = document.getElementById('mobile-search-input');
-  const addCategoryBtn = document.getElementById('add-category-btn');
-  const mobileAddCategoryBtn = document.getElementById('mobile-add-category-btn');
-  const categoryModal = document.getElementById('category-modal');
-  const modalTitle = document.getElementById('modal-title');
-  const categoryForm = document.getElementById('category-form');
-  const categoryIdInput = document.getElementById('category-id');
-  const categoryNameInput = document.getElementById('category-name');
-  const categoryImageInput = document.getElementById('category-image');
-  const categoryProductsInput = document.getElementById('category-products');
-  const modalToggle = document.getElementById('modal-toggle');
-  const modalClose = document.getElementById('modal-close');
-  const modalCancel = document.getElementById('modal-cancel');
-  const modalSave = document.getElementById('modal-save');
-  const mobileEditBtn = document.getElementById('mobile-edit-btn');
-  const mobileDeleteBtn = document.getElementById('mobile-delete-btn');
+            // Advanced Menu functionality
+            const advancedMenu = document.getElementById('advanced-menu');
+            const advancedMenuOverlay = document.getElementById('advanced-menu-overlay');
+            const advancedMenuClose = document.getElementById('advanced-menu-close');
 
-  // Initialize app
-  document.addEventListener('DOMContentLoaded', () => {
-    loadCategories();
-    setupEventListeners();
-  });
+            // Close advanced menu
+            if (advancedMenuClose && advancedMenuOverlay) {
+                advancedMenuClose.addEventListener('click', () => {
+                    advancedMenu.classList.remove('open');
+                    advancedMenuOverlay.classList.remove('open');
+                });
 
-  // Load categories from Firebase
-  async function loadCategories() {
-    try {
-      const snapshot = await categoriesCollection.get();
-      categories = [];
-      snapshot.forEach(doc => {
-        categories.push({
-          id: doc.id,
-          ...doc.data()
+                advancedMenuOverlay.addEventListener('click', () => {
+                    advancedMenu.classList.remove('open');
+                    advancedMenuOverlay.classList.remove('open');
+                });
+            }
         });
-      });
-      renderCategories();
-    } catch (error) {
-      console.error('Error loading categories:', error);
-      showError('Failed to load categories. Please try again.');
-    }
-  }
 
-  // Render categories in both desktop and mobile views
-  function renderCategories() {
-    renderDesktopTable();
-    renderMobileCards();
-  }
+        // --- FIREBASE CONFIG ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
+            authDomain: "vastramaya---magic.firebaseapp.com",
+            projectId: "vastramaya---magic",
+            storageBucket: "vastramaya---magic.firebasestorage.app",
+            messagingSenderId: "543460072082",
+            appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
+            measurementId: "G-E39VNDCFVE"
+        };
+        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
 
-  // Render desktop table
-  function renderDesktopTable() {
-    categoriesTableBody.innerHTML = '';
-    
-    categories.forEach((category, index) => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td class="td-image">
-          <img class="product-thumb"
-               src="${category.imageUrl || 'https://images.pexels.com/photos/6311657/pexels-photo-6311657.jpeg?auto=compress&cs=tinysrgb&w=200'}"
-               alt="${category.name}" />
-        </td>
-        <td class="product-name">${category.name}</td>
-        <td class="product-count">${category.productCount || 0} products</td>
-        <td class="product-status">
-          <div class="toggle ${category.active ? 'on' : ''}" data-id="${category.id}">
-            <div class="toggle-inner"></div>
-          </div>
-        </td>
-        <td class="product-actions">
-          <div class="action-buttons">
-            <button class="btn-secondary" data-id="${category.id}">Manage</button>
-            <div class="kebab" data-row="${index + 1}" data-id="${category.id}">
-              <span class="kebab-dots"></span>
-            </div>
-            <!-- Desktop Popup -->
-            <div class="desktop-popup" id="popup-${index + 1}">
-              <button class="desktop-popup-item edit-btn" data-id="${category.id}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M13 21h8"/>
-                  <path d="m15 5 4 4"/>
-                  <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
-                </svg>
-                <span>Edit</span>
-              </button>
-              <button class="desktop-popup-item delete-btn" data-id="${category.id}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M10 11v6"/>
-                  <path d="M14 11v6"/>
-                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
-                  <path d="M3 6h18"/>
-                  <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                </svg>
-                <span>Delete</span>
-              </button>
-            </div>
-          </div>
-        </td>
-      `;
-      categoriesTableBody.appendChild(row);
-    });
-  }
+        // --- APP LOGIC ---
+        let allCategories = [];
+        let productCounts = {};
+        let editingId = null;
+        let deletingId = null;
+        let deletingName = null;
+        let uploadedFile = null;
+        let existingImageUrl = null;
+        let currentMenuCategoryId = null;
 
-  // Render mobile cards
-  function renderMobileCards() {
-    mobileCategoriesContainer.innerHTML = '';
-    
-    categories.forEach((category, index) => {
-      const card = document.createElement('div');
-      card.className = 'category-card';
-      card.setAttribute('data-category', category.id);
-      card.innerHTML = `
-        <img class="category-card-image"
-             src="${category.imageUrl || 'https://images.pexels.com/photos/6311657/pexels-photo-6311657.jpeg?auto=compress&cs=tinysrgb&w=200'}"
-             alt="${category.name}" />
-        <div class="category-card-content">
-          <div class="category-card-name">${category.name}</div>
-          <div class="category-card-products">${category.productCount || 0} products</div>
-        </div>
-        <div class="category-card-status">
-          <div class="category-card-toggle ${category.active ? 'on' : ''}" data-id="${category.id}">
-            <div class="category-card-toggle-inner"></div>
-          </div>
-        </div>
-        <button class="category-card-menu-btn" data-id="${category.id}">
-          <span class="category-card-menu-dots"></span>
-        </button>
-      `;
-      mobileCategoriesContainer.appendChild(card);
-    });
-  }
-
-  // Setup event listeners
-  function setupEventListeners() {
-    // Add category buttons
-    addCategoryBtn.addEventListener('click', () => openModal('add'));
-    mobileAddCategoryBtn.addEventListener('click', () => openModal('add'));
-
-    // Modal controls
-    modalClose.addEventListener('click', closeModal);
-    modalCancel.addEventListener('click', closeModal);
-    
-    // Form submission
-    categoryForm.addEventListener('submit', handleFormSubmit);
-
-    // Toggle switch
-    modalToggle.addEventListener('click', () => {
-      modalToggle.classList.toggle('on');
-    });
-
-    // Search functionality
-    searchInput.addEventListener('input', filterCategories);
-    mobileSearchInput.addEventListener('input', filterCategories);
-
-    // Mobile menu items
-    mobileEditBtn.addEventListener('click', handleMobileEdit);
-    mobileDeleteBtn.addEventListener('click', handleMobileDelete);
-
-    // Delegated event listeners for dynamic elements
-    document.addEventListener('click', (e) => {
-      // Desktop toggle switches
-      if (e.target.closest('.toggle')) {
-        const toggle = e.target.closest('.toggle');
-        const categoryId = toggle.getAttribute('data-id');
-        const isActive = toggle.classList.contains('on');
-        toggle.classList.toggle('on');
-        updateCategoryStatus(categoryId, !isActive);
-      }
-
-      // Mobile toggle switches
-      if (e.target.closest('.category-card-toggle')) {
-        const toggle = e.target.closest('.category-card-toggle');
-        const categoryId = toggle.getAttribute('data-id');
-        const isActive = toggle.classList.contains('on');
-        toggle.classList.toggle('on');
-        updateCategoryStatus(categoryId, !isActive);
-      }
-
-      // Desktop kebab menu
-      if (e.target.closest('.kebab')) {
-        const kebab = e.target.closest('.kebab');
-        const row = kebab.getAttribute('data-row');
-        const popup = document.getElementById(`popup-${row}`);
-        const allPopups = document.querySelectorAll('.desktop-popup');
-        
-        allPopups.forEach(p => {
-          if (p !== popup) p.classList.remove('open');
+        auth.onAuthStateChanged(user => {
+            if (!user || user.email !== ADMIN_EMAIL) {
+                window.location.href = 'index.html';
+                return;
+            }
+            initProfile(user);
+            loadData();
         });
-        
-        popup.classList.toggle('open');
-        e.stopPropagation();
-      }
 
-      // Desktop edit button
-      if (e.target.closest('.edit-btn')) {
-        const btn = e.target.closest('.edit-btn');
-        const categoryId = btn.getAttribute('data-id');
-        openModal('edit', categoryId);
-      }
-
-      // Desktop delete button
-      if (e.target.closest('.delete-btn')) {
-        const btn = e.target.closest('.delete-btn');
-        const categoryId = btn.getAttribute('data-id');
-        deleteCategory(categoryId);
-      }
-
-      // Mobile menu button
-      if (e.target.closest('.category-card-menu-btn')) {
-        const btn = e.target.closest('.category-card-menu-btn');
-        selectedCategoryId = btn.getAttribute('data-id');
-        const advancedMenu = document.getElementById('advanced-menu');
-        const advancedMenuOverlay = document.getElementById('advanced-menu-overlay');
-        advancedMenu.classList.add('open');
-        advancedMenuOverlay.classList.add('open');
-      }
-
-      // Close desktop popups when clicking outside
-      if (!e.target.closest('.desktop-popup') && !e.target.closest('.kebab')) {
-        document.querySelectorAll('.desktop-popup').forEach(popup => {
-          popup.classList.remove('open');
-        });
-      }
-    });
-  }
-
-  // Open modal for add/edit
-  function openModal(mode, categoryId = null) {
-    editingCategoryId = categoryId;
-    
-    if (mode === 'add') {
-      modalTitle.textContent = 'Add New Category';
-      categoryForm.reset();
-      categoryIdInput.value = '';
-      modalToggle.classList.remove('on');
-    } else if (mode === 'edit' && categoryId) {
-      modalTitle.textContent = 'Edit Category';
-      const category = categories.find(c => c.id === categoryId);
-      if (category) {
-        categoryIdInput.value = category.id;
-        categoryNameInput.value = category.name;
-        categoryImageInput.value = category.imageUrl || '';
-        categoryProductsInput.value = category.productCount || 0;
-        if (category.active) {
-          modalToggle.classList.add('on');
-        } else {
-          modalToggle.classList.remove('on');
+        function initProfile(user) {
+            const name = user.displayName || 'Admin';
+            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=5127ba&color=fff`;
+            
+            // Desktop
+            document.getElementById('sidebar-name').textContent = name;
+            document.getElementById('sidebar-email').textContent = user.email;
+            document.getElementById('sidebar-avatar').src = avatar;
+            
+            // Mobile
+            document.getElementById('mobile-sidebar-name').textContent = name;
+            document.getElementById('mobile-sidebar-email').textContent = user.email;
+            document.getElementById('mobile-sidebar-avatar').src = avatar;
+            
+            // Popup
+            document.getElementById('popup-name').textContent = name;
+            document.getElementById('popup-email').textContent = user.email;
+            document.getElementById('popup-avatar').src = avatar;
         }
-      }
-    }
-    
-    categoryModal.classList.add('open');
-  }
 
-  // Close modal
-  function closeModal() {
-    categoryModal.classList.remove('open');
-    categoryForm.reset();
-    editingCategoryId = null;
-  }
+        async function loadData() {
+            try {
+                const prodSnap = await db.collection('products').get();
+                productCounts = {};
+                prodSnap.forEach(doc => {
+                    const cat = doc.data().category;
+                    if(cat) productCounts[cat] = (productCounts[cat] || 0) + 1;
+                });
 
-  // Handle form submission
-  async function handleFormSubmit(e) {
-    e.preventDefault();
-    
-    const categoryData = {
-      name: categoryNameInput.value.trim(),
-      imageUrl: categoryImageInput.value.trim(),
-      productCount: parseInt(categoryProductsInput.value) || 0,
-      active: modalToggle.classList.contains('on'),
-      createdAt: new Date().toISOString()
-    };
+                const catSnap = await db.collection('categories').orderBy('name').get();
+                allCategories = catSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderCategories(allCategories);
+            } catch (e) {
+                console.error(e);
+                showToast('Error loading data', 'error');
+            }
+        }
 
-    try {
-      if (editingCategoryId) {
-        // Update existing category
-        await categoriesCollection.doc(editingCategoryId).update(categoryData);
-        showSuccess('Category updated successfully!');
-      } else {
-        // Add new category
-        await categoriesCollection.add(categoryData);
-        showSuccess('Category added successfully!');
-      }
-      
-      closeModal();
-      loadCategories();
-    } catch (error) {
-      console.error('Error saving category:', error);
-      showError('Failed to save category. Please try again.');
-    }
-  }
+        function renderCategories(list) {
+            // Desktop table
+            const desktopTable = document.getElementById('desktop-categories-table');
+            // Mobile cards
+            const mobileCards = document.getElementById('mobile-category-cards');
+            
+            if(list.length === 0) {
+                desktopTable.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="empty-state">
+                            <h3>No Categories Found</h3>
+                            <p>Create a new category to get started.</p>
+                        </td>
+                    </tr>`;
+                mobileCards.innerHTML = `<div class="empty-state"><h3>No Categories Found</h3><p>Create a new category to get started.</p></div>`;
+                return;
+            }
+            
+            // Desktop table rows
+            desktopTable.innerHTML = list.map(cat => `
+                <tr>
+                    <td class="td-image">
+                        <img class="product-thumb"
+                             src="${cat.imageUrl || 'https://via.placeholder.com/100?text=No+Image'}"
+                             alt="${cat.name}" />
+                    </td>
+                    <td class="product-name">${cat.name}</td>
+                    <td class="product-count">${productCounts[cat.name] || 0} products</td>
+                    <td class="product-actions">
+                        <div class="action-buttons">
+                            <button class="btn-secondary" onclick="window.location.href='manage-products.html?category=${encodeURIComponent(cat.name)}'">Manage</button>
+                            <div class="kebab" data-category-id="${cat.id}">
+                                <span class="kebab-dots"></span>
+                            </div>
+                            <div class="desktop-popup" id="desktop-popup-${cat.id}">
+                                <button class="desktop-popup-item" onclick="openEditModal('${cat.id}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M13 21h8"/>
+                                        <path d="m15 5 4 4"/>
+                                        <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                                    </svg>
+                                    <span>Edit</span>
+                                </button>
+                                <button class="desktop-popup-item" onclick="openDeleteModal('${cat.id}', '${cat.name}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M10 11v6"/>
+                                        <path d="M14 11v6"/>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                                        <path d="M3 6h18"/>
+                                        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                    </svg>
+                                    <span>Delete</span>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            
+            // Mobile cards
+            mobileCards.innerHTML = list.map(cat => `
+                <div class="category-card-mobile">
+                    <img class="category-card-image"
+                         src="${cat.imageUrl || 'https://via.placeholder.com/100?text=No+Image'}"
+                         alt="${cat.name}" />
+                    <div class="category-card-content" onclick="window.location.href='manage-products.html?category=${encodeURIComponent(cat.name)}'">
+                        <div class="category-card-name">${cat.name}</div>
+                        <div class="category-card-products">${productCounts[cat.name] || 0} products</div>
+                    </div>
+                    <button class="category-card-menu-btn" data-category-id="${cat.id}">
+                        <span class="category-card-menu-dots"></span>
+                    </button>
+                </div>
+            `).join('');
+            
+            // Attach event listeners for desktop popups
+            document.querySelectorAll('.kebab').forEach(kebab => {
+                kebab.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const categoryId = kebab.getAttribute('data-category-id');
+                    const popup = document.getElementById(`desktop-popup-${categoryId}`);
+                    
+                    // Close all other popups
+                    document.querySelectorAll('.desktop-popup').forEach(p => {
+                        if (p !== popup) p.classList.remove('open');
+                    });
+                    
+                    // Toggle current popup
+                    popup.classList.toggle('open');
+                });
+            });
+            
+            // Close desktop popups when clicking outside
+            document.addEventListener('click', () => {
+                document.querySelectorAll('.desktop-popup').forEach(p => p.classList.remove('open'));
+            });
+            
+            // Prevent desktop popups from closing when clicking inside
+            document.querySelectorAll('.desktop-popup').forEach(popup => {
+                popup.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+            });
+            
+            // Attach event listeners for mobile menu buttons
+            document.querySelectorAll('.category-card-menu-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    currentMenuCategoryId = btn.getAttribute('data-category-id');
+                    
+                    // Set up the mobile menu buttons
+                    document.getElementById('mobile-edit-btn').onclick = () => {
+                        openEditModal(currentMenuCategoryId);
+                        closeAdvancedMenu();
+                    };
+                    
+                    document.getElementById('mobile-delete-btn').onclick = () => {
+                        const cat = allCategories.find(c => c.id === currentMenuCategoryId);
+                        if (cat) {
+                            openDeleteModal(cat.id, cat.name);
+                            closeAdvancedMenu();
+                        }
+                    };
+                    
+                    openAdvancedMenu();
+                });
+            });
+        }
 
-  // Update category status
-  async function updateCategoryStatus(categoryId, isActive) {
-    try {
-      await categoriesCollection.doc(categoryId).update({
-        active: isActive,
-        updatedAt: new Date().toISOString()
-      });
-      showSuccess('Status updated successfully!');
-    } catch (error) {
-      console.error('Error updating status:', error);
-      showError('Failed to update status. Please try again.');
-    }
-  }
+        function openAdvancedMenu() {
+            document.getElementById('advanced-menu').classList.add('open');
+            document.getElementById('advanced-menu-overlay').classList.add('open');
+        }
 
-  // Delete category
-  async function deleteCategory(categoryId) {
-    if (confirm('Are you sure you want to delete this category?')) {
-      try {
-        await categoriesCollection.doc(categoryId).delete();
-        showSuccess('Category deleted successfully!');
-        loadCategories();
-      } catch (error) {
-        console.error('Error deleting category:', error);
-        showError('Failed to delete category. Please try again.');
-      }
-    }
-  }
+        function closeAdvancedMenu() {
+            document.getElementById('advanced-menu').classList.remove('open');
+            document.getElementById('advanced-menu-overlay').classList.remove('open');
+        }
 
-  // Handle mobile edit
-  function handleMobileEdit() {
-    if (selectedCategoryId) {
-      openModal('edit', selectedCategoryId);
-      closeMobileMenu();
-    }
-  }
+        // Search functionality
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allCategories.filter(c => c.name.toLowerCase().includes(term));
+            renderCategories(filtered);
+        });
 
-  // Handle mobile delete
-  function handleMobileDelete() {
-    if (selectedCategoryId) {
-      deleteCategory(selectedCategoryId);
-      closeMobileMenu();
-    }
-  }
+        document.getElementById('mobile-search-input').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allCategories.filter(c => c.name.toLowerCase().includes(term));
+            renderCategories(filtered);
+        });
 
-  // Close mobile menu
-  function closeMobileMenu() {
-    const advancedMenu = document.getElementById('advanced-menu');
-    const advancedMenuOverlay = document.getElementById('advanced-menu-overlay');
-    advancedMenu.classList.remove('open');
-    advancedMenuOverlay.classList.remove('open');
-    selectedCategoryId = null;
-  }
+        // --- ADD/EDIT LOGIC ---
+        function openAddModal() {
+            editingId = null;
+            uploadedFile = null;
+            existingImageUrl = null;
+            document.getElementById('modal-title').textContent = "Add Category";
+            document.getElementById('modal-submit-btn').textContent = "Save Category";
+            document.getElementById('category-form').reset();
+            document.getElementById('cat-preview').style.display = 'none';
+            document.getElementById('category-modal').style.display = 'flex';
+        }
 
-  // Filter categories based on search
-  function filterCategories() {
-    const searchTerm = searchInput.value.toLowerCase() || mobileSearchInput.value.toLowerCase();
-    
-    const filteredCategories = categories.filter(category =>
-      category.name.toLowerCase().includes(searchTerm)
-    );
-    
-    // Update UI with filtered results
-    updateFilteredUI(filteredCategories);
-  }
+        function openEditModal(id) {
+            const cat = allCategories.find(c => c.id === id);
+            if(!cat) return;
+            editingId = id;
+            uploadedFile = null;
+            existingImageUrl = cat.imageUrl || null;
+            document.getElementById('modal-title').textContent = "Edit Category";
+            document.getElementById('modal-submit-btn').textContent = "Update Category";
+            document.getElementById('cat-name-input').value = cat.name;
+            
+            if(cat.imageUrl) {
+                document.getElementById('cat-preview').src = cat.imageUrl;
+                document.getElementById('cat-preview').style.display = 'block';
+            } else {
+                document.getElementById('cat-preview').style.display = 'none';
+            }
+            document.getElementById('category-modal').style.display = 'flex';
+            
+            // Clean up menus
+            document.querySelectorAll('.desktop-popup').forEach(d => d.classList.remove('open'));
+            closeAdvancedMenu();
+        }
 
-  // Update UI with filtered categories
-  function updateFilteredUI(filteredCategories) {
-    // For simplicity, we'll just reload all categories and highlight matching ones
-    renderCategories();
-  }
+        function closeModal() {
+            document.getElementById('category-modal').style.display = 'none';
+        }
 
-  // Show success message
-  function showSuccess(message) {
-    alert(message); // You can replace this with a toast notification
-  }
+        document.getElementById('cat-file-input').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                if(file.size > 5*1024*1024) return showToast('Image too large', 'error');
+                uploadedFile = file;
+                document.getElementById('cat-preview').src = URL.createObjectURL(file);
+                document.getElementById('cat-preview').style.display = 'block';
+            }
+        });
 
-  // Show error message
-  function showError(message) {
-    alert('Error: ' + message); // You can replace this with a toast notification
-  }
+        document.getElementById('category-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('cat-name-input').value.trim();
+            if(!name) return showToast('Name required', 'error');
 
-  // Mobile drawer behaviour
-  const mOverlay = document.getElementById('m-overlay');
-  const mMenuToggle = document.getElementById('m-menu-toggle');
-  const mDrawerClose = document.getElementById('m-drawer-close');
+            const exists = allCategories.some(c => c.id !== editingId && c.name.toLowerCase() === name.toLowerCase());
+            if(exists) return showToast('Category name exists', 'error');
 
-  if (mMenuToggle && mOverlay && mDrawerClose) {
-    mMenuToggle.addEventListener('click', () => {
-      mOverlay.classList.add('open');
-    });
+            const btn = document.getElementById('modal-submit-btn');
+            btn.disabled = true; btn.textContent = "Saving...";
 
-    mDrawerClose.addEventListener('click', () => {
-      mOverlay.classList.remove('open');
-    });
+            try {
+                let imageUrl = existingImageUrl;
+                
+                if(uploadedFile) {
+                    const ref = storage.ref().child(`categories/${Date.now()}-${uploadedFile.name}`);
+                    await ref.put(uploadedFile);
+                    imageUrl = await ref.getDownloadURL();
+                }
 
-    mOverlay.addEventListener('click', (e) => {
-      if (e.target === mOverlay) {
-        mOverlay.classList.remove('open');
-      }
-    });
-  }
+                const data = {
+                    name,
+                    imageUrl: imageUrl || '',
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
 
-  // Desktop Customize Site dropdown
-  const dCustomizeToggle = document.getElementById('d-customize-toggle');
-  const dCustomizeSubmenu = document.getElementById('d-customize-submenu');
+                if(editingId) {
+                    await db.collection('categories').doc(editingId).update(data);
+                    showToast('Updated successfully');
+                } else {
+                    data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    await db.collection('categories').add(data);
+                    showToast('Created successfully');
+                }
+                
+                closeModal();
+                loadData();
+            } catch(e) {
+                console.error(e);
+                showToast('Operation failed', 'error');
+            } finally {
+                btn.disabled = false; 
+                btn.textContent = editingId ? "Update Category" : "Save Category";
+            }
+        });
 
-  if (dCustomizeToggle && dCustomizeSubmenu) {
-    dCustomizeToggle.addEventListener('click', () => {
-      dCustomizeSubmenu.classList.toggle('open');
-      dCustomizeToggle.classList.toggle('dropdown-open');
-    });
-  }
+        // --- DELETE LOGIC ---
+        function openDeleteModal(id, name) {
+            deletingId = id;
+            deletingName = name;
+            document.getElementById('del-cat-name').textContent = name;
+            document.getElementById('confirm-del-input').value = '';
+            document.getElementById('confirm-del-btn').disabled = true;
+            document.getElementById('delete-modal').style.display = 'flex';
+            
+            // Clean up menus
+            document.querySelectorAll('.desktop-popup').forEach(d => d.classList.remove('open'));
+            closeAdvancedMenu();
+        }
 
-  // Desktop MANAGE ORDERS dropdown
-  const dOrdersToggle = document.getElementById('d-orders-toggle');
-  const dOrdersSubmenu = document.getElementById('d-orders-submenu');
+        function closeDeleteModal() {
+            document.getElementById('delete-modal').style.display = 'none';
+        }
 
-  if (dOrdersToggle && dOrdersSubmenu) {
-    dOrdersToggle.addEventListener('click', () => {
-      dOrdersSubmenu.classList.toggle('open');
-      dOrdersToggle.classList.toggle('dropdown-open');
-    });
-  }
+        document.getElementById('confirm-del-input').addEventListener('input', (e) => {
+            document.getElementById('confirm-del-btn').disabled = e.target.value !== deletingName;
+        });
 
-  // Mobile Customize Site dropdown
-  const mCustomizeToggle = document.getElementById('m-customize-toggle');
-  const mCustomizeSubmenu = document.getElementById('m-customize-submenu');
+        document.getElementById('confirm-del-btn').addEventListener('click', async () => {
+            if(!deletingId) return;
+            try {
+                await db.collection('categories').doc(deletingId).delete();
+                showToast('Deleted successfully');
+                closeDeleteModal();
+                loadData();
+            } catch(e) {
+                showToast('Delete failed', 'error');
+            }
+        });
 
-  if (mCustomizeToggle && mCustomizeSubmenu) {
-    mCustomizeToggle.addEventListener('click', () => {
-      mCustomizeSubmenu.classList.toggle('open');
-      mCustomizeToggle.classList.toggle('dropdown-open');
-    });
-  }
-
-  // Mobile MANAGE ORDERS dropdown
-  const mOrdersToggle = document.getElementById('m-orders-toggle');
-  const mOrdersSubmenu = document.getElementById('m-orders-submenu');
-
-  if (mOrdersToggle && mOrdersSubmenu) {
-    mOrdersToggle.addEventListener('click', () => {
-      mOrdersSubmenu.classList.toggle('open');
-      mOrdersToggle.classList.toggle('dropdown-open');
-    });
-  }
-
-  // Advanced Menu functionality
-  const advancedMenu = document.getElementById('advanced-menu');
-  const advancedMenuOverlay = document.getElementById('advanced-menu-overlay');
-  const advancedMenuClose = document.getElementById('advanced-menu-close');
-
-  // Close advanced menu
-  if (advancedMenuClose && advancedMenuOverlay) {
-    advancedMenuClose.addEventListener('click', () => {
-      closeMobileMenu();
-    });
-
-    advancedMenuOverlay.addEventListener('click', () => {
-      closeMobileMenu();
-    });
-  }
-
-  // Close desktop popup when clicking outside
-  document.addEventListener('click', () => {
-    document.querySelectorAll('.desktop-popup').forEach(popup => {
-      popup.classList.remove('open');
-    });
-  });
-</script>
-
+        function showToast(msg, type='success') {
+            const container = document.getElementById('toast-container');
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    ${type === 'success' ? 
+                        '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' : 
+                        '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}
+                </svg>
+                <span>${msg}</span>`;
+            container.appendChild(el);
+            setTimeout(() => el.remove(), 3000);
+        }
+    </script>
 </body>
 </html>
