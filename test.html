@@ -7,7 +7,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         :root {
             --header-height-desktop: 70px;
@@ -85,7 +84,6 @@
             border-right: 1px solid var(--border-subtle);
             display: flex;
             flex-direction: column;
-            position: relative;
         }
 
         .d-sidebar-inner {
@@ -123,6 +121,9 @@
 
         .d-nav-item .label {
             flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .d-nav-item .icon svg {
@@ -217,95 +218,24 @@
             display: flex;
             flex-direction: column;
             gap: 2px;
+            min-width: 0;
+            flex: 1;
         }
 
         .account-name {
             font-size: 14px;
             font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .account-email {
             font-size: 12px;
             color: #6b7280;
-        }
-
-        /* Profile Popup - REDESIGNED with fixed width */
-        .profile-popup {
-            position: absolute;
-            bottom: 90px;
-            left: 16px;
-            right: 16px;
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 2px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid #e5e7eb;
-            padding: 0;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(10px) scale(0.95);
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            width: 228px; /* Fixed width: sidebar width (260px) - left/right padding (32px) */
-        }
-
-        .profile-popup.active {
-            opacity: 1;
-            pointer-events: all;
-            transform: translateY(0) scale(1);
-        }
-
-        .popup-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 16px;
-            border-bottom: 1px solid #f3f4f6;
-            background: #fafafa;
-            border-radius: 12px 12px 0 0;
-        }
-
-        .popup-list {
-            list-style: none;
-            padding: 8px;
-        }
-
-        .popup-list a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            border-radius: 8px;
-            text-decoration: none;
-            color: #374151;
-            font-weight: 500;
-            font-size: 14px;
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-
-        .popup-list a:hover {
-            background: #f3f4f6;
-            color: #5127ba;
-        }
-
-        .popup-list a i {
-            font-size: 18px;
-            color: #6b7280;
-            width: 20px;
-            text-align: center;
-        }
-
-        .popup-list a.logout {
-            color: #dc2626;
-        }
-
-        .popup-list a.logout:hover {
-            background: #fef2f2;
-            color: #dc2626;
-        }
-
-        .popup-list a.logout i {
-            color: #dc2626;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         /* Desktop content */
@@ -320,6 +250,8 @@
             max-width: 1110px;
             margin: 0 auto;
             padding: 24px 24px 40px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .page-header {
@@ -327,12 +259,15 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 24px;
+            gap: 16px;
         }
 
         .page-title-wrap {
             display: flex;
             flex-direction: column;
             gap: 4px;
+            min-width: 0;
+            flex: 1;
         }
 
         .page-title {
@@ -340,6 +275,9 @@
             font-size: 20px;
             line-height: 32px;
             color: rgb(29, 30, 32);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .breadcrumb {
@@ -349,6 +287,14 @@
             font-size: 13px;
             line-height: 20px;
             color: #6b7280;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .breadcrumb span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .breadcrumb-icon svg {
@@ -359,6 +305,7 @@
 
         .breadcrumb-divider {
             color: #d1d5db;
+            flex-shrink: 0;
         }
 
         .primary-btn {
@@ -375,6 +322,8 @@
             color: #ffffff;
             background: var(--brand-primary);
             transition: background 0.15s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
         .primary-btn svg {
             width: 18px;
@@ -391,7 +340,6 @@
             border-radius: 12px;
             border: 1px solid #e5e7eb;
             overflow: hidden;
-            position: relative;
         }
 
         .card-header {
@@ -428,14 +376,14 @@
             flex: 1;
             font-family: "DM Sans", Roboto, sans-serif;
             font-size: 14px;
+            width: 100%;
         }
 
-        /* Table area - FIXED Z-INDEX ISSUE */
+        /* Table area */
         .table-wrapper {
             width: 100%;
             overflow-x: auto;
             position: relative;
-            z-index: 1;
         }
 
         .domain-table {
@@ -451,7 +399,6 @@
         .domain-table th,
         .domain-table td {
             padding: 12px 20px;
-            position: relative;
         }
 
         .domain-table thead th {
@@ -461,10 +408,7 @@
             color: rgb(29, 30, 32);
             text-align: left;
             border-bottom: 1px solid #e5e7eb;
-            background: #ffffff;
-            position: sticky;
-            top: 0;
-            z-index: 2;
+            white-space: nowrap;
         }
 
         .th-image,
@@ -474,7 +418,6 @@
 
         .domain-table tbody tr {
             border-bottom: 1px solid #f3f4f6;
-            background: #ffffff;
         }
 
         .domain-table tbody tr:last-child {
@@ -494,6 +437,10 @@
             font-size: 14px;
             line-height: 24px;
             color: rgb(29, 30, 32);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
         }
 
         .product-count,
@@ -503,6 +450,7 @@
             font-size: 14px;
             line-height: 24px;
             color: rgb(59, 61, 74);
+            white-space: nowrap;
         }
 
         .action-buttons {
@@ -510,6 +458,7 @@
             gap: 8px;
             align-items: center;
             position: relative;
+            z-index: 100;
         }
 
         .btn-secondary {
@@ -522,6 +471,7 @@
             color: #673de6;
             cursor: pointer;
             transition: background 0.15s ease;
+            white-space: nowrap;
         }
         .btn-secondary:hover {
             background: #f2efff;
@@ -536,12 +486,7 @@
             justify-content: center;
             cursor: pointer;
             position: relative;
-            background: transparent;
-            border: none;
-            transition: background 0.2s ease;
-        }
-        .kebab:hover {
-            background: #f3f4f6;
+            flex-shrink: 0;
         }
         .kebab-dots {
             width: 4px;
@@ -551,7 +496,7 @@
             box-shadow: 0 -6px 0 0 #a855f7, 0 6px 0 0 #a855f7;
         }
 
-        /* Desktop Popup Menu - FIXED Z-INDEX ISSUE */
+        /* Desktop Popup Menu - FIXED z-index */
         .desktop-popup {
             position: absolute;
             top: 100%;
@@ -559,12 +504,11 @@
             background: #ffffff;
             border-radius: 8px;
             border: 1px solid #e5e7eb;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             min-width: 160px;
-            z-index: 1000; /* Increased z-index */
+            z-index: 1001;
             display: none;
             overflow: hidden;
-            margin-top: 4px;
         }
 
         .desktop-popup.open {
@@ -585,7 +529,7 @@
             line-height: 20px;
             color: rgb(29, 30, 32);
             transition: background 0.15s ease;
-            font-family: "DM Sans", Roboto, sans-serif;
+            white-space: nowrap;
         }
 
         .desktop-popup-item:hover {
@@ -596,6 +540,7 @@
             width: 16px;
             height: 16px;
             stroke: #6b7280;
+            flex-shrink: 0;
         }
 
         .desktop-popup-item:last-child {
@@ -612,6 +557,8 @@
             display: flex;
             flex-direction: column;
             display: none;
+            overflow-x: hidden;
+            width: 100%;
         }
 
         /* Mobile header */
@@ -623,9 +570,8 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 16px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .m-menu-btn {
@@ -638,6 +584,7 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            flex-shrink: 0;
         }
 
         .m-menu-lines {
@@ -670,6 +617,7 @@
             height: 48px;
             width: auto;
             object-fit: contain;
+            max-width: 150px;
         }
 
         /* Mobile main bg */
@@ -677,6 +625,7 @@
             flex: 1;
             background: var(--page-bg);
             padding-bottom: 20px;
+            width: 100%;
             overflow-x: hidden;
         }
 
@@ -728,6 +677,7 @@
             height: 48px;
             width: auto;
             object-fit: contain;
+            max-width: 150px;
         }
 
         .m-drawer-close {
@@ -739,6 +689,7 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            flex-shrink: 0;
         }
         .m-drawer-close-icon {
             width: 14px;
@@ -768,6 +719,7 @@
             padding: 32px 8px;
             display: flex;
             flex-direction: column;
+            overflow-y: auto;
         }
 
         .m-nav-item {
@@ -787,6 +739,9 @@
 
         .m-nav-item .label {
             flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .m-nav-item .icon svg {
@@ -848,35 +803,12 @@
             position: relative;
         }
 
-        /* Mobile Profile Popup - REDESIGNED */
-        .mobile-profile-popup {
-            position: absolute;
-            bottom: 90px;
-            left: 16px;
-            right: 16px;
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 2px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid #e5e7eb;
-            padding: 0;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(10px) scale(0.95);
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            width: calc(100% - 32px);
-        }
-
-        .mobile-profile-popup.active {
-            opacity: 1;
-            pointer-events: all;
-            transform: translateY(0) scale(1);
-        }
-
-        /* Mobile content layout - FIXED OVERFLOW */
+        /* Mobile content layout */
         .mobile-content-inner {
             padding: 16px;
-            max-width: 100%;
+            width: 100%;
+            box-sizing: border-box;
+            max-width: 100vw;
             overflow-x: hidden;
         }
 
@@ -884,8 +816,6 @@
         .mobile-page-header {
             margin-bottom: 20px;
             width: 100%;
-            max-width: 100%;
-            overflow: hidden;
         }
 
         .mobile-page-title-wrap {
@@ -901,7 +831,9 @@
             font-size: 22px;
             line-height: 32px;
             color: rgb(29, 30, 32);
-            word-wrap: break-word;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .mobile-breadcrumb {
@@ -911,20 +843,29 @@
             font-size: 14px;
             line-height: 20px;
             color: #6b7280;
-            flex-wrap: wrap;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .mobile-breadcrumb span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .mobile-breadcrumb-icon svg {
             width: 16px;
             height: 16px;
             stroke: #9ca3af;
+            flex-shrink: 0;
         }
 
         .mobile-breadcrumb-divider {
             color: #d1d5db;
+            flex-shrink: 0;
         }
 
-        /* Mobile search and add button row - FIXED OVERFLOW */
+        /* Mobile search and add button row - FIXED */
         .mobile-controls-row {
             display: flex;
             align-items: center;
@@ -932,14 +873,13 @@
             margin-bottom: 20px;
             width: 100%;
             max-width: 100%;
-            flex-wrap: nowrap;
-            overflow: hidden;
+            box-sizing: border-box;
         }
 
         .mobile-search-wrap {
             flex: 1;
             position: relative;
-            min-width: 0; /* Allows flex item to shrink below content size */
+            min-width: 0;
         }
 
         .mobile-search-input-wrap {
@@ -953,6 +893,7 @@
             transition: all 0.2s ease;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             width: 100%;
+            box-sizing: border-box;
         }
 
         .mobile-search-input-wrap:focus-within {
@@ -969,6 +910,7 @@
             height: 20px;
             stroke: #6b7280;
             z-index: 2;
+            flex-shrink: 0;
         }
 
         .mobile-search-input-wrap input {
@@ -980,7 +922,7 @@
             color: #111827;
             font-weight: 500;
             width: 100%;
-            min-width: 0; /* Allows input to shrink */
+            min-width: 0;
         }
 
         .mobile-search-input-wrap input::placeholder {
@@ -1004,8 +946,8 @@
             white-space: nowrap;
             transition: all 0.2s ease;
             box-shadow: 0 2px 4px rgba(81, 39, 186, 0.2);
-            flex-shrink: 0; /* Prevents button from shrinking */
-            min-width: fit-content;
+            flex-shrink: 0;
+            max-width: 100px;
         }
 
         .mobile-add-btn:hover {
@@ -1017,6 +959,7 @@
             width: 20px;
             height: 20px;
             stroke: #ffffff;
+            flex-shrink: 0;
         }
 
         /* Mobile category cards */
@@ -1025,8 +968,6 @@
             flex-direction: column;
             gap: 16px;
             width: 100%;
-            max-width: 100%;
-            overflow-x: hidden;
         }
 
         .category-card-mobile {
@@ -1040,8 +981,7 @@
             transition: all 0.2s ease;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             width: 100%;
-            max-width: 100%;
-            overflow: hidden;
+            box-sizing: border-box;
         }
 
         .category-card-mobile:hover {
@@ -1064,8 +1004,7 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
-            min-width: 0; /* Allows text truncation */
-            overflow: hidden;
+            min-width: 0;
         }
 
         .category-card-name {
@@ -1083,6 +1022,9 @@
             font-size: 14px;
             line-height: 18px;
             color: #6b7280;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .category-card-menu-btn {
@@ -1161,6 +1103,9 @@
             line-height: 28px;
             color: rgb(29, 30, 32);
             text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .advanced-menu-items {
@@ -1183,6 +1128,7 @@
             color: rgb(29, 30, 32);
             transition: background 0.15s ease;
             border-bottom: 1px solid #f9fafb;
+            white-space: nowrap;
         }
 
         .advanced-menu-item:last-child {
@@ -1202,6 +1148,7 @@
             width: 22px;
             height: 22px;
             stroke: #6b7280;
+            flex-shrink: 0;
         }
 
         .advanced-menu-close {
@@ -1218,6 +1165,7 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s ease;
+            flex-shrink: 0;
         }
 
         .advanced-menu-close:hover {
@@ -1272,6 +1220,7 @@
             align-items: center;
             justify-content: center;
             padding: 1rem;
+            box-sizing: border-box;
         }
 
         .modal-content {
@@ -1284,6 +1233,8 @@
             flex-direction: column;
             overflow: hidden;
             animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         @keyframes modalPop {
@@ -1317,6 +1268,9 @@
         .modal-title {
             font-weight: 600;
             font-size: 1.1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .btn-icon {
@@ -1324,13 +1278,7 @@
             border: none;
             cursor: pointer;
             color: #6b7280;
-            padding: 4px;
-            border-radius: 4px;
-            transition: background 0.2s ease;
-        }
-
-        .btn-icon:hover {
-            background: #f3f4f6;
+            flex-shrink: 0;
         }
 
         .form-group {
@@ -1343,6 +1291,9 @@
             font-weight: 500;
             color: #6b7280;
             margin-bottom: 0.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .form-input {
@@ -1353,6 +1304,7 @@
             background: white;
             transition: all 0.15s ease;
             font-family: "DM Sans", Roboto, sans-serif;
+            box-sizing: border-box;
         }
 
         .form-input:focus {
@@ -1396,6 +1348,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            max-width: calc(100vw - 40px);
         }
 
         .toast {
@@ -1409,7 +1362,9 @@
             gap: 1rem;
             border-left: 4px solid var(--brand-primary);
             min-width: 300px;
+            max-width: 400px;
             pointer-events: auto;
+            box-sizing: border-box;
         }
 
         .toast.success {
@@ -1437,6 +1392,7 @@
             transition: all 0.15s ease;
             border: none;
             font-size: 0.95rem;
+            white-space: nowrap;
         }
 
         .btn-primary {
@@ -1467,6 +1423,89 @@
 
         .btn-danger:hover {
             background: #FEE2E2;
+        }
+
+        /* Profile Popup - REDESIGNED */
+        .profile-popup {
+            position: absolute;
+            bottom: 90px;
+            left: 1.5rem;
+            right: 1.5rem;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border: 1px solid #e5e7eb;
+            padding: 0;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px) scale(0.95);
+            transition: all 0.2s ease;
+            width: 280px;
+            overflow: hidden;
+        }
+
+        .profile-popup.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0) scale(1);
+        }
+
+        .popup-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            border-bottom: 1px solid #f3f4f6;
+            background: #f9fafb;
+        }
+
+        .popup-list {
+            list-style: none;
+            padding: 8px;
+        }
+
+        .popup-list li {
+            margin: 4px 0;
+        }
+
+        .popup-list a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #374151;
+            transition: all 0.15s ease;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .popup-list a:hover {
+            background: #f3f4f6;
+            color: #111827;
+        }
+
+        .popup-list a i {
+            font-size: 1.2rem;
+            color: #6b7280;
+            width: 20px;
+            text-align: center;
+        }
+
+        .popup-list a.logout i {
+            color: var(--danger-color);
+        }
+
+        .popup-list a.logout {
+            color: var(--danger-color);
+        }
+
+        .popup-list a.logout:hover {
+            background: #fef2f2;
+            color: var(--danger-color);
         }
 
         /* Empty state */
@@ -1511,11 +1550,38 @@
                 from { transform: translateY(100%); }
                 to { transform: translateY(0); }
             }
+            
+            .profile-popup {
+                width: calc(100vw - 32px);
+                max-width: 320px;
+                left: 50%;
+                transform: translateX(-50%) translateY(10px) scale(0.95);
+                bottom: 100px;
+                right: auto;
+            }
+            
+            .profile-popup.active {
+                transform: translateX(-50%) translateY(0) scale(1);
+            }
         }
 
         @media (min-width: 769px) {
             .page-desktop { display: flex; }
             .page-mobile { display: none; }
+            
+            .profile-popup {
+                left: auto;
+                right: 16px;
+                width: 280px;
+                bottom: 100px;
+            }
+        }
+
+        /* Truncate text utility */
+        .truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     </style>
 </head>
@@ -1591,7 +1657,7 @@
                                         <path d="M14 10l-3.5 4"/>
                                         <path d="m5 15 4.5-4"/>
                                     </svg>
-                                    <span>Theme & layout</span>
+                                    <span class="truncate">Theme & layout</span>
                                 </div>
                                 <div class="d-submenu-item">
                                     <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1599,7 +1665,7 @@
                                         <path d="M3 9h18"/>
                                         <path d="M9 21V9"/>
                                     </svg>
-                                    <span>Sections</span>
+                                    <span class="truncate">Sections</span>
                                 </div>
                                 <div class="d-submenu-item">
                                     <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1609,7 +1675,7 @@
                                         <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
                                         <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
                                     </svg>
-                                    <span>Navigation</span>
+                                    <span class="truncate">Navigation</span>
                                 </div>
                             </div>
 
@@ -1643,7 +1709,7 @@
                                         <path d="M22 12a10 10 0 1 0-11 9.95"/>
                                         <path d="m22 16-5.5 5.5L14 19"/>
                                     </svg>
-                                    <span>Today</span>
+                                    <span class="truncate">Today</span>
                                 </div>
                                 <div class="d-submenu-item">
                                     <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1658,7 +1724,7 @@
                                         <path d="M12 18h.01"/>
                                         <path d="M16 18h.01"/>
                                     </svg>
-                                    <span>This Month</span>
+                                    <span class="truncate">This Month</span>
                                 </div>
                                 <div class="d-submenu-item">
                                     <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1669,14 +1735,14 @@
                                         <path d="M8 8h14"/>
                                         <rect x="8" y="3" width="14" height="14" rx="2"/>
                                     </svg>
-                                    <span>All Orders</span>
+                                    <span class="truncate">All Orders</span>
                                 </div>
                             </div>
                         </div>
                     </nav>
 
                     <!-- Desktop Account section -->
-                    <div class="d-account-section" id="desktop-profile-section">
+                    <div class="d-account-section" id="profile-section">
                         <div class="account-card">
                             <img id="sidebar-avatar" class="account-avatar"
                                  src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
@@ -1705,9 +1771,9 @@
                                         <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                                     </svg>
                                 </span>
-                                <span>Home</span>
+                                <span class="truncate">Home</span>
                                 <span class="breadcrumb-divider">/</span>
-                                <span>Manage Categories</span>
+                                <span class="truncate">Manage Categories</span>
                             </div>
                         </div>
 
@@ -1786,13 +1852,13 @@
                                     <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                                 </svg>
                             </span>
-                            <span>Home</span>
+                            <span class="truncate">Home</span>
                             <span class="mobile-breadcrumb-divider">/</span>
-                            <span>Manage Categories</span>
+                            <span class="truncate">Manage Categories</span>
                         </div>
                     </div>
                     
-                    <!-- Mobile Search and Add Button Row - FIXED OVERFLOW -->
+                    <!-- Mobile Search and Add Button Row - FIXED -->
                     <div class="mobile-controls-row">
                         <div class="mobile-search-wrap">
                             <div class="mobile-search-input-wrap">
@@ -1896,7 +1962,7 @@
                                 <path d="M14 10l-3.5 4"/>
                                 <path d="m5 15 4.5-4"/>
                             </svg>
-                            <span>Theme & layout</span>
+                            <span class="truncate">Theme & layout</span>
                         </div>
                         <div class="m-submenu-item">
                             <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1904,7 +1970,7 @@
                                 <path d="M3 9h18"/>
                                 <path d="M9 21V9"/>
                             </svg>
-                            <span>Sections</span>
+                            <span class="truncate">Sections</span>
                         </div>
                         <div class="m-submenu-item">
                             <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1914,7 +1980,7 @@
                                 <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
                                 <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
                             </svg>
-                            <span>Navigation</span>
+                            <span class="truncate">Navigation</span>
                         </div>
                     </div>
 
@@ -1948,7 +2014,7 @@
                                 <path d="M22 12a10 10 0 1 0-11 9.95"/>
                                 <path d="m22 16-5.5 5.5L14 19"/>
                             </svg>
-                            <span>Today</span>
+                            <span class="truncate">Today</span>
                         </div>
                         <div class="m-submenu-item">
                             <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1963,7 +2029,7 @@
                                 <path d="M12 18h.01"/>
                                 <path d="M16 18h.01"/>
                             </svg>
-                            <span>This Month</span>
+                            <span class="truncate">This Month</span>
                         </div>
                         <div class="m-submenu-item">
                             <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1974,7 +2040,7 @@
                                 <path d="M8 8h14"/>
                                 <rect x="8" y="3" width="14" height="14" rx="2"/>
                             </svg>
-                            <span>All Orders</span>
+                            <span class="truncate">All Orders</span>
                         </div>
                     </div>
                 </nav>
@@ -2011,7 +2077,7 @@
                         <path d="m15 5 4 4"/>
                         <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
                     </svg>
-                    <span>Edit</span>
+                    <span class="truncate">Edit</span>
                 </button>
                 <button class="advanced-menu-item" id="mobile-delete-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2021,41 +2087,25 @@
                         <path d="M3 6h18"/>
                         <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
                     </svg>
-                    <span>Delete Category</span>
+                    <span class="truncate">Delete Category</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Profile Popup for Desktop -->
-    <div class="profile-popup" id="desktop-profile-popup">
+    <!-- Profile Popup - REDESIGNED -->
+    <div class="profile-popup" id="profile-popup">
         <div class="popup-header">
-            <img id="desktop-popup-avatar" src="" class="account-avatar">
+            <img id="popup-avatar" src="" class="account-avatar">
             <div class="account-text">
-                <span class="account-name" id="desktop-popup-name">Loading...</span>
-                <span class="account-email" id="desktop-popup-email">Admin</span>
+                <span class="account-name truncate" id="popup-name">Loading...</span>
+                <span class="account-email truncate" id="popup-email">Admin</span>
             </div>
         </div>
         <ul class="popup-list">
-            <li><a href="#"><i class='bx bx-user'></i> Profile</a></li>
-            <li><a href="#"><i class='bx bx-cog'></i> Settings</a></li>
-            <li><a href="#" onclick="auth.signOut()" class="logout"><i class='bx bx-log-out'></i> Logout</a></li>
-        </ul>
-    </div>
-
-    <!-- Profile Popup for Mobile -->
-    <div class="mobile-profile-popup" id="mobile-profile-popup">
-        <div class="popup-header">
-            <img id="mobile-popup-avatar" src="" class="account-avatar">
-            <div class="account-text">
-                <span class="account-name" id="mobile-popup-name">Loading...</span>
-                <span class="account-email" id="mobile-popup-email">Admin</span>
-            </div>
-        </div>
-        <ul class="popup-list">
-            <li><a href="#"><i class='bx bx-user'></i> Profile</a></li>
-            <li><a href="#"><i class='bx bx-cog'></i> Settings</a></li>
-            <li><a href="#" onclick="auth.signOut()" class="logout"><i class='bx bx-log-out'></i> Logout</a></li>
+            <li><a href="#"><i class='bx bx-user'></i> <span class="truncate">Profile</span></a></li>
+            <li><a href="#"><i class='bx bx-cog'></i> <span class="truncate">Settings</span></a></li>
+            <li><a href="#" onclick="auth.signOut()" class="logout"><i class='bx bx-log-out'></i> <span class="truncate">Logout</span></a></li>
         </ul>
     </div>
 
@@ -2063,7 +2113,7 @@
     <div class="modal-overlay" id="category-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title" id="modal-title">Add Category</div>
+                <div class="modal-title truncate" id="modal-title">Add Category</div>
                 <button class="btn-icon" onclick="closeModal()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M18 6 6 18"/>
@@ -2074,18 +2124,18 @@
             <form id="category-form">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label class="form-label">Category Name</label>
-                        <input type="text" class="form-input" id="cat-name-input" required placeholder="e.g. Ethnic Wear">
+                        <label class="form-label truncate">Category Name</label>
+                        <input type="text" class="form-input" id="cat-name-input" required placeholder="e.g. Ethnic Wear" maxlength="50">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Category Image</label>
+                        <label class="form-label truncate">Category Image</label>
                         <div class="image-upload-box" onclick="document.getElementById('cat-file-input').click()">
                             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke: #5127ba;">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                                 <polyline points="17 8 12 3 7 8"/>
                                 <line x1="12" y1="3" x2="12" y2="15"/>
                             </svg>
-                            <div style="margin-top:0.5rem; font-size:0.9rem; color:#6b7280;">Click to upload image</div>
+                            <div style="margin-top:0.5rem; font-size:0.9rem; color:#6b7280; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Click to upload image</div>
                             <img id="cat-preview" class="preview-img">
                         </div>
                         <input type="file" id="cat-file-input" accept="image/*" style="display:none;">
@@ -2103,7 +2153,7 @@
     <div class="modal-overlay" id="delete-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title" style="color: var(--danger-color);">Delete Category</div>
+                <div class="modal-title truncate" style="color: var(--danger-color);">Delete Category</div>
                 <button class="btn-icon" onclick="closeDeleteModal()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M18 6 6 18"/>
@@ -2112,10 +2162,10 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p style="color: #6b7280; margin-bottom: 1rem;">Are you sure you want to delete <strong id="del-cat-name" style="color: rgb(29, 30, 32);"></strong>?</p>
+                <p style="color: #6b7280; margin-bottom: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Are you sure you want to delete <strong id="del-cat-name" style="color: rgb(29, 30, 32);"></strong>?</p>
                 <div class="form-group">
-                    <label class="form-label">Type category name to confirm</label>
-                    <input type="text" class="form-input" id="confirm-del-input" placeholder="Category Name">
+                    <label class="form-label truncate">Type category name to confirm</label>
+                    <input type="text" class="form-input" id="confirm-del-input" placeholder="Category Name" maxlength="50">
                 </div>
             </div>
             <div class="modal-footer">
@@ -2131,6 +2181,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script src='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css'></script>
 
     <script>
         // --- UI INTERACTIONS ---
@@ -2161,18 +2212,9 @@
             const dCustomizeSubmenu = document.getElementById('d-customize-submenu');
 
             if (dCustomizeToggle && dCustomizeSubmenu) {
-                dCustomizeToggle.addEventListener('click', (e) => {
-                    e.stopPropagation();
+                dCustomizeToggle.addEventListener('click', () => {
                     dCustomizeSubmenu.classList.toggle('open');
                     dCustomizeToggle.classList.toggle('dropdown-open');
-                    
-                    // Close other dropdowns
-                    const otherToggle = document.getElementById('d-orders-toggle');
-                    const otherSubmenu = document.getElementById('d-orders-submenu');
-                    if (otherSubmenu && otherSubmenu !== dCustomizeSubmenu && otherSubmenu.classList.contains('open')) {
-                        otherSubmenu.classList.remove('open');
-                        otherToggle.classList.remove('dropdown-open');
-                    }
                 });
             }
 
@@ -2181,18 +2223,9 @@
             const dOrdersSubmenu = document.getElementById('d-orders-submenu');
 
             if (dOrdersToggle && dOrdersSubmenu) {
-                dOrdersToggle.addEventListener('click', (e) => {
-                    e.stopPropagation();
+                dOrdersToggle.addEventListener('click', () => {
                     dOrdersSubmenu.classList.toggle('open');
                     dOrdersToggle.classList.toggle('dropdown-open');
-                    
-                    // Close other dropdowns
-                    const otherToggle = document.getElementById('d-customize-toggle');
-                    const otherSubmenu = document.getElementById('d-customize-submenu');
-                    if (otherSubmenu && otherSubmenu !== dOrdersSubmenu && otherSubmenu.classList.contains('open')) {
-                        otherSubmenu.classList.remove('open');
-                        otherToggle.classList.remove('dropdown-open');
-                    }
                 });
             }
 
@@ -2201,18 +2234,9 @@
             const mCustomizeSubmenu = document.getElementById('m-customize-submenu');
 
             if (mCustomizeToggle && mCustomizeSubmenu) {
-                mCustomizeToggle.addEventListener('click', (e) => {
-                    e.stopPropagation();
+                mCustomizeToggle.addEventListener('click', () => {
                     mCustomizeSubmenu.classList.toggle('open');
                     mCustomizeToggle.classList.toggle('dropdown-open');
-                    
-                    // Close other dropdowns
-                    const otherToggle = document.getElementById('m-orders-toggle');
-                    const otherSubmenu = document.getElementById('m-orders-submenu');
-                    if (otherSubmenu && otherSubmenu !== mCustomizeSubmenu && otherSubmenu.classList.contains('open')) {
-                        otherSubmenu.classList.remove('open');
-                        otherToggle.classList.remove('dropdown-open');
-                    }
                 });
             }
 
@@ -2221,85 +2245,36 @@
             const mOrdersSubmenu = document.getElementById('m-orders-submenu');
 
             if (mOrdersToggle && mOrdersSubmenu) {
-                mOrdersToggle.addEventListener('click', (e) => {
-                    e.stopPropagation();
+                mOrdersToggle.addEventListener('click', () => {
                     mOrdersSubmenu.classList.toggle('open');
                     mOrdersToggle.classList.toggle('dropdown-open');
-                    
-                    // Close other dropdowns
-                    const otherToggle = document.getElementById('m-customize-toggle');
-                    const otherSubmenu = document.getElementById('m-customize-submenu');
-                    if (otherSubmenu && otherSubmenu !== mOrdersSubmenu && otherSubmenu.classList.contains('open')) {
-                        otherSubmenu.classList.remove('open');
-                        otherToggle.classList.remove('dropdown-open');
+                });
+            }
+
+            // Profile section
+            const profileSection = document.getElementById('profile-section');
+            const mobileProfileSection = document.getElementById('mobile-profile-section');
+            const profilePopup = document.getElementById('profile-popup');
+
+            if (profileSection) {
+                profileSection.addEventListener('click', e => {
+                    e.stopPropagation();
+                    profilePopup.classList.toggle('active');
+                });
+                
+                document.addEventListener('click', e => {
+                    if (!profileSection.contains(e.target) && !profilePopup.contains(e.target)) {
+                        profilePopup.classList.remove('active');
                     }
                 });
             }
 
-            // Desktop Profile section
-            const desktopProfileSection = document.getElementById('desktop-profile-section');
-            const desktopProfilePopup = document.getElementById('desktop-profile-popup');
-
-            if (desktopProfileSection && desktopProfilePopup) {
-                desktopProfileSection.addEventListener('click', e => {
-                    e.stopPropagation();
-                    desktopProfilePopup.classList.toggle('active');
-                    
-                    // Close dropdowns when opening profile popup
-                    document.querySelectorAll('.d-submenu').forEach(submenu => submenu.classList.remove('open'));
-                    document.querySelectorAll('.d-nav-item').forEach(item => item.classList.remove('dropdown-open'));
-                });
-            }
-
-            // Mobile Profile section
-            const mobileProfileSection = document.getElementById('mobile-profile-section');
-            const mobileProfilePopup = document.getElementById('mobile-profile-popup');
-
-            if (mobileProfileSection && mobileProfilePopup) {
+            if (mobileProfileSection) {
                 mobileProfileSection.addEventListener('click', e => {
                     e.stopPropagation();
-                    mobileProfilePopup.classList.toggle('active');
-                    
-                    // Close dropdowns when opening profile popup
-                    document.querySelectorAll('.m-submenu').forEach(submenu => submenu.classList.remove('open'));
-                    document.querySelectorAll('.m-nav-item').forEach(item => item.classList.remove('dropdown-open'));
+                    profilePopup.classList.toggle('active');
                 });
             }
-
-            // Close all popups when clicking outside
-            document.addEventListener('click', (e) => {
-                // Close desktop profile popup
-                if (desktopProfilePopup && !desktopProfileSection.contains(e.target) && !desktopProfilePopup.contains(e.target)) {
-                    desktopProfilePopup.classList.remove('active');
-                }
-                
-                // Close mobile profile popup
-                if (mobileProfilePopup && !mobileProfileSection.contains(e.target) && !mobileProfilePopup.contains(e.target)) {
-                    mobileProfilePopup.classList.remove('active');
-                }
-                
-                // Close desktop dropdowns
-                if (!dCustomizeToggle.contains(e.target) && !dCustomizeSubmenu.contains(e.target)) {
-                    dCustomizeSubmenu.classList.remove('open');
-                    dCustomizeToggle.classList.remove('dropdown-open');
-                }
-                
-                if (!dOrdersToggle.contains(e.target) && !dOrdersSubmenu.contains(e.target)) {
-                    dOrdersSubmenu.classList.remove('open');
-                    dOrdersToggle.classList.remove('dropdown-open');
-                }
-                
-                // Close mobile dropdowns
-                if (!mCustomizeToggle.contains(e.target) && !mCustomizeSubmenu.contains(e.target)) {
-                    mCustomizeSubmenu.classList.remove('open');
-                    mCustomizeToggle.classList.remove('dropdown-open');
-                }
-                
-                if (!mOrdersToggle.contains(e.target) && !mOrdersSubmenu.contains(e.target)) {
-                    mOrdersSubmenu.classList.remove('open');
-                    mOrdersToggle.classList.remove('dropdown-open');
-                }
-            });
 
             // Advanced Menu functionality
             const advancedMenu = document.getElementById('advanced-menu');
@@ -2318,6 +2293,18 @@
                     advancedMenuOverlay.classList.remove('open');
                 });
             }
+            
+            // Prevent horizontal scrolling on mobile
+            document.body.addEventListener('touchmove', function(e) {
+                if (window.innerWidth <= 768) {
+                    if (e.target.closest('.table-wrapper')) {
+                        return; // Allow scrolling in table
+                    }
+                    if (document.body.scrollWidth > window.innerWidth) {
+                        e.preventDefault();
+                    }
+                }
+            }, { passive: false });
         });
 
         // --- FIREBASE CONFIG ---
@@ -2363,17 +2350,16 @@
             document.getElementById('sidebar-name').textContent = name;
             document.getElementById('sidebar-email').textContent = user.email;
             document.getElementById('sidebar-avatar').src = avatar;
-            document.getElementById('desktop-popup-name').textContent = name;
-            document.getElementById('desktop-popup-email').textContent = user.email;
-            document.getElementById('desktop-popup-avatar').src = avatar;
             
             // Mobile
             document.getElementById('mobile-sidebar-name').textContent = name;
             document.getElementById('mobile-sidebar-email').textContent = user.email;
             document.getElementById('mobile-sidebar-avatar').src = avatar;
-            document.getElementById('mobile-popup-name').textContent = name;
-            document.getElementById('mobile-popup-email').textContent = user.email;
-            document.getElementById('mobile-popup-avatar').src = avatar;
+            
+            // Popup
+            document.getElementById('popup-name').textContent = name;
+            document.getElementById('popup-email').textContent = user.email;
+            document.getElementById('popup-avatar').src = avatar;
         }
 
         async function loadData() {
@@ -2420,14 +2406,14 @@
                              src="${cat.imageUrl || 'https://via.placeholder.com/100?text=No+Image'}"
                              alt="${cat.name}" />
                     </td>
-                    <td class="product-name">${cat.name}</td>
+                    <td class="product-name truncate" title="${cat.name}">${cat.name}</td>
                     <td class="product-count">${productCounts[cat.name] || 0} products</td>
                     <td class="product-actions">
                         <div class="action-buttons">
                             <button class="btn-secondary" onclick="window.location.href='manage-products.html?category=${encodeURIComponent(cat.name)}'">Manage</button>
-                            <button class="kebab" data-category-id="${cat.id}">
+                            <div class="kebab" data-category-id="${cat.id}">
                                 <span class="kebab-dots"></span>
-                            </button>
+                            </div>
                             <div class="desktop-popup" id="desktop-popup-${cat.id}">
                                 <button class="desktop-popup-item" onclick="openEditModal('${cat.id}')">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2435,7 +2421,7 @@
                                         <path d="m15 5 4 4"/>
                                         <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
                                     </svg>
-                                    <span>Edit</span>
+                                    <span class="truncate">Edit</span>
                                 </button>
                                 <button class="desktop-popup-item" onclick="openDeleteModal('${cat.id}', '${cat.name}')">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2445,7 +2431,7 @@
                                         <path d="M3 6h18"/>
                                         <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
                                     </svg>
-                                    <span>Delete</span>
+                                    <span class="truncate">Delete</span>
                                 </button>
                             </div>
                         </div>
@@ -2460,7 +2446,7 @@
                          src="${cat.imageUrl || 'https://via.placeholder.com/100?text=No+Image'}"
                          alt="${cat.name}" />
                     <div class="category-card-content" onclick="window.location.href='manage-products.html?category=${encodeURIComponent(cat.name)}'">
-                        <div class="category-card-name">${cat.name}</div>
+                        <div class="category-card-name truncate" title="${cat.name}">${cat.name}</div>
                         <div class="category-card-products">${productCounts[cat.name] || 0} products</div>
                     </div>
                     <button class="category-card-menu-btn" data-category-id="${cat.id}">
@@ -2469,7 +2455,7 @@
                 </div>
             `).join('');
             
-            // Attach event listeners for desktop popups - FIXED Z-INDEX ISSUE
+            // Attach event listeners for desktop popups
             document.querySelectorAll('.kebab').forEach(kebab => {
                 kebab.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -2685,7 +2671,7 @@
                         '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' : 
                         '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}
                 </svg>
-                <span>${msg}</span>`;
+                <span class="truncate">${msg}</span>`;
             container.appendChild(el);
             setTimeout(() => el.remove(), 3000);
         }
