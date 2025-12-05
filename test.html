@@ -25,7 +25,7 @@
             --brand-gradient: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
             --danger-color: #ef4444;
             --success-color: #10B981;
-            --switch-on: #10B981;
+            --switch-on: #5127ba;
             --switch-off: #9CA3AF;
             --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             --radius-md: 8px;
@@ -543,11 +543,11 @@
             stroke: var(--danger-color);
         }
 
-        /* Status toggle switch */
+        /* Status toggle switch - BLUE THEME */
         .status-toggle {
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
         }
 
         .toggle-switch {
@@ -589,27 +589,11 @@
         }
 
         input:checked + .toggle-slider {
-            background-color: var(--switch-on);
+            background-color: var(--brand-primary);
         }
 
         input:checked + .toggle-slider:before {
             transform: translateX(20px);
-        }
-
-        .toggle-label {
-            font-size: 13px;
-            color: #6b7280;
-            white-space: nowrap;
-        }
-
-        .status-active {
-            color: var(--switch-on);
-            font-weight: 500;
-        }
-
-        .status-inactive {
-            color: var(--switch-off);
-            font-weight: 500;
         }
 
         /* ============= MOBILE LAYOUT ============= */
@@ -1362,14 +1346,15 @@
             box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
         }
 
+        /* Updated image upload box */
         .image-upload-box {
-            border: 2px dashed #CBD5E1;
-            border-radius: var(--radius-md);
-            padding: 1.5rem;
+            border: 2px dashed #E5E7EB;
+            border-radius: 12px;
+            padding: 2rem 1.5rem;
             text-align: center;
             cursor: pointer;
-            background: white;
-            transition: all 0.15s ease;
+            background: #FAFAFA;
+            transition: all 0.3s ease;
             position: relative;
             width: 100%;
         }
@@ -1377,17 +1362,36 @@
         .image-upload-box:hover {
             border-color: var(--brand-primary);
             background: #F8FAFC;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(81, 39, 186, 0.1);
+        }
+
+        .image-upload-box svg {
+            stroke: var(--brand-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .upload-text {
+            font-size: 0.95rem;
+            color: #6B7280;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-subtext {
+            font-size: 0.85rem;
+            color: #9CA3AF;
         }
 
         .preview-img {
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
             object-fit: cover;
             border-radius: var(--radius-md);
             display: none;
             margin: 0.5rem auto 0;
             border: 1px solid #e5e7eb;
             max-width: 100%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         /* Toast */
@@ -1499,11 +1503,11 @@
             transform: translateY(0);
         }
 
-        /* Desktop positioning - FIXED: Appear at bottom left of account section */
+        /* Desktop positioning - FIXED: Show on LEFT side */
         @media (min-width: 769px) {
             .profile-popup {
-                left: auto !important;
-                right: 20px !important;
+                left: 30px !important;
+                right: auto !important;
                 bottom: 100px !important;
                 top: auto !important;
             }
@@ -2156,16 +2160,6 @@
                     </svg>
                     <span>Edit</span>
                 </button>
-                <button class="advanced-menu-item" id="mobile-toggle-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 6H3"/>
-                        <path d="M7 12H3"/>
-                        <path d="M7 18H3"/>
-                        <path d="M12 18a5 5 0 0 0 9-3 4.5 4.5 0 0 0-4.5-4.5c-1.33 0-2.54.54-3.41 1.41L11 14"/>
-                        <path d="M11 10v4h4"/>
-                    </svg>
-                    <span id="mobile-toggle-text">Enable/Disable</span>
-                </button>
                 <button class="advanced-menu-item" id="mobile-delete-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M10 11v6"/>
@@ -2196,7 +2190,7 @@
         </ul>
     </div>
 
-    <!-- ADD/EDIT MODAL -->
+    <!-- ADD/EDIT MODAL - UPDATED UI -->
     <div class="modal-overlay" id="category-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -2217,12 +2211,13 @@
                     <div class="form-group">
                         <label class="form-label">Category Image</label>
                         <div class="image-upload-box" onclick="document.getElementById('cat-file-input').click()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke: #5127ba;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                                 <polyline points="17 8 12 3 7 8"/>
                                 <line x1="12" y1="3" x2="12" y2="15"/>
                             </svg>
-                            <div style="margin-top:0.5rem; font-size:0.9rem; color:#6b7280;">Click to upload image</div>
+                            <div class="upload-text">Click to upload image</div>
+                            <div class="upload-subtext">PNG, JPG up to 5MB</div>
                             <img id="cat-preview" class="preview-img">
                         </div>
                         <input type="file" id="cat-file-input" accept="image/*" style="display:none;">
@@ -2343,7 +2338,7 @@
             const mobileProfileSection = document.getElementById('mobile-profile-section');
             const profilePopup = document.getElementById('profile-popup');
 
-            // Fix profile popup positioning for desktop
+            // Fix profile popup positioning for desktop - show on LEFT side
             if (profileSection) {
                 profileSection.addEventListener('click', e => {
                     e.stopPropagation();
@@ -2351,9 +2346,9 @@
                     // Position the popup at the bottom left of the account section for desktop
                     if (window.innerWidth >= 769) {
                         const rect = profileSection.getBoundingClientRect();
-                        profilePopup.style.left = 'auto';
-                        profilePopup.style.right = '20px';
-                        profilePopup.style.bottom = (window.innerHeight - rect.top + 20) + 'px';
+                        profilePopup.style.left = '30px';
+                        profilePopup.style.right = 'auto';
+                        profilePopup.style.bottom = '100px';
                         profilePopup.style.top = 'auto';
                     }
                     
@@ -2548,7 +2543,7 @@
                 return;
             }
             
-            // Desktop table rows
+            // Desktop table rows - REMOVED "Active/Inactive" text and "Enable/Disable" button from 3 dots menu
             desktopTable.innerHTML = list.map(cat => `
                 <tr>
                     <td class="td-image">
@@ -2565,9 +2560,6 @@
                                        onchange="toggleCategoryStatus('${cat.id}', this.checked)">
                                 <span class="toggle-slider"></span>
                             </label>
-                            <span class="toggle-label ${cat.enabled ? 'status-active' : 'status-inactive'}">
-                                ${cat.enabled ? 'Active' : 'Inactive'}
-                            </span>
                         </div>
                     </td>
                     <td class="product-actions">
@@ -2585,16 +2577,6 @@
                                     </svg>
                                     <span>Edit</span>
                                 </button>
-                                <button class="desktop-popup-item" onclick="toggleCategoryStatus('${cat.id}', ${!cat.enabled})">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M21 6H3"/>
-                                        <path d="M7 12H3"/>
-                                        <path d="M7 18H3"/>
-                                        <path d="M12 18a5 5 0 0 0 9-3 4.5 4.5 0 0 0-4.5-4.5c-1.33 0-2.54.54-3.41 1.41L11 14"/>
-                                        <path d="M11 10v4h4"/>
-                                    </svg>
-                                    <span>${cat.enabled ? 'Disable' : 'Enable'}</span>
-                                </button>
                                 <button class="desktop-popup-item" onclick="openDeleteModal('${cat.id}', '${cat.name}')">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M10 11v6"/>
@@ -2611,14 +2593,14 @@
                 </tr>
             `).join('');
             
-            // Mobile cards
+            // Mobile cards - REMOVED "Active/Inactive" text and status label
             mobileCards.innerHTML = list.map(cat => `
                 <div class="category-card-mobile">
                     <img class="category-card-image"
                          src="${cat.imageUrl || 'https://via.placeholder.com/100?text=No+Image'}"
                          alt="${cat.name}" />
-                    <div class="category-card-content" onclick="window.location.href='manage-products.html?category=${encodeURIComponent(cat.name)}'">
-                        <div class="category-card-name">${cat.name}</div>
+                    <div class="category-card-content">
+                        <div class="category-card-name" onclick="window.location.href='manage-products.html?category=${encodeURIComponent(cat.name)}'">${cat.name}</div>
                         <div class="category-card-products">${productCounts[cat.name] || 0} products</div>
                         <div class="category-card-status">
                             <label class="toggle-switch">
@@ -2626,9 +2608,6 @@
                                        onchange="toggleCategoryStatus('${cat.id}', this.checked)">
                                 <span class="toggle-slider"></span>
                             </label>
-                            <span class="toggle-label ${cat.enabled ? 'status-active' : 'status-inactive'}">
-                                ${cat.enabled ? 'Active' : 'Inactive'}
-                            </span>
                         </div>
                     </div>
                     <button class="category-card-menu-btn" data-category-id="${cat.id}">
@@ -2683,18 +2662,11 @@
                     
                     if (!cat) return;
                     
-                    // Set up the mobile menu buttons
+                    // Set up the mobile menu buttons - ONLY Edit and Delete (removed toggle button)
                     document.getElementById('mobile-edit-btn').onclick = () => {
                         openEditModal(currentMenuCategoryId);
                         closeAdvancedMenu();
                     };
-                    
-                    document.getElementById('mobile-toggle-btn').onclick = () => {
-                        toggleCategoryStatus(currentMenuCategoryId, !cat.enabled);
-                        closeAdvancedMenu();
-                    };
-                    
-                    document.getElementById('mobile-toggle-text').textContent = cat.enabled ? 'Disable' : 'Enable';
                     
                     document.getElementById('mobile-delete-btn').onclick = () => {
                         openDeleteModal(cat.id, cat.name);
@@ -2702,6 +2674,13 @@
                     };
                     
                     openAdvancedMenu();
+                });
+            });
+            
+            // Fix mobile toggle click issue - prevent redirect when clicking toggle
+            document.querySelectorAll('.category-card-mobile .toggle-switch input').forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent the click from bubbling up to parent
                 });
             });
         }
