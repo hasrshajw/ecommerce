@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Manage Categories - Vastramaya</title>
+    <title>Manage Products - Vastramaya</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -329,7 +329,7 @@
             background: #471ea7;
         }
 
-        /* Card - FIXED: Increased search bar padding */
+        /* Card */
         .card {
             background: #ffffff;
             border-radius: 12px;
@@ -339,7 +339,7 @@
         }
 
         .card-header {
-            padding: 24px 20px; /* Increased from 16px to 24px */
+            padding: 24px 20px;
             border-bottom: 1px solid #e5e7eb;
         }
 
@@ -347,8 +347,8 @@
             background: #f9fafb;
             border-radius: 999px;
             border: 1px solid #e5e7eb;
-            padding: 12px 16px; /* Increased from 0 16px */
-            height: 48px; /* Increased from 40px */
+            padding: 12px 16px;
+            height: 48px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -376,34 +376,32 @@
             width: 100%;
         }
 
-        /* Table area - IMPORTANT: Fixed for popup positioning */
+        /* Table area */
         .table-wrapper {
             width: 100%;
             overflow-x: auto;
             position: relative;
-            /* Ensure popups are not clipped */
             overflow: visible !important;
         }
 
-        /* Force table to have proper stacking context */
-        .domain-table {
+        .products-table {
             width: 100%;
             border-collapse: collapse;
             position: relative;
             z-index: 1;
         }
 
-        .domain-table thead tr {
+        .products-table thead tr {
             height: 48px;
         }
 
-        .domain-table th,
-        .domain-table td {
+        .products-table th,
+        .products-table td {
             padding: 12px 20px;
             vertical-align: middle;
         }
 
-        .domain-table thead th {
+        .products-table thead th {
             font-weight: 700;
             font-size: 14px;
             line-height: 24px;
@@ -413,52 +411,74 @@
             white-space: nowrap;
         }
 
-        /* FIXED: Image column with heading */
-        .th-image {
-            width: 120px;
-            min-width: 120px;
+        /* Product column with heading */
+        .th-product {
+            width: 40%;
         }
 
-        .th-image-content {
+        .th-product-content {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-weight: 700;
-            font-size: 14px;
-            line-height: 24px;
-            color: rgb(29, 30, 32);
         }
 
-        .th-image-content svg {
-            width: 18px;
-            height: 18px;
-            stroke: rgb(29, 30, 32);
+        .td-product {
+            width: 40%;
         }
 
-        .td-image {
-            width: 120px;
+        .th-price {
+            width: 15%;
         }
 
-        /* FIXED: Status column - left aligned */
+        .td-price {
+            width: 15%;
+        }
+
+        .th-colors {
+            width: 10%;
+            text-align: center;
+        }
+
+        .td-colors {
+            width: 10%;
+            text-align: center;
+        }
+
         .th-status {
-            width: 120px;
-            text-align: left;
+            width: 15%;
+            text-align: center;
         }
 
         .td-status {
-            width: 120px;
-            text-align: left;
+            width: 15%;
+            text-align: center;
         }
 
-        .domain-table tbody tr {
+        .th-actions {
+            width: 20%;
+            text-align: right;
+        }
+
+        .td-actions {
+            width: 20%;
+            text-align: right;
+        }
+
+        .products-table tbody tr {
             border-bottom: 1px solid #f3f4f6;
         }
 
-        .domain-table tbody tr:last-child {
+        .products-table tbody tr:last-child {
             border-bottom: none;
         }
 
-        .product-thumb {
+        .product-cell {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .product-image {
             width: 48px;
             height: 48px;
             border-radius: 8px;
@@ -466,20 +486,29 @@
             background: #e5e7eb;
         }
 
-        .product-name {
-            font-weight: 400;
-            font-size: 14px;
-            line-height: 24px;
-            color: rgb(29, 30, 32);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 200px;
+        .product-info {
+            flex: 1;
+            min-width: 0;
         }
 
-        .product-count,
-        .product-status,
-        .product-actions {
+        .product-name {
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 20px;
+            color: rgb(29, 30, 32);
+            margin-bottom: 4px;
+        }
+
+        .product-category {
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 16px;
+            color: #6b7280;
+        }
+
+        .product-price,
+        .product-colors,
+        .product-status {
             font-weight: 400;
             font-size: 14px;
             line-height: 24px;
@@ -556,14 +585,14 @@
             bottom: -6px;
         }
 
-        /* FIXED: Desktop popup - positioned relative to viewport */
+        /* Desktop popup */
         .popup-container {
             position: relative;
             display: inline-block;
         }
 
         .desktop-popup {
-            position: fixed; /* Changed from absolute to fixed */
+            position: fixed;
             background: #ffffff;
             border-radius: 12px;
             border: 1px solid #e5e7eb;
@@ -631,11 +660,11 @@
             stroke: var(--danger-color);
         }
 
-        /* Status toggle switch - FIXED: Left aligned under Status heading */
+        /* Status toggle switch */
         .status-toggle {
             display: flex;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             width: 100%;
         }
 
@@ -829,7 +858,7 @@
             width: 100%;
         }
 
-        /* FIXED: Mobile menu button with border and styling like advanced-menu-close */
+        /* Mobile menu button with border and styling */
         .m-menu-btn {
             width: 40px;
             height: 40px;
@@ -942,7 +971,7 @@
             max-width: 200px;
         }
 
-        /* FIXED: Mobile drawer close button with border and styling like advanced-menu-close */
+        /* Mobile drawer close button */
         .m-drawer-close {
             width: 40px;
             height: 40px;
@@ -1025,42 +1054,6 @@
         }
         .m-nav-item.active .icon svg {
             stroke: var(--icon-active);
-        }
-
-        /* Mobile submenu */
-        .m-submenu {
-            display: none;
-            margin-left: 28px;
-            padding-left: 16px;
-            border-left: 1px solid var(--border-subtle);
-            margin-top: 4px;
-        }
-        .m-submenu.open {
-            display: block;
-        }
-        .m-submenu-item {
-            height: 48px;
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
-            border-radius: 8px;
-            margin: 2px 0;
-            cursor: pointer;
-            gap: 12px;
-            font-size: 15px;
-            font-weight: 500;
-        }
-        .m-submenu-item:hover {
-            background: var(--hover-bg);
-        }
-        .m-submenu-item.active {
-            background: var(--active-bg);
-        }
-
-        .m-submenu-item .submenu-icon {
-            width: 18px;
-            height: 18px;
-            stroke: #6b7280;
         }
 
         /* Drawer footer account */
@@ -1217,15 +1210,15 @@
             stroke: #ffffff;
         }
 
-        /* Mobile category cards - UPDATED LAYOUT */
-        .mobile-category-cards {
+        /* Mobile product cards */
+        .mobile-product-cards {
             display: flex;
             flex-direction: column;
             gap: 16px;
             width: 100%;
         }
 
-        .category-card-mobile {
+        .product-card-mobile {
             background: #ffffff;
             border-radius: 16px;
             border: 1px solid #e5e7eb;
@@ -1241,12 +1234,12 @@
             cursor: pointer;
         }
 
-        .category-card-mobile:hover {
+        .product-card-mobile:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
-        .category-card-image {
+        .product-card-image {
             width: 56px;
             height: 56px;
             border-radius: 12px;
@@ -1256,7 +1249,7 @@
             padding: 8px;
         }
 
-        .category-card-content {
+        .product-card-content {
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -1264,7 +1257,7 @@
             min-width: 0;
         }
 
-        .category-card-name {
+        .product-card-name {
             font-weight: 700;
             font-size: 16px;
             line-height: 24px;
@@ -1275,18 +1268,22 @@
             max-width: 200px;
         }
 
-        .category-card-products {
-            font-weight: 500;
+        .product-card-price {
+            font-weight: 600;
             font-size: 14px;
             line-height: 18px;
-            color: #6b7280;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            color: #5127ba;
         }
 
-        /* Mobile card actions - UPDATED: toggle moved to left of 3 dots */
-        .category-card-actions {
+        .product-card-category {
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 16px;
+            color: #6b7280;
+        }
+
+        /* Mobile card actions */
+        .product-card-actions {
             display: flex;
             align-items: center;
             gap: 12px;
@@ -1300,7 +1297,7 @@
             margin: 0;
         }
 
-        .category-card-menu-btn {
+        .product-card-menu-btn {
             width: 40px;
             height: 40px;
             border-radius: 10px;
@@ -1316,12 +1313,12 @@
             z-index: 2;
         }
 
-        .category-card-menu-btn:hover {
+        .product-card-menu-btn:hover {
             background: #f9fafb;
             border-color: #d1d5db;
         }
 
-        .category-card-menu-dots {
+        .product-card-menu-dots {
             width: 4px;
             height: 4px;
             border-radius: 999px;
@@ -1483,7 +1480,7 @@
             margin: 0 auto 20px auto;
         }
 
-        /* --- UPDATED MODAL STYLES --- */
+        /* Modal styles */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -1552,7 +1549,7 @@
         }
 
         .btn-icon {
-            background: #f3f4f6;
+            background: none;
             border: none;
             cursor: pointer;
             color: #6b7280;
@@ -1565,435 +1562,8 @@
             transition: background 0.2s ease;
         }
 
-        .form-group {
-            margin-bottom: 1.5rem;
-            width: 100%;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: rgb(29, 30, 32);
-            margin-bottom: 0.5rem;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 0.875rem 1rem;
-            border: 1px solid #e5e7eb;
-            border-radius: var(--radius-md);
-            background: white;
-            transition: all 0.15s ease;
-            font-family: "DM Sans", Roboto, sans-serif;
-            font-size: 0.95rem;
-        }
-
-        .form-input:focus {
-            border-color: var(--brand-primary);
-            box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
-            outline: none;
-        }
-
-        /* ============= UPDATED PREMIUM IMAGE UPLOAD AREA ============= */
-        .image-upload-container {
-            width: 100%;
-        }
-
-        /* Premium upload box */
-        .image-upload-box {
-            border: 2px dashed #E5E7EB;
-            border-radius: 16px;
-            padding: 3rem 2rem;
-            text-align: center;
-            cursor: pointer;
-            background: linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 100%);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            width: 100%;
-            margin-bottom: 1rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 220px;
-            overflow: hidden;
-        }
-
-        .image-upload-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #5127ba, #673de6, #5127ba);
-            background-size: 200% 100%;
-            animation: shimmer 3s infinite linear;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-
-        .image-upload-box:hover {
-            border-color: var(--brand-primary);
-            background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 20px 40px rgba(81, 39, 186, 0.15);
-        }
-
-        .image-upload-box:active {
-            transform: translateY(0);
-        }
-
-        .image-upload-box svg {
-            stroke: var(--brand-primary);
-            margin-bottom: 1rem;
-            width: 64px;
-            height: 64px;
-            filter: drop-shadow(0 4px 6px rgba(81, 39, 186, 0.1));
-        }
-
-        .upload-text {
-            font-size: 1.125rem;
-            font-weight: 700;
-            color: #1F2937;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .upload-subtext {
-            font-size: 0.875rem;
-            color: #6B7280;
-            max-width: 80%;
-            margin: 0 auto;
-            line-height: 1.4;
-        }
-
-        /* Progress bar styles */
-        .upload-progress {
-            margin-top: 1rem;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 1.5rem;
-            background: white;
-            border-radius: 16px;
-            border: 1px solid #E5E7EB;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        .progress-bar {
-            height: 10px;
-            background: #F3F4F6;
-            border-radius: 5px;
-            overflow: hidden;
-            width: 100%;
-            max-width: 300px;
-            position: relative;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #5127ba, #673de6);
-            width: 0%;
-            transition: width 0.3s ease;
-            border-radius: 5px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            background-image: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255, 255, 255, 0.3),
-                transparent
-            );
-            animation: shimmer 2s infinite;
-        }
-
-        .progress-text {
-            font-size: 0.875rem;
-            color: #6b7280;
-            text-align: center;
-            font-weight: 500;
-        }
-
-        /* Premium preview container */
-        .image-preview-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-            padding: 2rem;
-            background: white;
-            border-radius: 16px;
-            border: 1px solid #E5E7EB;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            margin-bottom: 1rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .image-preview-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #5127ba, #673de6, #5127ba);
-            background-size: 200% 100%;
-        }
-
-        .preview-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-            width: 100%;
-        }
-
-        .preview-img-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 100%);
-            border-radius: 12px;
-            border: 1px dashed #E5E7EB;
-        }
-
-        .preview-img {
-            width: 160px;
-            height: 160px;
-            object-fit: cover;
-            border-radius: 12px;
-            border: 2px solid white;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .preview-img:hover {
-            transform: scale(1.02);
-        }
-
-        /* Action buttons container */
-        .preview-actions {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-            width: 100%;
-        }
-
-        .change-image-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 12px 24px;
-            background: white;
-            border: 2px solid var(--brand-primary);
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--brand-primary);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            min-width: 180px;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .change-image-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .change-image-btn:hover {
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(81, 39, 186, 0.25);
-        }
-
-        .change-image-btn:hover::before {
-            opacity: 1;
-        }
-
-        .change-image-btn:active {
-            transform: translateY(0);
-        }
-
-        .change-image-btn svg {
-            width: 18px;
-            height: 18px;
-            stroke: currentColor;
-            transition: stroke 0.3s ease;
-        }
-
-        /* Success message for new uploads only */
-        .upload-success-message {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 1rem 1.5rem;
-            background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%);
-            border: 1px solid #BBF7D0;
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
-            width: 100%;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .upload-success-message svg {
-            stroke: var(--success-color);
-            width: 24px;
-            height: 24px;
-            flex-shrink: 0;
-        }
-
-        .upload-success-message-text {
-            color: var(--success-color);
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .image-required {
-            color: var(--danger-color);
-            font-size: 0.875rem;
-            margin-top: 0.75rem;
-            text-align: center;
-            display: none;
-            font-weight: 500;
-            padding: 0.75rem 1rem;
-            background: #FEF2F2;
-            border-radius: 8px;
-            border: 1px solid #FECACA;
-        }
-
-        .upload-error {
-            color: var(--danger-color);
-            font-size: 0.875rem;
-            margin-top: 0.75rem;
-            text-align: center;
-            font-weight: 500;
-            padding: 0.75rem 1rem;
-            background: #FEF2F2;
-            border-radius: 8px;
-            border: 1px solid #FECACA;
-            display: none;
-        }
-
-        /* Updated button styles */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.875rem 1.5rem;
-            font-weight: 600;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: all 0.15s ease;
-            border: none;
-            font-size: 0.95rem;
-            white-space: nowrap;
-            min-width: 100px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
-            color: white;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, #471ea7 0%, #5127ba 100%);
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 20px rgba(81, 39, 186, 0.25);
-        }
-
-        .btn-primary:hover::before {
-            opacity: 1;
-        }
-
-        .btn-primary:disabled {
-            background: #9ca3af;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .btn-primary:disabled::before {
-            display: none;
-        }
-
-        .btn-secondary {
-            background: white;
-            border: 1px solid #e5e7eb;
-            color: var(--text-color);
-        }
-
-        .btn-secondary:hover {
-            background: #F8FAFC;
-            border-color: #CBD5E1;
-            transform: translateY(-1px);
-        }
-
-        .btn-danger {
-            background: #FEF2F2;
-            color: var(--danger-color);
-            border: 1px solid #FECACA;
-        }
-
-        .btn-danger:hover {
-            background: #FEE2E2;
-            transform: translateY(-1px);
+        .btn-icon:hover {
+            background: #f3f4f6;
         }
 
         /* Toast */
@@ -2036,7 +1606,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ============= FIXED PROFILE POPUP ============= */
+        /* FIXED PROFILE POPUP */
         .profile-popup {
             position: fixed;
             background-color: #ffffff;
@@ -2060,7 +1630,7 @@
             transform: translateY(0);
         }
 
-        /* Desktop positioning - FIXED: Show on LEFT side */
+        /* Desktop positioning - Show on LEFT side */
         @media (min-width: 769px) {
             .profile-popup {
                 left: 30px !important;
@@ -2160,6 +1730,17 @@
             width: 100%;
         }
 
+        /* Category badge */
+        .category-badge {
+            background: #EFF6FF;
+            color: var(--brand-primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
         /* Responsive switch */
         @media (max-width: 768px) {
             .page-desktop { display: none; }
@@ -2224,7 +1805,7 @@
             .page-mobile { display: none; }
             
             /* Fix desktop popup z-index */
-            .product-actions {
+            .td-actions {
                 position: relative;
             }
             
@@ -2417,7 +1998,7 @@
                     <!-- PAGE HEADER -->
                     <div class="page-header">
                         <div class="page-title-wrap">
-                            <div class="page-title">Manage Categories</div>
+                            <div class="page-title" id="products-page-title">Products</div>
                             <div class="breadcrumb">
                                 <span class="breadcrumb-icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -2429,19 +2010,19 @@
                                 </span>
                                 <span>Home</span>
                                 <span class="breadcrumb-divider">/</span>
-                                <span>Manage Categories</span>
+                                <span>Products</span>
                             </div>
                         </div>
 
-                        <button class="primary-btn" onclick="openAddModal()">
+                        <button class="primary-btn" id="add-product-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="2"
                                  stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M5 12h14"/>
                                 <path d="M12 5v14"/>
                             </svg>
-                            <span>Add Category</span>
-                        button>
+                            <span>Add Product</span>
+                        </button>
                     </div>
 
                     <!-- CARD -->
@@ -2454,39 +2035,35 @@
                                     <circle cx="11" cy="11" r="7"></circle>
                                     <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
                                 </svg>
-                                <input type="text" id="search-input" placeholder="Search categories..." />
+                                <input type="text" id="search-products" placeholder="Search products by name..." />
                             </div>
                         </div>
 
                         <div class="table-wrapper">
-                            <table class="domain-table">
+                            <table class="products-table">
                                 <thead>
                                     <tr>
-                                        <th class="th-image">
-                                            <div class="th-image-content">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-images-icon lucide-images">
-                                                    <path d="m22 11-1.296-1.296a2.4 2.4 0 0 0-3.408 0L11 16"/>
-                                                    <path d="M4 8a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2"/>
-                                                    <circle cx="13" cy="7" r="1" fill="currentColor"/>
-                                                    <rect x="8" y="2" width="14" height="14" rx="2"/>
-                                                </svg>
-                                                <span>Image</span>
-                                            </div>
-                                        </th>
-                                        <th>Name</th>
-                                        <th>No. of products</th>
+                                        <th class="th-product">Product</th>
+                                        <th class="th-price">Price</th>
+                                        <th class="th-colors">Colors</th>
                                         <th class="th-status">Status</th>
-                                        <th>Actions</th>
+                                        <th class="th-actions">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody id="desktop-categories-table">
+                                <tbody id="admin-products-table">
                                     <!-- Skeleton loading for desktop -->
                                     <tr class="desktop-skeleton-row">
-                                        <td class="td-image">
-                                            <div class="skeleton skeleton-image"></div>
+                                        <td class="td-product">
+                                            <div class="product-cell">
+                                                <div class="skeleton skeleton-image"></div>
+                                                <div class="product-info">
+                                                    <div class="skeleton skeleton-text"></div>
+                                                    <div class="skeleton skeleton-text-small"></div>
+                                                </div>
+                                            </div>
                                         </td>
                                         <td>
-                                            <div class="skeleton skeleton-text"></div>
+                                            <div class="skeleton skeleton-text-small"></div>
                                         </td>
                                         <td>
                                             <div class="skeleton skeleton-text-small"></div>
@@ -2502,11 +2079,17 @@
                                         </td>
                                     </tr>
                                     <tr class="desktop-skeleton-row">
-                                        <td class="td-image">
-                                            <div class="skeleton skeleton-image"></div>
+                                        <td class="td-product">
+                                            <div class="product-cell">
+                                                <div class="skeleton skeleton-image"></div>
+                                                <div class="product-info">
+                                                    <div class="skeleton skeleton-text"></div>
+                                                    <div class="skeleton skeleton-text-small"></div>
+                                                </div>
+                                            </div>
                                         </td>
                                         <td>
-                                            <div class="skeleton skeleton-text"></div>
+                                            <div class="skeleton skeleton-text-small"></div>
                                         </td>
                                         <td>
                                             <div class="skeleton skeleton-text-small"></div>
@@ -2522,51 +2105,17 @@
                                         </td>
                                     </tr>
                                     <tr class="desktop-skeleton-row">
-                                        <td class="td-image">
-                                            <div class="skeleton skeleton-image"></div>
-                                        </td>
-                                        <td>
-                                            <div class="skeleton skeleton-text"></div>
+                                        <td class="td-product">
+                                            <div class="product-cell">
+                                                <div class="skeleton skeleton-image"></div>
+                                                <div class="product-info">
+                                                    <div class="skeleton skeleton-text"></div>
+                                                    <div class="skeleton skeleton-text-small"></div>
+                                                </div>
+                                            </div>
                                         </td>
                                         <td>
                                             <div class="skeleton skeleton-text-small"></div>
-                                        </td>
-                                        <td>
-                                            <div class="skeleton skeleton-toggle"></div>
-                                        </td>
-                                        <td>
-                                            <div class="action-buttons">
-                                                <div class="skeleton skeleton-button"></div>
-                                                <div class="skeleton skeleton-kebab"></div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="desktop-skeleton-row">
-                                        <td class="td-image">
-                                            <div class="skeleton skeleton-image"></div>
-                                        </td>
-                                        <td>
-                                            <div class="skeleton skeleton-text"></div>
-                                        </td>
-                                        <td>
-                                            <div class="skeleton skeleton-text-small"></div>
-                                        </td>
-                                        <td>
-                                            <div class="skeleton skeleton-toggle"></div>
-                                        </td>
-                                        <td>
-                                            <div class="action-buttons">
-                                                <div class="skeleton skeleton-button"></div>
-                                                <div class="skeleton skeleton-kebab"></div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="desktop-skeleton-row">
-                                        <td class="td-image">
-                                            <div class="skeleton skeleton-image"></div>
-                                        </td>
-                                        <td>
-                                            <div class="skeleton skeleton-text"></div>
                                         </td>
                                         <td>
                                             <div class="skeleton skeleton-text-small"></div>
@@ -2609,7 +2158,7 @@
                 <!-- Mobile Page Header -->
                 <div class="mobile-page-header">
                     <div class="mobile-page-title-wrap">
-                        <div class="mobile-page-title">Manage Categories</div>
+                        <div class="mobile-page-title" id="mobile-products-page-title">Products</div>
                         <div class="mobile-breadcrumb">
                             <span class="mobile-breadcrumb-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -2621,7 +2170,7 @@
                             </span>
                             <span>Home</span>
                             <span class="mobile-breadcrumb-divider">/</span>
-                            <span>Manage Categories</span>
+                            <span>Products</span>
                         </div>
                     </div>
                     
@@ -2635,10 +2184,10 @@
                                     <circle cx="11" cy="11" r="7"></circle>
                                     <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
                                 </svg>
-                                <input type="text" id="mobile-search-input" placeholder="Search categories..." />
+                                <input type="text" id="mobile-search-products" placeholder="Search products..." />
                             </div>
                         </div>
-                        <button class="mobile-add-btn" onclick="openAddModal()">
+                        <button class="mobile-add-btn" id="mobile-add-product-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="2"
                                  stroke-linecap="round" stroke-linejoin="round">
@@ -2650,8 +2199,8 @@
                     </div>
                 </div>
 
-                <!-- Mobile Category Cards -->
-                <div class="mobile-category-cards" id="mobile-category-cards">
+                <!-- Mobile Product Cards -->
+                <div class="mobile-product-cards" id="mobile-product-cards">
                     <!-- Skeleton loading for mobile -->
                     <div class="mobile-skeleton-card">
                         <div class="skeleton skeleton-mobile-image"></div>
@@ -2659,7 +2208,7 @@
                             <div class="skeleton skeleton-mobile-title"></div>
                             <div class="skeleton skeleton-mobile-subtitle"></div>
                         </div>
-                        <div class="category-card-actions">
+                        <div class="product-card-actions">
                             <div class="skeleton skeleton-mobile-toggle"></div>
                             <div class="skeleton skeleton-mobile-menu"></div>
                         </div>
@@ -2670,7 +2219,7 @@
                             <div class="skeleton skeleton-mobile-title"></div>
                             <div class="skeleton skeleton-mobile-subtitle"></div>
                         </div>
-                        <div class="category-card-actions">
+                        <div class="product-card-actions">
                             <div class="skeleton skeleton-mobile-toggle"></div>
                             <div class="skeleton skeleton-mobile-menu"></div>
                         </div>
@@ -2681,29 +2230,7 @@
                             <div class="skeleton skeleton-mobile-title"></div>
                             <div class="skeleton skeleton-mobile-subtitle"></div>
                         </div>
-                        <div class="category-card-actions">
-                            <div class="skeleton skeleton-mobile-toggle"></div>
-                            <div class="skeleton skeleton-mobile-menu"></div>
-                        </div>
-                    </div>
-                    <div class="mobile-skeleton-card">
-                        <div class="skeleton skeleton-mobile-image"></div>
-                        <div class="skeleton-mobile-content">
-                            <div class="skeleton skeleton-mobile-title"></div>
-                            <div class="skeleton skeleton-mobile-subtitle"></div>
-                        </div>
-                        <div class="category-card-actions">
-                            <div class="skeleton skeleton-mobile-toggle"></div>
-                            <div class="skeleton skeleton-mobile-menu"></div>
-                        </div>
-                    </div>
-                    <div class="mobile-skeleton-card">
-                        <div class="skeleton skeleton-mobile-image"></div>
-                        <div class="skeleton-mobile-content">
-                            <div class="skeleton skeleton-mobile-title"></div>
-                            <div class="skeleton skeleton-mobile-subtitle"></div>
-                        </div>
-                        <div class="category-card-actions">
+                        <div class="product-card-actions">
                             <div class="skeleton skeleton-mobile-toggle"></div>
                             <div class="skeleton skeleton-mobile-menu"></div>
                         </div>
@@ -2887,7 +2414,7 @@
         <div class="advanced-menu" id="advanced-menu">
             <div class="menu-handle"></div>
             <div class="advanced-menu-header">
-                <div class="advanced-menu-title">Category Actions</div>
+                <div class="advanced-menu-title">Product Actions</div>
                 <button class="advanced-menu-close" id="advanced-menu-close">
                     <div class="advanced-menu-close-icon"></div>
                 </button>
@@ -2909,13 +2436,13 @@
                         <path d="M3 6h18"/>
                         <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
                     </svg>
-                    <span>Delete Category</span>
+                    <span>Delete Product</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Profile Popup with updated SVG icons -->
+    <!-- Profile Popup -->
     <div class="profile-popup" id="profile-popup">
         <div class="popup-header">
             <img id="popup-avatar" src="" class="account-avatar">
@@ -2956,120 +2483,11 @@
         </ul>
     </div>
 
-    <!-- UPDATED: ADD/EDIT MODAL with premium image area -->
-    <div class="modal-overlay" id="category-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title" id="modal-title">Add Category</div>
-                <button class="btn-icon" onclick="closeModal()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 6 6 18"/>
-                        <path d="m6 6 12 12"/>
-                    </svg>
-                </button>
-            </div>
-            <form id="category-form">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label class="form-label">Category Name</label>
-                        <input type="text" class="form-input" id="cat-name-input" required placeholder="e.g. Ethnic Wear">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Category Image <span style="color: var(--danger-color);">*</span></label>
-                        <div class="image-upload-container">
-                            <!-- Upload Box (shown initially for new category) -->
-                            <div class="image-upload-box" id="image-upload-box" onclick="triggerFileInput()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                    <polyline points="17 8 12 3 7 8"/>
-                                    <line x1="12" y1="3" x2="12" y2="15"/>
-                                </svg>
-                                <div class="upload-text">Click to upload image</div>
-                                <div class="upload-subtext">PNG, JPG up to 5MB</div>
-                            </div>
-                            
-                            <!-- Progress bar (hidden by default) -->
-                            <div class="upload-progress" id="upload-progress" style="display: none;">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" id="progress-fill"></div>
-                                </div>
-                                <div class="progress-text" id="progress-text">0% uploaded</div>
-                            </div>
-                            
-                            <!-- Success message for new uploads only -->
-                            <div class="upload-success-message" id="upload-success-message" style="display: none;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                    <polyline points="22 4 12 14.01 9 11.01"/>
-                                </svg>
-                                <div class="upload-success-message-text">Image uploaded successfully!</div>
-                            </div>
-                            
-                            <!-- Preview container (for both editing and new uploads) -->
-                            <div class="image-preview-container" id="image-preview-container" style="display: none;">
-                                <div class="preview-content">
-                                    <div class="preview-img-wrapper">
-                                        <img id="cat-preview" class="preview-img">
-                                    </div>
-                                    <div class="preview-actions">
-                                        <button type="button" class="change-image-btn" onclick="showUploadBox()">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
-                                            </svg>
-                                            Change Image
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="image-required" id="image-required">Image is required for new categories</div>
-                            <div class="upload-error" id="upload-error"></div>
-                        </div>
-                        <input type="file" id="cat-file-input" accept="image/*" style="display:none;">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary" id="modal-submit-btn" disabled>Save Category</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- UPDATED: DELETE MODAL with improved UI -->
-    <div class="modal-overlay" id="delete-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title" style="color: var(--danger-color);">Delete Category</div>
-                <button class="btn-icon" onclick="closeDeleteModal()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 6 6 18"/>
-                        <path d="m6 6 12 12"/>
-                    </svg>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p style="color: #6b7280; margin-bottom: 1rem; font-size: 0.95rem;">Are you sure you want to delete <strong id="del-cat-name" style="color: rgb(29, 30, 32);"></strong>? This action cannot be undone.</p>
-                <div class="form-group">
-                    <label class="form-label">Type category name to confirm</label>
-                    <input type="text" class="form-input" id="confirm-del-input" placeholder="Category Name">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
-                    <button class="btn btn-danger" id="confirm-del-btn" disabled>Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div id="toast-container"></div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-    <script src='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css'></script>
 
     <script>
         // --- UI INTERACTIONS ---
@@ -3267,23 +2685,11 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        const storage = firebase.storage();
 
         // --- APP LOGIC ---
-        let allCategories = [];
-        let productCounts = {};
-        let editingId = null;
-        let deletingId = null;
-        let deletingName = null;
-        let currentFileUpload = null;
-        let existingImageUrl = null;
-        let currentMenuCategoryId = null;
-        let imageUploaded = false;
-        let currentUploadTask = null;
-        let previousImageRef = null;
-        let previousImageUrlToDelete = null;
-        let isLoading = true; // Track loading state
-        let isNewUpload = false; // Track if this is a new upload (for success message)
+        let allProducts = [];
+        let currentCategory = null;
+        let currentMenuProductId = null;
 
         auth.onAuthStateChanged(user => {
             if (!user || user.email !== ADMIN_EMAIL) {
@@ -3291,7 +2697,7 @@
                 return;
             }
             initProfile(user);
-            loadData();
+            initializePage();
         });
 
         function initProfile(user) {
@@ -3314,90 +2720,123 @@
             document.getElementById('popup-avatar').src = avatar;
         }
 
-        async function loadData() {
-            try {
-                // Show skeleton loading initially
-                isLoading = true;
+        function initializePage() {
+            const params = new URLSearchParams(window.location.search);
+            currentCategory = params.get('category');
+            
+            const title = document.getElementById('products-page-title');
+            const mobileTitle = document.getElementById('mobile-products-page-title');
+            const badge = document.createElement('span');
+            badge.className = 'category-badge';
+            badge.id = 'category-badge';
+            const addBtn = document.getElementById('add-product-btn');
+            const mobileAddBtn = document.getElementById('mobile-add-product-btn');
+            
+            if (currentCategory) {
+                const catName = decodeURIComponent(currentCategory);
+                title.textContent = "Products";
+                mobileTitle.textContent = "Products";
+                badge.textContent = catName;
+                badge.style.display = 'inline-block';
                 
-                const prodSnap = await db.collection('products').get();
-                productCounts = {};
-                prodSnap.forEach(doc => {
-                    const cat = doc.data().category;
-                    if(cat) productCounts[cat] = (productCounts[cat] || 0) + 1;
-                });
+                const titleWrap = document.querySelector('.page-title-wrap');
+                if (titleWrap && !document.getElementById('category-badge')) {
+                    titleWrap.querySelector('.page-title').appendChild(badge);
+                }
+                
+                addBtn.onclick = () => window.location.href = `product.html?category=${encodeURIComponent(catName)}`;
+                mobileAddBtn.onclick = () => window.location.href = `product.html?category=${encodeURIComponent(catName)}`;
+            } else {
+                title.textContent = "All Products";
+                mobileTitle.textContent = "All Products";
+                addBtn.onclick = () => window.location.href = 'product.html';
+                mobileAddBtn.onclick = () => window.location.href = 'product.html';
+            }
 
-                const catSnap = await db.collection('categories').orderBy('name').get();
-                allCategories = catSnap.docs.map(doc => { 
-                    const data = doc.data();
-                    return { 
-                        id: doc.id, 
-                        ...data,
-                        enabled: data.enabled !== undefined ? data.enabled : true // Default to true if not set
-                    };
-                });
-                
-                isLoading = false;
-                renderCategories(allCategories);
-            } catch (e) {
-                console.error(e);
-                isLoading = false;
-                showToast('Error loading data', 'error');
-                renderCategories([]);
+            loadProducts();
+            
+            // Search functionality
+            document.getElementById('search-products').addEventListener('input', (e) => {
+                filterProducts(e.target.value.toLowerCase().trim());
+            });
+            
+            document.getElementById('mobile-search-products').addEventListener('input', (e) => {
+                filterProducts(e.target.value.toLowerCase().trim());
+            });
+        }
+
+        async function loadProducts() {
+            try {
+                const snapshot = await db.collection('products').orderBy('name').get();
+                allProducts = snapshot.docs.map(doc => ({ 
+                    id: doc.id, 
+                    ...doc.data(),
+                    colorsCount: (doc.data().colorVariants || []).length,
+                    isAvailable: doc.data().isAvailable !== false
+                }));
+                filterProducts('');
+            } catch (error) {
+                console.error(error);
+                showToast("Failed to load products", "error");
             }
         }
 
-        function renderCategories(list) {
-            // Desktop table
-            const desktopTable = document.getElementById('desktop-categories-table');
-            // Mobile cards
-            const mobileCards = document.getElementById('mobile-category-cards');
-            
-            // Show loading skeleton
-            if (isLoading) {
-                // Skeleton is already shown in HTML
+        function filterProducts(term) {
+            let filtered = allProducts;
+            if (currentCategory) {
+                filtered = filtered.filter(p => p.category === decodeURIComponent(currentCategory));
+            }
+            if (term) {
+                filtered = filtered.filter(p => p.name.toLowerCase().includes(term));
+            }
+            renderTable(filtered);
+            renderMobileCards(filtered);
+        }
+
+        function renderTable(products) {
+            const tbody = document.getElementById('admin-products-table');
+            if (products.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="empty-state"><h3>No Products Found</h3><p>Create a new product to get started.</p></td></tr>`;
                 return;
             }
-            
-            if(list.length === 0) {
-                desktopTable.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="empty-state">
-                            <h3>No Categories Found</h3>
-                            <p>Create a new category to get started.</p>
-                        </td>
-                    </tr>`;
-                mobileCards.innerHTML = `<div class="empty-state"><h3>No Categories Found</h3><p>Create a new category to get started.</p></div>`;
-                return;
-            }
-            
-            // Desktop table rows
-            desktopTable.innerHTML = list.map(cat => `
+
+            tbody.innerHTML = products.map(p => {
+                const img = (p.images && p.images.length) ? p.images[0] : 'https://via.placeholder.com/50?text=No+Image';
+                const available = p.isAvailable !== false;
+                
+                return `
                 <tr>
-                    <td class="td-image">
-                        <img class="product-thumb"
-                             src="${cat.imageUrl || 'https://via.placeholder.com/100?text=No+Image'}"
-                             alt="${cat.name}" />
+                    <td>
+                        <div class="product-cell">
+                            <img src="${img}" class="product-image">
+                            <div class="product-info">
+                                <div class="product-name">${p.name}</div>
+                                <div class="product-category">${p.category || 'General'}</div>
+                            </div>
+                        </div>
                     </td>
-                    <td class="product-name">${cat.name}</td>
-                    <td class="product-count">${productCounts[cat.name] || 0} products</td>
+                    <td class="product-price" style="font-weight:600;">₹${(p.price || 0).toFixed(2)}</td>
+                    <td class="product-colors" style="text-align:center;">
+                        <span style="background:#F1F5F9; padding:0.2rem 0.6rem; border-radius:99px; font-size:0.75rem; font-weight:600;">${p.colorsCount || 0}</span>
+                    </td>
                     <td class="td-status">
                         <div class="status-toggle">
                             <label class="toggle-switch">
-                                <input type="checkbox" ${cat.enabled ? 'checked' : ''} 
-                                       onchange="toggleCategoryStatus('${cat.id}', this.checked)">
+                                <input type="checkbox" ${available ? 'checked' : ''} 
+                                       onchange="toggleAvailability('${p.id}', this.checked)">
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
                     </td>
-                    <td class="product-actions">
+                    <td class="td-actions">
                         <div class="action-buttons">
-                            <button class="btn-secondary" onclick="window.location.href='manage-products.html?category=${encodeURIComponent(cat.name)}'">Manage</button>
+                            <button class="btn-secondary" onclick="manageProduct('${p.id}')">Manage</button>
                             <div class="popup-container">
-                                <div class="kebab" data-category-id="${cat.id}">
+                                <div class="kebab" data-product-id="${p.id}">
                                     <span class="kebab-dots"></span>
                                 </div>
-                                <div class="desktop-popup" id="desktop-popup-${cat.id}">
-                                    <button class="desktop-popup-item" onclick="openEditModal('${cat.id}')">
+                                <div class="desktop-popup" id="desktop-popup-${p.id}">
+                                    <button class="desktop-popup-item" onclick="editProduct('${p.id}')">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M13 21h8"/>
                                             <path d="m15 5 4 4"/>
@@ -3405,7 +2844,7 @@
                                         </svg>
                                         <span>Edit</span>
                                     </button>
-                                    <button class="desktop-popup-item delete-item" onclick="openDeleteModal('${cat.id}', '${cat.name}')">
+                                    <button class="desktop-popup-item delete-item" onclick="deleteProduct('${p.id}', '${p.name.replace(/'/g, "\\'")}')">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M10 11v6"/>
                                             <path d="M14 11v6"/>
@@ -3419,42 +2858,17 @@
                             </div>
                         </div>
                     </td>
-                </tr>
-            `).join('');
-            
-            // Mobile cards - UPDATED LAYOUT with toggle left to 3 dots and card redirect
-            mobileCards.innerHTML = list.map(cat => `
-                <div class="category-card-mobile" onclick="handleMobileCardClick(event, '${encodeURIComponent(cat.name)}')">
-                    <img class="category-card-image"
-                         src="${cat.imageUrl || 'https://via.placeholder.com/100?text=No+Image'}"
-                         alt="${cat.name}" />
-                    <div class="category-card-content">
-                        <div class="category-card-name">${cat.name}</div>
-                        <div class="category-card-products">${productCounts[cat.name] || 0} products</div>
-                    </div>
-                    <div class="category-card-actions">
-                        <div class="mobile-status-toggle">
-                            <label class="toggle-switch">
-                                <input type="checkbox" ${cat.enabled ? 'checked' : ''} 
-                                       onchange="toggleCategoryStatus('${cat.id}', this.checked)">
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                        <button class="category-card-menu-btn" data-category-id="${cat.id}">
-                            <span class="category-card-menu-dots"></span>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-            
-            // FIXED: Desktop popup positioning - now using fixed positioning
+                </tr>`;
+            }).join('');
+
+            // FIXED: Desktop popup positioning
             document.querySelectorAll('.kebab').forEach(kebab => {
                 kebab.addEventListener('click', (e) => {
                     e.stopPropagation();
                     e.preventDefault();
                     
-                    const categoryId = kebab.getAttribute('data-category-id');
-                    const popup = document.getElementById(`desktop-popup-${categoryId}`);
+                    const productId = kebab.getAttribute('data-product-id');
+                    const popup = document.getElementById(`desktop-popup-${productId}`);
                     
                     // Close all other popups
                     document.querySelectorAll('.desktop-popup').forEach(p => {
@@ -3502,25 +2916,62 @@
                     e.stopPropagation();
                 });
             });
+        }
+
+        function renderMobileCards(products) {
+            const mobileCards = document.getElementById('mobile-product-cards');
+            if (products.length === 0) {
+                mobileCards.innerHTML = `<div class="empty-state"><h3>No Products Found</h3><p>Create a new product to get started.</p></div>`;
+                return;
+            }
+
+            mobileCards.innerHTML = products.map(p => {
+                const img = (p.images && p.images.length) ? p.images[0] : 'https://via.placeholder.com/50?text=No+Image';
+                const available = p.isAvailable !== false;
+                
+                return `
+                <div class="product-card-mobile" onclick="handleMobileCardClick(event, '${p.id}')">
+                    <img class="product-card-image"
+                         src="${img}"
+                         alt="${p.name}" />
+                    <div class="product-card-content">
+                        <div class="product-card-name">${p.name}</div>
+                        <div class="product-card-price">₹${(p.price || 0).toFixed(2)}</div>
+                        <div class="product-card-category">${p.category || 'General'} • ${p.colorsCount || 0} colors</div>
+                    </div>
+                    <div class="product-card-actions">
+                        <div class="mobile-status-toggle">
+                            <label class="toggle-switch">
+                                <input type="checkbox" ${available ? 'checked' : ''} 
+                                       onchange="toggleAvailability('${p.id}', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <button class="product-card-menu-btn" data-product-id="${p.id}">
+                            <span class="product-card-menu-dots"></span>
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
             
             // Attach event listeners for mobile menu buttons
-            document.querySelectorAll('.category-card-menu-btn').forEach(btn => {
+            document.querySelectorAll('.product-card-menu-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     e.preventDefault();
-                    currentMenuCategoryId = btn.getAttribute('data-category-id');
-                    const cat = allCategories.find(c => c.id === currentMenuCategoryId);
+                    currentMenuProductId = btn.getAttribute('data-product-id');
+                    const p = allProducts.find(x => x.id === currentMenuProductId);
                     
-                    if (!cat) return;
+                    if (!p) return;
                     
                     // Set up the mobile menu buttons
                     document.getElementById('mobile-edit-btn').onclick = () => {
-                        openEditModal(currentMenuCategoryId);
+                        editProduct(currentMenuProductId);
                         closeAdvancedMenu();
                     };
                     
                     document.getElementById('mobile-delete-btn').onclick = () => {
-                        openDeleteModal(cat.id, cat.name);
+                        deleteProduct(p.id, p.name);
                         closeAdvancedMenu();
                     };
                     
@@ -3529,42 +2980,40 @@
             });
             
             // Prevent toggle clicks from triggering card redirect
-            document.querySelectorAll('.category-card-actions .toggle-switch input').forEach(toggle => {
+            document.querySelectorAll('.product-card-actions .toggle-switch input').forEach(toggle => {
                 toggle.addEventListener('click', (e) => {
-                    e.stopPropagation(); // Prevent the click from bubbling up to parent
+                    e.stopPropagation();
                 });
             });
         }
 
-        // Handle mobile card click - redirect to products page
-        function handleMobileCardClick(event, categoryName) {
+        function handleMobileCardClick(event, productId) {
             // Only redirect if the click wasn't on the actions area (toggle or menu button)
-            if (!event.target.closest('.category-card-actions') && 
+            if (!event.target.closest('.product-card-actions') && 
                 !event.target.classList.contains('toggle-switch') &&
                 !event.target.classList.contains('toggle-slider') &&
                 event.target.type !== 'checkbox') {
-                window.location.href = 'manage-products.html?category=' + categoryName;
+                editProduct(productId);
             }
         }
 
-        // Toggle category status
-        async function toggleCategoryStatus(id, enabled) {
+        async function toggleAvailability(id, status) {
             try {
-                await db.collection('categories').doc(id).update({
-                    enabled: enabled,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                await db.collection('products').doc(id).update({ 
+                    isAvailable: status, 
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp() 
                 });
                 
                 // Update local state
-                const category = allCategories.find(c => c.id === id);
-                if (category) {
-                    category.enabled = enabled;
+                const p = allProducts.find(x => x.id === id);
+                if (p) {
+                    p.isAvailable = status;
                 }
                 
-                // Re-render to update UI
-                renderCategories(allCategories.filter(c => allCategories.includes(c)));
+                // Re-render
+                filterProducts(document.getElementById('search-products').value.toLowerCase());
                 
-                showToast(`Category ${enabled ? 'enabled' : 'disabled'} successfully`, 'success');
+                showToast(status ? "Product visible" : "Product hidden", 'success');
                 
                 // Close any open desktop popups
                 document.querySelectorAll('.desktop-popup').forEach(popup => {
@@ -3573,7 +3022,32 @@
                 
             } catch (e) {
                 console.error(e);
-                showToast('Failed to update category status', 'error');
+                showToast('Failed to update product status', 'error');
+            }
+        }
+
+        function manageProduct(id) {
+            // Navigate to product management page
+            window.location.href = `product-details.html?id=${id}`;
+        }
+
+        function editProduct(id) {
+            window.location.href = `product.html?id=${id}`;
+        }
+
+        function deleteProduct(id, name) {
+            closeAdvancedMenu();
+            if(confirm(`Delete "${name}"? This action cannot be undone.`)) {
+                // Delete logic here
+                db.collection('products').doc(id).delete()
+                    .then(() => {
+                        allProducts = allProducts.filter(p => p.id !== id);
+                        filterProducts(document.getElementById('search-products').value.toLowerCase());
+                        showToast("Product deleted successfully", "success");
+                    })
+                    .catch((error) => {
+                        showToast("Failed to delete product", "error");
+                    });
             }
         }
 
@@ -3586,384 +3060,6 @@
             document.getElementById('advanced-menu').classList.remove('open');
             document.getElementById('advanced-menu-overlay').classList.remove('open');
         }
-
-        // Search functionality
-        document.getElementById('search-input').addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            const filtered = allCategories.filter(c => c.name.toLowerCase().includes(term));
-            renderCategories(filtered);
-        });
-
-        document.getElementById('mobile-search-input').addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            const filtered = allCategories.filter(c => c.name.toLowerCase().includes(term));
-            renderCategories(filtered);
-        });
-
-        // --- ADD/EDIT LOGIC ---
-        function triggerFileInput() {
-            document.getElementById('cat-file-input').click();
-        }
-
-        function showUploadBox() {
-            // Hide success message and preview, show upload box
-            document.getElementById('upload-success-message').style.display = 'none';
-            document.getElementById('upload-progress').style.display = 'none';
-            document.getElementById('image-preview-container').style.display = 'none';
-            document.getElementById('image-upload-box').style.display = 'flex';
-            document.getElementById('cat-preview').style.display = 'none';
-            
-            // Reset file input
-            document.getElementById('cat-file-input').value = '';
-            
-            // Clear previous image URL
-            existingImageUrl = null;
-            
-            // For new category, show required message
-            if (!editingId) {
-                document.getElementById('image-required').style.display = 'block';
-                document.getElementById('modal-submit-btn').disabled = true;
-            }
-            
-            // Mark image as not uploaded
-            imageUploaded = false;
-            isNewUpload = false;
-        }
-
-        function openAddModal() {
-            editingId = null;
-            currentFileUpload = null;
-            existingImageUrl = null;
-            imageUploaded = false;
-            previousImageRef = null;
-            previousImageUrlToDelete = null;
-            isNewUpload = false;
-            
-            document.getElementById('modal-title').textContent = "Add Category";
-            document.getElementById('modal-submit-btn').textContent = "Save Category";
-            document.getElementById('modal-submit-btn').disabled = true; // Disable until image is uploaded
-            document.getElementById('category-form').reset();
-            
-            // Reset image upload UI
-            document.getElementById('upload-success-message').style.display = 'none';
-            document.getElementById('image-upload-box').style.display = 'flex';
-            document.getElementById('upload-progress').style.display = 'none';
-            document.getElementById('image-preview-container').style.display = 'none';
-            document.getElementById('image-required').style.display = 'block';
-            document.getElementById('upload-error').style.display = 'none';
-            document.getElementById('upload-error').textContent = '';
-            
-            document.getElementById('category-modal').style.display = 'flex';
-        }
-
-        function openEditModal(id) {
-            const cat = allCategories.find(c => c.id === id);
-            if(!cat) return;
-            editingId = id;
-            currentFileUpload = null;
-            existingImageUrl = cat.imageUrl || null;
-            imageUploaded = true; // Mark as uploaded since we have existing image
-            previousImageRef = null;
-            previousImageUrlToDelete = cat.imageUrl || null;
-            isNewUpload = false;
-            
-            document.getElementById('modal-title').textContent = "Edit Category";
-            document.getElementById('modal-submit-btn').textContent = "Update Category";
-            document.getElementById('modal-submit-btn').disabled = false; // Enable for editing
-            document.getElementById('cat-name-input').value = cat.name;
-            document.getElementById('image-required').style.display = 'none';
-            document.getElementById('upload-success-message').style.display = 'none';
-            
-            if(cat.imageUrl) {
-                document.getElementById('cat-preview').src = cat.imageUrl;
-                document.getElementById('cat-preview').style.display = 'block';
-                document.getElementById('image-preview-container').style.display = 'flex';
-                document.getElementById('upload-progress').style.display = 'none';
-                document.getElementById('image-upload-box').style.display = 'none';
-            } else {
-                // If no existing image, show upload box
-                document.getElementById('cat-preview').style.display = 'none';
-                document.getElementById('image-preview-container').style.display = 'none';
-                document.getElementById('upload-progress').style.display = 'none';
-                document.getElementById('image-upload-box').style.display = 'flex';
-                document.getElementById('image-required').style.display = 'block';
-                imageUploaded = false;
-                document.getElementById('modal-submit-btn').disabled = true;
-            }
-            
-            document.getElementById('category-modal').style.display = 'flex';
-            
-            // Clean up menus
-            document.querySelectorAll('.desktop-popup').forEach(d => d.classList.remove('open'));
-            closeAdvancedMenu();
-        }
-
-        function closeModal() {
-            // Cancel any ongoing upload
-            if (currentUploadTask) {
-                currentUploadTask.cancel();
-                currentUploadTask = null;
-            }
-            
-            document.getElementById('category-modal').style.display = 'none';
-        }
-
-        document.getElementById('cat-file-input').addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if(!file) return;
-            
-            // Validate file size
-            if(file.size > 5*1024*1024) {
-                document.getElementById('upload-error').textContent = 'Image too large (max 5MB)';
-                document.getElementById('upload-error').style.display = 'block';
-                return;
-            }
-            
-            // Validate file type
-            if(!file.type.match('image.*')) {
-                document.getElementById('upload-error').textContent = 'Please select an image file';
-                document.getElementById('upload-error').style.display = 'block';
-                return;
-            }
-            
-            document.getElementById('upload-error').style.display = 'none';
-            document.getElementById('upload-error').textContent = '';
-            document.getElementById('image-required').style.display = 'none';
-            
-            // Cancel previous upload if exists
-            if (currentUploadTask) {
-                currentUploadTask.cancel();
-            }
-            
-            // Delete previous image from storage if exists (when changing image)
-            if (previousImageUrlToDelete) {
-                try {
-                    // Extract the file path from the URL and delete from storage
-                    const imageRef = storage.refFromURL(previousImageUrlToDelete);
-                    await imageRef.delete();
-                    console.log('Previous image deleted from storage');
-                } catch (error) {
-                    console.log('Previous image not found or already deleted:', error);
-                }
-                previousImageUrlToDelete = null;
-            }
-            
-            // Show preview
-            const preview = document.getElementById('cat-preview');
-            preview.src = URL.createObjectURL(file);
-            preview.style.display = 'block';
-            
-            // Hide upload box and show progress
-            document.getElementById('image-upload-box').style.display = 'none';
-            document.getElementById('upload-success-message').style.display = 'none';
-            document.getElementById('image-preview-container').style.display = 'none';
-            document.getElementById('upload-progress').style.display = 'flex';
-            
-            // Disable submit button during upload
-            document.getElementById('modal-submit-btn').disabled = true;
-            
-            // Start upload
-            currentFileUpload = file;
-            uploadImage(file);
-        });
-
-        async function uploadImage(file) {
-            try {
-                // Create a reference to the file location
-                const fileExtension = file.name.split('.').pop();
-                const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExtension}`;
-                const storageRef = storage.ref().child(`categories/${fileName}`);
-                
-                // Start upload task
-                currentUploadTask = storageRef.put(file);
-                
-                // Track upload progress
-                currentUploadTask.on('state_changed',
-                    (snapshot) => {
-                        // Update progress bar
-                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        document.getElementById('progress-fill').style.width = `${progress}%`;
-                        document.getElementById('progress-text').textContent = `${Math.round(progress)}% uploaded`;
-                    },
-                    (error) => {
-                        // Upload failed
-                        console.error('Upload error:', error);
-                        document.getElementById('upload-error').textContent = 'Upload failed. Please try again.';
-                        document.getElementById('upload-error').style.display = 'block';
-                        document.getElementById('upload-progress').style.display = 'none';
-                        document.getElementById('modal-submit-btn').disabled = true;
-                        
-                        // Show upload box again
-                        document.getElementById('image-upload-box').style.display = 'flex';
-                        
-                        currentUploadTask = null;
-                    },
-                    async () => {
-                        // Upload completed successfully
-                        const downloadURL = await storageRef.getDownloadURL();
-                        
-                        // Store the reference for potential deletion later
-                        previousImageRef = storageRef;
-                        
-                        // Show success message only for new uploads (not when editing)
-                        isNewUpload = true;
-                        
-                        // Update UI for success
-                        document.getElementById('upload-progress').style.display = 'none';
-                        
-                        // Show preview with image
-                        document.getElementById('image-preview-container').style.display = 'flex';
-                        
-                        // Show success message only for new uploads
-                        if (isNewUpload && !editingId) {
-                            document.getElementById('upload-success-message').style.display = 'flex';
-                        }
-                        
-                        document.getElementById('modal-submit-btn').disabled = false;
-                        imageUploaded = true;
-                        
-                        // Store the download URL for later use
-                        existingImageUrl = downloadURL;
-                        
-                        // Store the URL to delete if user changes image again
-                        previousImageUrlToDelete = downloadURL;
-                        
-                        currentUploadTask = null;
-                    }
-                );
-                
-            } catch (error) {
-                console.error('Upload error:', error);
-                document.getElementById('upload-error').textContent = 'Upload failed. Please try again.';
-                document.getElementById('upload-error').style.display = 'block';
-                document.getElementById('upload-progress').style.display = 'none';
-                document.getElementById('modal-submit-btn').disabled = true;
-                document.getElementById('image-upload-box').style.display = 'flex';
-                currentUploadTask = null;
-            }
-        }
-
-        document.getElementById('category-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('cat-name-input').value.trim();
-            if(!name) {
-                showToast('Category name is required', 'error');
-                return;
-            }
-
-            // Check if image is uploaded (required for new categories)
-            if (!editingId && !imageUploaded) {
-                document.getElementById('image-required').style.display = 'block';
-                showToast('Please upload an image for the category', 'error');
-                return;
-            }
-
-            // For editing, if no new image uploaded and no existing image, require image
-            if (editingId && !imageUploaded && !existingImageUrl) {
-                document.getElementById('image-required').style.display = 'block';
-                showToast('Please upload an image for the category', 'error');
-                return;
-            }
-
-            const exists = allCategories.some(c => c.id !== editingId && c.name.toLowerCase() === name.toLowerCase());
-            if(exists) {
-                showToast('Category name already exists', 'error');
-                return;
-            }
-
-            const btn = document.getElementById('modal-submit-btn');
-            btn.disabled = true; 
-            btn.textContent = editingId ? "Updating..." : "Saving...";
-
-            try {
-                let imageUrl = existingImageUrl;
-                
-                // If we have a new file upload in progress, wait for it to complete
-                if (currentUploadTask) {
-                    showToast('Please wait for image upload to complete', 'error');
-                    btn.disabled = false;
-                    btn.textContent = editingId ? "Update Category" : "Save Category";
-                    return;
-                }
-
-                const data = {
-                    name,
-                    imageUrl: imageUrl || '',
-                    enabled: true, // Default to enabled when creating/updating
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
-
-                if(editingId) {
-                    await db.collection('categories').doc(editingId).update(data);
-                    showToast('Category updated successfully', 'success');
-                } else {
-                    data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                    await db.collection('categories').add(data);
-                    showToast('Category created successfully', 'success');
-                }
-                
-                closeModal();
-                loadData();
-            } catch(e) {
-                console.error(e);
-                showToast('Operation failed', 'error');
-                btn.disabled = false; 
-                btn.textContent = editingId ? "Update Category" : "Save Category";
-            }
-        });
-
-        // --- DELETE LOGIC ---
-        function openDeleteModal(id, name) {
-            deletingId = id;
-            deletingName = name;
-            document.getElementById('del-cat-name').textContent = name;
-            document.getElementById('confirm-del-input').value = '';
-            document.getElementById('confirm-del-btn').disabled = true;
-            document.getElementById('delete-modal').style.display = 'flex';
-            
-            // Clean up menus
-            document.querySelectorAll('.desktop-popup').forEach(d => d.classList.remove('open'));
-            closeAdvancedMenu();
-        }
-
-        function closeDeleteModal() {
-            document.getElementById('delete-modal').style.display = 'none';
-        }
-
-        document.getElementById('confirm-del-input').addEventListener('input', (e) => {
-            document.getElementById('confirm-del-btn').disabled = e.target.value !== deletingName;
-        });
-
-        document.getElementById('confirm-del-btn').addEventListener('click', async () => {
-            if(!deletingId) return;
-            
-            const btn = document.getElementById('confirm-del-btn');
-            btn.disabled = true;
-            btn.textContent = "Deleting...";
-            
-            try {
-                // Get the category to delete its image from storage
-                const cat = allCategories.find(c => c.id === deletingId);
-                if (cat && cat.imageUrl) {
-                    try {
-                        // Extract the file path from the URL and delete from storage
-                        const imageRef = storage.refFromURL(cat.imageUrl);
-                        await imageRef.delete();
-                    } catch (error) {
-                        console.log('Image not found or already deleted:', error);
-                    }
-                }
-                
-                await db.collection('categories').doc(deletingId).delete();
-                showToast('Category deleted successfully', 'success');
-                closeDeleteModal();
-                loadData();
-            } catch(e) {
-                showToast('Delete failed', 'error');
-                btn.disabled = false;
-                btn.textContent = "Delete";
-            }
-        });
 
         function showToast(msg, type='success') {
             const container = document.getElementById('toast-container');
