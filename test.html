@@ -374,7 +374,7 @@
             width: 100%;
         }
 
-        /* Table area - FIXED: Status column alignment */
+        /* Table area */
         .table-wrapper {
             width: 100%;
             overflow-x: auto;
@@ -411,11 +411,15 @@
             width: 80px;
         }
 
-        /* FIXED: Status column alignment */
-        .domain-table th:nth-child(4),
-        .domain-table td:nth-child(4) {
-            text-align: center;
+        /* FIXED: Status column width and alignment */
+        .th-status {
             width: 120px;
+            text-align: center;
+        }
+
+        .td-status {
+            width: 120px;
+            text-align: center;
         }
 
         .domain-table tbody tr {
@@ -459,6 +463,7 @@
             gap: 8px;
             align-items: center;
             position: relative;
+            z-index: 100;
         }
 
         .btn-secondary {
@@ -487,7 +492,7 @@
             cursor: pointer;
             position: relative;
             flex-shrink: 0;
-            z-index: 100;
+            z-index: 101;
         }
         .kebab-dots {
             width: 4px;
@@ -497,19 +502,20 @@
             box-shadow: 0 -6px 0 0 #a855f7, 0 6px 0 0 #a855f7;
         }
 
-        /* Desktop Popup Menu - FIXED: Position below kebab button */
+        /* Desktop Popup Menu - FIXED: Position and z-index */
         .desktop-popup {
             position: absolute;
-            top: calc(100% + 5px);
+            top: 100%;
             right: 0;
             background: #ffffff;
             border-radius: 8px;
             border: 1px solid #e5e7eb;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             min-width: 160px;
-            z-index: 9999;
+            z-index: 10002;
             display: none;
             overflow: hidden;
+            margin-top: 5px;
         }
 
         .desktop-popup.open {
@@ -557,7 +563,6 @@
             align-items: center;
             justify-content: center;
             width: 100%;
-            height: 100%;
         }
 
         .toggle-switch {
@@ -566,7 +571,7 @@
             width: 44px;
             height: 24px;
             flex-shrink: 0;
-            margin: 0;
+            margin: 0 auto;
         }
 
         .toggle-switch input {
@@ -1368,7 +1373,7 @@
             box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
         }
 
-        /* Updated image upload box with progress bar - FIXED: Show image left and change button */
+        /* Updated image upload box with progress bar - FIXED UI */
         .image-upload-container {
             width: 100%;
         }
@@ -1384,6 +1389,11 @@
             position: relative;
             width: 100%;
             margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
         }
 
         .image-upload-box:hover {
@@ -1409,20 +1419,23 @@
             color: #9CA3AF;
         }
 
-        /* Image preview and change button container */
-        .image-preview-container {
-            display: none;
+        /* Preview container */
+        .preview-container {
+            position: relative;
+            width: 100%;
+            margin: 1rem 0;
+            display: flex;
             flex-direction: column;
             align-items: center;
             gap: 1rem;
-            margin-bottom: 1rem;
         }
 
-        .preview-wrapper {
+        .image-preview-wrapper {
             display: flex;
             align-items: center;
             gap: 1rem;
             width: 100%;
+            justify-content: center;
         }
 
         .preview-img {
@@ -1434,71 +1447,75 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .preview-info {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
         .upload-success {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 8px;
-            padding: 0.75rem 1rem;
+            gap: 1rem;
+            padding: 1.5rem;
             background: #f0fdf4;
             border: 1px solid #bbf7d0;
-            border-radius: 8px;
+            border-radius: 12px;
+            margin-bottom: 1rem;
             width: 100%;
+        }
+
+        .upload-success-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+            justify-content: center;
         }
 
         .upload-success svg {
             stroke: var(--success-color);
-            width: 20px;
-            height: 20px;
+            width: 32px;
+            height: 32px;
             flex-shrink: 0;
         }
 
         .upload-success-text {
             color: var(--success-color);
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
 
         .change-image-btn {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 8px 16px;
-            background: var(--brand-primary);
+            gap: 8px;
+            padding: 10px 16px;
+            background: #ffffff;
             border: 1px solid var(--brand-primary);
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 0.9rem;
             font-weight: 500;
-            color: white;
+            color: var(--brand-primary);
             transition: all 0.2s ease;
-            width: 100%;
             margin-top: 0.5rem;
         }
 
         .change-image-btn:hover {
-            background: #471ea7;
-            border-color: #471ea7;
+            background: var(--brand-primary);
+            color: white;
         }
 
         .change-image-btn svg {
             width: 16px;
             height: 16px;
-            stroke: white;
+            stroke: currentColor;
         }
 
         /* Progress bar styles */
         .upload-progress {
             margin-top: 1rem;
             width: 100%;
-            display: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .progress-bar {
@@ -1506,7 +1523,8 @@
             background: #e5e7eb;
             border-radius: 4px;
             overflow: hidden;
-            margin-bottom: 8px;
+            width: 100%;
+            max-width: 300px;
         }
 
         .progress-fill {
@@ -1816,11 +1834,10 @@
             /* Fix desktop popup z-index */
             .product-actions {
                 position: relative;
-                z-index: 100;
             }
             
             .desktop-popup {
-                z-index: 9999;
+                z-index: 10002;
                 position: absolute !important;
             }
         }
@@ -2057,7 +2074,7 @@
                                         <th class="th-image"></th>
                                         <th>Name</th>
                                         <th>No. of products</th>
-                                        <th>Status</th>
+                                        <th class="th-status">Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -2404,7 +2421,7 @@
                     <div class="form-group">
                         <label class="form-label">Category Image <span style="color: var(--danger-color);">*</span></label>
                         <div class="image-upload-container">
-                            <!-- Image upload box (shown initially) -->
+                            <!-- Upload Box (shown initially for new category) -->
                             <div class="image-upload-box" id="image-upload-box" onclick="triggerFileInput()">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -2415,34 +2432,34 @@
                                 <div class="upload-subtext">PNG, JPG up to 5MB</div>
                             </div>
                             
-                            <!-- Image preview container (hidden initially) -->
-                            <div class="image-preview-container" id="image-preview-container">
-                                <div class="preview-wrapper">
-                                    <img id="cat-preview" class="preview-img">
-                                    <div class="preview-info">
-                                        <div class="upload-success">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                                <polyline points="22 4 12 14.01 9 11.01"/>
-                                            </svg>
-                                            <div class="upload-success-text">Image uploaded successfully!</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button type="button" class="change-image-btn" onclick="showUploadBox()">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
-                                    </svg>
-                                    Change Image
-                                </button>
-                            </div>
-                            
                             <!-- Progress bar (hidden by default) -->
-                            <div class="upload-progress" id="upload-progress">
+                            <div class="upload-progress" id="upload-progress" style="display: none;">
                                 <div class="progress-bar">
                                     <div class="progress-fill" id="progress-fill"></div>
                                 </div>
                                 <div class="progress-text" id="progress-text">0% uploaded</div>
+                            </div>
+                            
+                            <!-- Upload success with preview and change button (hidden by default) -->
+                            <div class="upload-success" id="upload-success" style="display: none;">
+                                <div class="upload-success-content">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                        <polyline points="22 4 12 14.01 9 11.01"/>
+                                    </svg>
+                                    <div class="upload-success-text">Image uploaded successfully!</div>
+                                </div>
+                                <div class="preview-container">
+                                    <div class="image-preview-wrapper">
+                                        <img id="cat-preview" class="preview-img">
+                                    </div>
+                                    <button type="button" class="change-image-btn" onclick="showUploadBox()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                                        </svg>
+                                        Change Image
+                                    </button>
+                                </div>
                             </div>
                             
                             <div class="image-required" id="image-required">Image is required for new categories</div>
@@ -2480,7 +2497,8 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
-                <button class="btn btn-danger" id="confirm-del-btn" disabled>Delete</button>
+                    <button class="btn btn-danger" id="confirm-del-btn" disabled>Delete</button>
+                </div>
             </div>
         </div>
     </div>
@@ -2701,6 +2719,7 @@
         let imageUploaded = false;
         let currentUploadTask = null;
         let previousImageRef = null;
+        let previousImageUrlToDelete = null;
 
         auth.onAuthStateChanged(user => {
             if (!user || user.email !== ADMIN_EMAIL) {
@@ -2784,7 +2803,7 @@
                     </td>
                     <td class="product-name">${cat.name}</td>
                     <td class="product-count">${productCounts[cat.name] || 0} products</td>
-                    <td class="product-status">
+                    <td class="td-status">
                         <div class="status-toggle">
                             <label class="toggle-switch">
                                 <input type="checkbox" ${cat.enabled ? 'checked' : ''} 
@@ -2796,7 +2815,7 @@
                     <td class="product-actions">
                         <div class="action-buttons">
                             <button class="btn-secondary" onclick="window.location.href='manage-products.html?category=${encodeURIComponent(cat.name)}'">Manage</button>
-                            <div class="kebab" data-category-id="${cat.id}" onclick="toggleDesktopPopup(event, '${cat.id}')">
+                            <div class="kebab" data-category-id="${cat.id}">
                                 <span class="kebab-dots"></span>
                             </div>
                             <div class="desktop-popup" id="desktop-popup-${cat.id}">
@@ -2849,6 +2868,41 @@
                 </div>
             `).join('');
             
+            // Attach event listeners for desktop popups with proper positioning
+            document.querySelectorAll('.kebab').forEach(kebab => {
+                kebab.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    
+                    const categoryId = kebab.getAttribute('data-category-id');
+                    const popup = document.getElementById(`desktop-popup-${categoryId}`);
+                    
+                    // Close all other popups
+                    document.querySelectorAll('.desktop-popup').forEach(p => {
+                        if (p !== popup) {
+                            p.classList.remove('open');
+                        }
+                    });
+                    
+                    // Toggle current popup
+                    popup.classList.toggle('open');
+                    
+                    // Position the popup relative to the kebab button
+                    const rect = kebab.getBoundingClientRect();
+                    popup.style.position = 'absolute';
+                    popup.style.top = '100%';
+                    popup.style.right = '0';
+                    popup.style.left = 'auto';
+                });
+            });
+            
+            // Prevent desktop popups from closing when clicking inside
+            document.querySelectorAll('.desktop-popup').forEach(popup => {
+                popup.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+            });
+            
             // Attach event listeners for mobile menu buttons
             document.querySelectorAll('.category-card-menu-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -2880,36 +2934,6 @@
                     e.stopPropagation(); // Prevent the click from bubbling up to parent
                 });
             });
-        }
-
-        // Toggle desktop popup - FIXED: Show below kebab button
-        function toggleDesktopPopup(event, categoryId) {
-            event.stopPropagation();
-            event.preventDefault();
-            
-            const popup = document.getElementById(`desktop-popup-${categoryId}`);
-            const isOpen = popup.classList.contains('open');
-            
-            // Close all other popups
-            document.querySelectorAll('.desktop-popup').forEach(p => {
-                if (p !== popup) {
-                    p.classList.remove('open');
-                }
-            });
-            
-            // Toggle current popup
-            popup.classList.toggle('open');
-            
-            // Position the popup
-            if (popup.classList.contains('open')) {
-                const kebab = event.currentTarget;
-                const rect = kebab.getBoundingClientRect();
-                
-                popup.style.position = 'absolute';
-                popup.style.top = 'calc(100% + 5px)';
-                popup.style.right = '0';
-                popup.style.left = 'auto';
-            }
         }
 
         // Handle mobile card click - redirect to products page
@@ -2982,16 +3006,26 @@
         }
 
         function showUploadBox() {
-            // Hide preview container, show upload box
-            document.getElementById('image-preview-container').style.display = 'none';
-            document.getElementById('image-upload-box').style.display = 'block';
+            // Hide success state, show upload box
+            document.getElementById('upload-success').style.display = 'none';
             document.getElementById('upload-progress').style.display = 'none';
-            document.getElementById('modal-submit-btn').disabled = true;
-            imageUploaded = false;
+            document.getElementById('image-upload-box').style.display = 'flex';
+            document.getElementById('cat-preview').style.display = 'none';
+            
+            // Reset file input
+            document.getElementById('cat-file-input').value = '';
+            
+            // Clear previous image URL
             existingImageUrl = null;
             
-            // Clear file input
-            document.getElementById('cat-file-input').value = '';
+            // For new category, show required message
+            if (!editingId) {
+                document.getElementById('image-required').style.display = 'block';
+                document.getElementById('modal-submit-btn').disabled = true;
+            }
+            
+            // Mark image as not uploaded
+            imageUploaded = false;
         }
 
         function openAddModal() {
@@ -3000,14 +3034,17 @@
             existingImageUrl = null;
             imageUploaded = false;
             previousImageRef = null;
+            previousImageUrlToDelete = null;
             
             document.getElementById('modal-title').textContent = "Add Category";
             document.getElementById('modal-submit-btn').textContent = "Save Category";
             document.getElementById('modal-submit-btn').disabled = true; // Disable until image is uploaded
             document.getElementById('category-form').reset();
-            document.getElementById('image-upload-box').style.display = 'block';
-            document.getElementById('image-preview-container').style.display = 'none';
+            
+            // Reset image upload UI
+            document.getElementById('image-upload-box').style.display = 'flex';
             document.getElementById('upload-progress').style.display = 'none';
+            document.getElementById('upload-success').style.display = 'none';
             document.getElementById('image-required').style.display = 'block';
             document.getElementById('upload-error').textContent = '';
             
@@ -3022,6 +3059,7 @@
             existingImageUrl = cat.imageUrl || null;
             imageUploaded = !!cat.imageUrl;
             previousImageRef = null;
+            previousImageUrlToDelete = cat.imageUrl || null;
             
             document.getElementById('modal-title').textContent = "Edit Category";
             document.getElementById('modal-submit-btn').textContent = "Update Category";
@@ -3030,15 +3068,16 @@
             document.getElementById('image-required').style.display = 'none';
             
             if(cat.imageUrl) {
-                // Show preview container, hide upload box
-                document.getElementById('image-upload-box').style.display = 'none';
-                document.getElementById('image-preview-container').style.display = 'flex';
                 document.getElementById('cat-preview').src = cat.imageUrl;
+                document.getElementById('cat-preview').style.display = 'block';
+                document.getElementById('upload-success').style.display = 'block';
                 document.getElementById('upload-progress').style.display = 'none';
+                document.getElementById('image-upload-box').style.display = 'none';
             } else {
-                // Show upload box, hide preview
-                document.getElementById('image-upload-box').style.display = 'block';
-                document.getElementById('image-preview-container').style.display = 'none';
+                document.getElementById('cat-preview').style.display = 'none';
+                document.getElementById('upload-success').style.display = 'none';
+                document.getElementById('upload-progress').style.display = 'none';
+                document.getElementById('image-upload-box').style.display = 'flex';
                 document.getElementById('image-required').style.display = 'block';
             }
             
@@ -3082,20 +3121,28 @@
                 currentUploadTask.cancel();
             }
             
-            // Delete previous image from storage if exists
-            if (previousImageRef) {
+            // Delete previous image from storage if exists (when changing image)
+            if (previousImageUrlToDelete) {
                 try {
-                    await previousImageRef.delete();
+                    // Extract the file path from the URL and delete from storage
+                    const imageRef = storage.refFromURL(previousImageUrlToDelete);
+                    await imageRef.delete();
+                    console.log('Previous image deleted from storage');
                 } catch (error) {
-                    console.log('Previous image not found or already deleted');
+                    console.log('Previous image not found or already deleted:', error);
                 }
-                previousImageRef = null;
+                previousImageUrlToDelete = null;
             }
             
-            // Hide upload box, show progress
+            // Show preview
+            const preview = document.getElementById('cat-preview');
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = 'block';
+            
+            // Hide upload box and show progress
             document.getElementById('image-upload-box').style.display = 'none';
-            document.getElementById('image-preview-container').style.display = 'none';
-            document.getElementById('upload-progress').style.display = 'block';
+            document.getElementById('upload-success').style.display = 'none';
+            document.getElementById('upload-progress').style.display = 'flex';
             document.getElementById('image-required').style.display = 'none';
             
             // Disable submit button during upload
@@ -3132,8 +3179,7 @@
                         document.getElementById('modal-submit-btn').disabled = true;
                         
                         // Show upload box again
-                        document.getElementById('image-upload-box').style.display = 'block';
-                        document.getElementById('image-preview-container').style.display = 'none';
+                        document.getElementById('image-upload-box').style.display = 'flex';
                         
                         currentUploadTask = null;
                     },
@@ -3146,13 +3192,15 @@
                         
                         // Update UI for success
                         document.getElementById('upload-progress').style.display = 'none';
-                        document.getElementById('image-preview-container').style.display = 'flex';
-                        document.getElementById('cat-preview').src = downloadURL;
+                        document.getElementById('upload-success').style.display = 'block';
                         document.getElementById('modal-submit-btn').disabled = false;
                         imageUploaded = true;
                         
                         // Store the download URL for later use
                         existingImageUrl = downloadURL;
+                        
+                        // Store the URL to delete if user changes image again
+                        previousImageUrlToDelete = downloadURL;
                         
                         currentUploadTask = null;
                     }
@@ -3163,11 +3211,7 @@
                 document.getElementById('upload-error').textContent = 'Upload failed. Please try again.';
                 document.getElementById('upload-progress').style.display = 'none';
                 document.getElementById('modal-submit-btn').disabled = true;
-                
-                // Show upload box again
-                document.getElementById('image-upload-box').style.display = 'block';
-                document.getElementById('image-preview-container').style.display = 'none';
-                
+                document.getElementById('image-upload-box').style.display = 'flex';
                 currentUploadTask = null;
             }
         }
