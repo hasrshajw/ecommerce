@@ -376,7 +376,7 @@
             width: 100%;
         }
 
-        /* Table area */
+        /* Table area - FIXED: All columns left aligned */
         .table-wrapper {
             width: 100%;
             overflow-x: auto;
@@ -399,6 +399,7 @@
         .products-table td {
             padding: 12px 20px;
             vertical-align: middle;
+            text-align: left; /* All columns left aligned */
         }
 
         .products-table thead th {
@@ -406,23 +407,13 @@
             font-size: 14px;
             line-height: 24px;
             color: rgb(29, 30, 32);
-            text-align: left;
             border-bottom: 1px solid #e5e7eb;
             white-space: nowrap;
+            background-color: #ffffff;
         }
 
-        /* Product column with heading */
+        /* Fixed column widths and alignments */
         .th-product {
-            width: 40%;
-        }
-
-        .th-product-content {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .td-product {
             width: 40%;
         }
 
@@ -430,52 +421,23 @@
             width: 15%;
         }
 
-        .td-price {
-            width: 15%;
-        }
-
         .th-colors {
             width: 10%;
-            text-align: center;
-        }
-
-        .td-colors {
-            width: 10%;
-            text-align: center;
         }
 
         .th-status {
             width: 15%;
-            text-align: center;
-        }
-
-        .td-status {
-            width: 15%;
-            text-align: center;
         }
 
         .th-actions {
             width: 20%;
-            text-align: right;
         }
 
-        .td-actions {
-            width: 20%;
-            text-align: right;
-        }
-
-        .products-table tbody tr {
-            border-bottom: 1px solid #f3f4f6;
-        }
-
-        .products-table tbody tr:last-child {
-            border-bottom: none;
-        }
-
+        /* Product cell styling */
         .product-cell {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 12px;
         }
 
         .product-image {
@@ -506,20 +468,37 @@
             color: #6b7280;
         }
 
-        .product-price,
-        .product-colors,
-        .product-status {
-            font-weight: 400;
+        .product-price {
+            font-weight: 600;
             font-size: 14px;
-            line-height: 24px;
-            color: rgb(59, 61, 74);
+            color: rgb(29, 30, 32);
         }
 
+        .product-colors {
+            font-weight: 400;
+            font-size: 14px;
+            color: rgb(29, 30, 32);
+        }
+
+        .products-table tbody tr {
+            border-bottom: 1px solid #f3f4f6;
+            background-color: #ffffff; /* White background for rows */
+        }
+
+        .products-table tbody tr:hover {
+            background-color: #f9fafb; /* Light gray on hover */
+        }
+
+        .products-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        /* Action buttons - FIXED: Left aligned */
         .action-buttons {
-            display: inline-flex;
+            display: flex;
             gap: 8px;
             align-items: center;
-            position: relative;
+            justify-content: flex-start; /* Left aligned */
         }
 
         .btn-secondary {
@@ -660,11 +639,11 @@
             stroke: var(--danger-color);
         }
 
-        /* Status toggle switch */
+        /* Status toggle switch - FIXED: Left aligned */
         .status-toggle {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start; /* Left aligned */
             width: 100%;
         }
 
@@ -846,7 +825,7 @@
             overflow-x: hidden;
         }
 
-        /* Mobile header */
+        /* Mobile header - FIXED: Exactly like reference */
         .m-header {
             height: 72px;
             background: var(--header-bg);
@@ -858,7 +837,7 @@
             width: 100%;
         }
 
-        /* Mobile menu button with border and styling */
+        /* FIXED: Mobile menu button exactly like reference */
         .m-menu-btn {
             width: 40px;
             height: 40px;
@@ -919,7 +898,7 @@
             overflow-x: hidden;
         }
 
-        /* Overlay & drawer */
+        /* Overlay & drawer - FIXED: Exactly like reference */
         .m-overlay {
             position: fixed;
             inset: 0;
@@ -954,7 +933,7 @@
             transform: translateX(0);
         }
 
-        /* Drawer header */
+        /* Drawer header - FIXED: Exactly like reference */
         .m-drawer-header {
             height: 72px;
             border-bottom: 1px solid var(--border-subtle);
@@ -971,7 +950,7 @@
             max-width: 200px;
         }
 
-        /* Mobile drawer close button */
+        /* FIXED: Mobile drawer close button exactly like reference */
         .m-drawer-close {
             width: 40px;
             height: 40px;
@@ -1013,7 +992,7 @@
             transform: rotate(-45deg);
         }
 
-        /* Drawer nav */
+        /* Drawer nav - FIXED: Exactly like reference */
         .m-drawer-nav {
             padding: 32px 8px;
             display: flex;
@@ -1056,7 +1035,43 @@
             stroke: var(--icon-active);
         }
 
-        /* Drawer footer account */
+        /* Mobile submenu - FIXED: Exactly like reference */
+        .m-submenu {
+            display: none;
+            margin-left: 28px;
+            padding-left: 16px;
+            border-left: 1px solid var(--border-subtle);
+            margin-top: 4px;
+        }
+        .m-submenu.open {
+            display: block;
+        }
+        .m-submenu-item {
+            height: 48px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            border-radius: 8px;
+            margin: 2px 0;
+            cursor: pointer;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .m-submenu-item:hover {
+            background: var(--hover-bg);
+        }
+        .m-submenu-item.active {
+            background: var(--active-bg);
+        }
+
+        .m-submenu-item .submenu-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+        }
+
+        /* Drawer footer account - FIXED: Exactly like reference */
         .m-account-section {
             margin-top: auto;
             padding: 16px;
@@ -1072,7 +1087,7 @@
             overflow-x: hidden;
         }
 
-        /* Mobile page header */
+        /* Mobile page header - FIXED: Exactly like reference */
         .mobile-page-header {
             margin-bottom: 20px;
             width: 100%;
@@ -1116,7 +1131,7 @@
             color: #d1d5db;
         }
 
-        /* Mobile search and add button row */
+        /* Mobile search and add button row - FIXED: Exactly like reference */
         .mobile-controls-row {
             display: flex;
             align-items: center;
@@ -1210,7 +1225,7 @@
             stroke: #ffffff;
         }
 
-        /* Mobile product cards */
+        /* Mobile product cards - FIXED: Exactly like reference category cards */
         .mobile-product-cards {
             display: flex;
             flex-direction: column;
@@ -1282,7 +1297,7 @@
             color: #6b7280;
         }
 
-        /* Mobile card actions */
+        /* Mobile card actions - FIXED: Exactly like reference */
         .product-card-actions {
             display: flex;
             align-items: center;
@@ -1326,7 +1341,7 @@
             box-shadow: 0 -6px 0 0 #6b7280, 0 6px 0 0 #6b7280;
         }
 
-        /* Advanced Menu (Bottom Sheet) */
+        /* Advanced Menu (Bottom Sheet) - FIXED: Exactly like reference */
         .advanced-menu {
             position: fixed;
             bottom: 0;
@@ -1478,92 +1493,6 @@
             border-radius: 999px;
             background: #e5e7eb;
             margin: 0 auto 20px auto;
-        }
-
-        /* Modal styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
-            z-index: 2000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .modal-content {
-            background: white;
-            width: 100%;
-            max-width: 480px;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-premium);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        @keyframes modalPop {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .modal-header {
-            padding: 1.5rem 1.5rem 1rem;
-            border-bottom: 1px solid var(--border-subtle);
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            background: #fff;
-            position: relative;
-        }
-
-        .modal-body {
-            padding: 1.5rem;
-            background: #F8FAFC;
-        }
-
-        .modal-footer {
-            padding: 1rem 1.5rem 1.5rem;
-            background: white;
-            border-top: 1px solid var(--border-subtle);
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.75rem;
-        }
-
-        .modal-title {
-            font-weight: 700;
-            font-size: 1.25rem;
-            color: rgb(29, 30, 32);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .btn-icon {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #6b7280;
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s ease;
-        }
-
-        .btn-icon:hover {
-            background: #f3f4f6;
         }
 
         /* Toast */
@@ -1726,8 +1655,13 @@
             text-align: center;
             padding: 4rem 1rem;
             color: #6b7280;
-            grid-column: 1/-1;
             width: 100%;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: rgb(29, 30, 32);
         }
 
         /* Category badge */
@@ -1756,25 +1690,6 @@
             
             .page-header {
                 display: none;
-            }
-
-            .modal-overlay {
-                align-items: flex-end;
-                padding: 0;
-            }
-            
-            .modal-content {
-                width: 100%;
-                border-radius: 24px 24px 0 0;
-                animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-                max-height: 90vh;
-                overflow-y: auto;
-                max-width: 100%;
-            }
-            
-            @keyframes slideUpModal {
-                from { transform: translateY(100%); }
-                to { transform: translateY(0); }
             }
             
             /* Prevent horizontal scrolling */
@@ -2069,7 +1984,9 @@
                                             <div class="skeleton skeleton-text-small"></div>
                                         </td>
                                         <td>
-                                            <div class="skeleton skeleton-toggle"></div>
+                                            <div class="status-toggle">
+                                                <div class="skeleton skeleton-toggle"></div>
+                                            </div>
                                         </td>
                                         <td>
                                             <div class="action-buttons">
@@ -2095,7 +2012,9 @@
                                             <div class="skeleton skeleton-text-small"></div>
                                         </td>
                                         <td>
-                                            <div class="skeleton skeleton-toggle"></div>
+                                            <div class="status-toggle">
+                                                <div class="skeleton skeleton-toggle"></div>
+                                            </div>
                                         </td>
                                         <td>
                                             <div class="action-buttons">
@@ -2121,7 +2040,9 @@
                                             <div class="skeleton skeleton-text-small"></div>
                                         </td>
                                         <td>
-                                            <div class="skeleton skeleton-toggle"></div>
+                                            <div class="status-toggle">
+                                                <div class="skeleton skeleton-toggle"></div>
+                                            </div>
                                         </td>
                                         <td>
                                             <div class="action-buttons">
@@ -2739,9 +2660,10 @@
                 badge.textContent = catName;
                 badge.style.display = 'inline-block';
                 
-                const titleWrap = document.querySelector('.page-title-wrap');
-                if (titleWrap && !document.getElementById('category-badge')) {
-                    titleWrap.querySelector('.page-title').appendChild(badge);
+                // Add badge to title
+                if (title && !document.getElementById('category-badge')) {
+                    const badgeClone = badge.cloneNode(true);
+                    title.appendChild(badgeClone);
                 }
                 
                 addBtn.onclick = () => window.location.href = `product.html?category=${encodeURIComponent(catName)}`;
@@ -2815,11 +2737,9 @@
                             </div>
                         </div>
                     </td>
-                    <td class="product-price" style="font-weight:600;">₹${(p.price || 0).toFixed(2)}</td>
-                    <td class="product-colors" style="text-align:center;">
-                        <span style="background:#F1F5F9; padding:0.2rem 0.6rem; border-radius:99px; font-size:0.75rem; font-weight:600;">${p.colorsCount || 0}</span>
-                    </td>
-                    <td class="td-status">
+                    <td class="product-price">₹${(p.price || 0).toFixed(2)}</td>
+                    <td class="product-colors">${p.colorsCount || 0}</td>
+                    <td>
                         <div class="status-toggle">
                             <label class="toggle-switch">
                                 <input type="checkbox" ${available ? 'checked' : ''} 
@@ -2828,7 +2748,7 @@
                             </label>
                         </div>
                     </td>
-                    <td class="td-actions">
+                    <td>
                         <div class="action-buttons">
                             <button class="btn-secondary" onclick="manageProduct('${p.id}')">Manage</button>
                             <div class="popup-container">
