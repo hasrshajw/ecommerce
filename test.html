@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Manage Products - Vastramaya</title>
+    <title>Product Editor - Vastramaya</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         :root {
             --header-height-desktop: 70px;
@@ -30,6 +31,7 @@
             --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             --radius-md: 8px;
             --radius-lg: 12px;
+            --radius-xl: 24px;
             --skeleton-color: #f0f0f0;
             --skeleton-highlight: #f8f8f8;
         }
@@ -131,10 +133,9 @@
             flex: 1;
         }
 
-        .d-nav-item .icon svg {
-            width: 22px;
-            height: 22px;
-            stroke: var(--icon-color);
+        .d-nav-item .icon i {
+            font-size: 22px;
+            color: var(--icon-color);
         }
 
         .chevron-icon {
@@ -152,8 +153,8 @@
         .d-nav-item--active {
             background: var(--active-bg);
         }
-        .d-nav-item--active .icon svg {
-            stroke: var(--icon-active);
+        .d-nav-item--active .icon i {
+            color: var(--icon-active);
         }
 
         /* Desktop hover */
@@ -192,9 +193,8 @@
         }
 
         .d-submenu-item .submenu-icon {
-            width: 18px;
-            height: 18px;
-            stroke: #6b7280;
+            font-size: 18px;
+            color: #6b7280;
         }
 
         /* Desktop account section */
@@ -253,7 +253,7 @@
 
         /* ============= BODY CONTENT ============= */
         .content-inner {
-            max-width: 1110px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 24px 24px 40px;
             width: 100%;
@@ -294,10 +294,9 @@
             flex-wrap: wrap;
         }
 
-        .breadcrumb-icon svg {
-            width: 16px;
-            height: 16px;
-            stroke: #9ca3af;
+        .breadcrumb-icon i {
+            font-size: 16px;
+            color: #9ca3af;
         }
 
         .breadcrumb-divider {
@@ -320,16 +319,49 @@
             transition: background 0.15s ease;
             white-space: nowrap;
         }
-        .primary-btn svg {
-            width: 18px;
-            height: 18px;
-            stroke: #ffffff;
+        .primary-btn i {
+            font-size: 18px;
+            color: #ffffff;
         }
         .primary-btn:hover {
             background: #471ea7;
         }
 
-        /* Card */
+        .secondary-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 20px;
+            color: #673de6;
+            cursor: pointer;
+            transition: background 0.15s ease;
+            white-space: nowrap;
+        }
+        .secondary-btn:hover {
+            background: #f2efff;
+        }
+
+        /* Form Layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-top: 8px;
+        }
+
+        .form-col {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Card Styling - Matching Manage Categories */
         .card {
             background: #ffffff;
             border-radius: 12px;
@@ -343,476 +375,585 @@
             border-bottom: 1px solid #e5e7eb;
         }
 
-        .search-input-wrap {
-            background: #f9fafb;
-            border-radius: 999px;
-            border: 1px solid #e5e7eb;
-            padding: 12px 16px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: border-color 0.15s ease;
-            width: 100%;
+        .card-body {
+            padding: 24px 20px;
         }
 
-        .search-input-wrap:focus-within {
-            border-color: #673de6;
-        }
-
-        .search-icon {
-            width: 16px;
-            height: 16px;
-            stroke: #9ca3af;
-        }
-
-        .search-input-wrap input {
-            border: none;
-            background: transparent;
-            outline: none;
-            flex: 1;
-            font-family: "DM Sans", Roboto, sans-serif;
-            font-size: 14px;
-            width: 100%;
-        }
-
-        /* Table area - FIXED: All columns left aligned */
-        .table-wrapper {
-            width: 100%;
-            overflow-x: auto;
-            position: relative;
-            overflow: visible !important;
-        }
-
-        .products-table {
-            width: 100%;
-            border-collapse: collapse;
-            position: relative;
-            z-index: 1;
-        }
-
-        .products-table thead tr {
-            height: 48px;
-        }
-
-        .products-table th,
-        .products-table td {
-            padding: 12px 20px;
-            vertical-align: middle;
-            text-align: left; /* All columns left aligned */
-        }
-
-        .products-table thead th {
+        .section-title {
             font-weight: 700;
-            font-size: 14px;
+            font-size: 16px;
             line-height: 24px;
             color: rgb(29, 30, 32);
-            border-bottom: 1px solid #e5e7eb;
-            white-space: nowrap;
-            background-color: #ffffff;
-        }
-
-        /* Fixed column widths and alignments */
-        .th-product {
-            width: 40%;
-        }
-
-        .th-price {
-            width: 15%;
-        }
-
-        .th-colors {
-            width: 10%;
-        }
-
-        .th-status {
-            width: 15%;
-        }
-
-        .th-actions {
-            width: 20%;
-        }
-
-        /* Product cell styling */
-        .product-cell {
             display: flex;
             align-items: center;
             gap: 12px;
+            margin-bottom: 20px;
         }
 
-        .product-image {
-            width: 48px;
-            height: 48px;
-            border-radius: 8px;
-            object-fit: cover;
-            background: #e5e7eb;
+        .section-title i {
+            font-size: 20px;
+            color: var(--brand-primary);
         }
 
-        .product-info {
-            flex: 1;
-            min-width: 0;
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 20px;
+            width: 100%;
         }
 
-        .product-name {
+        .form-label {
+            display: block;
+            font-size: 14px;
             font-weight: 600;
-            font-size: 14px;
-            line-height: 20px;
             color: rgb(29, 30, 32);
-            margin-bottom: 4px;
+            margin-bottom: 8px;
         }
 
-        .product-category {
-            font-weight: 400;
-            font-size: 12px;
-            line-height: 16px;
-            color: #6b7280;
-        }
-
-        .product-price {
-            font-weight: 600;
-            font-size: 14px;
-            color: rgb(29, 30, 32);
-        }
-
-        .product-colors {
-            font-weight: 400;
-            font-size: 14px;
-            color: rgb(29, 30, 32);
-        }
-
-        .products-table tbody tr {
-            border-bottom: 1px solid #f3f4f6;
-            background-color: #ffffff; /* White background for rows */
-        }
-
-        .products-table tbody tr:hover {
-            background-color: #f9fafb; /* Light gray on hover */
-        }
-
-        .products-table tbody tr:last-child {
-            border-bottom: none;
-        }
-
-        /* Action buttons - FIXED: Left aligned */
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            justify-content: flex-start; /* Left aligned */
-        }
-
-        .btn-secondary {
-            padding: 6px 12px;
-            border-radius: 8px;
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
             border: 1px solid #e5e7eb;
-            background: #ffffff;
-            font-size: 13px;
+            border-radius: var(--radius-md);
+            background: white;
+            transition: all 0.15s ease;
+            font-family: "DM Sans", Roboto, sans-serif;
+            font-size: 14px;
             line-height: 20px;
-            color: #673de6;
-            cursor: pointer;
-            transition: background 0.15s ease;
-            white-space: nowrap;
-        }
-        .btn-secondary:hover {
-            background: #f2efff;
         }
 
-        .kebab {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            display: inline-flex;
+        .form-control:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
+            outline: none;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Upload Zones - Matching Manage Categories */
+        .upload-zone {
+            border: 2px dashed #CBD5E1;
+            border-radius: var(--radius-md);
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            background: linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 100%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            width: 100%;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            position: relative;
-            flex-shrink: 0;
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            transition: all 0.2s ease;
+            min-height: 220px;
+            overflow: hidden;
         }
-        
-        .kebab:hover {
-            background: #f9fafb;
-            border-color: #d1d5db;
-        }
-        
-        .kebab-dots {
-            width: 4px;
-            height: 4px;
-            border-radius: 999px;
-            background: #6b7280;
-            position: relative;
-        }
-        
-        .kebab-dots::before,
-        .kebab-dots::after {
+
+        .upload-zone::before {
             content: '';
             position: absolute;
-            width: 4px;
-            height: 4px;
-            border-radius: 999px;
-            background: #6b7280;
-            left: 0;
-        }
-        
-        .kebab-dots::before {
-            top: -6px;
-        }
-        
-        .kebab-dots::after {
-            bottom: -6px;
-        }
-
-        /* Desktop popup */
-        .popup-container {
-            position: relative;
-            display: inline-block;
-        }
-
-        .desktop-popup {
-            position: fixed;
-            background: #ffffff;
-            border-radius: 12px;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            min-width: 180px;
-            z-index: 10002;
-            display: none;
-            overflow: hidden;
-            margin-top: 8px;
-            animation: fadeInUp 0.2s ease-out;
-        }
-
-        .desktop-popup.open {
-            display: block;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(-5px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .desktop-popup-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 16px;
-            width: 100%;
-            border: none;
-            background: none;
-            text-align: left;
-            cursor: pointer;
-            font-size: 14px;
-            line-height: 20px;
-            color: rgb(29, 30, 32);
-            transition: background 0.15s ease;
-            white-space: nowrap;
-            border-bottom: 1px solid #f9fafb;
-        }
-
-        .desktop-popup-item:last-child {
-            border-bottom: none;
-        }
-
-        .desktop-popup-item:hover {
-            background: #f9fafb;
-        }
-
-        .desktop-popup-item svg {
-            width: 18px;
-            height: 18px;
-            stroke: #6b7280;
-        }
-
-        .desktop-popup-item.delete-item {
-            color: var(--danger-color);
-        }
-
-        .desktop-popup-item.delete-item svg {
-            stroke: var(--danger-color);
-        }
-
-        /* Status toggle switch - FIXED: Left aligned */
-        .status-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start; /* Left aligned */
-            width: 100%;
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 24px;
-            flex-shrink: 0;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
             top: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            background-color: var(--switch-off);
-            transition: .4s;
-            border-radius: 24px;
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .toggle-slider {
-            background-color: var(--brand-primary);
-        }
-
-        input:checked + .toggle-slider:before {
-            transform: translateX(20px);
-        }
-
-        /* ============= SKELETON LOADING ============= */
-        .skeleton-loading {
-            pointer-events: none;
-            user-select: none;
-        }
-
-        .skeleton {
-            background: linear-gradient(
-                90deg,
-                var(--skeleton-color) 25%,
-                var(--skeleton-highlight) 50%,
-                var(--skeleton-color) 75%
-            );
+            height: 4px;
+            background: linear-gradient(90deg, #5127ba, #673de6, #5127ba);
             background-size: 200% 100%;
-            animation: skeleton-loading 1.5s infinite;
-            border-radius: 4px;
+            animation: shimmer 3s infinite linear;
         }
 
-        @keyframes skeleton-loading {
-            0% {
-                background-position: 200% 0;
-            }
-            100% {
-                background-position: -200% 0;
-            }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
 
-        /* Desktop skeleton */
-        .desktop-skeleton-row {
-            height: 72px;
+        .upload-zone:hover {
+            border-color: var(--brand-primary);
+            background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(81, 39, 186, 0.15);
         }
 
-        .desktop-skeleton-row td {
-            padding: 12px 20px;
+        .upload-zone i {
+            font-size: 64px;
+            color: var(--brand-primary);
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 4px 6px rgba(81, 39, 186, 0.1));
         }
 
-        .skeleton-image {
-            width: 48px;
-            height: 48px;
-            border-radius: 8px;
+        .upload-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .skeleton-text {
-            height: 20px;
-            width: 120px;
+        .upload-subtext {
+            font-size: 14px;
+            color: #6B7280;
+            max-width: 80%;
+            margin: 0 auto;
+            line-height: 1.4;
         }
 
-        .skeleton-text-small {
-            height: 16px;
-            width: 80px;
-        }
-
-        .skeleton-toggle {
-            width: 44px;
-            height: 24px;
-            border-radius: 24px;
-        }
-
-        .skeleton-button {
-            width: 80px;
-            height: 32px;
-            border-radius: 8px;
-        }
-
-        .skeleton-kebab {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-        }
-
-        /* Mobile skeleton */
-        .mobile-skeleton-card {
-            background: #ffffff;
+        /* Preview Container */
+        .image-preview-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 2rem;
+            background: white;
             border-radius: 16px;
-            border: 1px solid #e5e7eb;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-preview-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #5127ba, #673de6, #5127ba);
+            background-size: 200% 100%;
+        }
+
+        .preview-img {
+            width: 160px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 2px solid white;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .preview-img:hover {
+            transform: scale(1.02);
+        }
+
+        /* Swatch Upload */
+        .swatch-upload-container {
+            width: 100px;
+            height: 100px;
+            border-radius: var(--radius-md);
+            border: 2px dashed #CBD5E1;
+            background: #F8FAFC;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .swatch-upload-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .swatch-upload-container i {
+            font-size: 32px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .swatch-upload-container span {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Variant Cards */
+        .variant-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             padding: 16px;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+            background: #fff;
+            transition: 0.2s;
+        }
+
+        .variant-swatch {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            object-fit: cover;
+        }
+
+        .variant-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        /* Review Cards */
+        .review-card {
+            padding: 16px;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+            background: #fff;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .star-display {
+            color: var(--danger-color);
+            display: flex;
+            gap: 2px;
+            font-size: 16px;
+        }
+
+        .review-text {
+            font-size: 14px;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+
+        /* Size Selection */
+        .size-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .size-item {
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            background: white;
+            transition: all 0.2s ease;
+        }
+
+        .size-item:hover {
+            border-color: var(--brand-primary);
+            background: #f9fafb;
+        }
+
+        .size-item.selected {
+            background: linear-gradient(135deg, rgba(81, 39, 186, 0.1) 0%, rgba(103, 61, 230, 0.05) 100%);
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+        }
+
+        .size-label {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .size-status {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        /* Gallery Grid */
+        .existing-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .gallery-item {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-remove {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(255,255,255,0.9);
+            color: var(--danger-color);
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* Star Rating */
+        .star-rating-input {
+            display: flex;
+            gap: 8px;
+            font-size: 32px;
+            color: #CBD5E1;
+            cursor: pointer;
+            justify-content: center;
+            margin: 16px 0;
+        }
+
+        .star-rating-input i.active {
+            color: var(--danger-color);
+        }
+
+        /* MODALS - Matching Manage Categories */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-premium);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+        }
+
+        .modal-body {
+            padding: 24px;
+            background: #F8FAFC;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            background: white;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .modal-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: rgb(29, 30, 32);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 16px;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: none;
+            font-size: 14px;
+            white-space: nowrap;
+            min-width: 100px;
+        }
+
+        .btn-primary {
+            background: var(--brand-primary);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            background: #471ea7;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(81, 39, 186, 0.25);
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 1px solid #e5e7eb;
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: #FEF2F2;
+            color: var(--danger-color);
+            border: 1px solid #FECACA;
+        }
+
+        .btn-danger:hover {
+            background: #FEE2E2;
+            transform: translateY(-1px);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+            min-width: auto;
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #6b7280;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+
+        .btn-icon:hover {
+            background: #f3f4f6;
+        }
+
+        /* Toast */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 3000;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 16px 20px;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-premium);
+            animation: slideUp 0.3s ease;
             display: flex;
             align-items: center;
             gap: 12px;
+            border-left: 4px solid var(--brand-primary);
+            min-width: 300px;
+            pointer-events: auto;
+        }
+
+        .toast.success {
+            border-left-color: var(--success-color);
+        }
+
+        .toast.error {
+            border-left-color: var(--danger-color);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Progress Overlay */
+        #progress-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 88px;
-        }
-
-        .skeleton-mobile-image {
-            width: 56px;
-            height: 56px;
-            border-radius: 12px;
-            flex-shrink: 0;
-        }
-
-        .skeleton-mobile-content {
-            flex: 1;
-            display: flex;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: none;
             flex-direction: column;
-            gap: 8px;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
 
-        .skeleton-mobile-title {
-            height: 24px;
-            width: 150px;
-            border-radius: 4px;
+        .progress-content {
+            background: white;
+            padding: 32px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-premium);
+            border: 1px solid var(--border-subtle);
+            min-width: 300px;
         }
 
-        .skeleton-mobile-subtitle {
-            height: 18px;
-            width: 100px;
-            border-radius: 4px;
-        }
-
-        .skeleton-mobile-toggle {
-            width: 44px;
-            height: 24px;
-            border-radius: 24px;
-            margin-right: 12px;
-        }
-
-        .skeleton-mobile-menu {
+        .spinner {
             width: 40px;
             height: 40px;
-            border-radius: 10px;
+            border: 4px solid #E2E8F0;
+            border-top: 4px solid var(--brand-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* ============= MOBILE LAYOUT ============= */
@@ -825,7 +966,7 @@
             overflow-x: hidden;
         }
 
-        /* Mobile header - FIXED: Exactly like reference */
+        /* Mobile header */
         .m-header {
             height: 72px;
             background: var(--header-bg);
@@ -837,7 +978,7 @@
             width: 100%;
         }
 
-        /* FIXED: Mobile menu button exactly like reference */
+        /* Mobile menu button */
         .m-menu-btn {
             width: 40px;
             height: 40px;
@@ -898,7 +1039,7 @@
             overflow-x: hidden;
         }
 
-        /* Overlay & drawer - FIXED: Exactly like reference */
+        /* Overlay & drawer */
         .m-overlay {
             position: fixed;
             inset: 0;
@@ -933,7 +1074,7 @@
             transform: translateX(0);
         }
 
-        /* Drawer header - FIXED: Exactly like reference */
+        /* Drawer header */
         .m-drawer-header {
             height: 72px;
             border-bottom: 1px solid var(--border-subtle);
@@ -950,7 +1091,7 @@
             max-width: 200px;
         }
 
-        /* FIXED: Mobile drawer close button exactly like reference */
+        /* Mobile drawer close button */
         .m-drawer-close {
             width: 40px;
             height: 40px;
@@ -992,7 +1133,7 @@
             transform: rotate(-45deg);
         }
 
-        /* Drawer nav - FIXED: Exactly like reference */
+        /* Drawer nav */
         .m-drawer-nav {
             padding: 32px 8px;
             display: flex;
@@ -1021,21 +1162,20 @@
             text-overflow: ellipsis;
         }
 
-        .m-nav-item .icon svg {
-            width: 22px;
-            height: 22px;
-            stroke: var(--icon-color);
+        .m-nav-item .icon i {
+            font-size: 22px;
+            color: var(--icon-color);
         }
 
         /* active mobile */
         .m-nav-item.active {
             background: var(--active-bg);
         }
-        .m-nav-item.active .icon svg {
-            stroke: var(--icon-active);
+        .m-nav-item.active .icon i {
+            color: var(--icon-active);
         }
 
-        /* Mobile submenu - FIXED: Exactly like reference */
+        /* Mobile submenu */
         .m-submenu {
             display: none;
             margin-left: 28px;
@@ -1066,12 +1206,11 @@
         }
 
         .m-submenu-item .submenu-icon {
-            width: 18px;
-            height: 18px;
-            stroke: #6b7280;
+            font-size: 18px;
+            color: #6b7280;
         }
 
-        /* Drawer footer account - FIXED: Exactly like reference */
+        /* Drawer footer account */
         .m-account-section {
             margin-top: auto;
             padding: 16px;
@@ -1087,7 +1226,7 @@
             overflow-x: hidden;
         }
 
-        /* Mobile page header - FIXED: Exactly like reference */
+        /* Mobile page header */
         .mobile-page-header {
             margin-bottom: 20px;
             width: 100%;
@@ -1121,421 +1260,116 @@
             flex-wrap: wrap;
         }
 
-        .mobile-breadcrumb-icon svg {
-            width: 16px;
-            height: 16px;
-            stroke: #9ca3af;
+        .mobile-breadcrumb-icon i {
+            font-size: 16px;
+            color: #9ca3af;
         }
 
         .mobile-breadcrumb-divider {
             color: #d1d5db;
         }
 
-        /* Mobile search and add button row - FIXED: Exactly like reference */
-        .mobile-controls-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 100%;
-            overflow: hidden;
-        }
-
-        .mobile-search-wrap {
-            flex: 1;
-            position: relative;
-            min-width: 0;
-        }
-
-        .mobile-search-input-wrap {
-            background: #ffffff;
-            border-radius: 12px;
-            border: 2px solid #e5e7eb;
-            padding: 0 16px 0 44px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            transition: all 0.2s ease;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            width: 100%;
-        }
-
-        .mobile-search-input-wrap:focus-within {
-            border-color: var(--brand-primary);
-            box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
-        }
-
-        .mobile-search-icon {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
-            stroke: #6b7280;
-            z-index: 2;
-        }
-
-        .mobile-search-input-wrap input {
-            border: none;
-            background: transparent;
-            outline: none;
-            flex: 1;
-            font-size: 16px;
-            color: #111827;
-            font-weight: 500;
-            width: 100%;
-            min-width: 0;
-        }
-
-        .mobile-search-input-wrap input::placeholder {
-            color: #9ca3af;
-            font-weight: 400;
-        }
-
-        .mobile-add-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 15px;
-            line-height: 20px;
-            color: #ffffff;
-            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
-            white-space: nowrap;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 4px rgba(81, 39, 186, 0.2);
-            flex-shrink: 0;
-            max-width: 120px;
-        }
-
-        .mobile-add-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(81, 39, 186, 0.25);
-        }
-
-        .mobile-add-btn svg {
-            width: 20px;
-            height: 20px;
-            stroke: #ffffff;
-        }
-
-        /* Mobile product cards - FIXED: Exactly like reference category cards */
-        .mobile-product-cards {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            width: 100%;
-        }
-
-        .product-card-mobile {
+        /* Mobile Form Cards */
+        .mobile-form-card {
             background: #ffffff;
             border-radius: 16px;
             border: 1px solid #e5e7eb;
             padding: 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: all 0.2s ease;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            width: 100%;
-            max-width: 100%;
-            position: relative;
-            cursor: pointer;
+            margin-bottom: 16px;
         }
 
-        .product-card-mobile:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        .product-card-image {
-            width: 56px;
-            height: 56px;
-            border-radius: 12px;
-            object-fit: cover;
-            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-            flex-shrink: 0;
-            padding: 8px;
-        }
-
-        .product-card-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            min-width: 0;
-        }
-
-        .product-card-name {
+        .mobile-section-title {
             font-weight: 700;
-            font-size: 16px;
+            font-size: 18px;
             line-height: 24px;
             color: rgb(29, 30, 32);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 200px;
-        }
-
-        .product-card-price {
-            font-weight: 600;
-            font-size: 14px;
-            line-height: 18px;
-            color: #5127ba;
-        }
-
-        .product-card-category {
-            font-weight: 500;
-            font-size: 12px;
-            line-height: 16px;
-            color: #6b7280;
-        }
-
-        /* Mobile card actions - FIXED: Exactly like reference */
-        .product-card-actions {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-left: auto;
-            flex-shrink: 0;
+            margin-bottom: 16px;
         }
 
-        .mobile-status-toggle {
-            display: flex;
-            align-items: center;
-            margin: 0;
+        .mobile-section-title i {
+            font-size: 20px;
+            color: var(--brand-primary);
         }
 
-        .product-card-menu-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            border: 1px solid #e5e7eb;
-            background: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-            position: relative;
-            z-index: 2;
-        }
-
-        .product-card-menu-btn:hover {
-            background: #f9fafb;
-            border-color: #d1d5db;
-        }
-
-        .product-card-menu-dots {
-            width: 4px;
-            height: 4px;
-            border-radius: 999px;
-            background: #6b7280;
-            box-shadow: 0 -6px 0 0 #6b7280, 0 6px 0 0 #6b7280;
-        }
-
-        /* Advanced Menu (Bottom Sheet) - FIXED: Exactly like reference */
-        .advanced-menu {
+        /* Mobile Save Bar */
+        .mobile-save-bar {
+            display: none;
             position: fixed;
             bottom: 0;
             left: 0;
-            right: 0;
-            background: #ffffff;
-            border-radius: 24px 24px 0 0;
-            padding: 24px 0;
-            transform: translateY(100%);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 2000;
-            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
-            max-height: 80vh;
-            overflow-y: auto;
+            width: 100%;
+            background: white;
+            padding: 16px;
+            border-top: 1px solid var(--border-subtle);
+            z-index: 90;
+            box-shadow: 0 -4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .mobile-save-bar .btn {
+            flex: 1;
+            padding: 12px;
+        }
+
+        /* Custom Select */
+        .custom-select-container {
+            position: relative;
             width: 100%;
         }
 
-        .advanced-menu.open {
+        .custom-select-trigger {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            background: white;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+
+        .custom-select-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-premium);
+            z-index: 50;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .custom-select-options.open {
+            opacity: 1;
+            pointer-events: auto;
             transform: translateY(0);
         }
 
-        .advanced-menu-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            z-index: 1999;
-        }
-
-        .advanced-menu-overlay.open {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .advanced-menu-header {
-            padding: 0 24px 20px 24px;
-            border-bottom: 1px solid #f3f4f6;
-            margin-bottom: 16px;
-            position: relative;
-        }
-
-        .advanced-menu-title {
-            font-weight: 700;
-            font-size: 20px;
-            line-height: 28px;
-            color: rgb(29, 30, 32);
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .advanced-menu-items {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .advanced-menu-item {
-            padding: 18px 24px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            background: none;
-            border: none;
-            width: 100%;
-            text-align: left;
+        .custom-option {
+            padding: 12px 16px;
             cursor: pointer;
-            font-size: 16px;
-            line-height: 24px;
-            color: rgb(29, 30, 32);
-            transition: background 0.15s ease;
-            border-bottom: 1px solid #f9fafb;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            transition: all 0.1s ease;
+            font-size: 14px;
+            color: var(--text-color);
         }
 
-        .advanced-menu-item:last-child {
-            border-bottom: none;
-            color: var(--danger-color);
+        .custom-option:hover {
+            background: #F8FAFC;
+            color: var(--brand-primary);
         }
 
-        .advanced-menu-item:last-child svg {
-            stroke: var(--danger-color);
-        }
-
-        .advanced-menu-item:hover {
-            background: #f9fafb;
-        }
-
-        .advanced-menu-item svg {
-            width: 22px;
-            height: 22px;
-            stroke: #6b7280;
-            flex-shrink: 0;
-        }
-
-        .advanced-menu-close {
-            position: absolute;
-            top: 0;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            border: 1px solid #e5e7eb;
-            background: #f9fafb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .advanced-menu-close:hover {
-            background: #f3f4f6;
-        }
-
-        .advanced-menu-close-icon {
-            width: 16px;
-            height: 16px;
-            position: relative;
-        }
-
-        .advanced-menu-close-icon::before,
-        .advanced-menu-close-icon::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            margin: auto;
-            width: 16px;
-            height: 2px;
-            border-radius: 999px;
-            background: #111827;
-        }
-
-        .advanced-menu-close-icon::before {
-            transform: rotate(45deg);
-        }
-
-        .advanced-menu-close-icon::after {
-            transform: rotate(-45deg);
-        }
-
-        .menu-handle {
-            width: 40px;
-            height: 4px;
-            border-radius: 999px;
-            background: #e5e7eb;
-            margin: 0 auto 20px auto;
-        }
-
-        /* Toast */
-        #toast-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 3000;
-            pointer-events: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .toast {
-            padding: 1rem 1.5rem;
-            background: white;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-premium);
-            animation: slideUp 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            border-left: 4px solid var(--brand-primary);
-            min-width: 300px;
-            pointer-events: auto;
-            max-width: 90vw;
-        }
-
-        .toast.success {
-            border-left-color: var(--success-color);
-        }
-
-        .toast.error {
-            border-left-color: var(--danger-color);
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* FIXED PROFILE POPUP */
+        /* FIXED: Profile Popup */
         .profile-popup {
             position: fixed;
             background-color: #ffffff;
@@ -1587,15 +1421,15 @@
         .popup-header {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 1rem;
+            gap: 12px;
+            padding: 16px;
             border-bottom: 1px solid #e5e7eb;
             background: #f9fafb;
         }
 
         .popup-list {
             list-style: none;
-            padding: 0.5rem;
+            padding: 8px;
         }
 
         .popup-list li {
@@ -1606,8 +1440,8 @@
         .popup-list a {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem;
+            gap: 12px;
+            padding: 12px;
             border-radius: 8px;
             text-decoration: none;
             color: var(--text-color);
@@ -1626,9 +1460,9 @@
         }
 
         .popup-list a i {
-            font-size: 1.2rem;
+            font-size: 20px;
             color: #6b7280;
-            min-width: 20px;
+            min-width: 24px;
         }
 
         .popup-list a.logout {
@@ -1639,49 +1473,19 @@
             color: var(--danger-color);
         }
 
-        .popup-icon {
-            width: 18px;
-            height: 18px;
-            stroke: #6b7280;
-            flex-shrink: 0;
-        }
-
-        .logout-icon {
-            stroke: var(--danger-color) !important;
-        }
-
-        /* Empty state */
-        .empty-state {
-            text-align: center;
-            padding: 4rem 1rem;
-            color: #6b7280;
-            width: 100%;
-        }
-
-        .empty-state h3 {
-            font-size: 18px;
-            margin-bottom: 8px;
-            color: rgb(29, 30, 32);
-        }
-
-        /* Category badge */
-        .category-badge {
-            background: #EFF6FF;
-            color: var(--brand-primary);
-            padding: 0.25rem 0.75rem;
-            border-radius: 999px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-left: 0.5rem;
-        }
-
         /* Responsive switch */
         @media (max-width: 768px) {
             .page-desktop { display: none; }
             .page-mobile  { display: flex; }
             
-            .card {
-                display: none;
+            .form-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .form-col {
+                gap: 16px;
             }
             
             .content-inner {
@@ -1690,6 +1494,30 @@
             
             .page-header {
                 display: none;
+            }
+            
+            .mobile-save-bar {
+                display: flex;
+                gap: 12px;
+            }
+            
+            .modal-overlay {
+                align-items: flex-end;
+                padding: 0;
+            }
+            
+            .modal-content {
+                width: 100%;
+                border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+                animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                max-height: 90vh;
+                overflow-y: auto;
+                max-width: 100%;
+            }
+            
+            @keyframes slideUpModal {
+                from { transform: translateY(100%); }
+                to { transform: translateY(0); }
             }
             
             /* Prevent horizontal scrolling */
@@ -1703,15 +1531,7 @@
                 padding: 16px;
                 max-width: 100%;
                 overflow-x: hidden;
-            }
-            
-            .mobile-controls-row {
-                padding-right: 4px;
-            }
-            
-            .mobile-add-btn {
-                padding: 12px 14px;
-                font-size: 14px;
+                padding-bottom: 100px;
             }
         }
 
@@ -1719,21 +1539,9 @@
             .page-desktop { display: flex; }
             .page-mobile { display: none; }
             
-            /* Fix desktop popup z-index */
-            .td-actions {
-                position: relative;
+            .mobile-save-bar {
+                display: none;
             }
-            
-            .desktop-popup {
-                z-index: 10002;
-            }
-        }
-
-        /* Text truncation fixes */
-        .text-truncate {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
     </style>
 </head>
@@ -1754,13 +1562,7 @@
                             <!-- Dashboard -->
                             <div class="d-nav-item" onclick="window.location.href='index.html'">
                                 <span class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect width="7" height="7" x="3" y="3" rx="1"/>
-                                        <rect width="7" height="7" x="14" y="3" rx="1"/>
-                                        <rect width="7" height="7" x="14" y="14" rx="1"/>
-                                        <rect width="7" height="7" x="3" y="14" rx="1"/>
-                                    </svg>
+                                    <i class='bx bx-home-alt'></i>
                                 </span>
                                 <span class="label">Dashboard</span>
                             </div>
@@ -1768,12 +1570,7 @@
                             <!-- Inventory (Active) -->
                             <div class="d-nav-item d-nav-item--active">
                                 <span class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M2 7v10"/>
-                                        <path d="M6 5v14"/>
-                                        <rect width="12" height="18" x="10" y="3" rx="2"/>
-                                    </svg>
+                                    <i class='bx bx-package'></i>
                                 </span>
                                 <span class="label">Inventory</span>
                             </div>
@@ -1781,11 +1578,7 @@
                             <!-- Customize Site -->
                             <div class="d-nav-item" id="d-customize-toggle">
                                 <span class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
-                                        <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
-                                    </svg>
+                                    <i class='bx bx-palette'></i>
                                 </span>
                                 <span class="label">Customize Site</span>
                                 <span class="chevron">
@@ -1801,32 +1594,15 @@
                             <!-- Desktop Customize Site submenu -->
                             <div class="d-submenu" id="d-customize-submenu">
                                 <div class="d-submenu-item">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
-                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
-                                        <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
-                                        <path d="M9.5 12.5 11 14"/>
-                                        <path d="M14 10l-3.5 4"/>
-                                        <path d="m5 15 4.5-4"/>
-                                    </svg>
+                                    <i class='bx bx-paint submenu-icon'></i>
                                     <span>Theme & layout</span>
                                 </div>
                                 <div class="d-submenu-item">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect width="18" height="18" x="3" y="3" rx="2"/>
-                                        <path d="M3 9h18"/>
-                                        <path d="M9 21V9"/>
-                                    </svg>
+                                    <i class='bx bx-grid-alt submenu-icon'></i>
                                     <span>Sections</span>
                                 </div>
                                 <div class="d-submenu-item">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="18" cy="5" r="3"/>
-                                        <circle cx="6" cy="12" r="3"/>
-                                        <circle cx="18" cy="19" r="3"/>
-                                        <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
-                                        <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
-                                    </svg>
+                                    <i class='bx bx-navigation submenu-icon'></i>
                                     <span>Navigation</span>
                                 </div>
                             </div>
@@ -1834,13 +1610,7 @@
                             <!-- MANAGE ORDERS -->
                             <div class="d-nav-item" id="d-orders-toggle">
                                 <span class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
-                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
-                                        <path d="M8 14v2.2l1.6 1"/>
-                                        <circle cx="8" cy="16" r="6"/>
-                                    </svg>
+                                    <i class='bx bx-clipboard'></i>
                                 </span>
                                 <span class="label">MANAGE ORDERS</span>
                                 <span class="chevron">
@@ -1856,37 +1626,15 @@
                             <!-- Desktop MANAGE ORDERS submenu -->
                             <div class="d-submenu" id="d-orders-submenu">
                                 <div class="d-submenu-item">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12 6v6l4 2"/>
-                                        <path d="M22 12a10 10 0 1 0-11 9.95"/>
-                                        <path d="m22 16-5.5 5.5L14 19"/>
-                                    </svg>
+                                    <i class='bx bx-calendar submenu-icon'></i>
                                     <span>Today</span>
                                 </div>
                                 <div class="d-submenu-item">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M8 2v4"/>
-                                        <path d="M16 2v4"/>
-                                        <rect width="18" height="18" x="3" y="4" rx="2"/>
-                                        <path d="M3 10h18"/>
-                                        <path d="M8 14h.01"/>
-                                        <path d="M12 14h.01"/>
-                                        <path d="M16 14h.01"/>
-                                        <path d="M8 18h.01"/>
-                                        <path d="M12 18h.01"/>
-                                        <path d="M16 18h.01"/>
-                                    </svg>
+                                    <i class='bx bx-calendar-month submenu-icon'></i>
                                     <span>This Month</span>
                                 </div>
                                 <div class="d-submenu-item">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12 2v2"/>
-                                        <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
-                                        <path d="M18 2v2"/>
-                                        <path d="M2 13h2"/>
-                                        <path d="M8 8h14"/>
-                                        <rect x="8" y="3" width="14" height="14" rx="2"/>
-                                    </svg>
+                                    <i class='bx bx-list-ul submenu-icon'></i>
                                     <span>All Orders</span>
                                 </div>
                             </div>
@@ -1913,148 +1661,148 @@
                     <!-- PAGE HEADER -->
                     <div class="page-header">
                         <div class="page-title-wrap">
-                            <div class="page-title" id="products-page-title">Products</div>
+                            <div class="page-title" id="editor-title">Product Editor</div>
                             <div class="breadcrumb">
                                 <span class="breadcrumb-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2"
-                                         stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
-                                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                                    </svg>
+                                    <i class='bx bx-home'></i>
                                 </span>
                                 <span>Home</span>
                                 <span class="breadcrumb-divider">/</span>
-                                <span>Products</span>
+                                <span>Inventory</span>
+                                <span class="breadcrumb-divider">/</span>
+                                <span>Product Editor</span>
                             </div>
                         </div>
 
-                        <button class="primary-btn" id="add-product-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2"
-                                 stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M5 12h14"/>
-                                <path d="M12 5v14"/>
-                            </svg>
-                            <span>Add Product</span>
-                        </button>
+                        <div class="header-actions">
+                            <button class="secondary-btn" onclick="window.history.back()">
+                                <i class='bx bx-arrow-back'></i>
+                                <span>Back</span>
+                            </button>
+                            <button class="primary-btn" id="save-btn">
+                                <i class='bx bx-save'></i>
+                                <span>Save Product</span>
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- CARD -->
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="search-input-wrap">
-                                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg"
-                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="11" cy="11" r="7"></circle>
-                                    <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
-                                </svg>
-                                <input type="text" id="search-products" placeholder="Search products by name..." />
+                    <!-- Loading State -->
+                    <div id="loading-state" style="text-align:center; padding:4rem;">
+                        <i class='bx bx-loader-alt bx-spin' style='font-size:2.5rem; color:var(--brand-primary);'></i>
+                    </div>
+
+                    <!-- Product Form -->
+                    <form id="product-form" style="display:none;">
+                        <div class="form-grid">
+                            <div class="form-col">
+                                <!-- Cover Image Card -->
+                                <div class="card" id="card-cover">
+                                    <div class="card-body">
+                                        <h3 class="section-title">
+                                            <i class='bx bx-image'></i>
+                                            Cover Image
+                                        </h3>
+                                        <div id="cover-upload-zone" class="upload-zone" onclick="document.getElementById('cover-input').click()">
+                                            <i class='bx bx-cloud-upload'></i>
+                                            <div class="upload-text">Click to upload cover image</div>
+                                            <div class="upload-subtext">Single image only, PNG, JPG up to 5MB</div>
+                                        </div>
+                                        <input type="file" id="cover-input" accept="image/*" style="display:none;">
+                                        <div id="cover-preview-wrapper" class="image-preview-container" style="display:none;">
+                                            <div class="preview-content">
+                                                <div class="preview-img-wrapper">
+                                                    <img id="cover-preview" class="preview-img">
+                                                </div>
+                                                <div class="preview-actions">
+                                                    <button type="button" class="btn btn-secondary" onclick="showUploadBox()">
+                                                        <i class='bx bx-reset'></i>
+                                                        Change Image
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Product Details Card -->
+                                <div class="card" id="card-details">
+                                    <div class="card-body">
+                                        <h3 class="section-title">
+                                            <i class='bx bx-info-circle'></i>
+                                            Product Details
+                                        </h3>
+                                        <div class="form-group">
+                                            <label class="form-label">Product Name</label>
+                                            <input type="text" class="form-control" id="name" required placeholder="e.g. Classic Cotton Shirt">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Category</label>
+                                            <div id="category-select" class="custom-select-container"></div>
+                                            <input type="hidden" id="selected-category">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Description</label>
+                                            <textarea class="form-control" id="description" rows="4" placeholder="Detailed product description..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Color Variants Card -->
+                                <div class="card" id="card-variants">
+                                    <div class="card-body">
+                                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                                            <h3 class="section-title" style="margin:0;">
+                                                <i class='bx bx-palette'></i>
+                                                Color Variants
+                                            </h3>
+                                            <button type="button" class="btn btn-primary btn-sm" onclick="openColorModal()">
+                                                <i class='bx bx-plus'></i>
+                                                Add Variant
+                                            </button>
+                                        </div>
+                                        <div id="variants-list"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Customer Reviews Card -->
+                                <div class="card" id="card-reviews">
+                                    <div class="card-body">
+                                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                                            <h3 class="section-title" style="margin:0;">
+                                                <i class='bx bx-star'></i>
+                                                Customer Reviews
+                                            </h3>
+                                            <button type="button" class="btn btn-primary btn-sm" onclick="openReviewModal()">
+                                                <i class='bx bx-plus'></i>
+                                                Add Review
+                                            </button>
+                                        </div>
+                                        <div id="reviews-list"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-col">
+                                <!-- Pricing Card -->
+                                <div class="card" id="card-pricing">
+                                    <div class="card-body">
+                                        <h3 class="section-title">
+                                            <i class='bx bx-tag-alt'></i>
+                                            Pricing
+                                        </h3>
+                                        <div class="form-group">
+                                            <label class="form-label">Current Price (₹)</label>
+                                            <input type="number" class="form-control" id="price" step="0.01" required placeholder="0.00">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Old Price (₹)</label>
+                                            <input type="number" class="form-control" id="oldPrice" step="0.01" required placeholder="0.00">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="table-wrapper">
-                            <table class="products-table">
-                                <thead>
-                                    <tr>
-                                        <th class="th-product">Product</th>
-                                        <th class="th-price">Price</th>
-                                        <th class="th-colors">Colors</th>
-                                        <th class="th-status">Status</th>
-                                        <th class="th-actions">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="admin-products-table">
-                                    <!-- Skeleton loading for desktop -->
-                                    <tr class="desktop-skeleton-row">
-                                        <td class="td-product">
-                                            <div class="product-cell">
-                                                <div class="skeleton skeleton-image"></div>
-                                                <div class="product-info">
-                                                    <div class="skeleton skeleton-text"></div>
-                                                    <div class="skeleton skeleton-text-small"></div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="skeleton skeleton-text-small"></div>
-                                        </td>
-                                        <td>
-                                            <div class="skeleton skeleton-text-small"></div>
-                                        </td>
-                                        <td>
-                                            <div class="status-toggle">
-                                                <div class="skeleton skeleton-toggle"></div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="action-buttons">
-                                                <div class="skeleton skeleton-button"></div>
-                                                <div class="skeleton skeleton-kebab"></div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="desktop-skeleton-row">
-                                        <td class="td-product">
-                                            <div class="product-cell">
-                                                <div class="skeleton skeleton-image"></div>
-                                                <div class="product-info">
-                                                    <div class="skeleton skeleton-text"></div>
-                                                    <div class="skeleton skeleton-text-small"></div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="skeleton skeleton-text-small"></div>
-                                        </td>
-                                        <td>
-                                            <div class="skeleton skeleton-text-small"></div>
-                                        </td>
-                                        <td>
-                                            <div class="status-toggle">
-                                                <div class="skeleton skeleton-toggle"></div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="action-buttons">
-                                                <div class="skeleton skeleton-button"></div>
-                                                <div class="skeleton skeleton-kebab"></div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="desktop-skeleton-row">
-                                        <td class="td-product">
-                                            <div class="product-cell">
-                                                <div class="skeleton skeleton-image"></div>
-                                                <div class="product-info">
-                                                    <div class="skeleton skeleton-text"></div>
-                                                    <div class="skeleton skeleton-text-small"></div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="skeleton skeleton-text-small"></div>
-                                        </td>
-                                        <td>
-                                            <div class="skeleton skeleton-text-small"></div>
-                                        </td>
-                                        <td>
-                                            <div class="status-toggle">
-                                                <div class="skeleton skeleton-toggle"></div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="action-buttons">
-                                                <div class="skeleton skeleton-button"></div>
-                                                <div class="skeleton skeleton-kebab"></div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </main>
         </div>
@@ -2068,10 +1816,9 @@
                 <div class="m-menu-lines"><span></span></div>
             </button>
 
-            <img
-              class="m-logo"
-              src="https://product-ecommerces.netlify.app/vastramaya.png"
-              alt="Vastramaya Logo" />
+            <img class="m-logo"
+                 src="https://product-ecommerces.netlify.app/vastramaya.png"
+                 alt="Vastramaya Logo" />
         </header>
 
         <main class="m-main">
@@ -2079,84 +1826,111 @@
                 <!-- Mobile Page Header -->
                 <div class="mobile-page-header">
                     <div class="mobile-page-title-wrap">
-                        <div class="mobile-page-title" id="mobile-products-page-title">Products</div>
+                        <div class="mobile-page-title" id="mobile-editor-title">Product Editor</div>
                         <div class="mobile-breadcrumb">
                             <span class="mobile-breadcrumb-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2"
-                                     stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
-                                    <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                                </svg>
+                                <i class='bx bx-home'></i>
                             </span>
                             <span>Home</span>
                             <span class="mobile-breadcrumb-divider">/</span>
-                            <span>Products</span>
+                            <span>Inventory</span>
+                            <span class="mobile-breadcrumb-divider">/</span>
+                            <span>Product Editor</span>
                         </div>
-                    </div>
-                    
-                    <!-- Mobile Search and Add Button Row -->
-                    <div class="mobile-controls-row">
-                        <div class="mobile-search-wrap">
-                            <div class="mobile-search-input-wrap">
-                                <svg class="mobile-search-icon" xmlns="http://www.w3.org/2000/svg"
-                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="11" cy="11" r="7"></circle>
-                                    <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
-                                </svg>
-                                <input type="text" id="mobile-search-products" placeholder="Search products..." />
-                            </div>
-                        </div>
-                        <button class="mobile-add-btn" id="mobile-add-product-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2"
-                                 stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M5 12h14"/>
-                                <path d="M12 5v14"/>
-                            </svg>
-                            <span>Add</span>
-                        </button>
                     </div>
                 </div>
 
-                <!-- Mobile Product Cards -->
-                <div class="mobile-product-cards" id="mobile-product-cards">
-                    <!-- Skeleton loading for mobile -->
-                    <div class="mobile-skeleton-card">
-                        <div class="skeleton skeleton-mobile-image"></div>
-                        <div class="skeleton-mobile-content">
-                            <div class="skeleton skeleton-mobile-title"></div>
-                            <div class="skeleton skeleton-mobile-subtitle"></div>
-                        </div>
-                        <div class="product-card-actions">
-                            <div class="skeleton skeleton-mobile-toggle"></div>
-                            <div class="skeleton skeleton-mobile-menu"></div>
-                        </div>
-                    </div>
-                    <div class="mobile-skeleton-card">
-                        <div class="skeleton skeleton-mobile-image"></div>
-                        <div class="skeleton-mobile-content">
-                            <div class="skeleton skeleton-mobile-title"></div>
-                            <div class="skeleton skeleton-mobile-subtitle"></div>
-                        </div>
-                        <div class="product-card-actions">
-                            <div class="skeleton skeleton-mobile-toggle"></div>
-                            <div class="skeleton skeleton-mobile-menu"></div>
-                        </div>
-                    </div>
-                    <div class="mobile-skeleton-card">
-                        <div class="skeleton skeleton-mobile-image"></div>
-                        <div class="skeleton-mobile-content">
-                            <div class="skeleton skeleton-mobile-title"></div>
-                            <div class="skeleton skeleton-mobile-subtitle"></div>
-                        </div>
-                        <div class="product-card-actions">
-                            <div class="skeleton skeleton-mobile-toggle"></div>
-                            <div class="skeleton skeleton-mobile-menu"></div>
-                        </div>
-                    </div>
+                <!-- Loading State -->
+                <div id="mobile-loading-state" style="text-align:center; padding:4rem;">
+                    <i class='bx bx-loader-alt bx-spin' style='font-size:2.5rem; color:var(--brand-primary);'></i>
                 </div>
+
+                <!-- Mobile Product Form -->
+                <form id="mobile-product-form" style="display:none;">
+                    <!-- Cover Image Card -->
+                    <div class="mobile-form-card">
+                        <h3 class="mobile-section-title">
+                            <i class='bx bx-image'></i>
+                            Cover Image
+                        </h3>
+                        <div id="mobile-cover-upload-zone" class="upload-zone" onclick="document.getElementById('mobile-cover-input').click()">
+                            <i class='bx bx-cloud-upload'></i>
+                            <div class="upload-text">Tap to upload cover</div>
+                            <div class="upload-subtext">Single image only</div>
+                        </div>
+                        <input type="file" id="mobile-cover-input" accept="image/*" style="display:none;">
+                        <div id="mobile-cover-preview-wrapper" class="image-preview-container" style="display:none; margin-top:12px;">
+                            <img id="mobile-cover-preview" class="preview-img">
+                        </div>
+                    </div>
+
+                    <!-- Product Details Card -->
+                    <div class="mobile-form-card">
+                        <h3 class="mobile-section-title">
+                            <i class='bx bx-info-circle'></i>
+                            Product Details
+                        </h3>
+                        <div class="form-group">
+                            <label class="form-label">Product Name</label>
+                            <input type="text" class="form-control" id="mobile-name" required placeholder="Product name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <div id="mobile-category-select" class="custom-select-container"></div>
+                            <input type="hidden" id="mobile-selected-category">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" id="mobile-description" rows="3" placeholder="Product description"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Pricing Card -->
+                    <div class="mobile-form-card">
+                        <h3 class="mobile-section-title">
+                            <i class='bx bx-tag-alt'></i>
+                            Pricing
+                        </h3>
+                        <div class="form-group">
+                            <label class="form-label">Current Price (₹)</label>
+                            <input type="number" class="form-control" id="mobile-price" step="0.01" required placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Old Price (₹)</label>
+                            <input type="number" class="form-control" id="mobile-oldPrice" step="0.01" required placeholder="0.00">
+                        </div>
+                    </div>
+
+                    <!-- Color Variants Card -->
+                    <div class="mobile-form-card">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                            <h3 class="mobile-section-title" style="margin:0;">
+                                <i class='bx bx-palette'></i>
+                                Color Variants
+                            </h3>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="openColorModal()">
+                                <i class='bx bx-plus'></i>
+                                Add
+                            </button>
+                        </div>
+                        <div id="mobile-variants-list"></div>
+                    </div>
+
+                    <!-- Customer Reviews Card -->
+                    <div class="mobile-form-card">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                            <h3 class="mobile-section-title" style="margin:0;">
+                                <i class='bx bx-star'></i>
+                                Customer Reviews
+                            </h3>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="openReviewModal()">
+                                <i class='bx bx-plus'></i>
+                                Add
+                            </button>
+                        </div>
+                        <div id="mobile-reviews-list"></div>
+                    </div>
+                </form>
             </div>
         </main>
 
@@ -2164,10 +1938,9 @@
         <div class="m-overlay" id="m-overlay">
             <div class="m-drawer">
                 <div class="m-drawer-header">
-                    <img
-                      class="m-drawer-logo"
-                      src="https://product-ecommerces.netlify.app/vastramaya.png"
-                      alt="Vastramaya Logo" />
+                    <img class="m-drawer-logo"
+                         src="https://product-ecommerces.netlify.app/vastramaya.png"
+                         alt="Vastramaya Logo" />
                     <button class="m-drawer-close" id="m-drawer-close" aria-label="Close menu">
                         <div class="m-drawer-close-icon"></div>
                     </button>
@@ -2177,13 +1950,7 @@
                     <!-- Dashboard -->
                     <div class="m-nav-item" onclick="window.location.href='index.html'">
                         <span class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect width="7" height="7" x="3" y="3" rx="1"/>
-                                <rect width="7" height="7" x="14" y="3" rx="1"/>
-                                <rect width="7" height="7" x="14" y="14" rx="1"/>
-                                <rect width="7" height="7" x="3" y="14" rx="1"/>
-                            </svg>
+                            <i class='bx bx-home-alt'></i>
                         </span>
                         <span class="label">Dashboard</span>
                     </div>
@@ -2191,12 +1958,7 @@
                     <!-- Inventory (Active) -->
                     <div class="m-nav-item active">
                         <span class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M2 7v10"/>
-                                <path d="M6 5v14"/>
-                                <rect width="12" height="18" x="10" y="3" rx="2"/>
-                            </svg>
+                            <i class='bx bx-package'></i>
                         </span>
                         <span class="label">Inventory</span>
                     </div>
@@ -2204,11 +1966,7 @@
                     <!-- Customize Site with dropdown -->
                     <div class="m-nav-item" id="m-customize-toggle">
                         <span class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
-                                <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
-                            </svg>
+                            <i class='bx bx-palette'></i>
                         </span>
                         <span class="label">Customize Site</span>
                         <span class="chevron">
@@ -2224,32 +1982,15 @@
                     <!-- Mobile Customize Site submenu -->
                     <div class="m-submenu" id="m-customize-submenu">
                         <div class="m-submenu-item">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
-                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
-                                <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
-                                <path d="M9.5 12.5 11 14"/>
-                                <path d="M14 10l-3.5 4"/>
-                                <path d="m5 15 4.5-4"/>
-                            </svg>
+                            <i class='bx bx-paint submenu-icon'></i>
                             <span>Theme & layout</span>
                         </div>
                         <div class="m-submenu-item">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect width="18" height="18" x="3" y="3" rx="2"/>
-                                <path d="M3 9h18"/>
-                                <path d="M9 21V9"/>
-                            </svg>
+                            <i class='bx bx-grid-alt submenu-icon'></i>
                             <span>Sections</span>
                         </div>
                         <div class="m-submenu-item">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="18" cy="5" r="3"/>
-                                <circle cx="6" cy="12" r="3"/>
-                                <circle cx="18" cy="19" r="3"/>
-                                <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
-                                <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
-                            </svg>
+                            <i class='bx bx-navigation submenu-icon'></i>
                             <span>Navigation</span>
                         </div>
                     </div>
@@ -2257,13 +1998,7 @@
                     <!-- MANAGE ORDERS with dropdown -->
                     <div class="m-nav-item" id="m-orders-toggle">
                         <span class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
-                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
-                                <path d="M8 14v2.2l1.6 1"/>
-                                <circle cx="8" cy="16" r="6"/>
-                            </svg>
+                            <i class='bx bx-clipboard'></i>
                         </span>
                         <span class="label">MANAGE ORDERS</span>
                         <span class="chevron">
@@ -2279,37 +2014,15 @@
                     <!-- Mobile MANAGE ORDERS submenu -->
                     <div class="m-submenu" id="m-orders-submenu">
                         <div class="m-submenu-item">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 6v6l4 2"/>
-                                <path d="M22 12a10 10 0 1 0-11 9.95"/>
-                                <path d="m22 16-5.5 5.5L14 19"/>
-                            </svg>
+                            <i class='bx bx-calendar submenu-icon'></i>
                             <span>Today</span>
                         </div>
                         <div class="m-submenu-item">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M8 2v4"/>
-                                <path d="M16 2v4"/>
-                                <rect width="18" height="18" x="3" y="4" rx="2"/>
-                                <path d="M3 10h18"/>
-                                <path d="M8 14h.01"/>
-                                <path d="M12 14h.01"/>
-                                <path d="M16 14h.01"/>
-                                <path d="M8 18h.01"/>
-                                <path d="M12 18h.01"/>
-                                <path d="M16 18h.01"/>
-                            </svg>
+                            <i class='bx bx-calendar-month submenu-icon'></i>
                             <span>This Month</span>
                         </div>
                         <div class="m-submenu-item">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 2v2"/>
-                                <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
-                                <path d="M18 2v2"/>
-                                <path d="M2 13h2"/>
-                                <path d="M8 8h14"/>
-                                <rect x="8" y="3" width="14" height="14" rx="2"/>
-                            </svg>
+                            <i class='bx bx-list-ul submenu-icon'></i>
                             <span>All Orders</span>
                         </div>
                     </div>
@@ -2330,36 +2043,10 @@
             </div>
         </div>
         
-        <!-- Advanced Menu (Bottom Sheet) -->
-        <div class="advanced-menu-overlay" id="advanced-menu-overlay"></div>
-        <div class="advanced-menu" id="advanced-menu">
-            <div class="menu-handle"></div>
-            <div class="advanced-menu-header">
-                <div class="advanced-menu-title">Product Actions</div>
-                <button class="advanced-menu-close" id="advanced-menu-close">
-                    <div class="advanced-menu-close-icon"></div>
-                </button>
-            </div>
-            <div class="advanced-menu-items">
-                <button class="advanced-menu-item" id="mobile-edit-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M13 21h8"/>
-                        <path d="m15 5 4 4"/>
-                        <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
-                    </svg>
-                    <span>Edit</span>
-                </button>
-                <button class="advanced-menu-item" id="mobile-delete-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M10 11v6"/>
-                        <path d="M14 11v6"/>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
-                        <path d="M3 6h18"/>
-                        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                    </svg>
-                    <span>Delete Product</span>
-                </button>
-            </div>
+        <!-- Mobile Save Bar -->
+        <div class="mobile-save-bar">
+            <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+            <button type="button" class="btn btn-primary" id="mobile-save-btn">Save Product</button>
         </div>
     </div>
 
@@ -2375,40 +2062,131 @@
         <ul class="popup-list">
             <li>
                 <a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
-                        <circle cx="12" cy="8" r="5"/>
-                        <path d="M20 21a8 8 0 0 0-16 0"/>
-                    </svg>
+                    <i class='bx bx-user'></i>
                     <span>Profile</span>
                 </a>
             </li>
             <li>
                 <a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
-                        <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
-                        <circle cx="12" cy="12" r="3"/>
-                    </svg>
+                    <i class='bx bx-cog'></i>
                     <span>Settings</span>
                 </a>
             </li>
             <li>
                 <a href="#" onclick="auth.signOut()" class="logout">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon logout-icon">
-                        <path d="m16 17 5-5-5-5"/>
-                        <path d="M21 12H9"/>
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                    </svg>
+                    <i class='bx bx-log-out'></i>
                     <span>Logout</span>
                 </a>
             </li>
         </ul>
     </div>
 
+    <!-- Progress Overlay -->
+    <div id="progress-overlay">
+        <div class="progress-content">
+            <div class="spinner"></div>
+            <h3 style="margin:0 0 0.5rem 0; font-size:1.1rem;" id="progress-title">Processing</h3>
+            <p style="margin:0; color:var(--text-secondary); font-size:0.9rem;" id="progress-desc">Please wait...</p>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
     <div id="toast-container"></div>
+
+    <!-- Color Variant Modal -->
+    <div class="modal-overlay" id="color-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="color-modal-title">Add Color Variant</div>
+                <button class="btn-icon" onclick="closeColorModal()">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="color-form">
+                    <div class="form-group">
+                        <label class="form-label">Color Name</label>
+                        <input type="text" class="form-control" id="color-name" placeholder="e.g. Midnight Blue" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Color Swatch (Image)</label>
+                        <div style="display:flex; gap:16px; align-items:center;">
+                            <div class="swatch-upload-container" onclick="document.getElementById('color-swatch-input').click()">
+                                <i class='bx bx-image-add' id="swatch-icon"></i>
+                                <span id="swatch-text">Upload</span>
+                                <img id="swatch-preview">
+                            </div>
+                            <div style="flex:1;">
+                                <p style="font-size:12px; color:var(--text-secondary); margin-bottom:8px;">Click to upload color image</p>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('color-swatch-input').click()">Select File</button>
+                            </div>
+                            <input type="file" id="color-swatch-input" accept="image/*" style="display:none;">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Available Sizes</label>
+                        <div id="size-selection" class="size-grid"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Gallery Images</label>
+                        <div id="existing-gallery" class="existing-gallery-grid"></div>
+                        <div class="upload-zone" style="padding:24px; margin-top:12px;" onclick="document.getElementById('variant-images-input').click()">
+                            <i class='bx bx-images' style="font-size:24px;"></i>
+                            <div style="font-size:14px; margin-top:8px;">Upload gallery images</div>
+                        </div>
+                        <input type="file" id="variant-images-input" multiple accept="image/*" style="display:none;">
+                        <div id="variant-image-previews" style="display:flex; gap:8px; overflow-x:auto; margin-top:12px; padding-bottom:8px;"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeColorModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveColorVariant()">Save Variant</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div class="modal-overlay" id="review-modal">
+        <div class="modal-content" style="max-width:500px;">
+            <div class="modal-header">
+                <div class="modal-title" id="review-modal-title">Add Customer Review</div>
+                <button class="btn-icon" onclick="closeReviewModal()">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Customer Name</label>
+                    <input type="text" class="form-control" id="review-name" placeholder="e.g. John Doe">
+                </div>
+                <div class="form-group" style="text-align:center;">
+                    <label class="form-label">Rating</label>
+                    <div class="star-rating-input" id="star-rating">
+                        <i class='bx bx-star' data-val="1"></i>
+                        <i class='bx bx-star' data-val="2"></i>
+                        <i class='bx bx-star' data-val="3"></i>
+                        <i class='bx bx-star' data-val="4"></i>
+                        <i class='bx bx-star' data-val="5"></i>
+                    </div>
+                    <input type="hidden" id="review-rating" value="0">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Comment</label>
+                    <textarea class="form-control" id="review-text" rows="4" placeholder="Write the review here..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeReviewModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" id="review-save-btn" onclick="addReview()">Add Review</button>
+            </div>
+        </div>
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <script>
         // --- UI INTERACTIONS ---
@@ -2510,85 +2288,32 @@
             if (mobileProfileSection) {
                 mobileProfileSection.addEventListener('click', e => {
                     e.stopPropagation();
+                    
+                    // Position the popup at the bottom center for mobile
+                    if (window.innerWidth < 769) {
+                        profilePopup.style.left = '50%';
+                        profilePopup.style.right = 'auto';
+                        profilePopup.style.bottom = '100px';
+                        profilePopup.style.top = 'auto';
+                    }
+                    
                     profilePopup.classList.toggle('active');
                 });
-            }
-
-            // Advanced Menu functionality
-            const advancedMenu = document.getElementById('advanced-menu');
-            const advancedMenuOverlay = document.getElementById('advanced-menu-overlay');
-            const advancedMenuClose = document.getElementById('advanced-menu-close');
-
-            // Close advanced menu
-            if (advancedMenuClose && advancedMenuOverlay) {
-                advancedMenuClose.addEventListener('click', () => {
-                    advancedMenu.classList.remove('open');
-                    advancedMenuOverlay.classList.remove('open');
-                });
-
-                advancedMenuOverlay.addEventListener('click', () => {
-                    advancedMenu.classList.remove('open');
-                    advancedMenuOverlay.classList.remove('open');
-                });
-            }
-
-            // Prevent horizontal scrolling on mobile
-            if (window.innerWidth <= 768) {
-                document.body.style.overflowX = 'hidden';
-                document.body.style.maxWidth = '100vw';
-            }
-
-            // Close popups when clicking outside
-            document.addEventListener('click', function(e) {
-                // Close profile popup when clicking outside
-                const profilePopup = document.getElementById('profile-popup');
-                const profileSection = document.getElementById('profile-section');
-                const mobileProfileSection = document.getElementById('mobile-profile-section');
                 
-                if (profilePopup && profilePopup.classList.contains('active')) {
-                    if (!profilePopup.contains(e.target) && 
-                        !profileSection?.contains(e.target) && 
-                        !mobileProfileSection?.contains(e.target)) {
+                document.addEventListener('click', e => {
+                    if (!mobileProfileSection.contains(e.target) && !profilePopup.contains(e.target)) {
                         profilePopup.classList.remove('active');
                     }
-                }
-                
-                // Close desktop popups when clicking outside
-                document.querySelectorAll('.desktop-popup').forEach(popup => {
-                    if (popup.classList.contains('open') && 
-                        !popup.contains(e.target) && 
-                        !e.target.closest('.kebab')) {
-                        popup.classList.remove('open');
-                    }
                 });
-            });
+            }
 
             // Close popups when pressing Escape key
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
-                    document.getElementById('profile-popup')?.classList.remove('active');
-                    document.querySelectorAll('.desktop-popup').forEach(popup => {
-                        popup.classList.remove('open');
-                    });
-                    closeAdvancedMenu();
+                    profilePopup.classList.remove('active');
+                    closeColorModal();
+                    closeReviewModal();
                 }
-            });
-        });
-
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            if (window.innerWidth <= 768) {
-                document.body.style.overflowX = 'hidden';
-                document.body.style.maxWidth = '100vw';
-            } else {
-                document.body.style.overflowX = '';
-                document.body.style.maxWidth = '';
-            }
-            
-            // Close popups on resize
-            document.getElementById('profile-popup')?.classList.remove('active');
-            document.querySelectorAll('.desktop-popup').forEach(popup => {
-                popup.classList.remove('open');
             });
         });
 
@@ -2602,26 +2327,34 @@
             appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
             measurementId: "G-E39VNDCFVE"
         };
-        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
+        
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+        const storage = firebase.storage();
+        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
 
-        // --- APP LOGIC ---
-        let allProducts = [];
-        let currentCategory = null;
-        let currentMenuProductId = null;
+        let allCategories = [];
+        let coverImageFile = null;
+        let colorVariants = [];
+        let productReviews = [];
+        let editingVariantIndex = null;
+        let editingReviewIndex = null;
+        let tempVariantFiles = [];
+        let tempSwatchFile = null;
+        let existingVariantImages = [];
+        let currentProductId = null;
 
         auth.onAuthStateChanged(user => {
             if (!user || user.email !== ADMIN_EMAIL) {
                 window.location.href = 'index.html';
                 return;
             }
-            initProfile(user);
-            initializePage();
+            initUI(user);
+            loadEditor();
         });
 
-        function initProfile(user) {
+        function initUI(user) {
             const name = user.displayName || 'Admin';
             const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=5127ba&color=fff`;
             
@@ -2641,359 +2374,679 @@
             document.getElementById('popup-avatar').src = avatar;
         }
 
-        function initializePage() {
+        async function loadEditor() {
             const params = new URLSearchParams(window.location.search);
-            currentCategory = params.get('category');
+            const id = params.get('id');
+            currentProductId = id;
             
-            const title = document.getElementById('products-page-title');
-            const mobileTitle = document.getElementById('mobile-products-page-title');
-            const badge = document.createElement('span');
-            badge.className = 'category-badge';
-            badge.id = 'category-badge';
-            const addBtn = document.getElementById('add-product-btn');
-            const mobileAddBtn = document.getElementById('mobile-add-product-btn');
-            
-            if (currentCategory) {
-                const catName = decodeURIComponent(currentCategory);
-                title.textContent = "Products";
-                mobileTitle.textContent = "Products";
-                badge.textContent = catName;
-                badge.style.display = 'inline-block';
-                
-                // Add badge to title
-                if (title && !document.getElementById('category-badge')) {
-                    const badgeClone = badge.cloneNode(true);
-                    title.appendChild(badgeClone);
-                }
-                
-                addBtn.onclick = () => window.location.href = `product.html?category=${encodeURIComponent(catName)}`;
-                mobileAddBtn.onclick = () => window.location.href = `product.html?category=${encodeURIComponent(catName)}`;
-            } else {
-                title.textContent = "All Products";
-                mobileTitle.textContent = "All Products";
-                addBtn.onclick = () => window.location.href = 'product.html';
-                mobileAddBtn.onclick = () => window.location.href = 'product.html';
-            }
-
-            loadProducts();
-            
-            // Search functionality
-            document.getElementById('search-products').addEventListener('input', (e) => {
-                filterProducts(e.target.value.toLowerCase().trim());
-            });
-            
-            document.getElementById('mobile-search-products').addEventListener('input', (e) => {
-                filterProducts(e.target.value.toLowerCase().trim());
-            });
-        }
-
-        async function loadProducts() {
             try {
-                const snapshot = await db.collection('products').orderBy('name').get();
-                allProducts = snapshot.docs.map(doc => ({ 
-                    id: doc.id, 
-                    ...doc.data(),
-                    colorsCount: (doc.data().colorVariants || []).length,
-                    isAvailable: doc.data().isAvailable !== false
-                }));
-                filterProducts('');
-            } catch (error) {
-                console.error(error);
-                showToast("Failed to load products", "error");
-            }
-        }
-
-        function filterProducts(term) {
-            let filtered = allProducts;
-            if (currentCategory) {
-                filtered = filtered.filter(p => p.category === decodeURIComponent(currentCategory));
-            }
-            if (term) {
-                filtered = filtered.filter(p => p.name.toLowerCase().includes(term));
-            }
-            renderTable(filtered);
-            renderMobileCards(filtered);
-        }
-
-        function renderTable(products) {
-            const tbody = document.getElementById('admin-products-table');
-            if (products.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="empty-state"><h3>No Products Found</h3><p>Create a new product to get started.</p></td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = products.map(p => {
-                const img = (p.images && p.images.length) ? p.images[0] : 'https://via.placeholder.com/50?text=No+Image';
-                const available = p.isAvailable !== false;
+                // Load categories
+                const catSnap = await db.collection('categories').orderBy('name').get();
+                allCategories = catSnap.docs.map(d => d.data().name);
                 
-                return `
-                <tr>
-                    <td>
-                        <div class="product-cell">
-                            <img src="${img}" class="product-image">
-                            <div class="product-info">
-                                <div class="product-name">${p.name}</div>
-                                <div class="product-category">${p.category || 'General'}</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="product-price">₹${(p.price || 0).toFixed(2)}</td>
-                    <td class="product-colors">${p.colorsCount || 0}</td>
-                    <td>
-                        <div class="status-toggle">
-                            <label class="toggle-switch">
-                                <input type="checkbox" ${available ? 'checked' : ''} 
-                                       onchange="toggleAvailability('${p.id}', this.checked)">
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-secondary" onclick="manageProduct('${p.id}')">Manage</button>
-                            <div class="popup-container">
-                                <div class="kebab" data-product-id="${p.id}">
-                                    <span class="kebab-dots"></span>
-                                </div>
-                                <div class="desktop-popup" id="desktop-popup-${p.id}">
-                                    <button class="desktop-popup-item" onclick="editProduct('${p.id}')">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M13 21h8"/>
-                                            <path d="m15 5 4 4"/>
-                                            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
-                                        </svg>
-                                        <span>Edit</span>
-                                    </button>
-                                    <button class="desktop-popup-item delete-item" onclick="deleteProduct('${p.id}', '${p.name.replace(/'/g, "\\'")}')">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M10 11v6"/>
-                                            <path d="M14 11v6"/>
-                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
-                                            <path d="M3 6h18"/>
-                                            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                                        </svg>
-                                        <span>Delete</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>`;
-            }).join('');
-
-            // FIXED: Desktop popup positioning
-            document.querySelectorAll('.kebab').forEach(kebab => {
-                kebab.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
+                // Setup category dropdowns
+                setupCategoryDropdown('category-select', 'selected-category', 'cat-display');
+                setupCategoryDropdown('mobile-category-select', 'mobile-selected-category', 'mobile-cat-display');
+                
+                if (id) {
+                    // Edit mode
+                    document.getElementById('editor-title').textContent = 'Edit Product';
+                    document.getElementById('mobile-editor-title').textContent = 'Edit Product';
                     
-                    const productId = kebab.getAttribute('data-product-id');
-                    const popup = document.getElementById(`desktop-popup-${productId}`);
-                    
-                    // Close all other popups
-                    document.querySelectorAll('.desktop-popup').forEach(p => {
-                        if (p !== popup) {
-                            p.classList.remove('open');
-                        }
-                    });
-                    
-                    // Toggle current popup
-                    popup.classList.toggle('open');
-                    
-                    if (popup.classList.contains('open')) {
-                        // Get the position of the kebab button
-                        const rect = kebab.getBoundingClientRect();
-                        
-                        // Position the popup relative to the viewport
-                        popup.style.position = 'fixed';
-                        popup.style.top = `${rect.bottom + window.scrollY + 5}px`;
-                        popup.style.right = `${window.innerWidth - rect.right}px`;
-                        
-                        // Ensure popup stays within viewport
-                        const popupRect = popup.getBoundingClientRect();
-                        if (popupRect.bottom > window.innerHeight) {
-                            popup.style.top = `${rect.top + window.scrollY - popupRect.height - 5}px`;
-                        }
-                        if (popupRect.right > window.innerWidth) {
-                            popup.style.right = '10px';
-                        }
+                    const doc = await db.collection('products').doc(id).get();
+                    if (doc.exists) {
+                        populateForm(doc.data());
+                    } else {
+                        showToast('Product not found', 'error');
+                        setTimeout(() => window.history.back(), 1500);
                     }
-                });
-            });
-            
-            // Close popups when clicking elsewhere
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.popup-container') && !e.target.closest('.desktop-popup')) {
-                    document.querySelectorAll('.desktop-popup').forEach(popup => {
-                        popup.classList.remove('open');
-                    });
+                } else {
+                    // New mode
+                    document.getElementById('editor-title').textContent = 'New Product';
+                    document.getElementById('mobile-editor-title').textContent = 'New Product';
+                    
+                    document.getElementById('product-form').style.display = 'block';
+                    document.getElementById('loading-state').style.display = 'none';
+                    document.getElementById('mobile-product-form').style.display = 'block';
+                    document.getElementById('mobile-loading-state').style.display = 'none';
                 }
-            });
-            
-            // Prevent desktop popups from closing when clicking inside
-            document.querySelectorAll('.desktop-popup').forEach(popup => {
-                popup.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                });
-            });
-        }
-
-        function renderMobileCards(products) {
-            const mobileCards = document.getElementById('mobile-product-cards');
-            if (products.length === 0) {
-                mobileCards.innerHTML = `<div class="empty-state"><h3>No Products Found</h3><p>Create a new product to get started.</p></div>`;
-                return;
-            }
-
-            mobileCards.innerHTML = products.map(p => {
-                const img = (p.images && p.images.length) ? p.images[0] : 'https://via.placeholder.com/50?text=No+Image';
-                const available = p.isAvailable !== false;
-                
-                return `
-                <div class="product-card-mobile" onclick="handleMobileCardClick(event, '${p.id}')">
-                    <img class="product-card-image"
-                         src="${img}"
-                         alt="${p.name}" />
-                    <div class="product-card-content">
-                        <div class="product-card-name">${p.name}</div>
-                        <div class="product-card-price">₹${(p.price || 0).toFixed(2)}</div>
-                        <div class="product-card-category">${p.category || 'General'} • ${p.colorsCount || 0} colors</div>
-                    </div>
-                    <div class="product-card-actions">
-                        <div class="mobile-status-toggle">
-                            <label class="toggle-switch">
-                                <input type="checkbox" ${available ? 'checked' : ''} 
-                                       onchange="toggleAvailability('${p.id}', this.checked)">
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                        <button class="product-card-menu-btn" data-product-id="${p.id}">
-                            <span class="product-card-menu-dots"></span>
-                        </button>
-                    </div>
-                </div>`;
-            }).join('');
-            
-            // Attach event listeners for mobile menu buttons
-            document.querySelectorAll('.product-card-menu-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    currentMenuProductId = btn.getAttribute('data-product-id');
-                    const p = allProducts.find(x => x.id === currentMenuProductId);
-                    
-                    if (!p) return;
-                    
-                    // Set up the mobile menu buttons
-                    document.getElementById('mobile-edit-btn').onclick = () => {
-                        editProduct(currentMenuProductId);
-                        closeAdvancedMenu();
-                    };
-                    
-                    document.getElementById('mobile-delete-btn').onclick = () => {
-                        deleteProduct(p.id, p.name);
-                        closeAdvancedMenu();
-                    };
-                    
-                    openAdvancedMenu();
-                });
-            });
-            
-            // Prevent toggle clicks from triggering card redirect
-            document.querySelectorAll('.product-card-actions .toggle-switch input').forEach(toggle => {
-                toggle.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                });
-            });
-        }
-
-        function handleMobileCardClick(event, productId) {
-            // Only redirect if the click wasn't on the actions area (toggle or menu button)
-            if (!event.target.closest('.product-card-actions') && 
-                !event.target.classList.contains('toggle-switch') &&
-                !event.target.classList.contains('toggle-slider') &&
-                event.target.type !== 'checkbox') {
-                editProduct(productId);
-            }
-        }
-
-        async function toggleAvailability(id, status) {
-            try {
-                await db.collection('products').doc(id).update({ 
-                    isAvailable: status, 
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp() 
-                });
-                
-                // Update local state
-                const p = allProducts.find(x => x.id === id);
-                if (p) {
-                    p.isAvailable = status;
-                }
-                
-                // Re-render
-                filterProducts(document.getElementById('search-products').value.toLowerCase());
-                
-                showToast(status ? "Product visible" : "Product hidden", 'success');
-                
-                // Close any open desktop popups
-                document.querySelectorAll('.desktop-popup').forEach(popup => {
-                    popup.classList.remove('open');
-                });
-                
             } catch (e) {
                 console.error(e);
-                showToast('Failed to update product status', 'error');
+                showToast('Error loading data', 'error');
             }
         }
 
-        function manageProduct(id) {
-            // Navigate to product management page
-            window.location.href = `product-details.html?id=${id}`;
+        function setupCategoryDropdown(containerId, hiddenId, displayId) {
+            const container = document.getElementById(containerId);
+            let html = `
+                <div class="custom-select-trigger" onclick="toggleSelectOptions('${containerId}')">
+                    <span id="${displayId}">Select Category</span>
+                    <i class='bx bx-chevron-down'></i>
+                </div>
+                <div class="custom-select-options" id="${containerId}-options">
+            `;
+            
+            allCategories.forEach(cat => {
+                html += `<div class="custom-option" onclick="selectCategory('${cat}', '${hiddenId}', '${displayId}', '${containerId}')">${cat}</div>`;
+            });
+            
+            html += `</div>`;
+            container.innerHTML = html;
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', e => {
+                if (!container.contains(e.target)) {
+                    document.getElementById(`${containerId}-options`).classList.remove('open');
+                }
+            });
         }
 
-        function editProduct(id) {
-            window.location.href = `product.html?id=${id}`;
+        function toggleSelectOptions(containerId) {
+            const options = document.getElementById(`${containerId}-options`);
+            options.classList.toggle('open');
         }
 
-        function deleteProduct(id, name) {
-            closeAdvancedMenu();
-            if(confirm(`Delete "${name}"? This action cannot be undone.`)) {
-                // Delete logic here
-                db.collection('products').doc(id).delete()
-                    .then(() => {
-                        allProducts = allProducts.filter(p => p.id !== id);
-                        filterProducts(document.getElementById('search-products').value.toLowerCase());
-                        showToast("Product deleted successfully", "success");
-                    })
-                    .catch((error) => {
-                        showToast("Failed to delete product", "error");
-                    });
+        function selectCategory(cat, hiddenId, displayId, containerId) {
+            document.getElementById(hiddenId).value = cat;
+            document.getElementById(displayId).textContent = cat;
+            document.getElementById(`${containerId}-options`).classList.remove('open');
+        }
+
+        function populateForm(data) {
+            // Desktop form
+            document.getElementById('name').value = data.name || '';
+            document.getElementById('description').value = data.description || '';
+            document.getElementById('price').value = data.price || '';
+            document.getElementById('oldPrice').value = data.oldPrice || '';
+            
+            if (data.category) {
+                selectCategory(data.category, 'selected-category', 'cat-display', 'category-select');
+                selectCategory(data.category, 'mobile-selected-category', 'mobile-cat-display', 'mobile-category-select');
+            }
+            
+            // Mobile form
+            document.getElementById('mobile-name').value = data.name || '';
+            document.getElementById('mobile-description').value = data.description || '';
+            document.getElementById('mobile-price').value = data.price || '';
+            document.getElementById('mobile-oldPrice').value = data.oldPrice || '';
+            
+            // Cover image
+            const coverUrl = data.image || (data.images && data.images.length > 0 ? data.images[0] : null);
+            if (coverUrl) {
+                showCoverPreview(coverUrl);
+                showMobileCoverPreview(coverUrl);
+            }
+            
+            // Variants and reviews
+            colorVariants = data.colorVariants || [];
+            productReviews = data.reviews || [];
+            
+            renderVariants();
+            renderReviewsList();
+            
+            // Show forms
+            document.getElementById('product-form').style.display = 'block';
+            document.getElementById('loading-state').style.display = 'none';
+            document.getElementById('mobile-product-form').style.display = 'block';
+            document.getElementById('mobile-loading-state').style.display = 'none';
+        }
+
+        function showCoverPreview(url) {
+            const preview = document.getElementById('cover-preview');
+            preview.src = url;
+            preview.dataset.url = url;
+            
+            document.getElementById('cover-preview-wrapper').style.display = 'flex';
+            document.getElementById('cover-upload-zone').style.display = 'none';
+        }
+
+        function showMobileCoverPreview(url) {
+            const preview = document.getElementById('mobile-cover-preview');
+            preview.src = url;
+            preview.dataset.url = url;
+            
+            document.getElementById('mobile-cover-preview-wrapper').style.display = 'flex';
+            document.getElementById('mobile-cover-upload-zone').style.display = 'none';
+        }
+
+        function showUploadBox() {
+            coverImageFile = null;
+            document.getElementById('cover-input').value = '';
+            document.getElementById('cover-preview').src = '';
+            delete document.getElementById('cover-preview').dataset.url;
+            document.getElementById('cover-preview-wrapper').style.display = 'none';
+            document.getElementById('cover-upload-zone').style.display = 'flex';
+        }
+
+        // Cover image handling
+        document.getElementById('cover-input').onchange = (e) => {
+            handleCoverImage(e.target.files[0], 'cover-preview', 'cover-upload-zone', 'cover-preview-wrapper');
+        };
+
+        document.getElementById('mobile-cover-input').onchange = (e) => {
+            handleCoverImage(e.target.files[0], 'mobile-cover-preview', 'mobile-cover-upload-zone', 'mobile-cover-preview-wrapper');
+        };
+
+        function handleCoverImage(file, previewId, uploadZoneId, previewWrapperId) {
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast('Image too large (Max 5MB)', 'error');
+                    return;
+                }
+                
+                coverImageFile = file;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const preview = document.getElementById(previewId);
+                    preview.src = e.target.result;
+                    preview.dataset.url = e.target.result;
+                    
+                    document.getElementById(previewWrapperId).style.display = 'flex';
+                    document.getElementById(uploadZoneId).style.display = 'none';
+                };
+                reader.readAsDataURL(file);
             }
         }
 
-        function openAdvancedMenu() {
-            document.getElementById('advanced-menu').classList.add('open');
-            document.getElementById('advanced-menu-overlay').classList.add('open');
+        // Variant Modal Functions
+        function openColorModal(index = null) {
+            editingVariantIndex = index;
+            const isEdit = index !== null;
+            const data = isEdit ? colorVariants[index] : {};
+            
+            document.getElementById('color-modal-title').textContent = isEdit ? 'Edit Variant' : 'Add Color Variant';
+            document.getElementById('color-name').value = data.name || '';
+            
+            // Swatch preview
+            const swatchImg = document.getElementById('swatch-preview');
+            const swatchIcon = document.getElementById('swatch-icon');
+            const swatchText = document.getElementById('swatch-text');
+            
+            if (data.hex && data.hex.includes('http')) {
+                swatchImg.src = data.hex;
+                swatchImg.style.display = 'block';
+                swatchIcon.style.display = 'none';
+                swatchText.style.display = 'none';
+            } else {
+                swatchImg.style.display = 'none';
+                swatchIcon.style.display = 'block';
+                swatchText.style.display = 'block';
+            }
+            
+            // Size selection
+            setupSizeSelection(data.sizes || []);
+            
+            // Gallery
+            tempSwatchFile = null;
+            tempVariantFiles = [];
+            existingVariantImages = data.images || [];
+            renderExistingGallery();
+            document.getElementById('variant-image-previews').innerHTML = '';
+            
+            document.getElementById('color-modal').style.display = 'flex';
         }
 
-        function closeAdvancedMenu() {
-            document.getElementById('advanced-menu').classList.remove('open');
-            document.getElementById('advanced-menu-overlay').classList.remove('open');
+        function setupSizeSelection(selectedSizes) {
+            const container = document.getElementById('size-selection');
+            const SIZES = ['S', 'M', 'L', 'XL', '2XL'];
+            
+            container.innerHTML = SIZES.map(size => {
+                const existing = selectedSizes.find(s => s.name === size);
+                const isSelected = !!existing;
+                const inStock = existing ? existing.available : false;
+                
+                return `
+                    <div class="size-item ${isSelected ? 'selected' : ''}" onclick="toggleSizeSelection('${size}', this)">
+                        <div class="size-label">${size}</div>
+                        <div class="size-status">${isSelected ? (inStock ? 'In Stock' : 'Out of Stock') : 'Select'}</div>
+                        <input type="checkbox" class="size-check" style="display:none;" value="${size}" ${isSelected ? 'checked' : ''}>
+                        <input type="checkbox" class="stock-check" style="display:none;" ${inStock ? 'checked' : ''}>
+                    </div>
+                `;
+            }).join('');
         }
 
-        function showToast(msg, type='success') {
+        function toggleSizeSelection(size, element) {
+            const checkbox = element.querySelector('.size-check');
+            const stockCheck = element.querySelector('.stock-check');
+            const isSelected = !checkbox.checked;
+            
+            checkbox.checked = isSelected;
+            stockCheck.checked = isSelected; // Default to in stock when selected
+            
+            if (isSelected) {
+                element.classList.add('selected');
+                element.querySelector('.size-status').textContent = 'In Stock';
+            } else {
+                element.classList.remove('selected');
+                element.querySelector('.size-status').textContent = 'Select';
+            }
+        }
+
+        function closeColorModal() {
+            document.getElementById('color-modal').style.display = 'none';
+            editingVariantIndex = null;
+        }
+
+        // Swatch image handling
+        document.getElementById('color-swatch-input').onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                tempSwatchFile = file;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const prev = document.getElementById('swatch-preview');
+                    prev.src = e.target.result;
+                    prev.style.display = 'block';
+                    document.getElementById('swatch-icon').style.display = 'none';
+                    document.getElementById('swatch-text').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        // Gallery images handling
+        document.getElementById('variant-images-input').onchange = (e) => {
+            Array.from(e.target.files).forEach(file => {
+                tempVariantFiles.push(file);
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.cssText = "width:60px; height:60px; border-radius:6px; object-fit:cover; border:1px solid #eee; flex-shrink:0;";
+                    document.getElementById('variant-image-previews').appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        };
+
+        function renderExistingGallery() {
+            const container = document.getElementById('existing-gallery');
+            if (existingVariantImages.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+            
+            container.style.display = 'grid';
+            container.innerHTML = existingVariantImages.map((url, i) => `
+                <div class="gallery-item">
+                    <img src="${url}" class="gallery-img">
+                    <div class="gallery-remove" onclick="removeExistingGalleryImage(${i})">×</div>
+                </div>
+            `).join('');
+        }
+
+        function removeExistingGalleryImage(index) {
+            existingVariantImages.splice(index, 1);
+            renderExistingGallery();
+        }
+
+        async function saveColorVariant() {
+            const name = document.getElementById('color-name').value.trim();
+            if (!name) {
+                showToast('Color name is required', 'error');
+                return;
+            }
+
+            showProgress('Saving Variant', 'Uploading images...');
+
+            try {
+                let hex = '';
+                if (tempSwatchFile) {
+                    hex = await uploadFile(tempSwatchFile, 'swatches');
+                } else if (editingVariantIndex !== null && colorVariants[editingVariantIndex]?.hex) {
+                    hex = colorVariants[editingVariantIndex].hex;
+                }
+
+                // Get selected sizes
+                let sizes = [];
+                document.querySelectorAll('.size-check').forEach(cb => {
+                    if (cb.checked) {
+                        const stock = cb.parentElement.querySelector('.stock-check').checked;
+                        sizes.push({ name: cb.value, available: stock });
+                    }
+                });
+
+                if (sizes.length === 0) {
+                    hideProgress();
+                    showToast('Please select at least one size', 'error');
+                    return;
+                }
+
+                // Upload gallery images
+                let images = [...existingVariantImages];
+                for (let file of tempVariantFiles) {
+                    const url = await uploadFile(file, 'variants');
+                    images.push(url);
+                }
+
+                const variant = { name, hex, sizes, images };
+                
+                if (editingVariantIndex !== null) {
+                    colorVariants[editingVariantIndex] = variant;
+                } else {
+                    colorVariants.push(variant);
+                }
+
+                renderVariants();
+                closeColorModal();
+                showToast('Variant saved successfully', 'success');
+            } catch (e) {
+                console.error(e);
+                showToast('Failed to save variant', 'error');
+            } finally {
+                hideProgress();
+            }
+        }
+
+        function renderVariants() {
+            // Desktop
+            const container = document.getElementById('variants-list');
+            // Mobile
+            const mobileContainer = document.getElementById('mobile-variants-list');
+            
+            if (colorVariants.length === 0) {
+                container.innerHTML = `<div style="text-align:center; color:var(--text-secondary); padding:16px; font-style:italic;">No variants added yet.</div>`;
+                mobileContainer.innerHTML = `<div style="text-align:center; color:var(--text-secondary); padding:16px; font-style:italic;">No variants added yet.</div>`;
+                return;
+            }
+            
+            const variantHtml = colorVariants.map((v, i) => `
+                <div class="variant-card">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <img src="${v.hex || 'https://via.placeholder.com/40?text=Color'}" class="variant-swatch" style="background:${v.hex ? 'transparent' : '#eee'}">
+                        <div>
+                            <div style="font-weight:600; font-size:14px;">${v.name}</div>
+                            <div style="font-size:12px; color:var(--text-secondary);">${v.sizes?.length || 0} sizes, ${v.images?.length || 0} images</div>
+                        </div>
+                    </div>
+                    <div class="variant-actions">
+                        <button type="button" class="btn-icon" onclick="openColorModal(${i})">
+                            <i class='bx bx-edit-alt'></i>
+                        </button>
+                        <button type="button" class="btn-icon" onclick="removeVariant(${i})" style="color:var(--danger-color);">
+                            <i class='bx bx-trash'></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = variantHtml;
+            mobileContainer.innerHTML = variantHtml;
+        }
+
+        function removeVariant(index) {
+            if (confirm('Are you sure you want to remove this variant?')) {
+                colorVariants.splice(index, 1);
+                renderVariants();
+                showToast('Variant removed', 'success');
+            }
+        }
+
+        // Review Modal Functions
+        function openReviewModal(index = null) {
+            editingReviewIndex = index;
+            const isEdit = index !== null;
+            
+            document.getElementById('review-modal-title').textContent = isEdit ? 'Edit Review' : 'Add Customer Review';
+            document.getElementById('review-save-btn').textContent = isEdit ? 'Update Review' : 'Add Review';
+            
+            if (isEdit && productReviews[index]) {
+                const rev = productReviews[index];
+                document.getElementById('review-name').value = rev.name || '';
+                document.getElementById('review-text').value = rev.comment || '';
+                document.getElementById('review-rating').value = rev.rating || 0;
+                updateStars(rev.rating || 0);
+            } else {
+                document.getElementById('review-name').value = '';
+                document.getElementById('review-text').value = '';
+                document.getElementById('review-rating').value = '0';
+                updateStars(0);
+            }
+            
+            document.getElementById('review-modal').style.display = 'flex';
+        }
+
+        function closeReviewModal() {
+            document.getElementById('review-modal').style.display = 'none';
+            editingReviewIndex = null;
+        }
+
+        // Star rating
+        document.querySelectorAll('#star-rating i').forEach(star => {
+            star.addEventListener('click', function() {
+                const val = parseInt(this.dataset.val);
+                document.getElementById('review-rating').value = val;
+                updateStars(val);
+            });
+        });
+
+        function updateStars(val) {
+            document.querySelectorAll('#star-rating i').forEach(s => {
+                const starVal = parseInt(s.dataset.val);
+                if (starVal <= val) {
+                    s.className = 'bx bxs-star';
+                    s.classList.add('active');
+                } else {
+                    s.className = 'bx bx-star';
+                    s.classList.remove('active');
+                }
+            });
+        }
+
+        function addReview() {
+            const name = document.getElementById('review-name').value.trim();
+            const rating = parseInt(document.getElementById('review-rating').value);
+            const comment = document.getElementById('review-text').value.trim();
+            
+            if (!name) {
+                showToast('Customer name is required', 'error');
+                return;
+            }
+            
+            if (rating === 0) {
+                showToast('Please select a rating', 'error');
+                return;
+            }
+            
+            if (!comment) {
+                showToast('Review comment is required', 'error');
+                return;
+            }
+            
+            const reviewData = {
+                name,
+                rating,
+                comment,
+                date: new Date().toISOString().split('T')[0]
+            };
+            
+            if (editingReviewIndex !== null) {
+                productReviews[editingReviewIndex] = reviewData;
+            } else {
+                productReviews.push(reviewData);
+            }
+            
+            renderReviewsList();
+            closeReviewModal();
+            showToast(editingReviewIndex !== null ? 'Review updated' : 'Review added', 'success');
+        }
+
+        function renderReviewsList() {
+            // Desktop
+            const container = document.getElementById('reviews-list');
+            // Mobile
+            const mobileContainer = document.getElementById('mobile-reviews-list');
+            
+            if (productReviews.length === 0) {
+                container.innerHTML = `<div style="text-align:center; color:var(--text-secondary); padding:16px; font-style:italic;">No reviews added yet.</div>`;
+                mobileContainer.innerHTML = `<div style="text-align:center; color:var(--text-secondary); padding:16px; font-style:italic;">No reviews added yet.</div>`;
+                return;
+            }
+            
+            const reviewHtml = productReviews.map((r, i) => `
+                <div class="review-card">
+                    <div class="review-header">
+                        <span>${r.name}</span>
+                        <div style="display:flex; gap:8px;">
+                            <button type="button" class="btn-icon" onclick="openReviewModal(${i})">
+                                <i class='bx bx-edit-alt'></i>
+                            </button>
+                            <button type="button" class="btn-icon" onclick="removeReview(${i})" style="color:var(--danger-color);">
+                                <i class='bx bx-trash'></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="star-display">
+                        ${Array(5).fill(0).map((_, idx) => 
+                            idx < r.rating ? "<i class='bx bxs-star'></i>" : "<i class='bx bx-star'></i>"
+                        ).join('')}
+                    </div>
+                    <div class="review-text" style="margin-top:8px;">${r.comment}</div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = reviewHtml;
+            mobileContainer.innerHTML = reviewHtml;
+        }
+
+        function removeReview(index) {
+            if (confirm('Are you sure you want to delete this review?')) {
+                productReviews.splice(index, 1);
+                renderReviewsList();
+                showToast('Review deleted', 'success');
+            }
+        }
+
+        // File upload helper
+        async function uploadFile(file, path) {
+            const storageRef = storage.ref();
+            const fileRef = storageRef.child(`${path}/${Date.now()}_${file.name}`);
+            await fileRef.put(file);
+            return await fileRef.getDownloadURL();
+        }
+
+        // Progress overlay
+        function showProgress(title, desc) {
+            document.getElementById('progress-title').textContent = title;
+            document.getElementById('progress-desc').textContent = desc;
+            document.getElementById('progress-overlay').style.display = 'flex';
+        }
+
+        function hideProgress() {
+            document.getElementById('progress-overlay').style.display = 'none';
+        }
+
+        // Save product function
+        async function saveProduct() {
+            // Validate required fields
+            const name = document.getElementById('name').value.trim();
+            const price = parseFloat(document.getElementById('price').value);
+            const oldPrice = parseFloat(document.getElementById('oldPrice').value);
+            const category = document.getElementById('selected-category').value;
+            
+            if (!name || !price || !oldPrice || !category) {
+                showToast('Please fill all required fields', 'error');
+                return;
+            }
+            
+            if (!coverImageFile && !document.getElementById('cover-preview').dataset.url) {
+                showToast('Please upload a cover image', 'error');
+                return;
+            }
+            
+            showProgress('Saving Product', 'Please wait...');
+            
+            try {
+                let coverUrl = document.getElementById('cover-preview').dataset.url;
+                
+                // Upload new cover image if exists
+                if (coverImageFile) {
+                    coverUrl = await uploadFile(coverImageFile, 'products');
+                }
+                
+                // Prepare product data
+                const productData = {
+                    name,
+                    description: document.getElementById('description').value.trim(),
+                    category,
+                    price,
+                    oldPrice,
+                    image: coverUrl,
+                    images: [coverUrl],
+                    colorVariants,
+                    reviews: productReviews,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                // Save to Firestore
+                if (currentProductId) {
+                    // Update existing product
+                    await db.collection('products').doc(currentProductId).update(productData);
+                    showToast('Product updated successfully!', 'success');
+                } else {
+                    // Create new product
+                    productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    await db.collection('products').add(productData);
+                    showToast('Product created successfully!', 'success');
+                }
+                
+                // Redirect back after a delay
+                setTimeout(() => {
+                    window.history.back();
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Error saving product:', error);
+                showToast('Failed to save product', 'error');
+            } finally {
+                hideProgress();
+            }
+        }
+
+        // Attach save handlers
+        document.getElementById('save-btn').addEventListener('click', saveProduct);
+        document.getElementById('mobile-save-btn').addEventListener('click', saveProduct);
+
+        // Toast notification
+        function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
-            const el = document.createElement('div');
-            el.className = `toast ${type}`;
-            el.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    ${type === 'success' ? 
-                        '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' : 
-                        '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}
-                </svg>
-                <span>${msg}</span>`;
-            container.appendChild(el);
-            setTimeout(() => el.remove(), 3000);
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'bx-check-circle' : 'bx-error-circle';
+            toast.innerHTML = `
+                <i class='bx ${icon}' style="font-size:20px;"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Remove toast after 3 seconds
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    container.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth <= 768) {
+                document.body.style.overflowX = 'hidden';
+                document.body.style.maxWidth = '100vw';
+            } else {
+                document.body.style.overflowX = '';
+                document.body.style.maxWidth = '';
+            }
+        });
+
+        // Initialize on load
+        if (window.innerWidth <= 768) {
+            document.body.style.overflowX = 'hidden';
+            document.body.style.maxWidth = '100vw';
         }
     </script>
 </body>
