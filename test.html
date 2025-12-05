@@ -30,6 +30,8 @@
             --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             --radius-md: 8px;
             --radius-lg: 12px;
+            --skeleton-color: #f0f0f0;
+            --skeleton-highlight: #f8f8f8;
         }
 
         * {
@@ -50,6 +52,7 @@
             width: 100%;
         }
 
+        /* ============= DESKTOP LAYOUT ============= */
         .page-desktop {
             min-height: 100vh;
             display: flex;
@@ -58,6 +61,7 @@
             overflow: hidden;
         }
 
+        /* Desktop header */
         .d-topbar {
             height: var(--header-height-desktop);
             background: var(--header-bg);
@@ -74,12 +78,14 @@
             object-fit: contain;
         }
 
+        /* Desktop main area */
         .d-app {
             flex: 1;
             display: flex;
             width: 100%;
         }
 
+        /* Desktop sidebar */
         .d-sidebar {
             width: var(--sidebar-width);
             background: var(--sidebar-bg);
@@ -95,6 +101,7 @@
             height: 100%;
         }
 
+        /* Desktop nav */
         .d-nav {
             display: flex;
             flex-direction: column;
@@ -141,6 +148,7 @@
             transform: rotate(90deg);
         }
 
+        /* Desktop active */
         .d-nav-item--active {
             background: var(--active-bg);
         }
@@ -148,10 +156,12 @@
             stroke: var(--icon-active);
         }
 
+        /* Desktop hover */
         .d-nav-item:hover {
             background: var(--hover-bg);
         }
 
+        /* Desktop submenus */
         .d-submenu {
             display: none;
             margin-left: 28px;
@@ -187,6 +197,7 @@
             stroke: #6b7280;
         }
 
+        /* Desktop account section */
         .d-account-section {
             margin-top: auto;
             padding: 16px;
@@ -232,6 +243,7 @@
             max-width: 150px;
         }
 
+        /* Desktop content */
         .d-content {
             flex: 1;
             background: var(--page-bg);
@@ -239,6 +251,7 @@
             width: 100%;
         }
 
+        /* ============= BODY CONTENT ============= */
         .content-inner {
             max-width: 1110px;
             margin: 0 auto;
@@ -316,6 +329,7 @@
             background: #471ea7;
         }
 
+        /* Card - FIXED: Increased search bar padding */
         .card {
             background: #ffffff;
             border-radius: 12px;
@@ -325,7 +339,7 @@
         }
 
         .card-header {
-            padding: 32px 20px;
+            padding: 24px 20px; /* Increased from 16px to 24px */
             border-bottom: 1px solid #e5e7eb;
         }
 
@@ -333,8 +347,8 @@
             background: #f9fafb;
             border-radius: 999px;
             border: 1px solid #e5e7eb;
-            padding: 0 16px;
-            height: 40px;
+            padding: 12px 16px; /* Increased from 0 16px */
+            height: 48px; /* Increased from 40px */
             display: flex;
             align-items: center;
             gap: 8px;
@@ -362,15 +376,21 @@
             width: 100%;
         }
 
+        /* Table area - IMPORTANT: Fixed for popup positioning */
         .table-wrapper {
             width: 100%;
             overflow-x: auto;
             position: relative;
+            /* Ensure popups are not clipped */
+            overflow: visible !important;
         }
 
+        /* Force table to have proper stacking context */
         .domain-table {
             width: 100%;
             border-collapse: collapse;
+            position: relative;
+            z-index: 1;
         }
 
         .domain-table thead tr {
@@ -393,11 +413,33 @@
             white-space: nowrap;
         }
 
-        .th-image,
-        .td-image {
-            width: 80px;
+        /* FIXED: Image column with heading */
+        .th-image {
+            width: 120px;
+            min-width: 120px;
         }
 
+        .th-image-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 24px;
+            color: rgb(29, 30, 32);
+        }
+
+        .th-image-content svg {
+            width: 18px;
+            height: 18px;
+            stroke: rgb(29, 30, 32);
+        }
+
+        .td-image {
+            width: 120px;
+        }
+
+        /* FIXED: Status column - left aligned */
         .th-status {
             width: 120px;
             text-align: left;
@@ -449,7 +491,6 @@
             gap: 8px;
             align-items: center;
             position: relative;
-            z-index: 100;
         }
 
         .btn-secondary {
@@ -469,46 +510,92 @@
         }
 
         .kebab {
-            width: 24px;
-            height: 24px;
-            border-radius: 999px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             position: relative;
             flex-shrink: 0;
-            z-index: 101;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s ease;
         }
+        
+        .kebab:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
+        
         .kebab-dots {
             width: 4px;
             height: 4px;
             border-radius: 999px;
-            background: #a855f7;
-            box-shadow: 0 -6px 0 0 #a855f7, 0 6px 0 0 #a855f7;
+            background: #6b7280;
+            position: relative;
+        }
+        
+        .kebab-dots::before,
+        .kebab-dots::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 999px;
+            background: #6b7280;
+            left: 0;
+        }
+        
+        .kebab-dots::before {
+            top: -6px;
+        }
+        
+        .kebab-dots::after {
+            bottom: -6px;
+        }
+
+        /* FIXED: Desktop popup - positioned relative to viewport */
+        .popup-container {
+            position: relative;
+            display: inline-block;
         }
 
         .desktop-popup {
-            position: fixed;
+            position: fixed; /* Changed from absolute to fixed */
             background: #ffffff;
-            border-radius: 8px;
+            border-radius: 12px;
             border: 1px solid #e5e7eb;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            min-width: 160px;
-            z-index: 10005;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            min-width: 180px;
+            z-index: 10002;
             display: none;
             overflow: hidden;
+            margin-top: 8px;
+            animation: fadeInUp 0.2s ease-out;
         }
 
         .desktop-popup.open {
             display: block;
         }
 
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .desktop-popup-item {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 12px 16px;
+            padding: 14px 16px;
             width: 100%;
             border: none;
             background: none;
@@ -519,6 +606,11 @@
             color: rgb(29, 30, 32);
             transition: background 0.15s ease;
             white-space: nowrap;
+            border-bottom: 1px solid #f9fafb;
+        }
+
+        .desktop-popup-item:last-child {
+            border-bottom: none;
         }
 
         .desktop-popup-item:hover {
@@ -526,19 +618,20 @@
         }
 
         .desktop-popup-item svg {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             stroke: #6b7280;
         }
 
-        .desktop-popup-item:last-child {
+        .desktop-popup-item.delete-item {
             color: var(--danger-color);
         }
 
-        .desktop-popup-item:last-child svg {
+        .desktop-popup-item.delete-item svg {
             stroke: var(--danger-color);
         }
 
+        /* Status toggle switch - FIXED: Left aligned under Status heading */
         .status-toggle {
             display: flex;
             align-items: center;
@@ -592,6 +685,129 @@
             transform: translateX(20px);
         }
 
+        /* ============= SKELETON LOADING ============= */
+        .skeleton-loading {
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .skeleton {
+            background: linear-gradient(
+                90deg,
+                var(--skeleton-color) 25%,
+                var(--skeleton-highlight) 50%,
+                var(--skeleton-color) 75%
+            );
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes skeleton-loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        /* Desktop skeleton */
+        .desktop-skeleton-row {
+            height: 72px;
+        }
+
+        .desktop-skeleton-row td {
+            padding: 12px 20px;
+        }
+
+        .skeleton-image {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+        }
+
+        .skeleton-text {
+            height: 20px;
+            width: 120px;
+        }
+
+        .skeleton-text-small {
+            height: 16px;
+            width: 80px;
+        }
+
+        .skeleton-toggle {
+            width: 44px;
+            height: 24px;
+            border-radius: 24px;
+        }
+
+        .skeleton-button {
+            width: 80px;
+            height: 32px;
+            border-radius: 8px;
+        }
+
+        .skeleton-kebab {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+        }
+
+        /* Mobile skeleton */
+        .mobile-skeleton-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            height: 88px;
+        }
+
+        .skeleton-mobile-image {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+
+        .skeleton-mobile-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .skeleton-mobile-title {
+            height: 24px;
+            width: 150px;
+            border-radius: 4px;
+        }
+
+        .skeleton-mobile-subtitle {
+            height: 18px;
+            width: 100px;
+            border-radius: 4px;
+        }
+
+        .skeleton-mobile-toggle {
+            width: 44px;
+            height: 24px;
+            border-radius: 24px;
+            margin-right: 12px;
+        }
+
+        .skeleton-mobile-menu {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+        }
+
+        /* ============= MOBILE LAYOUT ============= */
         .page-mobile {
             min-height: 100vh;
             display: flex;
@@ -601,6 +817,7 @@
             overflow-x: hidden;
         }
 
+        /* Mobile header */
         .m-header {
             height: 72px;
             background: var(--header-bg);
@@ -612,6 +829,7 @@
             width: 100%;
         }
 
+        /* FIXED: Mobile menu button with border and styling like advanced-menu-close */
         .m-menu-btn {
             width: 40px;
             height: 40px;
@@ -663,6 +881,7 @@
             max-width: 200px;
         }
 
+        /* Mobile main bg */
         .m-main {
             flex: 1;
             background: var(--page-bg);
@@ -671,6 +890,7 @@
             overflow-x: hidden;
         }
 
+        /* Overlay & drawer */
         .m-overlay {
             position: fixed;
             inset: 0;
@@ -705,6 +925,7 @@
             transform: translateX(0);
         }
 
+        /* Drawer header */
         .m-drawer-header {
             height: 72px;
             border-bottom: 1px solid var(--border-subtle);
@@ -721,6 +942,7 @@
             max-width: 200px;
         }
 
+        /* FIXED: Mobile drawer close button with border and styling like advanced-menu-close */
         .m-drawer-close {
             width: 40px;
             height: 40px;
@@ -762,6 +984,7 @@
             transform: rotate(-45deg);
         }
 
+        /* Drawer nav */
         .m-drawer-nav {
             padding: 32px 8px;
             display: flex;
@@ -796,6 +1019,7 @@
             stroke: var(--icon-color);
         }
 
+        /* active mobile */
         .m-nav-item.active {
             background: var(--active-bg);
         }
@@ -803,6 +1027,7 @@
             stroke: var(--icon-active);
         }
 
+        /* Mobile submenu */
         .m-submenu {
             display: none;
             margin-left: 28px;
@@ -838,6 +1063,7 @@
             stroke: #6b7280;
         }
 
+        /* Drawer footer account */
         .m-account-section {
             margin-top: auto;
             padding: 16px;
@@ -846,12 +1072,14 @@
             position: relative;
         }
 
+        /* Mobile content layout */
         .mobile-content-inner {
             padding: 16px;
             width: 100%;
             overflow-x: hidden;
         }
 
+        /* Mobile page header */
         .mobile-page-header {
             margin-bottom: 20px;
             width: 100%;
@@ -895,6 +1123,7 @@
             color: #d1d5db;
         }
 
+        /* Mobile search and add button row */
         .mobile-controls-row {
             display: flex;
             align-items: center;
@@ -988,6 +1217,7 @@
             stroke: #ffffff;
         }
 
+        /* Mobile category cards - UPDATED LAYOUT */
         .mobile-category-cards {
             display: flex;
             flex-direction: column;
@@ -1055,6 +1285,7 @@
             text-overflow: ellipsis;
         }
 
+        /* Mobile card actions - UPDATED: toggle moved to left of 3 dots */
         .category-card-actions {
             display: flex;
             align-items: center;
@@ -1098,6 +1329,7 @@
             box-shadow: 0 -6px 0 0 #6b7280, 0 6px 0 0 #6b7280;
         }
 
+        /* Advanced Menu (Bottom Sheet) */
         .advanced-menu {
             position: fixed;
             bottom: 0;
@@ -1251,14 +1483,15 @@
             margin: 0 auto 20px auto;
         }
 
+        /* --- UPDATED MODAL STYLES --- */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(5px);
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
             z-index: 2000;
             display: none;
             align-items: center;
@@ -1268,14 +1501,16 @@
 
         .modal-content {
             background: white;
-            width: 550px;
-            max-width: 95vw;
-            border-radius: 16px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            width: 100%;
+            max-width: 480px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-premium);
             display: flex;
             flex-direction: column;
             overflow: hidden;
             animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         @keyframes modalPop {
@@ -1284,80 +1519,78 @@
         }
 
         .modal-header {
-            padding: 24px;
-            border-bottom: 1px solid #F1F5F9;
+            padding: 1.5rem 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-subtle);
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             background: #fff;
+            position: relative;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            background: #F8FAFC;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem 1.5rem;
+            background: white;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
         }
 
         .modal-title {
             font-weight: 700;
             font-size: 1.25rem;
-            color: #1e293b;
-            letter-spacing: -0.01em;
-        }
-
-        .modal-body {
-            padding: 24px;
-            background: #fff;
-        }
-
-        .modal-footer {
-            padding: 20px 24px;
-            background: #fff;
-            border-top: 1px solid #F1F5F9;
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
+            color: rgb(29, 30, 32);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .btn-icon {
             background: none;
             border: none;
             cursor: pointer;
-            color: #94a3b8;
-            padding: 4px;
+            color: #6b7280;
+            width: 40px;
+            height: 40px;
             border-radius: 8px;
-            transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: background 0.2s ease;
         }
-        
+
         .btn-icon:hover {
-            color: #64748b;
-            background: #f1f5f9;
+            background: #f3f4f6;
         }
 
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 1.5rem;
             width: 100%;
-        }
-        
-        .form-group:last-child {
-            margin-bottom: 0;
         }
 
         .form-label {
             display: block;
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             font-weight: 600;
-            color: #334155;
-            margin-bottom: 8px;
+            color: rgb(29, 30, 32);
+            margin-bottom: 0.5rem;
         }
 
         .form-input {
             width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            background: #fff;
-            transition: all 0.2s ease;
+            padding: 0.875rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--radius-md);
+            background: white;
+            transition: all 0.15s ease;
             font-family: "DM Sans", Roboto, sans-serif;
-            font-size: 15px;
-            color: #1e293b;
+            font-size: 0.95rem;
         }
 
         .form-input:focus {
@@ -1365,67 +1598,65 @@
             box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
             outline: none;
         }
-        
-        .form-input::placeholder {
-            color: #cbd5e1;
-        }
 
+        /* Updated image upload box with progress bar */
         .image-upload-container {
             width: 100%;
         }
 
         .image-upload-box {
-            border: 2px dashed #cbd5e1;
+            border: 2px dashed #E5E7EB;
             border-radius: 12px;
-            padding: 40px 20px;
+            padding: 2.5rem 1.5rem;
             text-align: center;
             cursor: pointer;
-            background: #f8fafc;
-            transition: all 0.2s ease;
+            background: #FAFAFA;
+            transition: all 0.3s ease;
             position: relative;
             width: 100%;
+            margin-bottom: 1rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 200px;
+            min-height: 180px;
         }
 
         .image-upload-box:hover {
             border-color: var(--brand-primary);
-            background: #f1f5f9;
+            background: #F8FAFC;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(81, 39, 186, 0.1);
         }
 
         .image-upload-box svg {
-            stroke: #64748b;
-            margin-bottom: 16px;
-            transition: stroke 0.2s;
-        }
-        
-        .image-upload-box:hover svg {
             stroke: var(--brand-primary);
+            margin-bottom: 0.75rem;
+            width: 48px;
+            height: 48px;
         }
 
         .upload-text {
             font-size: 1rem;
             font-weight: 600;
-            color: #475569;
-            margin-bottom: 4px;
+            color: #6B7280;
+            margin-bottom: 0.25rem;
         }
 
         .upload-subtext {
-            font-size: 0.85rem;
-            color: #94a3b8;
+            font-size: 0.875rem;
+            color: #9CA3AF;
         }
 
+        /* Preview container */
         .preview-container {
             position: relative;
             width: 100%;
+            margin: 1rem 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 16px;
-            padding: 10px 0;
+            gap: 1rem;
         }
 
         .image-preview-wrapper {
@@ -1437,12 +1668,12 @@
         }
 
         .preview-img {
-            width: 140px;
-            height: 140px;
+            width: 120px;
+            height: 120px;
             object-fit: cover;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border-radius: var(--radius-md);
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .upload-success {
@@ -1456,10 +1687,6 @@
             border-radius: 12px;
             margin-bottom: 1rem;
             width: 100%;
-        }
-        
-        .upload-success.hidden {
-            display: none;
         }
 
         .upload-success-content {
@@ -1480,7 +1707,7 @@
         .upload-success-text {
             color: var(--success-color);
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
 
         .change-image-btn {
@@ -1489,20 +1716,20 @@
             gap: 8px;
             padding: 10px 16px;
             background: #ffffff;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--brand-primary);
             border-radius: 8px;
             cursor: pointer;
             font-size: 0.9rem;
             font-weight: 600;
-            color: #475569;
+            color: var(--brand-primary);
             transition: all 0.2s ease;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            margin-top: 0.5rem;
         }
 
         .change-image-btn:hover {
-            background: #f8fafc;
-            border-color: #cbd5e1;
-            color: #1e293b;
+            background: var(--brand-primary);
+            color: white;
+            transform: translateY(-1px);
         }
 
         .change-image-btn svg {
@@ -1511,6 +1738,7 @@
             stroke: currentColor;
         }
 
+        /* Progress bar styles */
         .upload-progress {
             margin-top: 1rem;
             width: 100%;
@@ -1556,6 +1784,65 @@
             display: none;
         }
 
+        /* Updated button styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.5rem;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: none;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            min-width: 100px;
+        }
+
+        .btn-primary {
+            background: var(--brand-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #471ea7;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(81, 39, 186, 0.2);
+        }
+
+        .btn-primary:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 1px solid #e5e7eb;
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: #FEF2F2;
+            color: var(--danger-color);
+            border: 1px solid #FECACA;
+        }
+
+        .btn-danger:hover {
+            background: #FEE2E2;
+            transform: translateY(-1px);
+        }
+
+        /* Toast */
         #toast-container {
             position: fixed;
             bottom: 20px;
@@ -1595,57 +1882,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            font-weight: 600;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            border: none;
-            font-size: 0.95rem;
-            white-space: nowrap;
-        }
-
-        .btn-primary {
-            background: var(--brand-primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #471ea7;
-        }
-
-        .btn-primary:disabled {
-            background: #9ca3af;
-            cursor: not-allowed;
-        }
-
-        .btn-secondary {
-            background: white;
-            border: 1px solid #e2e8f0;
-            color: #475569;
-        }
-
-        .btn-secondary:hover {
-            background: #f8fafc;
-            border-color: #cbd5e1;
-            color: #1e293b;
-        }
-
-        .btn-danger {
-            background: #FEF2F2;
-            color: var(--danger-color);
-            border: 1px solid #FECACA;
-        }
-
-        .btn-danger:hover {
-            background: #FEE2E2;
-        }
-
+        /* ============= FIXED PROFILE POPUP ============= */
         .profile-popup {
             position: fixed;
             background-color: #ffffff;
@@ -1669,6 +1906,7 @@
             transform: translateY(0);
         }
 
+        /* Desktop positioning - FIXED: Show on LEFT side */
         @media (min-width: 769px) {
             .profile-popup {
                 left: 30px !important;
@@ -1678,6 +1916,7 @@
             }
         }
 
+        /* Mobile positioning */
         @media (max-width: 768px) {
             .profile-popup {
                 left: 50% !important;
@@ -1758,6 +1997,7 @@
             stroke: var(--danger-color) !important;
         }
 
+        /* Empty state */
         .empty-state {
             text-align: center;
             padding: 4rem 1rem;
@@ -1766,6 +2006,7 @@
             width: 100%;
         }
 
+        /* Responsive switch */
         @media (max-width: 768px) {
             .page-desktop { display: none; }
             .page-mobile  { display: flex; }
@@ -1789,12 +2030,11 @@
             
             .modal-content {
                 width: 100%;
-                border-radius: 20px 20px 0 0;
+                border-radius: 24px 24px 0 0;
                 animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
                 max-height: 90vh;
                 overflow-y: auto;
                 max-width: 100%;
-                box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
             }
             
             @keyframes slideUpModal {
@@ -1802,6 +2042,7 @@
                 to { transform: translateY(0); }
             }
             
+            /* Prevent horizontal scrolling */
             body, html {
                 overflow-x: hidden;
                 position: relative;
@@ -1828,15 +2069,17 @@
             .page-desktop { display: flex; }
             .page-mobile { display: none; }
             
+            /* Fix desktop popup z-index */
             .product-actions {
                 position: relative;
             }
             
             .desktop-popup {
-                z-index: 10005;
+                z-index: 10002;
             }
         }
 
+        /* Text truncation fixes */
         .text-truncate {
             white-space: nowrap;
             overflow: hidden;
@@ -1845,9 +2088,12 @@
     </style>
 </head>
 <body>
+    <!-- ================= DESKTOP VIEW ================= -->
     <div class="page-desktop">
         <header class="d-topbar">
-            <img class="d-topbar-logo" src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" />
+            <img class="d-topbar-logo"
+                 src="https://product-ecommerces.netlify.app/vastramaya.png"
+                 alt="Vastramaya Logo" />
         </header>
 
         <div class="d-app">
@@ -1855,41 +2101,154 @@
                 <div class="d-sidebar-inner">
                     <nav class="d-nav">
                         <div class="d-nav-group">
+                            <!-- Dashboard -->
                             <div class="d-nav-item" onclick="window.location.href='index.html'">
                                 <span class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="7" height="7" x="3" y="3" rx="1"/>
+                                        <rect width="7" height="7" x="14" y="3" rx="1"/>
+                                        <rect width="7" height="7" x="14" y="14" rx="1"/>
+                                        <rect width="7" height="7" x="3" y="14" rx="1"/>
+                                    </svg>
                                 </span>
                                 <span class="label">Dashboard</span>
                             </div>
 
+                            <!-- Inventory (Active) -->
                             <div class="d-nav-item d-nav-item--active">
                                 <span class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7v10"/><path d="M6 5v14"/><rect width="12" height="18" x="10" y="3" rx="2"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 7v10"/>
+                                        <path d="M6 5v14"/>
+                                        <rect width="12" height="18" x="10" y="3" rx="2"/>
+                                    </svg>
                                 </span>
                                 <span class="label">Inventory</span>
                             </div>
 
+                            <!-- Customize Site -->
                             <div class="d-nav-item" id="d-customize-toggle">
                                 <span class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/><path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
+                                        <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+                                    </svg>
                                 </span>
                                 <span class="label">Customize Site</span>
                                 <span class="chevron">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-icon"><path d="m9 18 6-6-6-6"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round"
+                                         class="chevron-icon">
+                                        <path d="m9 18 6-6-6-6"/>
+                                    </svg>
                                 </span>
                             </div>
 
+                            <!-- Desktop Customize Site submenu -->
                             <div class="d-submenu" id="d-customize-submenu">
-                                <div class="d-submenu-item">Theme & layout</div>
-                                <div class="d-submenu-item">Sections</div>
-                                <div class="d-submenu-item">Navigation</div>
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                        <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+                                        <path d="M9.5 12.5 11 14"/>
+                                        <path d="M14 10l-3.5 4"/>
+                                        <path d="m5 15 4.5-4"/>
+                                    </svg>
+                                    <span>Theme & layout</span>
+                                </div>
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                        <path d="M3 9h18"/>
+                                        <path d="M9 21V9"/>
+                                    </svg>
+                                    <span>Sections</span>
+                                </div>
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="18" cy="5" r="3"/>
+                                        <circle cx="6" cy="12" r="3"/>
+                                        <circle cx="18" cy="19" r="3"/>
+                                        <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
+                                        <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
+                                    </svg>
+                                    <span>Navigation</span>
+                                </div>
+                            </div>
+
+                            <!-- MANAGE ORDERS -->
+                            <div class="d-nav-item" id="d-orders-toggle">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                        <path d="M8 14v2.2l1.6 1"/>
+                                        <circle cx="8" cy="16" r="6"/>
+                                    </svg>
+                                </span>
+                                <span class="label">MANAGE ORDERS</span>
+                                <span class="chevron">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round"
+                                         class="chevron-icon">
+                                        <path d="m9 18 6-6-6-6"/>
+                                    </svg>
+                                </span>
+                            </div>
+
+                            <!-- Desktop MANAGE ORDERS submenu -->
+                            <div class="d-submenu" id="d-orders-submenu">
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 6v6l4 2"/>
+                                        <path d="M22 12a10 10 0 1 0-11 9.95"/>
+                                        <path d="m22 16-5.5 5.5L14 19"/>
+                                    </svg>
+                                    <span>Today</span>
+                                </div>
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M8 2v4"/>
+                                        <path d="M16 2v4"/>
+                                        <rect width="18" height="18" x="3" y="4" rx="2"/>
+                                        <path d="M3 10h18"/>
+                                        <path d="M8 14h.01"/>
+                                        <path d="M12 14h.01"/>
+                                        <path d="M16 14h.01"/>
+                                        <path d="M8 18h.01"/>
+                                        <path d="M12 18h.01"/>
+                                        <path d="M16 18h.01"/>
+                                    </svg>
+                                    <span>This Month</span>
+                                </div>
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2v2"/>
+                                        <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
+                                        <path d="M18 2v2"/>
+                                        <path d="M2 13h2"/>
+                                        <path d="M8 8h14"/>
+                                        <rect x="8" y="3" width="14" height="14" rx="2"/>
+                                    </svg>
+                                    <span>All Orders</span>
+                                </div>
                             </div>
                         </div>
                     </nav>
 
+                    <!-- Desktop Account section -->
                     <div class="d-account-section" id="profile-section">
                         <div class="account-card">
-                            <img id="sidebar-avatar" class="account-avatar" src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png" alt="Profile" />
+                            <img id="sidebar-avatar" class="account-avatar"
+                                 src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
+                                 alt="Profile" />
                             <div class="account-text">
                                 <div class="account-name" id="sidebar-name">Loading...</div>
                                 <div class="account-email" id="sidebar-email">Admin</div>
@@ -1901,11 +2260,19 @@
 
             <main class="d-content">
                 <div class="content-inner">
+                    <!-- PAGE HEADER -->
                     <div class="page-header">
                         <div class="page-title-wrap">
                             <div class="page-title">Manage Categories</div>
                             <div class="breadcrumb">
-                                <span class="breadcrumb-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>
+                                <span class="breadcrumb-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                    </svg>
+                                </span>
                                 <span>Home</span>
                                 <span class="breadcrumb-divider">/</span>
                                 <span>Manage Categories</span>
@@ -1913,15 +2280,26 @@
                         </div>
 
                         <button class="primary-btn" onclick="openAddModal()">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14"/>
+                                <path d="M12 5v14"/>
+                            </svg>
                             <span>Add Category</span>
-                        </button>
+                        button>
                     </div>
 
+                    <!-- CARD -->
                     <div class="card">
                         <div class="card-header">
                             <div class="search-input-wrap">
-                                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="16.65" y1="16.65" x2="21" y2="21"></line></svg>
+                                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="7"></circle>
+                                    <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+                                </svg>
                                 <input type="text" id="search-input" placeholder="Search categories..." />
                             </div>
                         </div>
@@ -1931,8 +2309,13 @@
                                 <thead>
                                     <tr>
                                         <th class="th-image">
-                                            <div style="display:flex; align-items:center; gap:8px;">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-images-icon lucide-images"><path d="m22 11-1.296-1.296a2.4 2.4 0 0 0-3.408 0L11 16"/><path d="M4 8a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2"/><circle cx="13" cy="7" r="1" fill="currentColor"/><rect x="8" y="2" width="14" height="14" rx="2"/></svg>
+                                            <div class="th-image-content">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-images-icon lucide-images">
+                                                    <path d="m22 11-1.296-1.296a2.4 2.4 0 0 0-3.408 0L11 16"/>
+                                                    <path d="M4 8a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2"/>
+                                                    <circle cx="13" cy="7" r="1" fill="currentColor"/>
+                                                    <rect x="8" y="2" width="14" height="14" rx="2"/>
+                                                </svg>
                                                 <span>Image</span>
                                             </div>
                                         </th>
@@ -1943,6 +2326,107 @@
                                     </tr>
                                 </thead>
                                 <tbody id="desktop-categories-table">
+                                    <!-- Skeleton loading for desktop -->
+                                    <tr class="desktop-skeleton-row">
+                                        <td class="td-image">
+                                            <div class="skeleton skeleton-image"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-toggle"></div>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <div class="skeleton skeleton-button"></div>
+                                                <div class="skeleton skeleton-kebab"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="desktop-skeleton-row">
+                                        <td class="td-image">
+                                            <div class="skeleton skeleton-image"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-toggle"></div>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <div class="skeleton skeleton-button"></div>
+                                                <div class="skeleton skeleton-kebab"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="desktop-skeleton-row">
+                                        <td class="td-image">
+                                            <div class="skeleton skeleton-image"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-toggle"></div>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <div class="skeleton skeleton-button"></div>
+                                                <div class="skeleton skeleton-kebab"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="desktop-skeleton-row">
+                                        <td class="td-image">
+                                            <div class="skeleton skeleton-image"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-toggle"></div>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <div class="skeleton skeleton-button"></div>
+                                                <div class="skeleton skeleton-kebab"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="desktop-skeleton-row">
+                                        <td class="td-image">
+                                            <div class="skeleton skeleton-image"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-toggle"></div>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <div class="skeleton skeleton-button"></div>
+                                                <div class="skeleton skeleton-kebab"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -1952,71 +2436,289 @@
         </div>
     </div>
 
+    <!-- ================= MOBILE VIEW ================= -->
     <div class="page-mobile">
+        <!-- Mobile header: menu left, logo right -->
         <header class="m-header">
             <button class="m-menu-btn" id="m-menu-toggle" aria-label="Open menu">
                 <div class="m-menu-lines"><span></span></div>
             </button>
-            <img class="m-logo" src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" />
+
+            <img
+              class="m-logo"
+              src="https://product-ecommerces.netlify.app/vastramaya.png"
+              alt="Vastramaya Logo" />
         </header>
 
         <main class="m-main">
             <div class="mobile-content-inner">
+                <!-- Mobile Page Header -->
                 <div class="mobile-page-header">
                     <div class="mobile-page-title-wrap">
                         <div class="mobile-page-title">Manage Categories</div>
                         <div class="mobile-breadcrumb">
-                            <span class="mobile-breadcrumb-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>
+                            <span class="mobile-breadcrumb-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                                    <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                </svg>
+                            </span>
                             <span>Home</span>
                             <span class="mobile-breadcrumb-divider">/</span>
                             <span>Manage Categories</span>
                         </div>
                     </div>
                     
+                    <!-- Mobile Search and Add Button Row -->
                     <div class="mobile-controls-row">
                         <div class="mobile-search-wrap">
                             <div class="mobile-search-input-wrap">
-                                <svg class="mobile-search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="16.65" y1="16.65" x2="21" y2="21"></line></svg>
+                                <svg class="mobile-search-icon" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="7"></circle>
+                                    <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+                                </svg>
                                 <input type="text" id="mobile-search-input" placeholder="Search categories..." />
                             </div>
                         </div>
                         <button class="mobile-add-btn" onclick="openAddModal()">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14"/>
+                                <path d="M12 5v14"/>
+                            </svg>
                             <span>Add</span>
                         </button>
                     </div>
                 </div>
 
+                <!-- Mobile Category Cards -->
                 <div class="mobile-category-cards" id="mobile-category-cards">
+                    <!-- Skeleton loading for mobile -->
+                    <div class="mobile-skeleton-card">
+                        <div class="skeleton skeleton-mobile-image"></div>
+                        <div class="skeleton-mobile-content">
+                            <div class="skeleton skeleton-mobile-title"></div>
+                            <div class="skeleton skeleton-mobile-subtitle"></div>
+                        </div>
+                        <div class="category-card-actions">
+                            <div class="skeleton skeleton-mobile-toggle"></div>
+                            <div class="skeleton skeleton-mobile-menu"></div>
+                        </div>
+                    </div>
+                    <div class="mobile-skeleton-card">
+                        <div class="skeleton skeleton-mobile-image"></div>
+                        <div class="skeleton-mobile-content">
+                            <div class="skeleton skeleton-mobile-title"></div>
+                            <div class="skeleton skeleton-mobile-subtitle"></div>
+                        </div>
+                        <div class="category-card-actions">
+                            <div class="skeleton skeleton-mobile-toggle"></div>
+                            <div class="skeleton skeleton-mobile-menu"></div>
+                        </div>
+                    </div>
+                    <div class="mobile-skeleton-card">
+                        <div class="skeleton skeleton-mobile-image"></div>
+                        <div class="skeleton-mobile-content">
+                            <div class="skeleton skeleton-mobile-title"></div>
+                            <div class="skeleton skeleton-mobile-subtitle"></div>
+                        </div>
+                        <div class="category-card-actions">
+                            <div class="skeleton skeleton-mobile-toggle"></div>
+                            <div class="skeleton skeleton-mobile-menu"></div>
+                        </div>
+                    </div>
+                    <div class="mobile-skeleton-card">
+                        <div class="skeleton skeleton-mobile-image"></div>
+                        <div class="skeleton-mobile-content">
+                            <div class="skeleton skeleton-mobile-title"></div>
+                            <div class="skeleton skeleton-mobile-subtitle"></div>
+                        </div>
+                        <div class="category-card-actions">
+                            <div class="skeleton skeleton-mobile-toggle"></div>
+                            <div class="skeleton skeleton-mobile-menu"></div>
+                        </div>
+                    </div>
+                    <div class="mobile-skeleton-card">
+                        <div class="skeleton skeleton-mobile-image"></div>
+                        <div class="skeleton-mobile-content">
+                            <div class="skeleton skeleton-mobile-title"></div>
+                            <div class="skeleton skeleton-mobile-subtitle"></div>
+                        </div>
+                        <div class="category-card-actions">
+                            <div class="skeleton skeleton-mobile-toggle"></div>
+                            <div class="skeleton skeleton-mobile-menu"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
-        
+
+        <!-- Overlay & drawer -->
         <div class="m-overlay" id="m-overlay">
             <div class="m-drawer">
                 <div class="m-drawer-header">
-                    <img class="m-drawer-logo" src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" />
+                    <img
+                      class="m-drawer-logo"
+                      src="https://product-ecommerces.netlify.app/vastramaya.png"
+                      alt="Vastramaya Logo" />
                     <button class="m-drawer-close" id="m-drawer-close" aria-label="Close menu">
                         <div class="m-drawer-close-icon"></div>
                     </button>
                 </div>
+
                 <nav class="m-drawer-nav">
+                    <!-- Dashboard -->
                     <div class="m-nav-item" onclick="window.location.href='index.html'">
                         <span class="icon">
-                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="7" height="7" x="3" y="3" rx="1"/>
+                                <rect width="7" height="7" x="14" y="3" rx="1"/>
+                                <rect width="7" height="7" x="14" y="14" rx="1"/>
+                                <rect width="7" height="7" x="3" y="14" rx="1"/>
+                            </svg>
                         </span>
                         <span class="label">Dashboard</span>
                     </div>
-                     <div class="m-nav-item active">
+
+                    <!-- Inventory (Active) -->
+                    <div class="m-nav-item active">
                         <span class="icon">
-                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7v10"/><path d="M6 5v14"/><rect width="12" height="18" x="10" y="3" rx="2"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 7v10"/>
+                                <path d="M6 5v14"/>
+                                <rect width="12" height="18" x="10" y="3" rx="2"/>
+                            </svg>
                         </span>
                         <span class="label">Inventory</span>
                     </div>
+
+                    <!-- Customize Site with dropdown -->
+                    <div class="m-nav-item" id="m-customize-toggle">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
+                                <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+                            </svg>
+                        </span>
+                        <span class="label">Customize Site</span>
+                        <span class="chevron">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round"
+                                 class="chevron-icon">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <!-- Mobile Customize Site submenu -->
+                    <div class="m-submenu" id="m-customize-submenu">
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+                                <path d="M9.5 12.5 11 14"/>
+                                <path d="M14 10l-3.5 4"/>
+                                <path d="m5 15 4.5-4"/>
+                            </svg>
+                            <span>Theme & layout</span>
+                        </div>
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                <path d="M3 9h18"/>
+                                <path d="M9 21V9"/>
+                            </svg>
+                            <span>Sections</span>
+                        </div>
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="18" cy="5" r="3"/>
+                                <circle cx="6" cy="12" r="3"/>
+                                <circle cx="18" cy="19" r="3"/>
+                                <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
+                                <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
+                            </svg>
+                            <span>Navigation</span>
+                        </div>
+                    </div>
+
+                    <!-- MANAGE ORDERS with dropdown -->
+                    <div class="m-nav-item" id="m-orders-toggle">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                <path d="M8 14v2.2l1.6 1"/>
+                                <circle cx="8" cy="16" r="6"/>
+                            </svg>
+                        </span>
+                        <span class="label">MANAGE ORDERS</span>
+                        <span class="chevron">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round"
+                                 class="chevron-icon">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <!-- Mobile MANAGE ORDERS submenu -->
+                    <div class="m-submenu" id="m-orders-submenu">
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 6v6l4 2"/>
+                                <path d="M22 12a10 10 0 1 0-11 9.95"/>
+                                <path d="m22 16-5.5 5.5L14 19"/>
+                            </svg>
+                            <span>Today</span>
+                        </div>
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M8 2v4"/>
+                                <path d="M16 2v4"/>
+                                <rect width="18" height="18" x="3" y="4" rx="2"/>
+                                <path d="M3 10h18"/>
+                                <path d="M8 14h.01"/>
+                                <path d="M12 14h.01"/>
+                                <path d="M16 14h.01"/>
+                                <path d="M8 18h.01"/>
+                                <path d="M12 18h.01"/>
+                                <path d="M16 18h.01"/>
+                            </svg>
+                            <span>This Month</span>
+                        </div>
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2v2"/>
+                                <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
+                                <path d="M18 2v2"/>
+                                <path d="M2 13h2"/>
+                                <path d="M8 8h14"/>
+                                <rect x="8" y="3" width="14" height="14" rx="2"/>
+                            </svg>
+                            <span>All Orders</span>
+                        </div>
+                    </div>
                 </nav>
-                 <div class="m-account-section" id="mobile-profile-section">
+
+                <!-- Mobile account sharing -->
+                <div class="m-account-section" id="mobile-profile-section">
                     <div class="account-card">
-                        <img id="mobile-sidebar-avatar" class="account-avatar" src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png" alt="Profile" />
+                        <img id="mobile-sidebar-avatar" class="account-avatar"
+                             src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
+                             alt="Profile" />
                         <div class="account-text">
                             <div class="account-name" id="mobile-sidebar-name">Loading...</div>
                             <div class="account-email" id="mobile-sidebar-email">Admin</div>
@@ -2026,6 +2728,7 @@
             </div>
         </div>
         
+        <!-- Advanced Menu (Bottom Sheet) -->
         <div class="advanced-menu-overlay" id="advanced-menu-overlay"></div>
         <div class="advanced-menu" id="advanced-menu">
             <div class="menu-handle"></div>
@@ -2037,17 +2740,28 @@
             </div>
             <div class="advanced-menu-items">
                 <button class="advanced-menu-item" id="mobile-edit-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 21h8"/><path d="m15 5 4 4"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 21h8"/>
+                        <path d="m15 5 4 4"/>
+                        <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                    </svg>
                     <span>Edit</span>
                 </button>
                 <button class="advanced-menu-item" id="mobile-delete-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10 11v6"/>
+                        <path d="M14 11v6"/>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                        <path d="M3 6h18"/>
+                        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
                     <span>Delete Category</span>
                 </button>
             </div>
         </div>
     </div>
 
+    <!-- Profile Popup with updated SVG icons -->
     <div class="profile-popup" id="profile-popup">
         <div class="popup-header">
             <img id="popup-avatar" src="" class="account-avatar">
@@ -2057,17 +2771,47 @@
             </div>
         </div>
         <ul class="popup-list">
-            <li><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><span>Profile</span></a></li>
-            <li><a href="#" onclick="auth.signOut()" class="logout"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon logout-icon"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg><span>Logout</span></a></li>
+            <li>
+                <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
+                        <circle cx="12" cy="8" r="5"/>
+                        <path d="M20 21a8 8 0 0 0-16 0"/>
+                    </svg>
+                    <span>Profile</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
+                        <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="auth.signOut()" class="logout">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon logout-icon">
+                        <path d="m16 17 5-5-5-5"/>
+                        <path d="M21 12H9"/>
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    </svg>
+                    <span>Logout</span>
+                </a>
+            </li>
         </ul>
     </div>
 
+    <!-- UPDATED: ADD/EDIT MODAL with improved UI -->
     <div class="modal-overlay" id="category-modal">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title" id="modal-title">Add Category</div>
                 <button class="btn-icon" onclick="closeModal()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18"/>
+                        <path d="m6 6 12 12"/>
+                    </svg>
                 </button>
             </div>
             <form id="category-form">
@@ -2079,12 +2823,18 @@
                     <div class="form-group">
                         <label class="form-label">Category Image <span style="color: var(--danger-color);">*</span></label>
                         <div class="image-upload-container">
+                            <!-- Upload Box (shown initially for new category) -->
                             <div class="image-upload-box" id="image-upload-box" onclick="triggerFileInput()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
                                 <div class="upload-text">Click to upload image</div>
                                 <div class="upload-subtext">PNG, JPG up to 5MB</div>
                             </div>
                             
+                            <!-- Progress bar (hidden by default) -->
                             <div class="upload-progress" id="upload-progress" style="display: none;">
                                 <div class="progress-bar">
                                     <div class="progress-fill" id="progress-fill"></div>
@@ -2092,21 +2842,26 @@
                                 <div class="progress-text" id="progress-text">0% uploaded</div>
                             </div>
                             
-                            <div class="upload-success hidden" id="upload-success-message">
+                            <!-- Upload success with preview and change button (hidden by default) -->
+                            <div class="upload-success" id="upload-success" style="display: none;">
                                 <div class="upload-success-content">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                        <polyline points="22 4 12 14.01 9 11.01"/>
+                                    </svg>
                                     <div class="upload-success-text">Image uploaded successfully!</div>
                                 </div>
-                            </div>
-
-                            <div class="preview-container hidden" id="image-preview-container">
-                                <div class="image-preview-wrapper">
-                                    <img id="cat-preview" class="preview-img">
+                                <div class="preview-container">
+                                    <div class="image-preview-wrapper">
+                                        <img id="cat-preview" class="preview-img">
+                                    </div>
+                                    <button type="button" class="change-image-btn" onclick="showUploadBox()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                                        </svg>
+                                        Change Image
+                                    </button>
                                 </div>
-                                <button type="button" class="change-image-btn" onclick="showUploadBox()">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
-                                    Change Image
-                                </button>
                             </div>
                             
                             <div class="image-required" id="image-required">Image is required for new categories</div>
@@ -2123,16 +2878,20 @@
         </div>
     </div>
 
+    <!-- UPDATED: DELETE MODAL with improved UI -->
     <div class="modal-overlay" id="delete-modal">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title" style="color: var(--danger-color);">Delete Category</div>
                 <button class="btn-icon" onclick="closeDeleteModal()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18"/>
+                        <path d="m6 6 12 12"/>
+                    </svg>
                 </button>
             </div>
             <div class="modal-body">
-                <p style="color: #64748b; margin-bottom: 1rem;">Are you sure you want to delete <strong id="del-cat-name" style="color: rgb(29, 30, 32);"></strong>?</p>
+                <p style="color: #6b7280; margin-bottom: 1rem; font-size: 0.95rem;">Are you sure you want to delete <strong id="del-cat-name" style="color: rgb(29, 30, 32);"></strong>? This action cannot be undone.</p>
                 <div class="form-group">
                     <label class="form-label">Type category name to confirm</label>
                     <input type="text" class="form-input" id="confirm-del-input" placeholder="Category Name">
@@ -2152,10 +2911,13 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script src='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css'></script>
 
     <script>
+        // --- UI INTERACTIONS ---
         document.addEventListener('DOMContentLoaded', () => {
-             const mOverlay = document.getElementById('m-overlay');
+            // Mobile drawer behaviour
+            const mOverlay = document.getElementById('m-overlay');
             const mMenuToggle = document.getElementById('m-menu-toggle');
             const mDrawerClose = document.getElementById('m-drawer-close');
 
@@ -2163,9 +2925,11 @@
                 mMenuToggle.addEventListener('click', () => {
                     mOverlay.classList.add('open');
                 });
+
                 mDrawerClose.addEventListener('click', () => {
                     mOverlay.classList.remove('open');
                 });
+
                 mOverlay.addEventListener('click', (e) => {
                     if (e.target === mOverlay) {
                         mOverlay.classList.remove('open');
@@ -2173,8 +2937,10 @@
                 });
             }
 
+            // Desktop Customize Site dropdown
             const dCustomizeToggle = document.getElementById('d-customize-toggle');
             const dCustomizeSubmenu = document.getElementById('d-customize-submenu');
+
             if (dCustomizeToggle && dCustomizeSubmenu) {
                 dCustomizeToggle.addEventListener('click', () => {
                     dCustomizeSubmenu.classList.toggle('open');
@@ -2182,13 +2948,50 @@
                 });
             }
 
+            // Desktop MANAGE ORDERS dropdown
+            const dOrdersToggle = document.getElementById('d-orders-toggle');
+            const dOrdersSubmenu = document.getElementById('d-orders-submenu');
+
+            if (dOrdersToggle && dOrdersSubmenu) {
+                dOrdersToggle.addEventListener('click', () => {
+                    dOrdersSubmenu.classList.toggle('open');
+                    dOrdersToggle.classList.toggle('dropdown-open');
+                });
+            }
+
+            // Mobile Customize Site dropdown
+            const mCustomizeToggle = document.getElementById('m-customize-toggle');
+            const mCustomizeSubmenu = document.getElementById('m-customize-submenu');
+
+            if (mCustomizeToggle && mCustomizeSubmenu) {
+                mCustomizeToggle.addEventListener('click', () => {
+                    mCustomizeSubmenu.classList.toggle('open');
+                    mCustomizeToggle.classList.toggle('dropdown-open');
+                });
+            }
+
+            // Mobile MANAGE ORDERS dropdown
+            const mOrdersToggle = document.getElementById('m-orders-toggle');
+            const mOrdersSubmenu = document.getElementById('m-orders-submenu');
+
+            if (mOrdersToggle && mOrdersSubmenu) {
+                mOrdersToggle.addEventListener('click', () => {
+                    mOrdersSubmenu.classList.toggle('open');
+                    mOrdersToggle.classList.toggle('dropdown-open');
+                });
+            }
+
+            // Profile section
             const profileSection = document.getElementById('profile-section');
             const mobileProfileSection = document.getElementById('mobile-profile-section');
             const profilePopup = document.getElementById('profile-popup');
 
+            // Fix profile popup positioning for desktop - show on LEFT side
             if (profileSection) {
                 profileSection.addEventListener('click', e => {
                     e.stopPropagation();
+                    
+                    // Position the popup at the bottom left of the account section for desktop
                     if (window.innerWidth >= 769) {
                         const rect = profileSection.getBoundingClientRect();
                         profilePopup.style.left = '30px';
@@ -2196,6 +2999,7 @@
                         profilePopup.style.bottom = '100px';
                         profilePopup.style.top = 'auto';
                     }
+                    
                     profilePopup.classList.toggle('active');
                 });
                 
@@ -2206,28 +3010,53 @@
                 });
             }
 
-             if (mobileProfileSection) {
+            if (mobileProfileSection) {
                 mobileProfileSection.addEventListener('click', e => {
                     e.stopPropagation();
                     profilePopup.classList.toggle('active');
                 });
             }
-            
+
+            // Advanced Menu functionality
             const advancedMenu = document.getElementById('advanced-menu');
             const advancedMenuOverlay = document.getElementById('advanced-menu-overlay');
             const advancedMenuClose = document.getElementById('advanced-menu-close');
+
+            // Close advanced menu
             if (advancedMenuClose && advancedMenuOverlay) {
                 advancedMenuClose.addEventListener('click', () => {
                     advancedMenu.classList.remove('open');
                     advancedMenuOverlay.classList.remove('open');
                 });
+
                 advancedMenuOverlay.addEventListener('click', () => {
                     advancedMenu.classList.remove('open');
                     advancedMenuOverlay.classList.remove('open');
                 });
             }
 
+            // Prevent horizontal scrolling on mobile
+            if (window.innerWidth <= 768) {
+                document.body.style.overflowX = 'hidden';
+                document.body.style.maxWidth = '100vw';
+            }
+
+            // Close popups when clicking outside
             document.addEventListener('click', function(e) {
+                // Close profile popup when clicking outside
+                const profilePopup = document.getElementById('profile-popup');
+                const profileSection = document.getElementById('profile-section');
+                const mobileProfileSection = document.getElementById('mobile-profile-section');
+                
+                if (profilePopup && profilePopup.classList.contains('active')) {
+                    if (!profilePopup.contains(e.target) && 
+                        !profileSection?.contains(e.target) && 
+                        !mobileProfileSection?.contains(e.target)) {
+                        profilePopup.classList.remove('active');
+                    }
+                }
+                
+                // Close desktop popups when clicking outside
                 document.querySelectorAll('.desktop-popup').forEach(popup => {
                     if (popup.classList.contains('open') && 
                         !popup.contains(e.target) && 
@@ -2236,8 +3065,37 @@
                     }
                 });
             });
+
+            // Close popups when pressing Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    document.getElementById('profile-popup')?.classList.remove('active');
+                    document.querySelectorAll('.desktop-popup').forEach(popup => {
+                        popup.classList.remove('open');
+                    });
+                    closeAdvancedMenu();
+                }
+            });
         });
 
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth <= 768) {
+                document.body.style.overflowX = 'hidden';
+                document.body.style.maxWidth = '100vw';
+            } else {
+                document.body.style.overflowX = '';
+                document.body.style.maxWidth = '';
+            }
+            
+            // Close popups on resize
+            document.getElementById('profile-popup')?.classList.remove('active');
+            document.querySelectorAll('.desktop-popup').forEach(popup => {
+                popup.classList.remove('open');
+            });
+        });
+
+        // --- FIREBASE CONFIG ---
         const firebaseConfig = {
             apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
             authDomain: "vastramaya---magic.firebaseapp.com",
@@ -2253,6 +3111,7 @@
         const db = firebase.firestore();
         const storage = firebase.storage();
 
+        // --- APP LOGIC ---
         let allCategories = [];
         let productCounts = {};
         let editingId = null;
@@ -2260,9 +3119,12 @@
         let deletingName = null;
         let currentFileUpload = null;
         let existingImageUrl = null;
+        let currentMenuCategoryId = null;
         let imageUploaded = false;
         let currentUploadTask = null;
+        let previousImageRef = null;
         let previousImageUrlToDelete = null;
+        let isLoading = true; // Track loading state
 
         auth.onAuthStateChanged(user => {
             if (!user || user.email !== ADMIN_EMAIL) {
@@ -2276,12 +3138,18 @@
         function initProfile(user) {
             const name = user.displayName || 'Admin';
             const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=5127ba&color=fff`;
+            
+            // Desktop
             document.getElementById('sidebar-name').textContent = name;
             document.getElementById('sidebar-email').textContent = user.email;
             document.getElementById('sidebar-avatar').src = avatar;
+            
+            // Mobile
             document.getElementById('mobile-sidebar-name').textContent = name;
             document.getElementById('mobile-sidebar-email').textContent = user.email;
             document.getElementById('mobile-sidebar-avatar').src = avatar;
+            
+            // Popup
             document.getElementById('popup-name').textContent = name;
             document.getElementById('popup-email').textContent = user.email;
             document.getElementById('popup-avatar').src = avatar;
@@ -2289,6 +3157,9 @@
 
         async function loadData() {
             try {
+                // Show skeleton loading initially
+                isLoading = true;
+                
                 const prodSnap = await db.collection('products').get();
                 productCounts = {};
                 prodSnap.forEach(doc => {
@@ -2299,36 +3170,62 @@
                 const catSnap = await db.collection('categories').orderBy('name').get();
                 allCategories = catSnap.docs.map(doc => { 
                     const data = doc.data();
-                    return { id: doc.id, ...data, enabled: data.enabled !== undefined ? data.enabled : true };
+                    return { 
+                        id: doc.id, 
+                        ...data,
+                        enabled: data.enabled !== undefined ? data.enabled : true // Default to true if not set
+                    };
                 });
+                
+                isLoading = false;
                 renderCategories(allCategories);
             } catch (e) {
                 console.error(e);
+                isLoading = false;
                 showToast('Error loading data', 'error');
+                renderCategories([]);
             }
         }
 
         function renderCategories(list) {
+            // Desktop table
             const desktopTable = document.getElementById('desktop-categories-table');
+            // Mobile cards
             const mobileCards = document.getElementById('mobile-category-cards');
             
+            // Show loading skeleton
+            if (isLoading) {
+                // Skeleton is already shown in HTML
+                return;
+            }
+            
             if(list.length === 0) {
-                desktopTable.innerHTML = `<tr><td colspan="5" class="empty-state"><h3>No Categories Found</h3><p>Create a new category to get started.</p></td></tr>`;
+                desktopTable.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="empty-state">
+                            <h3>No Categories Found</h3>
+                            <p>Create a new category to get started.</p>
+                        </td>
+                    </tr>`;
                 mobileCards.innerHTML = `<div class="empty-state"><h3>No Categories Found</h3><p>Create a new category to get started.</p></div>`;
                 return;
             }
             
+            // Desktop table rows
             desktopTable.innerHTML = list.map(cat => `
                 <tr>
                     <td class="td-image">
-                        <img class="product-thumb" src="${cat.imageUrl || 'https://via.placeholder.com/100?text=No+Image'}" alt="${cat.name}" />
+                        <img class="product-thumb"
+                             src="${cat.imageUrl || 'https://via.placeholder.com/100?text=No+Image'}"
+                             alt="${cat.name}" />
                     </td>
                     <td class="product-name">${cat.name}</td>
                     <td class="product-count">${productCounts[cat.name] || 0} products</td>
                     <td class="td-status">
-                        <div class="status-toggle" style="padding-left: 0;">
+                        <div class="status-toggle">
                             <label class="toggle-switch">
-                                <input type="checkbox" ${cat.enabled ? 'checked' : ''} onchange="toggleCategoryStatus('${cat.id}', this.checked)">
+                                <input type="checkbox" ${cat.enabled ? 'checked' : ''} 
+                                       onchange="toggleCategoryStatus('${cat.id}', this.checked)">
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
@@ -2336,27 +3233,42 @@
                     <td class="product-actions">
                         <div class="action-buttons">
                             <button class="btn-secondary" onclick="window.location.href='manage-products.html?category=${encodeURIComponent(cat.name)}'">Manage</button>
-                            <div class="kebab" data-category-id="${cat.id}">
-                                <span class="kebab-dots"></span>
-                            </div>
-                            <div class="desktop-popup" id="desktop-popup-${cat.id}">
-                                <button class="desktop-popup-item" onclick="openEditModal('${cat.id}')">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 21h8"/><path d="m15 5 4 4"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
-                                    <span>Edit</span>
-                                </button>
-                                <button class="desktop-popup-item" onclick="openDeleteModal('${cat.id}', '${cat.name}')">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                                    <span>Delete</span>
-                                </button>
+                            <div class="popup-container">
+                                <div class="kebab" data-category-id="${cat.id}">
+                                    <span class="kebab-dots"></span>
+                                </div>
+                                <div class="desktop-popup" id="desktop-popup-${cat.id}">
+                                    <button class="desktop-popup-item" onclick="openEditModal('${cat.id}')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M13 21h8"/>
+                                            <path d="m15 5 4 4"/>
+                                            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                                        </svg>
+                                        <span>Edit</span>
+                                    </button>
+                                    <button class="desktop-popup-item delete-item" onclick="openDeleteModal('${cat.id}', '${cat.name}')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M10 11v6"/>
+                                            <path d="M14 11v6"/>
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                                            <path d="M3 6h18"/>
+                                            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                        </svg>
+                                        <span>Delete</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </td>
                 </tr>
             `).join('');
             
+            // Mobile cards - UPDATED LAYOUT with toggle left to 3 dots and card redirect
             mobileCards.innerHTML = list.map(cat => `
                 <div class="category-card-mobile" onclick="handleMobileCardClick(event, '${encodeURIComponent(cat.name)}')">
-                    <img class="category-card-image" src="${cat.imageUrl || 'https://via.placeholder.com/100?text=No+Image'}" alt="${cat.name}" />
+                    <img class="category-card-image"
+                         src="${cat.imageUrl || 'https://via.placeholder.com/100?text=No+Image'}"
+                         alt="${cat.name}" />
                     <div class="category-card-content">
                         <div class="category-card-name">${cat.name}</div>
                         <div class="category-card-products">${productCounts[cat.name] || 0} products</div>
@@ -2364,7 +3276,8 @@
                     <div class="category-card-actions">
                         <div class="mobile-status-toggle">
                             <label class="toggle-switch">
-                                <input type="checkbox" ${cat.enabled ? 'checked' : ''} onchange="toggleCategoryStatus('${cat.id}', this.checked)">
+                                <input type="checkbox" ${cat.enabled ? 'checked' : ''} 
+                                       onchange="toggleCategoryStatus('${cat.id}', this.checked)">
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
@@ -2375,48 +3288,98 @@
                 </div>
             `).join('');
             
+            // FIXED: Desktop popup positioning - now using fixed positioning
             document.querySelectorAll('.kebab').forEach(kebab => {
                 kebab.addEventListener('click', (e) => {
                     e.stopPropagation();
+                    e.preventDefault();
+                    
                     const categoryId = kebab.getAttribute('data-category-id');
                     const popup = document.getElementById(`desktop-popup-${categoryId}`);
                     
-                    document.querySelectorAll('.desktop-popup').forEach(p => { if (p !== popup) p.classList.remove('open'); });
+                    // Close all other popups
+                    document.querySelectorAll('.desktop-popup').forEach(p => {
+                        if (p !== popup) {
+                            p.classList.remove('open');
+                        }
+                    });
                     
+                    // Toggle current popup
                     popup.classList.toggle('open');
                     
-                    const rect = kebab.getBoundingClientRect();
-                    popup.style.top = `${rect.bottom + 6}px`; 
-                    popup.style.left = `${rect.right - 160}px`; 
+                    if (popup.classList.contains('open')) {
+                        // Get the position of the kebab button
+                        const rect = kebab.getBoundingClientRect();
+                        
+                        // Position the popup relative to the viewport
+                        popup.style.position = 'fixed';
+                        popup.style.top = `${rect.bottom + window.scrollY + 5}px`;
+                        popup.style.right = `${window.innerWidth - rect.right}px`;
+                        
+                        // Ensure popup stays within viewport
+                        const popupRect = popup.getBoundingClientRect();
+                        if (popupRect.bottom > window.innerHeight) {
+                            popup.style.top = `${rect.top + window.scrollY - popupRect.height - 5}px`;
+                        }
+                        if (popupRect.right > window.innerWidth) {
+                            popup.style.right = '10px';
+                        }
+                    }
                 });
             });
-
-             document.querySelectorAll('.category-card-menu-btn').forEach(btn => {
+            
+            // Close popups when clicking elsewhere
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.popup-container') && !e.target.closest('.desktop-popup')) {
+                    document.querySelectorAll('.desktop-popup').forEach(popup => {
+                        popup.classList.remove('open');
+                    });
+                }
+            });
+            
+            // Prevent desktop popups from closing when clicking inside
+            document.querySelectorAll('.desktop-popup').forEach(popup => {
+                popup.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+            });
+            
+            // Attach event listeners for mobile menu buttons
+            document.querySelectorAll('.category-card-menu-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     e.preventDefault();
                     currentMenuCategoryId = btn.getAttribute('data-category-id');
                     const cat = allCategories.find(c => c.id === currentMenuCategoryId);
+                    
                     if (!cat) return;
                     
+                    // Set up the mobile menu buttons
                     document.getElementById('mobile-edit-btn').onclick = () => {
                         openEditModal(currentMenuCategoryId);
                         closeAdvancedMenu();
                     };
+                    
                     document.getElementById('mobile-delete-btn').onclick = () => {
                         openDeleteModal(cat.id, cat.name);
                         closeAdvancedMenu();
                     };
+                    
                     openAdvancedMenu();
                 });
             });
             
-            document.querySelectorAll('.toggle-switch input').forEach(toggle => {
-                toggle.addEventListener('click', (e) => { e.stopPropagation(); });
+            // Prevent toggle clicks from triggering card redirect
+            document.querySelectorAll('.category-card-actions .toggle-switch input').forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent the click from bubbling up to parent
+                });
             });
         }
 
+        // Handle mobile card click - redirect to products page
         function handleMobileCardClick(event, categoryName) {
+            // Only redirect if the click wasn't on the actions area (toggle or menu button)
             if (!event.target.closest('.category-card-actions') && 
                 !event.target.classList.contains('toggle-switch') &&
                 !event.target.classList.contains('toggle-slider') &&
@@ -2425,16 +3388,30 @@
             }
         }
 
+        // Toggle category status
         async function toggleCategoryStatus(id, enabled) {
             try {
                 await db.collection('categories').doc(id).update({
                     enabled: enabled,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+                
+                // Update local state
                 const category = allCategories.find(c => c.id === id);
-                if (category) category.enabled = enabled;
+                if (category) {
+                    category.enabled = enabled;
+                }
+                
+                // Re-render to update UI
                 renderCategories(allCategories.filter(c => allCategories.includes(c)));
+                
                 showToast(`Category ${enabled ? 'enabled' : 'disabled'} successfully`, 'success');
+                
+                // Close any open desktop popups
+                document.querySelectorAll('.desktop-popup').forEach(popup => {
+                    popup.classList.remove('open');
+                });
+                
             } catch (e) {
                 console.error(e);
                 showToast('Failed to update category status', 'error');
@@ -2451,34 +3428,44 @@
             document.getElementById('advanced-menu-overlay').classList.remove('open');
         }
 
+        // Search functionality
         document.getElementById('search-input').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
             const filtered = allCategories.filter(c => c.name.toLowerCase().includes(term));
             renderCategories(filtered);
         });
+
         document.getElementById('mobile-search-input').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
             const filtered = allCategories.filter(c => c.name.toLowerCase().includes(term));
             renderCategories(filtered);
         });
 
+        // --- ADD/EDIT LOGIC ---
         function triggerFileInput() {
             document.getElementById('cat-file-input').click();
         }
 
         function showUploadBox() {
-            document.getElementById('upload-success-message').classList.add('hidden');
-            document.getElementById('image-preview-container').classList.add('hidden');
+            // Hide success state, show upload box
+            document.getElementById('upload-success').style.display = 'none';
             document.getElementById('upload-progress').style.display = 'none';
             document.getElementById('image-upload-box').style.display = 'flex';
+            document.getElementById('cat-preview').style.display = 'none';
             
+            // Reset file input
             document.getElementById('cat-file-input').value = '';
+            
+            // Clear previous image URL
             existingImageUrl = null;
             
+            // For new category, show required message
             if (!editingId) {
                 document.getElementById('image-required').style.display = 'block';
                 document.getElementById('modal-submit-btn').disabled = true;
             }
+            
+            // Mark image as not uploaded
             imageUploaded = false;
         }
 
@@ -2487,21 +3474,21 @@
             currentFileUpload = null;
             existingImageUrl = null;
             imageUploaded = false;
+            previousImageRef = null;
             previousImageUrlToDelete = null;
             
             document.getElementById('modal-title').textContent = "Add Category";
             document.getElementById('modal-submit-btn').textContent = "Save Category";
-            document.getElementById('modal-submit-btn').disabled = true;
+            document.getElementById('modal-submit-btn').disabled = true; // Disable until image is uploaded
             document.getElementById('category-form').reset();
             
+            // Reset image upload UI
             document.getElementById('image-upload-box').style.display = 'flex';
             document.getElementById('upload-progress').style.display = 'none';
-            
-            document.getElementById('upload-success-message').classList.add('hidden');
-            document.getElementById('image-preview-container').classList.add('hidden');
-            
+            document.getElementById('upload-success').style.display = 'none';
             document.getElementById('image-required').style.display = 'block';
             document.getElementById('upload-error').textContent = '';
+            
             document.getElementById('category-modal').style.display = 'flex';
         }
 
@@ -2511,148 +3498,218 @@
             editingId = id;
             currentFileUpload = null;
             existingImageUrl = cat.imageUrl || null;
-            imageUploaded = !!cat.imageUrl;
+            imageUploaded = true; // Mark as uploaded since we have existing image
+            previousImageRef = null;
             previousImageUrlToDelete = cat.imageUrl || null;
             
             document.getElementById('modal-title').textContent = "Edit Category";
             document.getElementById('modal-submit-btn').textContent = "Update Category";
-            document.getElementById('modal-submit-btn').disabled = false;
+            document.getElementById('modal-submit-btn').disabled = false; // Enable for editing
             document.getElementById('cat-name-input').value = cat.name;
             document.getElementById('image-required').style.display = 'none';
             
-            document.getElementById('image-upload-box').style.display = 'none';
-            document.getElementById('upload-progress').style.display = 'none';
-            
             if(cat.imageUrl) {
                 document.getElementById('cat-preview').src = cat.imageUrl;
-                document.getElementById('image-preview-container').classList.remove('hidden');
-                document.getElementById('upload-success-message').classList.add('hidden');
+                document.getElementById('cat-preview').style.display = 'block';
+                document.getElementById('upload-success').style.display = 'block';
+                document.getElementById('upload-progress').style.display = 'none';
+                document.getElementById('image-upload-box').style.display = 'none';
             } else {
-                document.getElementById('image-preview-container').classList.add('hidden');
+                // If no existing image, show upload box
+                document.getElementById('cat-preview').style.display = 'none';
+                document.getElementById('upload-success').style.display = 'none';
+                document.getElementById('upload-progress').style.display = 'none';
                 document.getElementById('image-upload-box').style.display = 'flex';
                 document.getElementById('image-required').style.display = 'block';
+                imageUploaded = false;
+                document.getElementById('modal-submit-btn').disabled = true;
             }
             
             document.getElementById('category-modal').style.display = 'flex';
+            
+            // Clean up menus
             document.querySelectorAll('.desktop-popup').forEach(d => d.classList.remove('open'));
             closeAdvancedMenu();
         }
 
         function closeModal() {
+            // Cancel any ongoing upload
             if (currentUploadTask) {
                 currentUploadTask.cancel();
                 currentUploadTask = null;
             }
+            
             document.getElementById('category-modal').style.display = 'none';
         }
 
         document.getElementById('cat-file-input').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if(!file) return;
+            
+            // Validate file size
             if(file.size > 5*1024*1024) {
                 document.getElementById('upload-error').textContent = 'Image too large (max 5MB)';
                 return;
             }
+            
+            // Validate file type
             if(!file.type.match('image.*')) {
                 document.getElementById('upload-error').textContent = 'Please select an image file';
                 return;
             }
             
             document.getElementById('upload-error').textContent = '';
-            if (currentUploadTask) currentUploadTask.cancel();
             
+            // Cancel previous upload if exists
+            if (currentUploadTask) {
+                currentUploadTask.cancel();
+            }
+            
+            // Delete previous image from storage if exists (when changing image)
             if (previousImageUrlToDelete) {
                 try {
+                    // Extract the file path from the URL and delete from storage
                     const imageRef = storage.refFromURL(previousImageUrlToDelete);
                     await imageRef.delete();
-                } catch (error) { console.log('Error deleting prev image:', error); }
+                    console.log('Previous image deleted from storage');
+                } catch (error) {
+                    console.log('Previous image not found or already deleted:', error);
+                }
                 previousImageUrlToDelete = null;
             }
             
+            // Show preview
             const preview = document.getElementById('cat-preview');
             preview.src = URL.createObjectURL(file);
+            preview.style.display = 'block';
             
+            // Hide upload box and show progress
             document.getElementById('image-upload-box').style.display = 'none';
-            document.getElementById('upload-success-message').classList.add('hidden');
-            document.getElementById('image-preview-container').classList.add('hidden');
+            document.getElementById('upload-success').style.display = 'none';
             document.getElementById('upload-progress').style.display = 'flex';
             document.getElementById('image-required').style.display = 'none';
+            
+            // Disable submit button during upload
             document.getElementById('modal-submit-btn').disabled = true;
             
+            // Start upload
             currentFileUpload = file;
             uploadImage(file);
         });
 
         async function uploadImage(file) {
             try {
+                // Create a reference to the file location
                 const fileExtension = file.name.split('.').pop();
                 const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExtension}`;
                 const storageRef = storage.ref().child(`categories/${fileName}`);
                 
+                // Start upload task
                 currentUploadTask = storageRef.put(file);
                 
+                // Track upload progress
                 currentUploadTask.on('state_changed',
                     (snapshot) => {
+                        // Update progress bar
                         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                         document.getElementById('progress-fill').style.width = `${progress}%`;
                         document.getElementById('progress-text').textContent = `${Math.round(progress)}% uploaded`;
                     },
                     (error) => {
+                        // Upload failed
                         console.error('Upload error:', error);
                         document.getElementById('upload-error').textContent = 'Upload failed. Please try again.';
                         document.getElementById('upload-progress').style.display = 'none';
+                        document.getElementById('modal-submit-btn').disabled = true;
+                        
+                        // Show upload box again
                         document.getElementById('image-upload-box').style.display = 'flex';
+                        
                         currentUploadTask = null;
                     },
                     async () => {
+                        // Upload completed successfully
                         const downloadURL = await storageRef.getDownloadURL();
                         
-                        document.getElementById('upload-progress').style.display = 'none';
-                        document.getElementById('upload-success-message').classList.remove('hidden');
-                        document.getElementById('image-preview-container').classList.remove('hidden');
+                        // Store the reference for potential deletion later
+                        previousImageRef = storageRef;
                         
+                        // Update UI for success
+                        document.getElementById('upload-progress').style.display = 'none';
+                        document.getElementById('upload-success').style.display = 'block';
                         document.getElementById('modal-submit-btn').disabled = false;
                         imageUploaded = true;
+                        
+                        // Store the download URL for later use
                         existingImageUrl = downloadURL;
+                        
+                        // Store the URL to delete if user changes image again
                         previousImageUrlToDelete = downloadURL;
+                        
                         currentUploadTask = null;
                     }
                 );
+                
             } catch (error) {
-                console.error(error);
-                document.getElementById('upload-error').textContent = 'Upload failed.';
+                console.error('Upload error:', error);
+                document.getElementById('upload-error').textContent = 'Upload failed. Please try again.';
+                document.getElementById('upload-progress').style.display = 'none';
+                document.getElementById('modal-submit-btn').disabled = true;
                 document.getElementById('image-upload-box').style.display = 'flex';
+                currentUploadTask = null;
             }
         }
 
         document.getElementById('category-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('cat-name-input').value.trim();
-            if(!name) { showToast('Category name is required', 'error'); return; }
-            if ((!editingId && !imageUploaded) || (editingId && !imageUploaded && !existingImageUrl)) {
-                document.getElementById('image-required').style.display = 'block';
-                showToast('Please upload an image', 'error');
+            if(!name) {
+                showToast('Category name is required', 'error');
                 return;
             }
+
+            // Check if image is uploaded (required for new categories)
+            if (!editingId && !imageUploaded) {
+                document.getElementById('image-required').style.display = 'block';
+                showToast('Please upload an image for the category', 'error');
+                return;
+            }
+
+            // For editing, if no new image uploaded and no existing image, require image
+            if (editingId && !imageUploaded && !existingImageUrl) {
+                document.getElementById('image-required').style.display = 'block';
+                showToast('Please upload an image for the category', 'error');
+                return;
+            }
+
             const exists = allCategories.some(c => c.id !== editingId && c.name.toLowerCase() === name.toLowerCase());
-            if(exists) { showToast('Category name already exists', 'error'); return; }
+            if(exists) {
+                showToast('Category name already exists', 'error');
+                return;
+            }
 
             const btn = document.getElementById('modal-submit-btn');
             btn.disabled = true; 
             btn.textContent = editingId ? "Updating..." : "Saving...";
 
             try {
+                let imageUrl = existingImageUrl;
+                
+                // If we have a new file upload in progress, wait for it to complete
                 if (currentUploadTask) {
-                    showToast('Please wait for image upload', 'error');
+                    showToast('Please wait for image upload to complete', 'error');
                     btn.disabled = false;
+                    btn.textContent = editingId ? "Update Category" : "Save Category";
                     return;
                 }
+
                 const data = {
                     name,
-                    imageUrl: existingImageUrl || '',
-                    enabled: true,
+                    imageUrl: imageUrl || '',
+                    enabled: true, // Default to enabled when creating/updating
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
+
                 if(editingId) {
                     await db.collection('categories').doc(editingId).update(data);
                     showToast('Category updated successfully', 'success');
@@ -2661,6 +3718,7 @@
                     await db.collection('categories').add(data);
                     showToast('Category created successfully', 'success');
                 }
+                
                 closeModal();
                 loadData();
             } catch(e) {
@@ -2671,6 +3729,7 @@
             }
         });
 
+        // --- DELETE LOGIC ---
         function openDeleteModal(id, name) {
             deletingId = id;
             deletingName = name;
@@ -2678,6 +3737,8 @@
             document.getElementById('confirm-del-input').value = '';
             document.getElementById('confirm-del-btn').disabled = true;
             document.getElementById('delete-modal').style.display = 'flex';
+            
+            // Clean up menus
             document.querySelectorAll('.desktop-popup').forEach(d => d.classList.remove('open'));
             closeAdvancedMenu();
         }
@@ -2692,18 +3753,24 @@
 
         document.getElementById('confirm-del-btn').addEventListener('click', async () => {
             if(!deletingId) return;
+            
             const btn = document.getElementById('confirm-del-btn');
             btn.disabled = true;
             btn.textContent = "Deleting...";
             
             try {
+                // Get the category to delete its image from storage
                 const cat = allCategories.find(c => c.id === deletingId);
                 if (cat && cat.imageUrl) {
                     try {
+                        // Extract the file path from the URL and delete from storage
                         const imageRef = storage.refFromURL(cat.imageUrl);
                         await imageRef.delete();
-                    } catch (error) { console.log('Image not found/deleted:', error); }
+                    } catch (error) {
+                        console.log('Image not found or already deleted:', error);
+                    }
                 }
+                
                 await db.collection('categories').doc(deletingId).delete();
                 showToast('Category deleted successfully', 'success');
                 closeDeleteModal();
