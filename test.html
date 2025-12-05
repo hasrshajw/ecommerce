@@ -374,7 +374,7 @@
             width: 100%;
         }
 
-        /* Table area */
+        /* Table area - FIXED: Status column alignment */
         .table-wrapper {
             width: 100%;
             overflow-x: auto;
@@ -411,15 +411,11 @@
             width: 80px;
         }
 
-        /* FIXED: Status column width and alignment */
-        .th-status {
-            width: 120px;
+        /* FIXED: Status column alignment */
+        .domain-table th:nth-child(4),
+        .domain-table td:nth-child(4) {
             text-align: center;
-        }
-
-        .td-status {
             width: 120px;
-            text-align: center;
         }
 
         .domain-table tbody tr {
@@ -491,7 +487,7 @@
             cursor: pointer;
             position: relative;
             flex-shrink: 0;
-            z-index: 1;
+            z-index: 100;
         }
         .kebab-dots {
             width: 4px;
@@ -501,20 +497,19 @@
             box-shadow: 0 -6px 0 0 #a855f7, 0 6px 0 0 #a855f7;
         }
 
-        /* Desktop Popup Menu - FIXED: Position and z-index */
+        /* Desktop Popup Menu - FIXED: Position below kebab button */
         .desktop-popup {
             position: absolute;
-            top: 100%;
+            top: calc(100% + 5px);
             right: 0;
             background: #ffffff;
             border-radius: 8px;
             border: 1px solid #e5e7eb;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             min-width: 160px;
-            z-index: 10000;
+            z-index: 9999;
             display: none;
             overflow: hidden;
-            margin-top: 5px;
         }
 
         .desktop-popup.open {
@@ -562,6 +557,7 @@
             align-items: center;
             justify-content: center;
             width: 100%;
+            height: 100%;
         }
 
         .toggle-switch {
@@ -570,7 +566,7 @@
             width: 44px;
             height: 24px;
             flex-shrink: 0;
-            margin: 0 auto;
+            margin: 0;
         }
 
         .toggle-switch input {
@@ -1372,7 +1368,7 @@
             box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
         }
 
-        /* Updated image upload box with progress bar */
+        /* Updated image upload box with progress bar - FIXED: Show image left and change button */
         .image-upload-container {
             width: 100%;
         }
@@ -1413,69 +1409,96 @@
             color: #9CA3AF;
         }
 
-        .preview-container {
-            position: relative;
-            width: 120px;
-            height: 120px;
-            margin: 0.5rem auto 0;
+        /* Image preview and change button container */
+        .image-preview-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .preview-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
         }
 
         .preview-img {
-            width: 100%;
-            height: 100%;
+            width: 120px;
+            height: 120px;
             object-fit: cover;
             border-radius: var(--radius-md);
             border: 1px solid #e5e7eb;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            display: none;
+        }
+
+        .preview-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
         }
 
         .upload-success {
             display: flex;
             align-items: center;
-            justify-content: center;
-            flex-direction: column;
             gap: 8px;
-            padding: 1rem;
+            padding: 0.75rem 1rem;
             background: #f0fdf4;
             border: 1px solid #bbf7d0;
             border-radius: 8px;
-            margin-bottom: 1rem;
+            width: 100%;
         }
 
         .upload-success svg {
             stroke: var(--success-color);
-            width: 32px;
-            height: 32px;
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
         }
 
         .upload-success-text {
             color: var(--success-color);
             font-weight: 500;
+            font-size: 0.9rem;
         }
 
         .change-image-btn {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 6px;
-            padding: 6px 12px;
-            background: #f3f4f6;
-            border: 1px solid #e5e7eb;
+            padding: 8px 16px;
+            background: var(--brand-primary);
+            border: 1px solid var(--brand-primary);
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.85rem;
-            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: white;
             transition: all 0.2s ease;
+            width: 100%;
+            margin-top: 0.5rem;
         }
 
         .change-image-btn:hover {
-            background: #e5e7eb;
+            background: #471ea7;
+            border-color: #471ea7;
+        }
+
+        .change-image-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: white;
         }
 
         /* Progress bar styles */
         .upload-progress {
             margin-top: 1rem;
             width: 100%;
+            display: none;
         }
 
         .progress-bar {
@@ -1797,7 +1820,7 @@
             }
             
             .desktop-popup {
-                z-index: 10000;
+                z-index: 9999;
                 position: absolute !important;
             }
         }
@@ -2034,7 +2057,7 @@
                                         <th class="th-image"></th>
                                         <th>Name</th>
                                         <th>No. of products</th>
-                                        <th class="th-status">Status</th>
+                                        <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -2381,6 +2404,7 @@
                     <div class="form-group">
                         <label class="form-label">Category Image <span style="color: var(--danger-color);">*</span></label>
                         <div class="image-upload-container">
+                            <!-- Image upload box (shown initially) -->
                             <div class="image-upload-box" id="image-upload-box" onclick="triggerFileInput()">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -2389,32 +2413,36 @@
                                 </svg>
                                 <div class="upload-text">Click to upload image</div>
                                 <div class="upload-subtext">PNG, JPG up to 5MB</div>
-                                <div class="preview-container">
+                            </div>
+                            
+                            <!-- Image preview container (hidden initially) -->
+                            <div class="image-preview-container" id="image-preview-container">
+                                <div class="preview-wrapper">
                                     <img id="cat-preview" class="preview-img">
+                                    <div class="preview-info">
+                                        <div class="upload-success">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                                <polyline points="22 4 12 14.01 9 11.01"/>
+                                            </svg>
+                                            <div class="upload-success-text">Image uploaded successfully!</div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            
-                            <!-- Progress bar (hidden by default) -->
-                            <div class="upload-progress" id="upload-progress" style="display: none;">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" id="progress-fill"></div>
-                                </div>
-                                <div class="progress-text" id="progress-text">0% uploaded</div>
-                            </div>
-                            
-                            <!-- Upload success message (hidden by default) -->
-                            <div class="upload-success" id="upload-success" style="display: none;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                    <polyline points="22 4 12 14.01 9 11.01"/>
-                                </svg>
-                                <div class="upload-success-text">Image uploaded successfully!</div>
-                                <button type="button" class="change-image-btn" onclick="triggerFileInput()">
+                                <button type="button" class="change-image-btn" onclick="showUploadBox()">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
                                     </svg>
                                     Change Image
                                 </button>
+                            </div>
+                            
+                            <!-- Progress bar (hidden by default) -->
+                            <div class="upload-progress" id="upload-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="progress-fill"></div>
+                                </div>
+                                <div class="progress-text" id="progress-text">0% uploaded</div>
                             </div>
                             
                             <div class="image-required" id="image-required">Image is required for new categories</div>
@@ -2756,7 +2784,7 @@
                     </td>
                     <td class="product-name">${cat.name}</td>
                     <td class="product-count">${productCounts[cat.name] || 0} products</td>
-                    <td class="td-status">
+                    <td class="product-status">
                         <div class="status-toggle">
                             <label class="toggle-switch">
                                 <input type="checkbox" ${cat.enabled ? 'checked' : ''} 
@@ -2768,7 +2796,7 @@
                     <td class="product-actions">
                         <div class="action-buttons">
                             <button class="btn-secondary" onclick="window.location.href='manage-products.html?category=${encodeURIComponent(cat.name)}'">Manage</button>
-                            <div class="kebab" data-category-id="${cat.id}">
+                            <div class="kebab" data-category-id="${cat.id}" onclick="toggleDesktopPopup(event, '${cat.id}')">
                                 <span class="kebab-dots"></span>
                             </div>
                             <div class="desktop-popup" id="desktop-popup-${cat.id}">
@@ -2821,41 +2849,6 @@
                 </div>
             `).join('');
             
-            // Attach event listeners for desktop popups with proper positioning
-            document.querySelectorAll('.kebab').forEach(kebab => {
-                kebab.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    
-                    const categoryId = kebab.getAttribute('data-category-id');
-                    const popup = document.getElementById(`desktop-popup-${categoryId}`);
-                    
-                    // Close all other popups
-                    document.querySelectorAll('.desktop-popup').forEach(p => {
-                        if (p !== popup) {
-                            p.classList.remove('open');
-                        }
-                    });
-                    
-                    // Toggle current popup
-                    popup.classList.toggle('open');
-                    
-                    // Position the popup relative to the kebab button
-                    const rect = kebab.getBoundingClientRect();
-                    popup.style.position = 'absolute';
-                    popup.style.top = '100%';
-                    popup.style.right = '0';
-                    popup.style.left = 'auto';
-                });
-            });
-            
-            // Prevent desktop popups from closing when clicking inside
-            document.querySelectorAll('.desktop-popup').forEach(popup => {
-                popup.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                });
-            });
-            
             // Attach event listeners for mobile menu buttons
             document.querySelectorAll('.category-card-menu-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -2887,6 +2880,36 @@
                     e.stopPropagation(); // Prevent the click from bubbling up to parent
                 });
             });
+        }
+
+        // Toggle desktop popup - FIXED: Show below kebab button
+        function toggleDesktopPopup(event, categoryId) {
+            event.stopPropagation();
+            event.preventDefault();
+            
+            const popup = document.getElementById(`desktop-popup-${categoryId}`);
+            const isOpen = popup.classList.contains('open');
+            
+            // Close all other popups
+            document.querySelectorAll('.desktop-popup').forEach(p => {
+                if (p !== popup) {
+                    p.classList.remove('open');
+                }
+            });
+            
+            // Toggle current popup
+            popup.classList.toggle('open');
+            
+            // Position the popup
+            if (popup.classList.contains('open')) {
+                const kebab = event.currentTarget;
+                const rect = kebab.getBoundingClientRect();
+                
+                popup.style.position = 'absolute';
+                popup.style.top = 'calc(100% + 5px)';
+                popup.style.right = '0';
+                popup.style.left = 'auto';
+            }
         }
 
         // Handle mobile card click - redirect to products page
@@ -2958,6 +2981,19 @@
             document.getElementById('cat-file-input').click();
         }
 
+        function showUploadBox() {
+            // Hide preview container, show upload box
+            document.getElementById('image-preview-container').style.display = 'none';
+            document.getElementById('image-upload-box').style.display = 'block';
+            document.getElementById('upload-progress').style.display = 'none';
+            document.getElementById('modal-submit-btn').disabled = true;
+            imageUploaded = false;
+            existingImageUrl = null;
+            
+            // Clear file input
+            document.getElementById('cat-file-input').value = '';
+        }
+
         function openAddModal() {
             editingId = null;
             currentFileUpload = null;
@@ -2969,18 +3005,11 @@
             document.getElementById('modal-submit-btn').textContent = "Save Category";
             document.getElementById('modal-submit-btn').disabled = true; // Disable until image is uploaded
             document.getElementById('category-form').reset();
-            document.getElementById('cat-preview').style.display = 'none';
+            document.getElementById('image-upload-box').style.display = 'block';
+            document.getElementById('image-preview-container').style.display = 'none';
             document.getElementById('upload-progress').style.display = 'none';
-            document.getElementById('upload-success').style.display = 'none';
             document.getElementById('image-required').style.display = 'block';
             document.getElementById('upload-error').textContent = '';
-            
-            // Reset upload box styling
-            const uploadBox = document.getElementById('image-upload-box');
-            uploadBox.style.borderColor = '#E5E7EB';
-            uploadBox.style.background = '#FAFAFA';
-            uploadBox.querySelector('.upload-text').textContent = 'Click to upload image';
-            uploadBox.querySelector('.upload-subtext').textContent = 'PNG, JPG up to 5MB';
             
             document.getElementById('category-modal').style.display = 'flex';
         }
@@ -3001,21 +3030,15 @@
             document.getElementById('image-required').style.display = 'none';
             
             if(cat.imageUrl) {
+                // Show preview container, hide upload box
+                document.getElementById('image-upload-box').style.display = 'none';
+                document.getElementById('image-preview-container').style.display = 'flex';
                 document.getElementById('cat-preview').src = cat.imageUrl;
-                document.getElementById('cat-preview').style.display = 'block';
-                document.getElementById('upload-success').style.display = 'flex';
                 document.getElementById('upload-progress').style.display = 'none';
-                
-                // Update upload box styling
-                const uploadBox = document.getElementById('image-upload-box');
-                uploadBox.style.borderColor = '#bbf7d0';
-                uploadBox.style.background = '#f0fdf4';
-                uploadBox.querySelector('.upload-text').textContent = 'Image uploaded';
-                uploadBox.querySelector('.upload-subtext').textContent = 'Click to change image';
             } else {
-                document.getElementById('cat-preview').style.display = 'none';
-                document.getElementById('upload-success').style.display = 'none';
-                document.getElementById('upload-progress').style.display = 'none';
+                // Show upload box, hide preview
+                document.getElementById('image-upload-box').style.display = 'block';
+                document.getElementById('image-preview-container').style.display = 'none';
                 document.getElementById('image-required').style.display = 'block';
             }
             
@@ -3069,22 +3092,11 @@
                 previousImageRef = null;
             }
             
-            // Show preview
-            const preview = document.getElementById('cat-preview');
-            preview.src = URL.createObjectURL(file);
-            preview.style.display = 'block';
-            
-            // Hide success message and show progress
-            document.getElementById('upload-success').style.display = 'none';
+            // Hide upload box, show progress
+            document.getElementById('image-upload-box').style.display = 'none';
+            document.getElementById('image-preview-container').style.display = 'none';
             document.getElementById('upload-progress').style.display = 'block';
             document.getElementById('image-required').style.display = 'none';
-            
-            // Update upload box styling
-            const uploadBox = document.getElementById('image-upload-box');
-            uploadBox.style.borderColor = '#E5E7EB';
-            uploadBox.style.background = '#FAFAFA';
-            uploadBox.querySelector('.upload-text').textContent = 'Uploading...';
-            uploadBox.querySelector('.upload-subtext').textContent = 'Please wait';
             
             // Disable submit button during upload
             document.getElementById('modal-submit-btn').disabled = true;
@@ -3119,15 +3131,9 @@
                         document.getElementById('upload-progress').style.display = 'none';
                         document.getElementById('modal-submit-btn').disabled = true;
                         
-                        // Reset preview
-                        document.getElementById('cat-preview').style.display = 'none';
-                        
-                        // Reset upload box
-                        const uploadBox = document.getElementById('image-upload-box');
-                        uploadBox.style.borderColor = '#E5E7EB';
-                        uploadBox.style.background = '#FAFAFA';
-                        uploadBox.querySelector('.upload-text').textContent = 'Click to upload image';
-                        uploadBox.querySelector('.upload-subtext').textContent = 'PNG, JPG up to 5MB';
+                        // Show upload box again
+                        document.getElementById('image-upload-box').style.display = 'block';
+                        document.getElementById('image-preview-container').style.display = 'none';
                         
                         currentUploadTask = null;
                     },
@@ -3140,16 +3146,10 @@
                         
                         // Update UI for success
                         document.getElementById('upload-progress').style.display = 'none';
-                        document.getElementById('upload-success').style.display = 'flex';
+                        document.getElementById('image-preview-container').style.display = 'flex';
+                        document.getElementById('cat-preview').src = downloadURL;
                         document.getElementById('modal-submit-btn').disabled = false;
                         imageUploaded = true;
-                        
-                        // Update upload box styling
-                        const uploadBox = document.getElementById('image-upload-box');
-                        uploadBox.style.borderColor = '#bbf7d0';
-                        uploadBox.style.background = '#f0fdf4';
-                        uploadBox.querySelector('.upload-text').textContent = 'Image uploaded';
-                        uploadBox.querySelector('.upload-subtext').textContent = 'Click to change image';
                         
                         // Store the download URL for later use
                         existingImageUrl = downloadURL;
@@ -3163,6 +3163,11 @@
                 document.getElementById('upload-error').textContent = 'Upload failed. Please try again.';
                 document.getElementById('upload-progress').style.display = 'none';
                 document.getElementById('modal-submit-btn').disabled = true;
+                
+                // Show upload box again
+                document.getElementById('image-upload-box').style.display = 'block';
+                document.getElementById('image-preview-container').style.display = 'none';
+                
                 currentUploadTask = null;
             }
         }
