@@ -502,11 +502,9 @@
             box-shadow: 0 -6px 0 0 #a855f7, 0 6px 0 0 #a855f7;
         }
 
-        /* Desktop Popup Menu - FIXED: Position and z-index */
+        /* Desktop Popup Menu - FIXED: Fixed the z-index and positioning issue */
         .desktop-popup {
-            position: absolute;
-            top: 100%;
-            right: 0;
+            position: fixed; /* Changed from absolute to fixed */
             background: #ffffff;
             border-radius: 8px;
             border: 1px solid #e5e7eb;
@@ -515,7 +513,6 @@
             z-index: 10002;
             display: none;
             overflow: hidden;
-            margin-top: 5px;
         }
 
         .desktop-popup.open {
@@ -571,7 +568,6 @@
             width: 44px;
             height: 24px;
             flex-shrink: 0;
-            margin: 0 auto;
         }
 
         .toggle-switch input {
@@ -622,7 +618,7 @@
             overflow-x: hidden;
         }
 
-        /* Mobile header */
+        /* Mobile header - FIXED: Applied border and styling like advanced-menu-close */
         .m-header {
             height: 72px;
             background: var(--header-bg);
@@ -634,17 +630,23 @@
             width: 100%;
         }
 
+        /* FIXED: Mobile menu button with border and styling like advanced-menu-close */
         .m-menu-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 6px;
-            border: 1px solid var(--border-subtle);
-            background: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .m-menu-btn:hover {
+            background: #f3f4f6;
         }
 
         .m-menu-lines {
@@ -741,17 +743,25 @@
             max-width: 200px;
         }
 
+        /* FIXED: Mobile drawer close button with border and styling like advanced-menu-close */
         .m-drawer-close {
             width: 40px;
             height: 40px;
-            border: 0px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
             background: #f9fafb;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             flex-shrink: 0;
+            transition: all 0.2s ease;
         }
+        
+        .m-drawer-close:hover {
+            background: #f3f4f6;
+        }
+        
         .m-drawer-close-icon {
             width: 14px;
             height: 14px;
@@ -1838,7 +1848,6 @@
             
             .desktop-popup {
                 z-index: 10002;
-                position: absolute !important;
             }
         }
 
@@ -2655,11 +2664,13 @@
                 }
                 
                 // Close desktop popups when clicking outside
-                if (!e.target.closest('.kebab') && !e.target.closest('.desktop-popup')) {
-                    document.querySelectorAll('.desktop-popup').forEach(popup => {
+                document.querySelectorAll('.desktop-popup').forEach(popup => {
+                    if (popup.classList.contains('open') && 
+                        !popup.contains(e.target) && 
+                        !e.target.closest('.kebab')) {
                         popup.classList.remove('open');
-                    });
-                }
+                    }
+                });
             });
 
             // Close popups when pressing Escape key
@@ -2889,10 +2900,8 @@
                     
                     // Position the popup relative to the kebab button
                     const rect = kebab.getBoundingClientRect();
-                    popup.style.position = 'absolute';
-                    popup.style.top = '100%';
-                    popup.style.right = '0';
-                    popup.style.left = 'auto';
+                    popup.style.top = `${rect.bottom + window.scrollY}px`;
+                    popup.style.left = `${rect.left + window.scrollX - 140}px`;
                 });
             });
             
