@@ -327,7 +327,7 @@
             background: #471ea7;
         }
 
-        /* Card */
+        /* Card - FIXED: Increased search bar padding */
         .card {
             background: #ffffff;
             border-radius: 12px;
@@ -336,9 +336,8 @@
             width: 100%;
         }
 
-        /* FIXED: Increased top and bottom padding as requested */
         .card-header {
-            padding: 32px 20px; 
+            padding: 24px 20px; /* Increased from 16px to 24px */
             border-bottom: 1px solid #e5e7eb;
         }
 
@@ -346,8 +345,8 @@
             background: #f9fafb;
             border-radius: 999px;
             border: 1px solid #e5e7eb;
-            padding: 0 16px;
-            height: 40px;
+            padding: 12px 16px; /* Increased from 0 16px */
+            height: 48px; /* Increased from 40px */
             display: flex;
             align-items: center;
             gap: 8px;
@@ -407,20 +406,41 @@
             white-space: nowrap;
         }
 
-        .th-image,
-        .td-image {
-            width: 80px;
+        /* FIXED: Image column with heading */
+        .th-image {
+            width: 120px;
+            min-width: 120px;
         }
 
-        /* FIXED: Status column LEFT aligned as requested */
+        .th-image-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 24px;
+            color: rgb(29, 30, 32);
+        }
+
+        .th-image-content svg {
+            width: 18px;
+            height: 18px;
+            stroke: rgb(29, 30, 32);
+        }
+
+        .td-image {
+            width: 120px;
+        }
+
+        /* FIXED: Status column - left aligned */
         .th-status {
             width: 120px;
-            text-align: left; /* Changed from center */
+            text-align: left; /* Changed from center to left */
         }
 
         .td-status {
             width: 120px;
-            text-align: left; /* Changed from center */
+            text-align: left; /* Changed from center to left */
         }
 
         .domain-table tbody tr {
@@ -464,7 +484,6 @@
             gap: 8px;
             align-items: center;
             position: relative;
-            z-index: 100;
         }
 
         .btn-secondary {
@@ -493,7 +512,6 @@
             cursor: pointer;
             position: relative;
             flex-shrink: 0;
-            z-index: 101;
         }
         .kebab-dots {
             width: 4px;
@@ -503,9 +521,11 @@
             box-shadow: 0 -6px 0 0 #a855f7, 0 6px 0 0 #a855f7;
         }
 
-        /* Desktop Popup Menu - FIXED */
+        /* FIXED: Desktop Popup Menu - Position and z-index */
         .desktop-popup {
-            position: fixed;
+            position: absolute;
+            top: 100%;
+            right: 0;
             background: #ffffff;
             border-radius: 8px;
             border: 1px solid #e5e7eb;
@@ -514,6 +534,7 @@
             z-index: 10002;
             display: none;
             overflow: hidden;
+            margin-top: 5px;
         }
 
         .desktop-popup.open {
@@ -555,7 +576,7 @@
             stroke: var(--danger-color);
         }
 
-        /* Status toggle switch - FIXED: Left Aligned */
+        /* Status toggle switch - FIXED: Left aligned under Status heading */
         .status-toggle {
             display: flex;
             align-items: center;
@@ -619,6 +640,7 @@
             overflow-x: hidden;
         }
 
+        /* Mobile header */
         .m-header {
             height: 72px;
             background: var(--header-bg);
@@ -630,6 +652,7 @@
             width: 100%;
         }
 
+        /* FIXED: Mobile menu button with border and styling like advanced-menu-close */
         .m-menu-btn {
             width: 40px;
             height: 40px;
@@ -681,6 +704,7 @@
             max-width: 200px;
         }
 
+        /* Mobile main bg */
         .m-main {
             flex: 1;
             background: var(--page-bg);
@@ -689,6 +713,7 @@
             overflow-x: hidden;
         }
 
+        /* Overlay & drawer */
         .m-overlay {
             position: fixed;
             inset: 0;
@@ -723,6 +748,7 @@
             transform: translateX(0);
         }
 
+        /* Drawer header */
         .m-drawer-header {
             height: 72px;
             border-bottom: 1px solid var(--border-subtle);
@@ -739,6 +765,7 @@
             max-width: 200px;
         }
 
+        /* FIXED: Mobile drawer close button with border and styling like advanced-menu-close */
         .m-drawer-close {
             width: 40px;
             height: 40px;
@@ -780,6 +807,7 @@
             transform: rotate(-45deg);
         }
 
+        /* Drawer nav */
         .m-drawer-nav {
             padding: 32px 8px;
             display: flex;
@@ -814,6 +842,7 @@
             stroke: var(--icon-color);
         }
 
+        /* active mobile */
         .m-nav-item.active {
             background: var(--active-bg);
         }
@@ -821,6 +850,7 @@
             stroke: var(--icon-active);
         }
 
+        /* Mobile submenu */
         .m-submenu {
             display: none;
             margin-left: 28px;
@@ -856,6 +886,7 @@
             stroke: #6b7280;
         }
 
+        /* Drawer footer account */
         .m-account-section {
             margin-top: auto;
             padding: 16px;
@@ -864,12 +895,14 @@
             position: relative;
         }
 
+        /* Mobile content layout */
         .mobile-content-inner {
             padding: 16px;
             width: 100%;
             overflow-x: hidden;
         }
 
+        /* Mobile page header */
         .mobile-page-header {
             margin-bottom: 20px;
             width: 100%;
@@ -913,6 +946,7 @@
             color: #d1d5db;
         }
 
+        /* Mobile search and add button row */
         .mobile-controls-row {
             display: flex;
             align-items: center;
@@ -1006,6 +1040,7 @@
             stroke: #ffffff;
         }
 
+        /* Mobile category cards - UPDATED LAYOUT */
         .mobile-category-cards {
             display: flex;
             flex-direction: column;
@@ -1073,6 +1108,7 @@
             text-overflow: ellipsis;
         }
 
+        /* Mobile card actions - UPDATED: toggle moved to left of 3 dots */
         .category-card-actions {
             display: flex;
             align-items: center;
@@ -1288,8 +1324,8 @@
 
         .modal-content {
             background: white;
-            width: 500px;
-            max-width: 500px;
+            width: 500px; /* FIXED: Set fixed width for desktop */
+            max-width: 500px; /* FIXED: Set max-width */
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-premium);
             display: flex;
@@ -1369,7 +1405,7 @@
             box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
         }
 
-        /* Updated image upload box with progress bar */
+        /* Updated image upload box with progress bar - FIXED UI */
         .image-upload-container {
             width: 100%;
         }
@@ -1664,7 +1700,7 @@
             transform: translateY(0);
         }
 
-        /* Desktop positioning */
+        /* Desktop positioning - FIXED: Show on LEFT side */
         @media (min-width: 769px) {
             .profile-popup {
                 left: 30px !important;
@@ -2066,9 +2102,16 @@
                             <table class="domain-table">
                                 <thead>
                                     <tr>
-                                        <!-- FIXED: Replaced empty header with SVG -->
                                         <th class="th-image">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-images-icon lucide-images"><path d="m22 11-1.296-1.296a2.4 2.4 0 0 0-3.408 0L11 16"/><path d="M4 8a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2"/><circle cx="13" cy="7" r="1" fill="currentColor"/><rect x="8" y="2" width="14" height="14" rx="2"/></svg>
+                                            <div class="th-image-content">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-images-icon lucide-images">
+                                                    <path d="m22 11-1.296-1.296a2.4 2.4 0 0 0-3.408 0L11 16"/>
+                                                    <path d="M4 8a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2"/>
+                                                    <circle cx="13" cy="7" r="1" fill="currentColor"/>
+                                                    <rect x="8" y="2" width="14" height="14" rx="2"/>
+                                                </svg>
+                                                <span>Image</span>
+                                            </div>
                                         </th>
                                         <th>Name</th>
                                         <th>No. of products</th>
@@ -2868,7 +2911,7 @@
                 </div>
             `).join('');
             
-            // Attach event listeners for desktop popups with FIXED positioning logic
+            // Attach event listeners for desktop popups with proper positioning
             document.querySelectorAll('.kebab').forEach(kebab => {
                 kebab.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -2887,10 +2930,16 @@
                     // Toggle current popup
                     popup.classList.toggle('open');
                     
-                    // FIXED: Position the popup relative to the viewport (since it is fixed)
+                    // Position the popup relative to the kebab button
                     const rect = kebab.getBoundingClientRect();
-                    popup.style.top = `${rect.bottom + 5}px`; // Just below the button
-                    popup.style.left = `${rect.right - 160}px`; // Align to the right edge of button
+                    const tableWrapper = document.querySelector('.table-wrapper');
+                    const tableRect = tableWrapper.getBoundingClientRect();
+                    
+                    // Position popup relative to the kebab button within the table
+                    popup.style.position = 'absolute';
+                    popup.style.top = `${rect.bottom - tableRect.top}px`;
+                    popup.style.right = `${tableRect.right - rect.right}px`;
+                    popup.style.left = 'auto';
                 });
             });
             
