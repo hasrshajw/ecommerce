@@ -7,7 +7,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         :root {
             --header-height-desktop: 70px;
@@ -72,6 +71,11 @@
             display: flex;
             align-items: center;
             padding-left: 40px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
         }
 
         .d-topbar-logo {
@@ -85,15 +89,21 @@
             flex: 1;
             display: flex;
             width: 100%;
+            margin-top: var(--header-height-desktop); /* Account for fixed header */
         }
 
-        /* Desktop sidebar */
+        /* Desktop sidebar - FIXED */
         .d-sidebar {
             width: var(--sidebar-width);
             background: var(--sidebar-bg);
             border-right: 1px solid var(--border-subtle);
             display: flex;
             flex-direction: column;
+            position: fixed;
+            top: var(--header-height-desktop);
+            left: 0;
+            bottom: 0;
+            z-index: 100;
         }
 
         .d-sidebar-inner {
@@ -101,6 +111,7 @@
             display: flex;
             flex-direction: column;
             height: 100%;
+            overflow-y: auto;
         }
 
         /* Desktop nav */
@@ -133,9 +144,10 @@
             flex: 1;
         }
 
-        .d-nav-item .icon i {
-            font-size: 22px;
-            color: var(--icon-color);
+        .d-nav-item .icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--icon-color);
         }
 
         .chevron-icon {
@@ -153,8 +165,8 @@
         .d-nav-item--active {
             background: var(--active-bg);
         }
-        .d-nav-item--active .icon i {
-            color: var(--icon-active);
+        .d-nav-item--active .icon svg {
+            stroke: var(--icon-active);
         }
 
         /* Desktop hover */
@@ -193,8 +205,9 @@
         }
 
         .d-submenu-item .submenu-icon {
-            font-size: 18px;
-            color: #6b7280;
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
         }
 
         /* Desktop account section */
@@ -243,12 +256,13 @@
             max-width: 150px;
         }
 
-        /* Desktop content */
+        /* Desktop content - Add left margin for fixed sidebar */
         .d-content {
             flex: 1;
             background: var(--page-bg);
             overflow-y: auto;
             width: 100%;
+            margin-left: var(--sidebar-width);
         }
 
         /* ============= BODY CONTENT ============= */
@@ -294,20 +308,95 @@
             flex-wrap: wrap;
         }
 
-        .breadcrumb-icon i {
-            font-size: 16px;
-            color: #9ca3af;
+        .breadcrumb-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: #9ca3af;
         }
 
         .breadcrumb-divider {
             color: #d1d5db;
         }
 
+        /* Button Styles - UPDATED to match Manage Categories */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 16px;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: none;
+            white-space: nowrap;
+            min-height: 40px;
+        }
+
+        .btn-primary {
+            background: var(--brand-primary);
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background: #471ea7;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            color: #673de6;
+        }
+        .btn-secondary:hover {
+            background: #f2efff;
+        }
+
+        .btn-danger {
+            background: #FEF2F2;
+            color: var(--danger-color);
+            border: 1px solid #FECACA;
+        }
+        .btn-danger:hover {
+            background: #FEE2E2;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+            min-height: 32px;
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #6b7280;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+        .btn-icon:hover {
+            background: #f3f4f6;
+        }
+
+        .btn-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+        }
+
         .primary-btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 16px;
+            padding: 10px 16px;
             border-radius: 8px;
             border: none;
             cursor: pointer;
@@ -318,10 +407,12 @@
             background: var(--brand-primary);
             transition: background 0.15s ease;
             white-space: nowrap;
+            min-height: 40px;
         }
-        .primary-btn i {
-            font-size: 18px;
-            color: #ffffff;
+        .primary-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: #ffffff;
         }
         .primary-btn:hover {
             background: #471ea7;
@@ -331,7 +422,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 16px;
+            padding: 10px 16px;
             border-radius: 8px;
             border: 1px solid #e5e7eb;
             background: #ffffff;
@@ -342,6 +433,7 @@
             cursor: pointer;
             transition: background 0.15s ease;
             white-space: nowrap;
+            min-height: 40px;
         }
         .secondary-btn:hover {
             background: #f2efff;
@@ -390,9 +482,10 @@
             margin-bottom: 20px;
         }
 
-        .section-title i {
-            font-size: 20px;
-            color: var(--brand-primary);
+        .section-title svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--brand-primary);
         }
 
         /* Form Controls */
@@ -419,6 +512,7 @@
             font-family: "DM Sans", Roboto, sans-serif;
             font-size: 14px;
             line-height: 20px;
+            font-weight: 400;
         }
 
         .form-control:focus {
@@ -432,10 +526,10 @@
             resize: vertical;
         }
 
-        /* Upload Zones - Matching Manage Categories */
+        /* UPDATED: Premium Upload Zone - Enhanced with gradients */
         .upload-zone {
-            border: 2px dashed #CBD5E1;
-            border-radius: var(--radius-md);
+            border: 2px dashed #E5E7EB;
+            border-radius: 16px;
             padding: 3rem 2rem;
             text-align: center;
             cursor: pointer;
@@ -476,9 +570,14 @@
             box-shadow: 0 20px 40px rgba(81, 39, 186, 0.15);
         }
 
-        .upload-zone i {
-            font-size: 64px;
-            color: var(--brand-primary);
+        .upload-zone:active {
+            transform: translateY(0);
+        }
+
+        .upload-zone svg {
+            width: 64px;
+            height: 64px;
+            stroke: var(--brand-primary);
             margin-bottom: 1rem;
             filter: drop-shadow(0 4px 6px rgba(81, 39, 186, 0.1));
         }
@@ -557,6 +656,12 @@
             cursor: pointer;
             overflow: hidden;
             position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .swatch-upload-container:hover {
+            border-color: var(--brand-primary);
+            background: #F0F5FF;
         }
 
         .swatch-upload-container img {
@@ -566,15 +671,17 @@
             display: none;
         }
 
-        .swatch-upload-container i {
-            font-size: 32px;
-            color: var(--text-secondary);
+        .swatch-upload-container svg {
+            width: 32px;
+            height: 32px;
+            stroke: #6b7280;
             margin-bottom: 4px;
         }
 
         .swatch-upload-container span {
             font-size: 12px;
             color: var(--text-secondary);
+            font-weight: 500;
         }
 
         /* Variant Cards */
@@ -632,6 +739,7 @@
             font-size: 14px;
             color: #6b7280;
             line-height: 1.4;
+            font-weight: 400;
         }
 
         /* Size Selection */
@@ -672,6 +780,7 @@
             font-size: 12px;
             color: #6b7280;
             margin-top: 4px;
+            font-weight: 500;
         }
 
         /* Gallery Grid */
@@ -713,6 +822,7 @@
             box-shadow: var(--shadow-sm);
             font-size: 16px;
             font-weight: bold;
+            border: none;
         }
 
         /* Star Rating */
@@ -726,8 +836,16 @@
             margin: 16px 0;
         }
 
-        .star-rating-input i.active {
+        .star-rating-input svg {
+            width: 32px;
+            height: 32px;
+            stroke: currentColor;
+            fill: currentColor;
+        }
+
+        .star-rating-input svg.active {
             color: var(--danger-color);
+            fill: var(--danger-color);
         }
 
         /* MODALS - Matching Manage Categories */
@@ -797,83 +915,6 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-        }
-
-        /* Button Styles */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px 16px;
-            font-weight: 600;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: all 0.15s ease;
-            border: none;
-            font-size: 14px;
-            white-space: nowrap;
-            min-width: 100px;
-        }
-
-        .btn-primary {
-            background: var(--brand-primary);
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-primary:hover {
-            background: #471ea7;
-            transform: translateY(-1px);
-            box-shadow: 0 8px 20px rgba(81, 39, 186, 0.25);
-        }
-
-        .btn-secondary {
-            background: white;
-            border: 1px solid #e5e7eb;
-            color: var(--text-color);
-        }
-
-        .btn-secondary:hover {
-            background: #F8FAFC;
-            border-color: #CBD5E1;
-            transform: translateY(-1px);
-        }
-
-        .btn-danger {
-            background: #FEF2F2;
-            color: var(--danger-color);
-            border: 1px solid #FECACA;
-        }
-
-        .btn-danger:hover {
-            background: #FEE2E2;
-            transform: translateY(-1px);
-        }
-
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 13px;
-            min-width: auto;
-        }
-
-        .btn-icon {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #6b7280;
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s ease;
-        }
-
-        .btn-icon:hover {
-            background: #f3f4f6;
         }
 
         /* Toast */
@@ -976,6 +1017,10 @@
             justify-content: space-between;
             padding: 0 16px;
             width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
         }
 
         /* Mobile menu button */
@@ -1030,10 +1075,11 @@
             max-width: 200px;
         }
 
-        /* Mobile main bg */
+        /* Mobile main bg - Add padding for fixed header */
         .m-main {
             flex: 1;
             background: var(--page-bg);
+            padding-top: 72px; /* Height of fixed header */
             padding-bottom: 20px;
             width: 100%;
             overflow-x: hidden;
@@ -1110,27 +1156,10 @@
             background: #f3f4f6;
         }
         
-        .m-drawer-close-icon {
+        .m-drawer-close svg {
             width: 14px;
             height: 14px;
-            position: relative;
-        }
-        .m-drawer-close-icon::before,
-        .m-drawer-close-icon::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            margin: auto;
-            width: 14px;
-            height: 2px;
-            border-radius: 999px;
-            background: #111827;
-        }
-        .m-drawer-close-icon::before {
-            transform: rotate(45deg);
-        }
-        .m-drawer-close-icon::after {
-            transform: rotate(-45deg);
+            stroke: #111827;
         }
 
         /* Drawer nav */
@@ -1162,17 +1191,18 @@
             text-overflow: ellipsis;
         }
 
-        .m-nav-item .icon i {
-            font-size: 22px;
-            color: var(--icon-color);
+        .m-nav-item .icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--icon-color);
         }
 
         /* active mobile */
         .m-nav-item.active {
             background: var(--active-bg);
         }
-        .m-nav-item.active .icon i {
-            color: var(--icon-active);
+        .m-nav-item.active .icon svg {
+            stroke: var(--icon-active);
         }
 
         /* Mobile submenu */
@@ -1206,8 +1236,9 @@
         }
 
         .m-submenu-item .submenu-icon {
-            font-size: 18px;
-            color: #6b7280;
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
         }
 
         /* Drawer footer account */
@@ -1260,9 +1291,10 @@
             flex-wrap: wrap;
         }
 
-        .mobile-breadcrumb-icon i {
-            font-size: 16px;
-            color: #9ca3af;
+        .mobile-breadcrumb-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: #9ca3af;
         }
 
         .mobile-breadcrumb-divider {
@@ -1289,9 +1321,10 @@
             margin-bottom: 16px;
         }
 
-        .mobile-section-title i {
-            font-size: 20px;
-            color: var(--brand-primary);
+        .mobile-section-title svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--brand-primary);
         }
 
         /* Mobile Save Bar */
@@ -1311,6 +1344,8 @@
         .mobile-save-bar .btn {
             flex: 1;
             padding: 12px;
+            font-weight: 600;
+            font-size: 14px;
         }
 
         /* Custom Select */
@@ -1329,7 +1364,16 @@
             cursor: pointer;
             background: white;
             font-size: 14px;
+            font-weight: 400;
             color: var(--text-color);
+            min-height: 44px;
+        }
+
+        .custom-select-trigger svg {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+            transition: transform 0.2s ease;
         }
 
         .custom-select-options {
@@ -1361,12 +1405,14 @@
             cursor: pointer;
             transition: all 0.1s ease;
             font-size: 14px;
+            font-weight: 400;
             color: var(--text-color);
         }
 
         .custom-option:hover {
             background: #F8FAFC;
             color: var(--brand-primary);
+            font-weight: 500;
         }
 
         /* FIXED: Profile Popup */
@@ -1448,6 +1494,7 @@
             transition: background 0.15s ease;
             cursor: pointer;
             font-size: 14px;
+            font-weight: 500;
             white-space: nowrap;
             width: 100%;
             background: none;
@@ -1459,18 +1506,19 @@
             background: #f3f4f6;
         }
 
-        .popup-list a i {
-            font-size: 20px;
-            color: #6b7280;
-            min-width: 24px;
+        .popup-list a svg {
+            width: 20px;
+            height: 20px;
+            stroke: #6b7280;
+            min-width: 20px;
         }
 
         .popup-list a.logout {
             color: var(--danger-color);
         }
 
-        .popup-list a.logout i {
-            color: var(--danger-color);
+        .popup-list a.logout svg {
+            stroke: var(--danger-color);
         }
 
         /* Responsive switch */
@@ -1562,7 +1610,13 @@
                             <!-- Dashboard -->
                             <div class="d-nav-item" onclick="window.location.href='index.html'">
                                 <span class="icon">
-                                    <i class='bx bx-home-alt'></i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="7" height="7" x="3" y="3" rx="1"/>
+                                        <rect width="7" height="7" x="14" y="3" rx="1"/>
+                                        <rect width="7" height="7" x="14" y="14" rx="1"/>
+                                        <rect width="7" height="7" x="3" y="14" rx="1"/>
+                                    </svg>
                                 </span>
                                 <span class="label">Dashboard</span>
                             </div>
@@ -1570,7 +1624,12 @@
                             <!-- Inventory (Active) -->
                             <div class="d-nav-item d-nav-item--active">
                                 <span class="icon">
-                                    <i class='bx bx-package'></i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 7v10"/>
+                                        <path d="M6 5v14"/>
+                                        <rect width="12" height="18" x="10" y="3" rx="2"/>
+                                    </svg>
                                 </span>
                                 <span class="label">Inventory</span>
                             </div>
@@ -1578,7 +1637,11 @@
                             <!-- Customize Site -->
                             <div class="d-nav-item" id="d-customize-toggle">
                                 <span class="icon">
-                                    <i class='bx bx-palette'></i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
+                                        <path d="M21 11V5a2 2 0 0 0-2 2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+                                    </svg>
                                 </span>
                                 <span class="label">Customize Site</span>
                                 <span class="chevron">
@@ -1594,15 +1657,32 @@
                             <!-- Desktop Customize Site submenu -->
                             <div class="d-submenu" id="d-customize-submenu">
                                 <div class="d-submenu-item">
-                                    <i class='bx bx-paint submenu-icon'></i>
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                        <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+                                        <path d="M9.5 12.5 11 14"/>
+                                        <path d="M14 10l-3.5 4"/>
+                                        <path d="m5 15 4.5-4"/>
+                                    </svg>
                                     <span>Theme & layout</span>
                                 </div>
                                 <div class="d-submenu-item">
-                                    <i class='bx bx-grid-alt submenu-icon'></i>
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                        <path d="M3 9h18"/>
+                                        <path d="M9 21V9"/>
+                                    </svg>
                                     <span>Sections</span>
                                 </div>
                                 <div class="d-submenu-item">
-                                    <i class='bx bx-navigation submenu-icon'></i>
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="18" cy="5" r="3"/>
+                                        <circle cx="6" cy="12" r="3"/>
+                                        <circle cx="18" cy="19" r="3"/>
+                                        <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
+                                        <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
+                                    </svg>
                                     <span>Navigation</span>
                                 </div>
                             </div>
@@ -1610,7 +1690,13 @@
                             <!-- MANAGE ORDERS -->
                             <div class="d-nav-item" id="d-orders-toggle">
                                 <span class="icon">
-                                    <i class='bx bx-clipboard'></i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                        <path d="M8 14v2.2l1.6 1"/>
+                                        <circle cx="8" cy="16" r="6"/>
+                                    </svg>
                                 </span>
                                 <span class="label">MANAGE ORDERS</span>
                                 <span class="chevron">
@@ -1626,15 +1712,37 @@
                             <!-- Desktop MANAGE ORDERS submenu -->
                             <div class="d-submenu" id="d-orders-submenu">
                                 <div class="d-submenu-item">
-                                    <i class='bx bx-calendar submenu-icon'></i>
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 6v6l4 2"/>
+                                        <path d="M22 12a10 10 0 1 0-11 9.95"/>
+                                        <path d="m22 16-5.5 5.5L14 19"/>
+                                    </svg>
                                     <span>Today</span>
                                 </div>
                                 <div class="d-submenu-item">
-                                    <i class='bx bx-calendar-month submenu-icon'></i>
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M8 2v4"/>
+                                        <path d="M16 2v4"/>
+                                        <rect width="18" height="18" x="3" y="4" rx="2"/>
+                                        <path d="M3 10h18"/>
+                                        <path d="M8 14h.01"/>
+                                        <path d="M12 14h.01"/>
+                                        <path d="M16 14h.01"/>
+                                        <path d="M8 18h.01"/>
+                                        <path d="M12 18h.01"/>
+                                        <path d="M16 18h.01"/>
+                                    </svg>
                                     <span>This Month</span>
                                 </div>
                                 <div class="d-submenu-item">
-                                    <i class='bx bx-list-ul submenu-icon'></i>
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2v2"/>
+                                        <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
+                                        <path d="M18 2v2"/>
+                                        <path d="M2 13h2"/>
+                                        <path d="M8 8h14"/>
+                                        <rect x="8" y="3" width="14" height="14" rx="2"/>
+                                    </svg>
                                     <span>All Orders</span>
                                 </div>
                             </div>
@@ -1664,7 +1772,12 @@
                             <div class="page-title" id="editor-title">Product Editor</div>
                             <div class="breadcrumb">
                                 <span class="breadcrumb-icon">
-                                    <i class='bx bx-home'></i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                    </svg>
                                 </span>
                                 <span>Home</span>
                                 <span class="breadcrumb-divider">/</span>
@@ -1676,11 +1789,22 @@
 
                         <div class="header-actions">
                             <button class="secondary-btn" onclick="window.history.back()">
-                                <i class='bx bx-arrow-back'></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M19 12H5"/>
+                                    <path d="m12 19-7-7 7-7"/>
+                                </svg>
                                 <span>Back</span>
                             </button>
                             <button class="primary-btn" id="save-btn">
-                                <i class='bx bx-save'></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                    <polyline points="17 21 17 13 7 13 7 21"/>
+                                    <polyline points="7 3 7 8 15 8"/>
+                                </svg>
                                 <span>Save Product</span>
                             </button>
                         </div>
@@ -1688,7 +1812,9 @@
 
                     <!-- Loading State -->
                     <div id="loading-state" style="text-align:center; padding:4rem;">
-                        <i class='bx bx-loader-alt bx-spin' style='font-size:2.5rem; color:var(--brand-primary);'></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:40px; height:40px; color:var(--brand-primary); animation: spin 1s linear infinite;">
+                            <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                        </svg>
                     </div>
 
                     <!-- Product Form -->
@@ -1699,11 +1825,19 @@
                                 <div class="card" id="card-cover">
                                     <div class="card-body">
                                         <h3 class="section-title">
-                                            <i class='bx bx-image'></i>
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+                                                <circle cx="9" cy="9" r="2"/>
+                                                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                                            </svg>
                                             Cover Image
                                         </h3>
                                         <div id="cover-upload-zone" class="upload-zone" onclick="document.getElementById('cover-input').click()">
-                                            <i class='bx bx-cloud-upload'></i>
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                                <polyline points="17 8 12 3 7 8"/>
+                                                <line x1="12" y1="3" x2="12" y2="15"/>
+                                            </svg>
                                             <div class="upload-text">Click to upload cover image</div>
                                             <div class="upload-subtext">Single image only, PNG, JPG up to 5MB</div>
                                         </div>
@@ -1715,7 +1849,9 @@
                                                 </div>
                                                 <div class="preview-actions">
                                                     <button type="button" class="btn btn-secondary" onclick="showUploadBox()">
-                                                        <i class='bx bx-reset'></i>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                                                        </svg>
                                                         Change Image
                                                     </button>
                                                 </div>
@@ -1728,7 +1864,11 @@
                                 <div class="card" id="card-details">
                                     <div class="card-body">
                                         <h3 class="section-title">
-                                            <i class='bx bx-info-circle'></i>
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10"/>
+                                                <line x1="12" y1="16" x2="12" y2="12"/>
+                                                <line x1="12" y1="8" x2="12.01" y2="8"/>
+                                            </svg>
                                             Product Details
                                         </h3>
                                         <div class="form-group">
@@ -1752,11 +1892,16 @@
                                     <div class="card-body">
                                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                                             <h3 class="section-title" style="margin:0;">
-                                                <i class='bx bx-palette'></i>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                                                </svg>
                                                 Color Variants
                                             </h3>
                                             <button type="button" class="btn btn-primary btn-sm" onclick="openColorModal()">
-                                                <i class='bx bx-plus'></i>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M5 12h14"/>
+                                                    <path d="M12 5v14"/>
+                                                </svg>
                                                 Add Variant
                                             </button>
                                         </div>
@@ -1769,11 +1914,16 @@
                                     <div class="card-body">
                                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                                             <h3 class="section-title" style="margin:0;">
-                                                <i class='bx bx-star'></i>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                                </svg>
                                                 Customer Reviews
                                             </h3>
                                             <button type="button" class="btn btn-primary btn-sm" onclick="openReviewModal()">
-                                                <i class='bx bx-plus'></i>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M5 12h14"/>
+                                                    <path d="M12 5v14"/>
+                                                </svg>
                                                 Add Review
                                             </button>
                                         </div>
@@ -1787,7 +1937,10 @@
                                 <div class="card" id="card-pricing">
                                     <div class="card-body">
                                         <h3 class="section-title">
-                                            <i class='bx bx-tag-alt'></i>
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <line x1="12" y1="1" x2="12" y2="23"/>
+                                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                            </svg>
                                             Pricing
                                         </h3>
                                         <div class="form-group">
@@ -1829,7 +1982,12 @@
                         <div class="mobile-page-title" id="mobile-editor-title">Product Editor</div>
                         <div class="mobile-breadcrumb">
                             <span class="mobile-breadcrumb-icon">
-                                <i class='bx bx-home'></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                                    <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                </svg>
                             </span>
                             <span>Home</span>
                             <span class="mobile-breadcrumb-divider">/</span>
@@ -1842,7 +2000,9 @@
 
                 <!-- Loading State -->
                 <div id="mobile-loading-state" style="text-align:center; padding:4rem;">
-                    <i class='bx bx-loader-alt bx-spin' style='font-size:2.5rem; color:var(--brand-primary);'></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:40px; height:40px; color:var(--brand-primary); animation: spin 1s linear infinite;">
+                        <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                    </svg>
                 </div>
 
                 <!-- Mobile Product Form -->
@@ -1850,11 +2010,19 @@
                     <!-- Cover Image Card -->
                     <div class="mobile-form-card">
                         <h3 class="mobile-section-title">
-                            <i class='bx bx-image'></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+                                <circle cx="9" cy="9" r="2"/>
+                                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                            </svg>
                             Cover Image
                         </h3>
                         <div id="mobile-cover-upload-zone" class="upload-zone" onclick="document.getElementById('mobile-cover-input').click()">
-                            <i class='bx bx-cloud-upload'></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
                             <div class="upload-text">Tap to upload cover</div>
                             <div class="upload-subtext">Single image only</div>
                         </div>
@@ -1867,7 +2035,11 @@
                     <!-- Product Details Card -->
                     <div class="mobile-form-card">
                         <h3 class="mobile-section-title">
-                            <i class='bx bx-info-circle'></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="16" x2="12" y2="12"/>
+                                <line x1="12" y1="8" x2="12.01" y2="8"/>
+                            </svg>
                             Product Details
                         </h3>
                         <div class="form-group">
@@ -1888,7 +2060,10 @@
                     <!-- Pricing Card -->
                     <div class="mobile-form-card">
                         <h3 class="mobile-section-title">
-                            <i class='bx bx-tag-alt'></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="1" x2="12" y2="23"/>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                            </svg>
                             Pricing
                         </h3>
                         <div class="form-group">
@@ -1905,11 +2080,16 @@
                     <div class="mobile-form-card">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
                             <h3 class="mobile-section-title" style="margin:0;">
-                                <i class='bx bx-palette'></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                                </svg>
                                 Color Variants
                             </h3>
                             <button type="button" class="btn btn-primary btn-sm" onclick="openColorModal()">
-                                <i class='bx bx-plus'></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12h14"/>
+                                    <path d="M12 5v14"/>
+                                </svg>
                                 Add
                             </button>
                         </div>
@@ -1920,11 +2100,16 @@
                     <div class="mobile-form-card">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
                             <h3 class="mobile-section-title" style="margin:0;">
-                                <i class='bx bx-star'></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                </svg>
                                 Customer Reviews
                             </h3>
                             <button type="button" class="btn btn-primary btn-sm" onclick="openReviewModal()">
-                                <i class='bx bx-plus'></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12h14"/>
+                                    <path d="M12 5v14"/>
+                                </svg>
                                 Add
                             </button>
                         </div>
@@ -1942,7 +2127,10 @@
                          src="https://product-ecommerces.netlify.app/vastramaya.png"
                          alt="Vastramaya Logo" />
                     <button class="m-drawer-close" id="m-drawer-close" aria-label="Close menu">
-                        <div class="m-drawer-close-icon"></div>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 6 6 18"/>
+                            <path d="m6 6 12 12"/>
+                        </svg>
                     </button>
                 </div>
 
@@ -1950,7 +2138,13 @@
                     <!-- Dashboard -->
                     <div class="m-nav-item" onclick="window.location.href='index.html'">
                         <span class="icon">
-                            <i class='bx bx-home-alt'></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="7" height="7" x="3" y="3" rx="1"/>
+                                <rect width="7" height="7" x="14" y="3" rx="1"/>
+                                <rect width="7" height="7" x="14" y="14" rx="1"/>
+                                <rect width="7" height="7" x="3" y="14" rx="1"/>
+                            </svg>
                         </span>
                         <span class="label">Dashboard</span>
                     </div>
@@ -1958,7 +2152,12 @@
                     <!-- Inventory (Active) -->
                     <div class="m-nav-item active">
                         <span class="icon">
-                            <i class='bx bx-package'></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 7v10"/>
+                                <path d="M6 5v14"/>
+                                <rect width="12" height="18" x="10" y="3" rx="2"/>
+                            </svg>
                         </span>
                         <span class="label">Inventory</span>
                     </div>
@@ -1966,7 +2165,11 @@
                     <!-- Customize Site with dropdown -->
                     <div class="m-nav-item" id="m-customize-toggle">
                         <span class="icon">
-                            <i class='bx bx-palette'></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
+                                <path d="M21 11V5a2 2 0 0 0-2 2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+                            </svg>
                         </span>
                         <span class="label">Customize Site</span>
                         <span class="chevron">
@@ -1982,15 +2185,32 @@
                     <!-- Mobile Customize Site submenu -->
                     <div class="m-submenu" id="m-customize-submenu">
                         <div class="m-submenu-item">
-                            <i class='bx bx-paint submenu-icon'></i>
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+                                <path d="M9.5 12.5 11 14"/>
+                                <path d="M14 10l-3.5 4"/>
+                                <path d="m5 15 4.5-4"/>
+                            </svg>
                             <span>Theme & layout</span>
                         </div>
                         <div class="m-submenu-item">
-                            <i class='bx bx-grid-alt submenu-icon'></i>
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                <path d="M3 9h18"/>
+                                <path d="M9 21V9"/>
+                            </svg>
                             <span>Sections</span>
                         </div>
                         <div class="m-submenu-item">
-                            <i class='bx bx-navigation submenu-icon'></i>
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="18" cy="5" r="3"/>
+                                <circle cx="6" cy="12" r="3"/>
+                                <circle cx="18" cy="19" r="3"/>
+                                <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
+                                <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
+                            </svg>
                             <span>Navigation</span>
                         </div>
                     </div>
@@ -1998,7 +2218,13 @@
                     <!-- MANAGE ORDERS with dropdown -->
                     <div class="m-nav-item" id="m-orders-toggle">
                         <span class="icon">
-                            <i class='bx bx-clipboard'></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                <path d="M8 14v2.2l1.6 1"/>
+                                <circle cx="8" cy="16" r="6"/>
+                            </svg>
                         </span>
                         <span class="label">MANAGE ORDERS</span>
                         <span class="chevron">
@@ -2014,15 +2240,37 @@
                     <!-- Mobile MANAGE ORDERS submenu -->
                     <div class="m-submenu" id="m-orders-submenu">
                         <div class="m-submenu-item">
-                            <i class='bx bx-calendar submenu-icon'></i>
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 6v6l4 2"/>
+                                <path d="M22 12a10 10 0 1 0-11 9.95"/>
+                                <path d="m22 16-5.5 5.5L14 19"/>
+                            </svg>
                             <span>Today</span>
                         </div>
                         <div class="m-submenu-item">
-                            <i class='bx bx-calendar-month submenu-icon'></i>
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M8 2v4"/>
+                                <path d="M16 2v4"/>
+                                <rect width="18" height="18" x="3" y="4" rx="2"/>
+                                <path d="M3 10h18"/>
+                                <path d="M8 14h.01"/>
+                                <path d="M12 14h.01"/>
+                                <path d="M16 14h.01"/>
+                                <path d="M8 18h.01"/>
+                                <path d="M12 18h.01"/>
+                                <path d="M16 18h.01"/>
+                            </svg>
                             <span>This Month</span>
                         </div>
                         <div class="m-submenu-item">
-                            <i class='bx bx-list-ul submenu-icon'></i>
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2v2"/>
+                                <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
+                                <path d="M18 2v2"/>
+                                <path d="M2 13h2"/>
+                                <path d="M8 8h14"/>
+                                <rect x="8" y="3" width="14" height="14" rx="2"/>
+                            </svg>
                             <span>All Orders</span>
                         </div>
                     </div>
@@ -2062,19 +2310,29 @@
         <ul class="popup-list">
             <li>
                 <a href="#">
-                    <i class='bx bx-user'></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="8" r="5"/>
+                        <path d="M20 21a8 8 0 0 0-16 0"/>
+                    </svg>
                     <span>Profile</span>
                 </a>
             </li>
             <li>
                 <a href="#">
-                    <i class='bx bx-cog'></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
                     <span>Settings</span>
                 </a>
             </li>
             <li>
                 <a href="#" onclick="auth.signOut()" class="logout">
-                    <i class='bx bx-log-out'></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m16 17 5-5-5-5"/>
+                        <path d="M21 12H9"/>
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    </svg>
                     <span>Logout</span>
                 </a>
             </li>
@@ -2085,8 +2343,8 @@
     <div id="progress-overlay">
         <div class="progress-content">
             <div class="spinner"></div>
-            <h3 style="margin:0 0 0.5rem 0; font-size:1.1rem;" id="progress-title">Processing</h3>
-            <p style="margin:0; color:var(--text-secondary); font-size:0.9rem;" id="progress-desc">Please wait...</p>
+            <h3 style="margin:0 0 0.5rem 0; font-size:1.1rem; font-weight:600;" id="progress-title">Processing</h3>
+            <p style="margin:0; color:var(--text-secondary); font-size:0.9rem; font-weight:400;" id="progress-desc">Please wait...</p>
         </div>
     </div>
 
@@ -2099,7 +2357,10 @@
             <div class="modal-header">
                 <div class="modal-title" id="color-modal-title">Add Color Variant</div>
                 <button class="btn-icon" onclick="closeColorModal()">
-                    <i class='bx bx-x'></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18"/>
+                        <path d="m6 6 12 12"/>
+                    </svg>
                 </button>
             </div>
             <div class="modal-body">
@@ -2112,12 +2373,19 @@
                         <label class="form-label">Color Swatch (Image)</label>
                         <div style="display:flex; gap:16px; align-items:center;">
                             <div class="swatch-upload-container" onclick="document.getElementById('color-swatch-input').click()">
-                                <i class='bx bx-image-add' id="swatch-icon"></i>
+                                <svg id="swatch-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                    <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                    <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+                                    <path d="M9.5 12.5 11 14"/>
+                                    <path d="M14 10l-3.5 4"/>
+                                    <path d="m5 15 4.5-4"/>
+                                </svg>
                                 <span id="swatch-text">Upload</span>
                                 <img id="swatch-preview">
                             </div>
                             <div style="flex:1;">
-                                <p style="font-size:12px; color:var(--text-secondary); margin-bottom:8px;">Click to upload color image</p>
+                                <p style="font-size:12px; color:var(--text-secondary); margin-bottom:8px; font-weight:400;">Click to upload color image</p>
                                 <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('color-swatch-input').click()">Select File</button>
                             </div>
                             <input type="file" id="color-swatch-input" accept="image/*" style="display:none;">
@@ -2131,8 +2399,12 @@
                         <label class="form-label">Gallery Images</label>
                         <div id="existing-gallery" class="existing-gallery-grid"></div>
                         <div class="upload-zone" style="padding:24px; margin-top:12px;" onclick="document.getElementById('variant-images-input').click()">
-                            <i class='bx bx-images' style="font-size:24px;"></i>
-                            <div style="font-size:14px; margin-top:8px;">Upload gallery images</div>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+                                <circle cx="9" cy="9" r="2"/>
+                                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                            </svg>
+                            <div style="font-size:14px; font-weight:500; margin-top:8px;">Upload gallery images</div>
                         </div>
                         <input type="file" id="variant-images-input" multiple accept="image/*" style="display:none;">
                         <div id="variant-image-previews" style="display:flex; gap:8px; overflow-x:auto; margin-top:12px; padding-bottom:8px;"></div>
@@ -2152,7 +2424,10 @@
             <div class="modal-header">
                 <div class="modal-title" id="review-modal-title">Add Customer Review</div>
                 <button class="btn-icon" onclick="closeReviewModal()">
-                    <i class='bx bx-x'></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18"/>
+                        <path d="m6 6 12 12"/>
+                    </svg>
                 </button>
             </div>
             <div class="modal-body">
@@ -2163,11 +2438,21 @@
                 <div class="form-group" style="text-align:center;">
                     <label class="form-label">Rating</label>
                     <div class="star-rating-input" id="star-rating">
-                        <i class='bx bx-star' data-val="1"></i>
-                        <i class='bx bx-star' data-val="2"></i>
-                        <i class='bx bx-star' data-val="3"></i>
-                        <i class='bx bx-star' data-val="4"></i>
-                        <i class='bx bx-star' data-val="5"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-val="1">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-val="2">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-val="3">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-val="4">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-val="5">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
                     </div>
                     <input type="hidden" id="review-rating" value="0">
                 </div>
@@ -2421,7 +2706,9 @@
             let html = `
                 <div class="custom-select-trigger" onclick="toggleSelectOptions('${containerId}')">
                     <span id="${displayId}">Select Category</span>
-                    <i class='bx bx-chevron-down'></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6"/>
+                    </svg>
                 </div>
                 <div class="custom-select-options" id="${containerId}-options">
             `;
@@ -2671,7 +2958,7 @@
             container.innerHTML = existingVariantImages.map((url, i) => `
                 <div class="gallery-item">
                     <img src="${url}" class="gallery-img">
-                    <div class="gallery-remove" onclick="removeExistingGalleryImage(${i})">×</div>
+                    <button class="gallery-remove" onclick="removeExistingGalleryImage(${i})">×</button>
                 </div>
             `).join('');
         }
@@ -2762,10 +3049,16 @@
                     </div>
                     <div class="variant-actions">
                         <button type="button" class="btn-icon" onclick="openColorModal(${i})">
-                            <i class='bx bx-edit-alt'></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                            </svg>
                         </button>
                         <button type="button" class="btn-icon" onclick="removeVariant(${i})" style="color:var(--danger-color);">
-                            <i class='bx bx-trash'></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 6h18"/>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
                         </button>
                     </div>
                 </div>
@@ -2813,7 +3106,7 @@
         }
 
         // Star rating
-        document.querySelectorAll('#star-rating i').forEach(star => {
+        document.querySelectorAll('#star-rating svg').forEach(star => {
             star.addEventListener('click', function() {
                 const val = parseInt(this.dataset.val);
                 document.getElementById('review-rating').value = val;
@@ -2822,14 +3115,16 @@
         });
 
         function updateStars(val) {
-            document.querySelectorAll('#star-rating i').forEach(s => {
+            document.querySelectorAll('#star-rating svg').forEach(s => {
                 const starVal = parseInt(s.dataset.val);
                 if (starVal <= val) {
-                    s.className = 'bx bxs-star';
                     s.classList.add('active');
+                    s.style.fill = 'var(--danger-color)';
+                    s.style.stroke = 'var(--danger-color)';
                 } else {
-                    s.className = 'bx bx-star';
                     s.classList.remove('active');
+                    s.style.fill = 'none';
+                    s.style.stroke = '#CBD5E1';
                 }
             });
         }
@@ -2890,16 +3185,28 @@
                         <span>${r.name}</span>
                         <div style="display:flex; gap:8px;">
                             <button type="button" class="btn-icon" onclick="openReviewModal(${i})">
-                                <i class='bx bx-edit-alt'></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                                </svg>
                             </button>
                             <button type="button" class="btn-icon" onclick="removeReview(${i})" style="color:var(--danger-color);">
-                                <i class='bx bx-trash'></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 6h18"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                </svg>
                             </button>
                         </div>
                     </div>
                     <div class="star-display">
                         ${Array(5).fill(0).map((_, idx) => 
-                            idx < r.rating ? "<i class='bx bxs-star'></i>" : "<i class='bx bx-star'></i>"
+                            idx < r.rating ? 
+                            `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="var(--danger-color)" stroke="var(--danger-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px; height:16px;">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>` : 
+                            `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px; height:16px;">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>`
                         ).join('')}
                     </div>
                     <div class="review-text" style="margin-top:8px;">${r.comment}</div>
