@@ -327,7 +327,7 @@
             background: #471ea7;
         }
 
-        /* Card - FIXED: Increased top/bottom padding for search bar */
+        /* Card */
         .card {
             background: #ffffff;
             border-radius: 12px;
@@ -336,8 +336,9 @@
             width: 100%;
         }
 
+        /* FIXED: Increased top and bottom padding as requested */
         .card-header {
-            padding: 20px 20px; /* Increased from 16px to 20px */
+            padding: 32px 20px; 
             border-bottom: 1px solid #e5e7eb;
         }
 
@@ -406,19 +407,20 @@
             white-space: nowrap;
         }
 
-        .th-image {
-            width: 100px;
+        .th-image,
+        .td-image {
+            width: 80px;
         }
 
-        /* FIXED: Status column alignment - LEFT ALIGNED */
+        /* FIXED: Status column LEFT aligned as requested */
         .th-status {
             width: 120px;
-            text-align: left;
+            text-align: left; /* Changed from center */
         }
 
         .td-status {
             width: 120px;
-            text-align: left;
+            text-align: left; /* Changed from center */
         }
 
         .domain-table tbody tr {
@@ -462,6 +464,7 @@
             gap: 8px;
             align-items: center;
             position: relative;
+            z-index: 100;
         }
 
         .btn-secondary {
@@ -500,7 +503,7 @@
             box-shadow: 0 -6px 0 0 #a855f7, 0 6px 0 0 #a855f7;
         }
 
-        /* Desktop Popup Menu - FIXED: Completely rewrote positioning */
+        /* Desktop Popup Menu - FIXED */
         .desktop-popup {
             position: fixed;
             background: #ffffff;
@@ -508,7 +511,7 @@
             border: 1px solid #e5e7eb;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             min-width: 160px;
-            z-index: 9999;
+            z-index: 10002;
             display: none;
             overflow: hidden;
         }
@@ -552,12 +555,12 @@
             stroke: var(--danger-color);
         }
 
-        /* Status toggle switch - FIXED: Left aligned under Status heading */
+        /* Status toggle switch - FIXED: Left Aligned */
         .status-toggle {
             display: flex;
             align-items: center;
+            justify-content: flex-start; /* Changed from center to flex-start */
             width: 100%;
-            justify-content: flex-start;
         }
 
         .toggle-switch {
@@ -606,26 +609,6 @@
             transform: translateX(20px);
         }
 
-        /* Image heading styling */
-        .image-heading {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .image-heading svg {
-            width: 18px;
-            height: 18px;
-            stroke: #6b7280;
-        }
-
-        .image-heading span {
-            font-weight: 700;
-            font-size: 14px;
-            line-height: 24px;
-            color: rgb(29, 30, 32);
-        }
-
         /* ============= MOBILE LAYOUT ============= */
         .page-mobile {
             min-height: 100vh;
@@ -636,7 +619,6 @@
             overflow-x: hidden;
         }
 
-        /* Mobile header - FIXED: Applied border and styling like advanced-menu-close */
         .m-header {
             height: 72px;
             background: var(--header-bg);
@@ -648,7 +630,6 @@
             width: 100%;
         }
 
-        /* FIXED: Mobile menu button with border and styling like advanced-menu-close */
         .m-menu-btn {
             width: 40px;
             height: 40px;
@@ -700,7 +681,6 @@
             max-width: 200px;
         }
 
-        /* Mobile main bg */
         .m-main {
             flex: 1;
             background: var(--page-bg);
@@ -709,7 +689,6 @@
             overflow-x: hidden;
         }
 
-        /* Overlay & drawer */
         .m-overlay {
             position: fixed;
             inset: 0;
@@ -744,7 +723,6 @@
             transform: translateX(0);
         }
 
-        /* Drawer header */
         .m-drawer-header {
             height: 72px;
             border-bottom: 1px solid var(--border-subtle);
@@ -761,7 +739,6 @@
             max-width: 200px;
         }
 
-        /* FIXED: Mobile drawer close button with border and styling like advanced-menu-close */
         .m-drawer-close {
             width: 40px;
             height: 40px;
@@ -803,7 +780,6 @@
             transform: rotate(-45deg);
         }
 
-        /* Drawer nav */
         .m-drawer-nav {
             padding: 32px 8px;
             display: flex;
@@ -838,7 +814,6 @@
             stroke: var(--icon-color);
         }
 
-        /* active mobile */
         .m-nav-item.active {
             background: var(--active-bg);
         }
@@ -846,7 +821,6 @@
             stroke: var(--icon-active);
         }
 
-        /* Mobile submenu */
         .m-submenu {
             display: none;
             margin-left: 28px;
@@ -882,7 +856,6 @@
             stroke: #6b7280;
         }
 
-        /* Drawer footer account */
         .m-account-section {
             margin-top: auto;
             padding: 16px;
@@ -891,14 +864,12 @@
             position: relative;
         }
 
-        /* Mobile content layout */
         .mobile-content-inner {
             padding: 16px;
             width: 100%;
             overflow-x: hidden;
         }
 
-        /* Mobile page header */
         .mobile-page-header {
             margin-bottom: 20px;
             width: 100%;
@@ -942,7 +913,6 @@
             color: #d1d5db;
         }
 
-        /* Mobile search and add button row */
         .mobile-controls-row {
             display: flex;
             align-items: center;
@@ -1036,7 +1006,6 @@
             stroke: #ffffff;
         }
 
-        /* Mobile category cards - UPDATED LAYOUT */
         .mobile-category-cards {
             display: flex;
             flex-direction: column;
@@ -1104,7 +1073,6 @@
             text-overflow: ellipsis;
         }
 
-        /* Mobile card actions - UPDATED: toggle moved to left of 3 dots */
         .category-card-actions {
             display: flex;
             align-items: center;
@@ -1320,8 +1288,8 @@
 
         .modal-content {
             background: white;
-            width: 500px; /* FIXED: Set fixed width for desktop */
-            max-width: 500px; /* FIXED: Set max-width */
+            width: 500px;
+            max-width: 500px;
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-premium);
             display: flex;
@@ -1401,7 +1369,7 @@
             box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
         }
 
-        /* Updated image upload box with progress bar - FIXED UI */
+        /* Updated image upload box with progress bar */
         .image-upload-container {
             width: 100%;
         }
@@ -1696,7 +1664,7 @@
             transform: translateY(0);
         }
 
-        /* Desktop positioning - FIXED: Show on LEFT side */
+        /* Desktop positioning */
         @media (min-width: 769px) {
             .profile-popup {
                 left: 30px !important;
@@ -2098,17 +2066,9 @@
                             <table class="domain-table">
                                 <thead>
                                     <tr>
-                                        <!-- FIXED: Added Image heading with SVG -->
+                                        <!-- FIXED: Replaced empty header with SVG -->
                                         <th class="th-image">
-                                            <div class="image-heading">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-images-icon lucide-images">
-                                                    <path d="m22 11-1.296-1.296a2.4 2.4 0 0 0-3.408 0L11 16"/>
-                                                    <path d="M4 8a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2"/>
-                                                    <circle cx="13" cy="7" r="1" fill="currentColor"/>
-                                                    <rect x="8" y="2" width="14" height="14" rx="2"/>
-                                                </svg>
-                                                <span>Image</span>
-                                            </div>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-images-icon lucide-images"><path d="m22 11-1.296-1.296a2.4 2.4 0 0 0-3.408 0L11 16"/><path d="M4 8a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2"/><circle cx="13" cy="7" r="1" fill="currentColor"/><rect x="8" y="2" width="14" height="14" rx="2"/></svg>
                                         </th>
                                         <th>Name</th>
                                         <th>No. of products</th>
@@ -2908,7 +2868,7 @@
                 </div>
             `).join('');
             
-            // Attach event listeners for desktop popups with proper positioning
+            // Attach event listeners for desktop popups with FIXED positioning logic
             document.querySelectorAll('.kebab').forEach(kebab => {
                 kebab.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -2927,10 +2887,10 @@
                     // Toggle current popup
                     popup.classList.toggle('open');
                     
-                    // FIXED: Position the popup correctly using fixed positioning
+                    // FIXED: Position the popup relative to the viewport (since it is fixed)
                     const rect = kebab.getBoundingClientRect();
-                    popup.style.top = `${rect.bottom + window.scrollY}px`;
-                    popup.style.left = `${rect.left + window.scrollX - 140}px`;
+                    popup.style.top = `${rect.bottom + 5}px`; // Just below the button
+                    popup.style.left = `${rect.right - 160}px`; // Align to the right edge of button
                 });
             });
             
