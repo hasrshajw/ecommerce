@@ -25,6 +25,8 @@
             --brand-gradient: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
             --danger-color: #ef4444;
             --success-color: #10B981;
+            --switch-on: #10B981;
+            --switch-off: #9CA3AF;
             --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             --radius-md: 8px;
             --radius-lg: 12px;
@@ -199,6 +201,7 @@
             padding: 16px;
             border-top: 1px solid var(--border-subtle);
             cursor: pointer;
+            position: relative;
         }
 
         .account-card {
@@ -376,13 +379,11 @@
             width: 100%;
             overflow-x: auto;
             position: relative;
-            z-index: 1;
         }
 
         .domain-table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: fixed;
         }
 
         .domain-table thead tr {
@@ -392,6 +393,7 @@
         .domain-table th,
         .domain-table td {
             padding: 12px 20px;
+            vertical-align: middle;
         }
 
         .domain-table thead th {
@@ -401,11 +403,12 @@
             color: rgb(29, 30, 32);
             text-align: left;
             border-bottom: 1px solid #e5e7eb;
+            white-space: nowrap;
         }
 
         .th-image,
         .td-image {
-            width: 64px;
+            width: 80px;
         }
 
         .domain-table tbody tr {
@@ -417,8 +420,8 @@
         }
 
         .product-thumb {
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             border-radius: 8px;
             object-fit: cover;
             background: #e5e7eb;
@@ -449,7 +452,6 @@
             gap: 8px;
             align-items: center;
             position: relative;
-            z-index: 1002;
         }
 
         .btn-secondary {
@@ -477,6 +479,7 @@
             justify-content: center;
             cursor: pointer;
             position: relative;
+            flex-shrink: 0;
         }
         .kebab-dots {
             width: 4px;
@@ -494,9 +497,9 @@
             background: #ffffff;
             border-radius: 8px;
             border: 1px solid #e5e7eb;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             min-width: 160px;
-            z-index: 1001;
+            z-index: 9999;
             display: none;
             overflow: hidden;
         }
@@ -538,6 +541,75 @@
 
         .desktop-popup-item:last-child svg {
             stroke: var(--danger-color);
+        }
+
+        /* Status toggle switch */
+        .status-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--switch-off);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--switch-on);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        .toggle-label {
+            font-size: 13px;
+            color: #6b7280;
+            white-space: nowrap;
+        }
+
+        .status-active {
+            color: var(--switch-on);
+            font-weight: 500;
+        }
+
+        .status-inactive {
+            color: var(--switch-off);
+            font-weight: 500;
         }
 
         /* ============= MOBILE LAYOUT ============= */
@@ -788,6 +860,7 @@
             padding: 16px;
             border-top: 1px solid var(--border-subtle);
             cursor: pointer;
+            position: relative;
         }
 
         /* Mobile content layout */
@@ -999,6 +1072,13 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        .category-card-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 4px;
         }
 
         .category-card-menu-btn {
@@ -1419,13 +1499,13 @@
             transform: translateY(0);
         }
 
-        /* Desktop positioning */
+        /* Desktop positioning - FIXED: Appear at bottom left of account section */
         @media (min-width: 769px) {
             .profile-popup {
                 left: auto !important;
-                right: 30px !important;
-                bottom: auto !important;
-                top: 85px !important;
+                right: 20px !important;
+                bottom: 100px !important;
+                top: auto !important;
             }
         }
 
@@ -1561,21 +1641,15 @@
             .page-desktop { display: flex; }
             .page-mobile { display: none; }
             
-            /* Fix table column widths */
-            .domain-table th:nth-child(2),
-            .domain-table td:nth-child(2) {
-                width: 35%;
-                max-width: 250px;
+            /* Fix desktop popup z-index */
+            .product-actions {
+                position: relative;
+                z-index: 100;
             }
             
-            .domain-table th:nth-child(3),
-            .domain-table td:nth-child(3) {
-                width: 25%;
-            }
-            
-            .domain-table th:nth-child(4),
-            .domain-table td:nth-child(4) {
-                width: 30%;
+            .desktop-popup {
+                z-index: 9999;
+                position: fixed !important;
             }
         }
 
@@ -1811,6 +1885,7 @@
                                         <th class="th-image"></th>
                                         <th>Name</th>
                                         <th>No. of products</th>
+                                        <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -2081,6 +2156,16 @@
                     </svg>
                     <span>Edit</span>
                 </button>
+                <button class="advanced-menu-item" id="mobile-toggle-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 6H3"/>
+                        <path d="M7 12H3"/>
+                        <path d="M7 18H3"/>
+                        <path d="M12 18a5 5 0 0 0 9-3 4.5 4.5 0 0 0-4.5-4.5c-1.33 0-2.54.54-3.41 1.41L11 14"/>
+                        <path d="M11 10v4h4"/>
+                    </svg>
+                    <span id="mobile-toggle-text">Enable/Disable</span>
+                </button>
                 <button class="advanced-menu-item" id="mobile-delete-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M10 11v6"/>
@@ -2258,9 +2343,20 @@
             const mobileProfileSection = document.getElementById('mobile-profile-section');
             const profilePopup = document.getElementById('profile-popup');
 
+            // Fix profile popup positioning for desktop
             if (profileSection) {
                 profileSection.addEventListener('click', e => {
                     e.stopPropagation();
+                    
+                    // Position the popup at the bottom left of the account section for desktop
+                    if (window.innerWidth >= 769) {
+                        const rect = profileSection.getBoundingClientRect();
+                        profilePopup.style.left = 'auto';
+                        profilePopup.style.right = '20px';
+                        profilePopup.style.bottom = (window.innerHeight - rect.top + 20) + 'px';
+                        profilePopup.style.top = 'auto';
+                    }
+                    
                     profilePopup.classList.toggle('active');
                 });
                 
@@ -2322,6 +2418,17 @@
                     document.querySelectorAll('.desktop-popup').forEach(popup => {
                         popup.classList.remove('open');
                     });
+                }
+            });
+
+            // Close popups when pressing Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    document.getElementById('profile-popup')?.classList.remove('active');
+                    document.querySelectorAll('.desktop-popup').forEach(popup => {
+                        popup.classList.remove('open');
+                    });
+                    closeAdvancedMenu();
                 }
             });
         });
@@ -2408,7 +2515,14 @@
                 });
 
                 const catSnap = await db.collection('categories').orderBy('name').get();
-                allCategories = catSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                allCategories = catSnap.docs.map(doc => { 
+                    const data = doc.data();
+                    return { 
+                        id: doc.id, 
+                        ...data,
+                        enabled: data.enabled !== undefined ? data.enabled : true // Default to true if not set
+                    };
+                });
                 renderCategories(allCategories);
             } catch (e) {
                 console.error(e);
@@ -2425,7 +2539,7 @@
             if(list.length === 0) {
                 desktopTable.innerHTML = `
                     <tr>
-                        <td colspan="4" class="empty-state">
+                        <td colspan="5" class="empty-state">
                             <h3>No Categories Found</h3>
                             <p>Create a new category to get started.</p>
                         </td>
@@ -2444,6 +2558,18 @@
                     </td>
                     <td class="product-name">${cat.name}</td>
                     <td class="product-count">${productCounts[cat.name] || 0} products</td>
+                    <td class="product-status">
+                        <div class="status-toggle">
+                            <label class="toggle-switch">
+                                <input type="checkbox" ${cat.enabled ? 'checked' : ''} 
+                                       onchange="toggleCategoryStatus('${cat.id}', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-label ${cat.enabled ? 'status-active' : 'status-inactive'}">
+                                ${cat.enabled ? 'Active' : 'Inactive'}
+                            </span>
+                        </div>
+                    </td>
                     <td class="product-actions">
                         <div class="action-buttons">
                             <button class="btn-secondary" onclick="window.location.href='manage-products.html?category=${encodeURIComponent(cat.name)}'">Manage</button>
@@ -2458,6 +2584,16 @@
                                         <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
                                     </svg>
                                     <span>Edit</span>
+                                </button>
+                                <button class="desktop-popup-item" onclick="toggleCategoryStatus('${cat.id}', ${!cat.enabled})">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 6H3"/>
+                                        <path d="M7 12H3"/>
+                                        <path d="M7 18H3"/>
+                                        <path d="M12 18a5 5 0 0 0 9-3 4.5 4.5 0 0 0-4.5-4.5c-1.33 0-2.54.54-3.41 1.41L11 14"/>
+                                        <path d="M11 10v4h4"/>
+                                    </svg>
+                                    <span>${cat.enabled ? 'Disable' : 'Enable'}</span>
                                 </button>
                                 <button class="desktop-popup-item" onclick="openDeleteModal('${cat.id}', '${cat.name}')">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2484,6 +2620,16 @@
                     <div class="category-card-content" onclick="window.location.href='manage-products.html?category=${encodeURIComponent(cat.name)}'">
                         <div class="category-card-name">${cat.name}</div>
                         <div class="category-card-products">${productCounts[cat.name] || 0} products</div>
+                        <div class="category-card-status">
+                            <label class="toggle-switch">
+                                <input type="checkbox" ${cat.enabled ? 'checked' : ''} 
+                                       onchange="toggleCategoryStatus('${cat.id}', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-label ${cat.enabled ? 'status-active' : 'status-inactive'}">
+                                ${cat.enabled ? 'Active' : 'Inactive'}
+                            </span>
+                        </div>
                     </div>
                     <button class="category-card-menu-btn" data-category-id="${cat.id}">
                         <span class="category-card-menu-dots"></span>
@@ -2491,7 +2637,7 @@
                 </div>
             `).join('');
             
-            // Attach event listeners for desktop popups
+            // Attach event listeners for desktop popups with proper positioning
             document.querySelectorAll('.kebab').forEach(kebab => {
                 kebab.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -2500,14 +2646,24 @@
                     
                     // Close all other popups
                     document.querySelectorAll('.desktop-popup').forEach(p => {
-                        if (p !== popup) p.classList.remove('open');
+                        if (p !== popup) {
+                            p.classList.remove('open');
+                            p.style.position = 'absolute'; // Reset position
+                        }
                     });
+                    
+                    // Position the popup correctly - use fixed positioning for desktop
+                    if (window.innerWidth >= 769) {
+                        const rect = kebab.getBoundingClientRect();
+                        popup.style.position = 'fixed';
+                        popup.style.top = (rect.bottom + window.scrollY) + 'px';
+                        popup.style.right = (window.innerWidth - rect.right) + 'px';
+                        popup.style.left = 'auto';
+                        popup.style.bottom = 'auto';
+                    }
                     
                     // Toggle current popup
                     popup.classList.toggle('open');
-                    
-                    // Ensure it's on top
-                    popup.style.zIndex = '1001';
                 });
             });
             
@@ -2523,6 +2679,9 @@
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     currentMenuCategoryId = btn.getAttribute('data-category-id');
+                    const cat = allCategories.find(c => c.id === currentMenuCategoryId);
+                    
+                    if (!cat) return;
                     
                     // Set up the mobile menu buttons
                     document.getElementById('mobile-edit-btn').onclick = () => {
@@ -2530,17 +2689,51 @@
                         closeAdvancedMenu();
                     };
                     
+                    document.getElementById('mobile-toggle-btn').onclick = () => {
+                        toggleCategoryStatus(currentMenuCategoryId, !cat.enabled);
+                        closeAdvancedMenu();
+                    };
+                    
+                    document.getElementById('mobile-toggle-text').textContent = cat.enabled ? 'Disable' : 'Enable';
+                    
                     document.getElementById('mobile-delete-btn').onclick = () => {
-                        const cat = allCategories.find(c => c.id === currentMenuCategoryId);
-                        if (cat) {
-                            openDeleteModal(cat.id, cat.name);
-                            closeAdvancedMenu();
-                        }
+                        openDeleteModal(cat.id, cat.name);
+                        closeAdvancedMenu();
                     };
                     
                     openAdvancedMenu();
                 });
             });
+        }
+
+        // Toggle category status
+        async function toggleCategoryStatus(id, enabled) {
+            try {
+                await db.collection('categories').doc(id).update({
+                    enabled: enabled,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // Update local state
+                const category = allCategories.find(c => c.id === id);
+                if (category) {
+                    category.enabled = enabled;
+                }
+                
+                // Re-render to update UI
+                renderCategories(allCategories.filter(c => allCategories.includes(c)));
+                
+                showToast(`Category ${enabled ? 'enabled' : 'disabled'} successfully`, 'success');
+                
+                // Close any open desktop popups
+                document.querySelectorAll('.desktop-popup').forEach(popup => {
+                    popup.classList.remove('open');
+                });
+                
+            } catch (e) {
+                console.error(e);
+                showToast('Failed to update category status', 'error');
+            }
         }
 
         function openAdvancedMenu() {
@@ -2638,6 +2831,7 @@
                 const data = {
                     name,
                     imageUrl: imageUrl || '',
+                    enabled: true, // Default to enabled when creating/updating
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
