@@ -543,11 +543,12 @@
             stroke: var(--danger-color);
         }
 
-        /* Status toggle switch - BLUE THEME */
+        /* Status toggle switch - FIXED ALIGNMENT */
         .status-toggle {
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 100%;
         }
 
         .toggle-switch {
@@ -992,7 +993,7 @@
             stroke: #ffffff;
         }
 
-        /* Mobile category cards */
+        /* Mobile category cards - UPDATED LAYOUT */
         .mobile-category-cards {
             display: flex;
             flex-direction: column;
@@ -1012,6 +1013,8 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             width: 100%;
             max-width: 100%;
+            position: relative;
+            cursor: pointer;
         }
 
         .category-card-mobile:hover {
@@ -1058,11 +1061,19 @@
             text-overflow: ellipsis;
         }
 
-        .category-card-status {
+        /* Mobile card actions - UPDATED: toggle moved to left of 3 dots */
+        .category-card-actions {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-top: 4px;
+            gap: 12px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        .mobile-status-toggle {
+            display: flex;
+            align-items: center;
+            margin: 0;
         }
 
         .category-card-menu-btn {
@@ -1077,6 +1088,8 @@
             cursor: pointer;
             transition: all 0.2s ease;
             flex-shrink: 0;
+            position: relative;
+            z-index: 2;
         }
 
         .category-card-menu-btn:hover {
@@ -1264,15 +1277,14 @@
 
         .modal-content {
             background: white;
-            width: 100%;
-            max-width: 500px;
+            width: 500px; /* FIXED: Set fixed width for desktop */
+            max-width: 500px; /* FIXED: Set max-width */
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-premium);
             display: flex;
             flex-direction: column;
             overflow: hidden;
             animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            max-width: 100%;
         }
 
         @keyframes modalPop {
@@ -1542,6 +1554,11 @@
             padding: 0.5rem;
         }
 
+        .popup-list li {
+            margin: 0;
+            padding: 0;
+        }
+
         .popup-list a {
             display: flex;
             align-items: center;
@@ -1554,6 +1571,10 @@
             cursor: pointer;
             font-size: 14px;
             white-space: nowrap;
+            width: 100%;
+            background: none;
+            border: none;
+            text-align: left;
         }
 
         .popup-list a:hover {
@@ -1572,6 +1593,17 @@
 
         .popup-list a.logout i {
             color: var(--danger-color);
+        }
+
+        .popup-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+            flex-shrink: 0;
+        }
+
+        .logout-icon {
+            stroke: var(--danger-color) !important;
         }
 
         /* Empty state */
@@ -1611,6 +1643,7 @@
                 animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
                 max-height: 90vh;
                 overflow-y: auto;
+                max-width: 100%;
             }
             
             @keyframes slideUpModal {
@@ -2174,7 +2207,7 @@
         </div>
     </div>
 
-    <!-- Profile Popup -->
+    <!-- Profile Popup with updated SVG icons -->
     <div class="profile-popup" id="profile-popup">
         <div class="popup-header">
             <img id="popup-avatar" src="" class="account-avatar">
@@ -2184,9 +2217,34 @@
             </div>
         </div>
         <ul class="popup-list">
-            <li><a href="#"><i class='bx bx-user'></i> Profile</a></li>
-            <li><a href="#"><i class='bx bx-cog'></i> Settings</a></li>
-            <li><a href="#" onclick="auth.signOut()" class="logout"><i class='bx bx-log-out'></i> Logout</a></li>
+            <li>
+                <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
+                        <circle cx="12" cy="8" r="5"/>
+                        <path d="M20 21a8 8 0 0 0-16 0"/>
+                    </svg>
+                    <span>Profile</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
+                        <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="auth.signOut()" class="logout">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon logout-icon">
+                        <path d="m16 17 5-5-5-5"/>
+                        <path d="M21 12H9"/>
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    </svg>
+                    <span>Logout</span>
+                </a>
+            </li>
         </ul>
     </div>
 
@@ -2543,7 +2601,7 @@
                 return;
             }
             
-            // Desktop table rows - REMOVED "Active/Inactive" text and "Enable/Disable" button from 3 dots menu
+            // Desktop table rows
             desktopTable.innerHTML = list.map(cat => `
                 <tr>
                     <td class="td-image">
@@ -2593,26 +2651,28 @@
                 </tr>
             `).join('');
             
-            // Mobile cards - REMOVED "Active/Inactive" text and status label
+            // Mobile cards - UPDATED LAYOUT with toggle left to 3 dots and card redirect
             mobileCards.innerHTML = list.map(cat => `
-                <div class="category-card-mobile">
+                <div class="category-card-mobile" onclick="handleMobileCardClick(event, '${encodeURIComponent(cat.name)}')">
                     <img class="category-card-image"
                          src="${cat.imageUrl || 'https://via.placeholder.com/100?text=No+Image'}"
                          alt="${cat.name}" />
                     <div class="category-card-content">
-                        <div class="category-card-name" onclick="window.location.href='manage-products.html?category=${encodeURIComponent(cat.name)}'">${cat.name}</div>
+                        <div class="category-card-name">${cat.name}</div>
                         <div class="category-card-products">${productCounts[cat.name] || 0} products</div>
-                        <div class="category-card-status">
+                    </div>
+                    <div class="category-card-actions">
+                        <div class="mobile-status-toggle">
                             <label class="toggle-switch">
                                 <input type="checkbox" ${cat.enabled ? 'checked' : ''} 
                                        onchange="toggleCategoryStatus('${cat.id}', this.checked)">
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
+                        <button class="category-card-menu-btn" data-category-id="${cat.id}">
+                            <span class="category-card-menu-dots"></span>
+                        </button>
                     </div>
-                    <button class="category-card-menu-btn" data-category-id="${cat.id}">
-                        <span class="category-card-menu-dots"></span>
-                    </button>
                 </div>
             `).join('');
             
@@ -2657,12 +2717,13 @@
             document.querySelectorAll('.category-card-menu-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
+                    e.preventDefault();
                     currentMenuCategoryId = btn.getAttribute('data-category-id');
                     const cat = allCategories.find(c => c.id === currentMenuCategoryId);
                     
                     if (!cat) return;
                     
-                    // Set up the mobile menu buttons - ONLY Edit and Delete (removed toggle button)
+                    // Set up the mobile menu buttons
                     document.getElementById('mobile-edit-btn').onclick = () => {
                         openEditModal(currentMenuCategoryId);
                         closeAdvancedMenu();
@@ -2677,12 +2738,23 @@
                 });
             });
             
-            // Fix mobile toggle click issue - prevent redirect when clicking toggle
-            document.querySelectorAll('.category-card-mobile .toggle-switch input').forEach(toggle => {
+            // Prevent toggle clicks from triggering card redirect
+            document.querySelectorAll('.category-card-actions .toggle-switch input').forEach(toggle => {
                 toggle.addEventListener('click', (e) => {
                     e.stopPropagation(); // Prevent the click from bubbling up to parent
                 });
             });
+        }
+
+        // Handle mobile card click - redirect to products page
+        function handleMobileCardClick(event, categoryName) {
+            // Only redirect if the click wasn't on the actions area (toggle or menu button)
+            if (!event.target.closest('.category-card-actions') && 
+                !event.target.classList.contains('toggle-switch') &&
+                !event.target.classList.contains('toggle-slider') &&
+                event.target.type !== 'checkbox') {
+                window.location.href = 'manage-products.html?category=' + categoryName;
+            }
         }
 
         // Toggle category status
