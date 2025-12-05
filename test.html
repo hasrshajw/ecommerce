@@ -327,7 +327,7 @@
             background: #471ea7;
         }
 
-        /* Card */
+        /* Card - FIXED: Increased top/bottom padding for search bar */
         .card {
             background: #ffffff;
             border-radius: 12px;
@@ -337,7 +337,7 @@
         }
 
         .card-header {
-            padding: 16px 20px;
+            padding: 20px 20px; /* Increased from 16px to 20px */
             border-bottom: 1px solid #e5e7eb;
         }
 
@@ -406,20 +406,19 @@
             white-space: nowrap;
         }
 
-        .th-image,
-        .td-image {
-            width: 80px;
+        .th-image {
+            width: 100px;
         }
 
-        /* FIXED: Status column width and alignment */
+        /* FIXED: Status column alignment - LEFT ALIGNED */
         .th-status {
             width: 120px;
-            text-align: center;
+            text-align: left;
         }
 
         .td-status {
             width: 120px;
-            text-align: center;
+            text-align: left;
         }
 
         .domain-table tbody tr {
@@ -463,7 +462,6 @@
             gap: 8px;
             align-items: center;
             position: relative;
-            z-index: 100;
         }
 
         .btn-secondary {
@@ -502,15 +500,15 @@
             box-shadow: 0 -6px 0 0 #a855f7, 0 6px 0 0 #a855f7;
         }
 
-        /* Desktop Popup Menu - FIXED: Fixed the z-index and positioning issue */
+        /* Desktop Popup Menu - FIXED: Completely rewrote positioning */
         .desktop-popup {
-            position: fixed; /* Changed from absolute to fixed */
+            position: fixed;
             background: #ffffff;
             border-radius: 8px;
             border: 1px solid #e5e7eb;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             min-width: 160px;
-            z-index: 10002;
+            z-index: 9999;
             display: none;
             overflow: hidden;
         }
@@ -554,12 +552,12 @@
             stroke: var(--danger-color);
         }
 
-        /* Status toggle switch - FIXED: Centered under Status heading */
+        /* Status toggle switch - FIXED: Left aligned under Status heading */
         .status-toggle {
             display: flex;
             align-items: center;
-            justify-content: center;
             width: 100%;
+            justify-content: flex-start;
         }
 
         .toggle-switch {
@@ -606,6 +604,26 @@
 
         input:checked + .toggle-slider:before {
             transform: translateX(20px);
+        }
+
+        /* Image heading styling */
+        .image-heading {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .image-heading svg {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+        }
+
+        .image-heading span {
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 24px;
+            color: rgb(29, 30, 32);
         }
 
         /* ============= MOBILE LAYOUT ============= */
@@ -2080,7 +2098,18 @@
                             <table class="domain-table">
                                 <thead>
                                     <tr>
-                                        <th class="th-image"></th>
+                                        <!-- FIXED: Added Image heading with SVG -->
+                                        <th class="th-image">
+                                            <div class="image-heading">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-images-icon lucide-images">
+                                                    <path d="m22 11-1.296-1.296a2.4 2.4 0 0 0-3.408 0L11 16"/>
+                                                    <path d="M4 8a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2"/>
+                                                    <circle cx="13" cy="7" r="1" fill="currentColor"/>
+                                                    <rect x="8" y="2" width="14" height="14" rx="2"/>
+                                                </svg>
+                                                <span>Image</span>
+                                            </div>
+                                        </th>
                                         <th>Name</th>
                                         <th>No. of products</th>
                                         <th class="th-status">Status</th>
@@ -2898,7 +2927,7 @@
                     // Toggle current popup
                     popup.classList.toggle('open');
                     
-                    // Position the popup relative to the kebab button
+                    // FIXED: Position the popup correctly using fixed positioning
                     const rect = kebab.getBoundingClientRect();
                     popup.style.top = `${rect.bottom + window.scrollY}px`;
                     popup.style.left = `${rect.left + window.scrollX - 140}px`;
