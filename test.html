@@ -411,6 +411,17 @@
             width: 80px;
         }
 
+        /* FIXED: Status column width and alignment */
+        .th-status {
+            width: 120px;
+            text-align: center;
+        }
+
+        .td-status {
+            width: 120px;
+            text-align: center;
+        }
+
         .domain-table tbody tr {
             border-bottom: 1px solid #f3f4f6;
         }
@@ -480,6 +491,7 @@
             cursor: pointer;
             position: relative;
             flex-shrink: 0;
+            z-index: 1;
         }
         .kebab-dots {
             width: 4px;
@@ -489,7 +501,7 @@
             box-shadow: 0 -6px 0 0 #a855f7, 0 6px 0 0 #a855f7;
         }
 
-        /* Desktop Popup Menu */
+        /* Desktop Popup Menu - FIXED: Position and z-index */
         .desktop-popup {
             position: absolute;
             top: 100%;
@@ -499,9 +511,10 @@
             border: 1px solid #e5e7eb;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             min-width: 160px;
-            z-index: 9999;
+            z-index: 10000;
             display: none;
             overflow: hidden;
+            margin-top: 5px;
         }
 
         .desktop-popup.open {
@@ -543,7 +556,7 @@
             stroke: var(--danger-color);
         }
 
-        /* Status toggle switch - FIXED ALIGNMENT */
+        /* Status toggle switch - FIXED: Centered under Status heading */
         .status-toggle {
             display: flex;
             align-items: center;
@@ -557,6 +570,7 @@
             width: 44px;
             height: 24px;
             flex-shrink: 0;
+            margin: 0 auto;
         }
 
         .toggle-switch input {
@@ -1358,7 +1372,11 @@
             box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
         }
 
-        /* Updated image upload box */
+        /* Updated image upload box with progress bar */
+        .image-upload-container {
+            width: 100%;
+        }
+
         .image-upload-box {
             border: 2px dashed #E5E7EB;
             border-radius: 12px;
@@ -1369,6 +1387,7 @@
             transition: all 0.3s ease;
             position: relative;
             width: 100%;
+            margin-bottom: 1rem;
         }
 
         .image-upload-box:hover {
@@ -1394,16 +1413,104 @@
             color: #9CA3AF;
         }
 
+        .preview-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0.5rem auto 0;
+        }
+
         .preview-img {
-            width: 100px;
-            height: 100px;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
             border-radius: var(--radius-md);
-            display: none;
-            margin: 0.5rem auto 0;
             border: 1px solid #e5e7eb;
-            max-width: 100%;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .upload-success {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
+            padding: 1rem;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .upload-success svg {
+            stroke: var(--success-color);
+            width: 32px;
+            height: 32px;
+        }
+
+        .upload-success-text {
+            color: var(--success-color);
+            font-weight: 500;
+        }
+
+        .change-image-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: #6b7280;
+            transition: all 0.2s ease;
+        }
+
+        .change-image-btn:hover {
+            background: #e5e7eb;
+        }
+
+        /* Progress bar styles */
+        .upload-progress {
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--brand-primary), #673de6);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.8rem;
+            color: #6b7280;
+            text-align: center;
+        }
+
+        .upload-error {
+            color: var(--danger-color);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+
+        .image-required {
+            color: var(--danger-color);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
         }
 
         /* Toast */
@@ -1468,6 +1575,11 @@
 
         .btn-primary:hover {
             background: #471ea7;
+        }
+
+        .btn-primary:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
         }
 
         .btn-secondary {
@@ -1685,8 +1797,8 @@
             }
             
             .desktop-popup {
-                z-index: 9999;
-                position: fixed !important;
+                z-index: 10000;
+                position: absolute !important;
             }
         }
 
@@ -1922,7 +2034,7 @@
                                         <th class="th-image"></th>
                                         <th>Name</th>
                                         <th>No. of products</th>
-                                        <th>Status</th>
+                                        <th class="th-status">Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -2248,7 +2360,7 @@
         </ul>
     </div>
 
-    <!-- ADD/EDIT MODAL - UPDATED UI -->
+    <!-- ADD/EDIT MODAL - UPDATED with image upload progress -->
     <div class="modal-overlay" id="category-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -2267,23 +2379,53 @@
                         <input type="text" class="form-input" id="cat-name-input" required placeholder="e.g. Ethnic Wear">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Category Image</label>
-                        <div class="image-upload-box" onclick="document.getElementById('cat-file-input').click()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                <polyline points="17 8 12 3 7 8"/>
-                                <line x1="12" y1="3" x2="12" y2="15"/>
-                            </svg>
-                            <div class="upload-text">Click to upload image</div>
-                            <div class="upload-subtext">PNG, JPG up to 5MB</div>
-                            <img id="cat-preview" class="preview-img">
+                        <label class="form-label">Category Image <span style="color: var(--danger-color);">*</span></label>
+                        <div class="image-upload-container">
+                            <div class="image-upload-box" id="image-upload-box" onclick="triggerFileInput()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                                <div class="upload-text">Click to upload image</div>
+                                <div class="upload-subtext">PNG, JPG up to 5MB</div>
+                                <div class="preview-container">
+                                    <img id="cat-preview" class="preview-img">
+                                </div>
+                            </div>
+                            
+                            <!-- Progress bar (hidden by default) -->
+                            <div class="upload-progress" id="upload-progress" style="display: none;">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="progress-fill"></div>
+                                </div>
+                                <div class="progress-text" id="progress-text">0% uploaded</div>
+                            </div>
+                            
+                            <!-- Upload success message (hidden by default) -->
+                            <div class="upload-success" id="upload-success" style="display: none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
+                                <div class="upload-success-text">Image uploaded successfully!</div>
+                                <button type="button" class="change-image-btn" onclick="triggerFileInput()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                                    </svg>
+                                    Change Image
+                                </button>
+                            </div>
+                            
+                            <div class="image-required" id="image-required">Image is required for new categories</div>
+                            <div class="upload-error" id="upload-error"></div>
                         </div>
                         <input type="file" id="cat-file-input" accept="image/*" style="display:none;">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary" id="modal-submit-btn">Save Category</button>
+                    <button type="submit" class="btn btn-primary" id="modal-submit-btn" disabled>Save Category</button>
                 </div>
             </form>
         </div>
@@ -2525,9 +2667,12 @@
         let editingId = null;
         let deletingId = null;
         let deletingName = null;
-        let uploadedFile = null;
+        let currentFileUpload = null;
         let existingImageUrl = null;
         let currentMenuCategoryId = null;
+        let imageUploaded = false;
+        let currentUploadTask = null;
+        let previousImageRef = null;
 
         auth.onAuthStateChanged(user => {
             if (!user || user.email !== ADMIN_EMAIL) {
@@ -2611,7 +2756,7 @@
                     </td>
                     <td class="product-name">${cat.name}</td>
                     <td class="product-count">${productCounts[cat.name] || 0} products</td>
-                    <td class="product-status">
+                    <td class="td-status">
                         <div class="status-toggle">
                             <label class="toggle-switch">
                                 <input type="checkbox" ${cat.enabled ? 'checked' : ''} 
@@ -2680,6 +2825,8 @@
             document.querySelectorAll('.kebab').forEach(kebab => {
                 kebab.addEventListener('click', (e) => {
                     e.stopPropagation();
+                    e.preventDefault();
+                    
                     const categoryId = kebab.getAttribute('data-category-id');
                     const popup = document.getElementById(`desktop-popup-${categoryId}`);
                     
@@ -2687,22 +2834,18 @@
                     document.querySelectorAll('.desktop-popup').forEach(p => {
                         if (p !== popup) {
                             p.classList.remove('open');
-                            p.style.position = 'absolute'; // Reset position
                         }
                     });
                     
-                    // Position the popup correctly - use fixed positioning for desktop
-                    if (window.innerWidth >= 769) {
-                        const rect = kebab.getBoundingClientRect();
-                        popup.style.position = 'fixed';
-                        popup.style.top = (rect.bottom + window.scrollY) + 'px';
-                        popup.style.right = (window.innerWidth - rect.right) + 'px';
-                        popup.style.left = 'auto';
-                        popup.style.bottom = 'auto';
-                    }
-                    
                     // Toggle current popup
                     popup.classList.toggle('open');
+                    
+                    // Position the popup relative to the kebab button
+                    const rect = kebab.getBoundingClientRect();
+                    popup.style.position = 'absolute';
+                    popup.style.top = '100%';
+                    popup.style.right = '0';
+                    popup.style.left = 'auto';
                 });
             });
             
@@ -2811,14 +2954,34 @@
         });
 
         // --- ADD/EDIT LOGIC ---
+        function triggerFileInput() {
+            document.getElementById('cat-file-input').click();
+        }
+
         function openAddModal() {
             editingId = null;
-            uploadedFile = null;
+            currentFileUpload = null;
             existingImageUrl = null;
+            imageUploaded = false;
+            previousImageRef = null;
+            
             document.getElementById('modal-title').textContent = "Add Category";
             document.getElementById('modal-submit-btn').textContent = "Save Category";
+            document.getElementById('modal-submit-btn').disabled = true; // Disable until image is uploaded
             document.getElementById('category-form').reset();
             document.getElementById('cat-preview').style.display = 'none';
+            document.getElementById('upload-progress').style.display = 'none';
+            document.getElementById('upload-success').style.display = 'none';
+            document.getElementById('image-required').style.display = 'block';
+            document.getElementById('upload-error').textContent = '';
+            
+            // Reset upload box styling
+            const uploadBox = document.getElementById('image-upload-box');
+            uploadBox.style.borderColor = '#E5E7EB';
+            uploadBox.style.background = '#FAFAFA';
+            uploadBox.querySelector('.upload-text').textContent = 'Click to upload image';
+            uploadBox.querySelector('.upload-subtext').textContent = 'PNG, JPG up to 5MB';
+            
             document.getElementById('category-modal').style.display = 'flex';
         }
 
@@ -2826,18 +2989,36 @@
             const cat = allCategories.find(c => c.id === id);
             if(!cat) return;
             editingId = id;
-            uploadedFile = null;
+            currentFileUpload = null;
             existingImageUrl = cat.imageUrl || null;
+            imageUploaded = !!cat.imageUrl;
+            previousImageRef = null;
+            
             document.getElementById('modal-title').textContent = "Edit Category";
             document.getElementById('modal-submit-btn').textContent = "Update Category";
+            document.getElementById('modal-submit-btn').disabled = false; // Enable for editing
             document.getElementById('cat-name-input').value = cat.name;
+            document.getElementById('image-required').style.display = 'none';
             
             if(cat.imageUrl) {
                 document.getElementById('cat-preview').src = cat.imageUrl;
                 document.getElementById('cat-preview').style.display = 'block';
+                document.getElementById('upload-success').style.display = 'flex';
+                document.getElementById('upload-progress').style.display = 'none';
+                
+                // Update upload box styling
+                const uploadBox = document.getElementById('image-upload-box');
+                uploadBox.style.borderColor = '#bbf7d0';
+                uploadBox.style.background = '#f0fdf4';
+                uploadBox.querySelector('.upload-text').textContent = 'Image uploaded';
+                uploadBox.querySelector('.upload-subtext').textContent = 'Click to change image';
             } else {
                 document.getElementById('cat-preview').style.display = 'none';
+                document.getElementById('upload-success').style.display = 'none';
+                document.getElementById('upload-progress').style.display = 'none';
+                document.getElementById('image-required').style.display = 'block';
             }
+            
             document.getElementById('category-modal').style.display = 'flex';
             
             // Clean up menus
@@ -2846,37 +3027,187 @@
         }
 
         function closeModal() {
+            // Cancel any ongoing upload
+            if (currentUploadTask) {
+                currentUploadTask.cancel();
+                currentUploadTask = null;
+            }
+            
             document.getElementById('category-modal').style.display = 'none';
         }
 
-        document.getElementById('cat-file-input').addEventListener('change', (e) => {
+        document.getElementById('cat-file-input').addEventListener('change', async (e) => {
             const file = e.target.files[0];
-            if(file) {
-                if(file.size > 5*1024*1024) return showToast('Image too large', 'error');
-                uploadedFile = file;
-                document.getElementById('cat-preview').src = URL.createObjectURL(file);
-                document.getElementById('cat-preview').style.display = 'block';
+            if(!file) return;
+            
+            // Validate file size
+            if(file.size > 5*1024*1024) {
+                document.getElementById('upload-error').textContent = 'Image too large (max 5MB)';
+                return;
             }
+            
+            // Validate file type
+            if(!file.type.match('image.*')) {
+                document.getElementById('upload-error').textContent = 'Please select an image file';
+                return;
+            }
+            
+            document.getElementById('upload-error').textContent = '';
+            
+            // Cancel previous upload if exists
+            if (currentUploadTask) {
+                currentUploadTask.cancel();
+            }
+            
+            // Delete previous image from storage if exists
+            if (previousImageRef) {
+                try {
+                    await previousImageRef.delete();
+                } catch (error) {
+                    console.log('Previous image not found or already deleted');
+                }
+                previousImageRef = null;
+            }
+            
+            // Show preview
+            const preview = document.getElementById('cat-preview');
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = 'block';
+            
+            // Hide success message and show progress
+            document.getElementById('upload-success').style.display = 'none';
+            document.getElementById('upload-progress').style.display = 'block';
+            document.getElementById('image-required').style.display = 'none';
+            
+            // Update upload box styling
+            const uploadBox = document.getElementById('image-upload-box');
+            uploadBox.style.borderColor = '#E5E7EB';
+            uploadBox.style.background = '#FAFAFA';
+            uploadBox.querySelector('.upload-text').textContent = 'Uploading...';
+            uploadBox.querySelector('.upload-subtext').textContent = 'Please wait';
+            
+            // Disable submit button during upload
+            document.getElementById('modal-submit-btn').disabled = true;
+            
+            // Start upload
+            currentFileUpload = file;
+            uploadImage(file);
         });
+
+        async function uploadImage(file) {
+            try {
+                // Create a reference to the file location
+                const fileExtension = file.name.split('.').pop();
+                const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExtension}`;
+                const storageRef = storage.ref().child(`categories/${fileName}`);
+                
+                // Start upload task
+                currentUploadTask = storageRef.put(file);
+                
+                // Track upload progress
+                currentUploadTask.on('state_changed',
+                    (snapshot) => {
+                        // Update progress bar
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        document.getElementById('progress-fill').style.width = `${progress}%`;
+                        document.getElementById('progress-text').textContent = `${Math.round(progress)}% uploaded`;
+                    },
+                    (error) => {
+                        // Upload failed
+                        console.error('Upload error:', error);
+                        document.getElementById('upload-error').textContent = 'Upload failed. Please try again.';
+                        document.getElementById('upload-progress').style.display = 'none';
+                        document.getElementById('modal-submit-btn').disabled = true;
+                        
+                        // Reset preview
+                        document.getElementById('cat-preview').style.display = 'none';
+                        
+                        // Reset upload box
+                        const uploadBox = document.getElementById('image-upload-box');
+                        uploadBox.style.borderColor = '#E5E7EB';
+                        uploadBox.style.background = '#FAFAFA';
+                        uploadBox.querySelector('.upload-text').textContent = 'Click to upload image';
+                        uploadBox.querySelector('.upload-subtext').textContent = 'PNG, JPG up to 5MB';
+                        
+                        currentUploadTask = null;
+                    },
+                    async () => {
+                        // Upload completed successfully
+                        const downloadURL = await storageRef.getDownloadURL();
+                        
+                        // Store the reference for potential deletion later
+                        previousImageRef = storageRef;
+                        
+                        // Update UI for success
+                        document.getElementById('upload-progress').style.display = 'none';
+                        document.getElementById('upload-success').style.display = 'flex';
+                        document.getElementById('modal-submit-btn').disabled = false;
+                        imageUploaded = true;
+                        
+                        // Update upload box styling
+                        const uploadBox = document.getElementById('image-upload-box');
+                        uploadBox.style.borderColor = '#bbf7d0';
+                        uploadBox.style.background = '#f0fdf4';
+                        uploadBox.querySelector('.upload-text').textContent = 'Image uploaded';
+                        uploadBox.querySelector('.upload-subtext').textContent = 'Click to change image';
+                        
+                        // Store the download URL for later use
+                        existingImageUrl = downloadURL;
+                        
+                        currentUploadTask = null;
+                    }
+                );
+                
+            } catch (error) {
+                console.error('Upload error:', error);
+                document.getElementById('upload-error').textContent = 'Upload failed. Please try again.';
+                document.getElementById('upload-progress').style.display = 'none';
+                document.getElementById('modal-submit-btn').disabled = true;
+                currentUploadTask = null;
+            }
+        }
 
         document.getElementById('category-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('cat-name-input').value.trim();
-            if(!name) return showToast('Name required', 'error');
+            if(!name) {
+                showToast('Category name is required', 'error');
+                return;
+            }
+
+            // Check if image is uploaded (required for new categories)
+            if (!editingId && !imageUploaded) {
+                document.getElementById('image-required').style.display = 'block';
+                showToast('Please upload an image for the category', 'error');
+                return;
+            }
+
+            // For editing, if no new image uploaded and no existing image, require image
+            if (editingId && !imageUploaded && !existingImageUrl) {
+                document.getElementById('image-required').style.display = 'block';
+                showToast('Please upload an image for the category', 'error');
+                return;
+            }
 
             const exists = allCategories.some(c => c.id !== editingId && c.name.toLowerCase() === name.toLowerCase());
-            if(exists) return showToast('Category name exists', 'error');
+            if(exists) {
+                showToast('Category name already exists', 'error');
+                return;
+            }
 
             const btn = document.getElementById('modal-submit-btn');
-            btn.disabled = true; btn.textContent = "Saving...";
+            btn.disabled = true; 
+            btn.textContent = editingId ? "Updating..." : "Saving...";
 
             try {
                 let imageUrl = existingImageUrl;
                 
-                if(uploadedFile) {
-                    const ref = storage.ref().child(`categories/${Date.now()}-${uploadedFile.name}`);
-                    await ref.put(uploadedFile);
-                    imageUrl = await ref.getDownloadURL();
+                // If we have a new file upload in progress, wait for it to complete
+                if (currentUploadTask) {
+                    showToast('Please wait for image upload to complete', 'error');
+                    btn.disabled = false;
+                    btn.textContent = editingId ? "Update Category" : "Save Category";
+                    return;
                 }
 
                 const data = {
@@ -2888,11 +3219,11 @@
 
                 if(editingId) {
                     await db.collection('categories').doc(editingId).update(data);
-                    showToast('Updated successfully');
+                    showToast('Category updated successfully', 'success');
                 } else {
                     data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                     await db.collection('categories').add(data);
-                    showToast('Created successfully');
+                    showToast('Category created successfully', 'success');
                 }
                 
                 closeModal();
@@ -2900,7 +3231,6 @@
             } catch(e) {
                 console.error(e);
                 showToast('Operation failed', 'error');
-            } finally {
                 btn.disabled = false; 
                 btn.textContent = editingId ? "Update Category" : "Save Category";
             }
@@ -2930,13 +3260,32 @@
 
         document.getElementById('confirm-del-btn').addEventListener('click', async () => {
             if(!deletingId) return;
+            
+            const btn = document.getElementById('confirm-del-btn');
+            btn.disabled = true;
+            btn.textContent = "Deleting...";
+            
             try {
+                // Get the category to delete its image from storage
+                const cat = allCategories.find(c => c.id === deletingId);
+                if (cat && cat.imageUrl) {
+                    try {
+                        // Extract the file path from the URL and delete from storage
+                        const imageRef = storage.refFromURL(cat.imageUrl);
+                        await imageRef.delete();
+                    } catch (error) {
+                        console.log('Image not found or already deleted:', error);
+                    }
+                }
+                
                 await db.collection('categories').doc(deletingId).delete();
-                showToast('Deleted successfully');
+                showToast('Category deleted successfully', 'success');
                 closeDeleteModal();
                 loadData();
             } catch(e) {
                 showToast('Delete failed', 'error');
+                btn.disabled = false;
+                btn.textContent = "Delete";
             }
         });
 
