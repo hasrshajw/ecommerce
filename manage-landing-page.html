@@ -7,7 +7,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         :root {
             --header-height-desktop: 70px;
@@ -91,7 +90,7 @@
             margin-top: var(--header-height-desktop);
         }
 
-        /* Desktop sidebar - FIXED */
+        /* Desktop sidebar - FIXED and non-scrolling */
         .d-sidebar {
             width: var(--sidebar-width);
             background: var(--sidebar-bg);
@@ -112,6 +111,24 @@
             flex-direction: column;
             height: 100%;
             overflow-y: auto;
+        }
+
+        .d-sidebar-inner::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .d-sidebar-inner::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .d-sidebar-inner::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+
+        .d-sidebar-inner::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
         }
 
         /* Desktop nav */
@@ -311,31 +328,22 @@
             flex-wrap: wrap;
         }
 
-        /* ============= PREMIUM POPUP MANAGER ============= */
-        .editor-form {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 24px;
-            width: 100%;
+        .breadcrumb-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: #9ca3af;
         }
 
-        .form-left {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
+        .breadcrumb-divider {
+            color: #d1d5db;
         }
 
-        .form-right {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .popup-card {
+        /* ============= POPUP MANAGER CARD ============= */
+        .popup-manager-card {
             background: #ffffff;
             border-radius: 12px;
             border: 1px solid #e5e7eb;
-            padding: 24px;
+            padding: 32px;
             width: 100%;
             box-shadow: var(--shadow-premium);
         }
@@ -344,14 +352,14 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 32px;
             width: 100%;
         }
 
         .section-title {
             font-weight: 700;
-            font-size: 16px;
-            line-height: 24px;
+            font-size: 18px;
+            line-height: 28px;
             color: rgb(29, 30, 32);
             display: flex;
             align-items: center;
@@ -359,14 +367,73 @@
         }
 
         .section-title svg {
-            width: 20px;
-            height: 20px;
-            stroke: var(--icon-color);
+            width: 24px;
+            height: 24px;
+            stroke: var(--icon-active);
         }
 
-        /* Premium form controls */
+        /* Toggle switch for popup */
+        .popup-toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 32px;
+        }
+
+        .popup-toggle {
+            position: relative;
+            width: 52px;
+            height: 28px;
+            background: var(--switch-off);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .popup-toggle.active {
+            background: var(--switch-on);
+        }
+
+        .popup-toggle::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .popup-toggle.active::after {
+            transform: translateX(24px);
+        }
+
+        .toggle-label {
+            flex: 1;
+        }
+
+        .toggle-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--text-color);
+        }
+
+        .toggle-description {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        /* Form groups */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             width: 100%;
         }
 
@@ -376,6 +443,11 @@
             font-weight: 600;
             color: rgb(29, 30, 32);
             margin-bottom: 8px;
+        }
+
+        .form-label-required::after {
+            content: " *";
+            color: var(--danger-color);
         }
 
         .form-control {
@@ -396,173 +468,100 @@
             outline: none;
         }
 
+        .form-control::placeholder {
+            color: #9ca3af;
+        }
+
         textarea.form-control {
             min-height: 100px;
             resize: vertical;
         }
 
-        /* Toggle Switch */
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            background: #f9fafb;
-            margin-bottom: 24px;
-        }
-
-        .toggle-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .toggle-title {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .toggle-description {
+        .form-hint {
             font-size: 12px;
             color: #6b7280;
+            margin-top: 4px;
         }
 
-        .toggle-switch {
-            position: relative;
-            width: 50px;
-            height: 26px;
-            background: #d1d5db;
-            border-radius: 13px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .toggle-switch.active {
-            background: var(--brand-primary);
-        }
-
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            width: 22px;
-            height: 22px;
-            background: white;
-            border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: transform 0.3s ease;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-
-        .toggle-switch.active::after {
-            transform: translateX(24px);
-        }
-
-        /* Image Upload Zone */
-        .upload-zone {
+        /* Image upload zone */
+        .image-upload-zone {
             border: 2px dashed #e5e7eb;
             border-radius: 12px;
-            padding: 40px 20px;
+            padding: 40px;
             text-align: center;
             cursor: pointer;
-            background: #fafafa;
+            background: linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 100%);
             transition: all 0.3s ease;
+            position: relative;
             width: 100%;
             margin-bottom: 16px;
         }
 
-        .upload-zone:hover {
+        .image-upload-zone:hover {
             border-color: var(--brand-primary);
-            background: #f8f7ff;
+            background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
         }
 
-        .upload-zone svg {
+        .image-upload-zone.has-image {
+            border: 2px solid #e5e7eb;
+            background: white;
+            padding: 20px;
+        }
+
+        .upload-icon {
             width: 48px;
             height: 48px;
-            stroke: var(--brand-primary);
-            margin-bottom: 16px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--brand-gradient);
+            border-radius: 50%;
+        }
+
+        .upload-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: white;
         }
 
         .upload-text {
             font-size: 16px;
             font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 8px;
+            color: var(--text-color);
+            margin-bottom: 4px;
         }
 
         .upload-subtext {
-            font-size: 14px;
+            font-size: 13px;
             color: #6b7280;
         }
 
-        .preview-container {
+        /* Image preview */
+        .image-preview-container {
             display: none;
-            padding: 20px;
-            background: #f9fafb;
-            border-radius: 12px;
-            border: 1px solid #e5e7eb;
-            margin-bottom: 16px;
-            text-align: center;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
         }
 
-        .preview-img {
-            max-width: 100%;
+        .image-preview-container.active {
+            display: flex;
+        }
+
+        .image-preview {
+            max-width: 300px;
             max-height: 200px;
+            width: auto;
+            height: auto;
             border-radius: 8px;
-            margin-bottom: 16px;
-        }
-
-        /* Preview Card */
-        .preview-card {
-            background: white;
-            border-radius: 16px;
             border: 1px solid #e5e7eb;
-            box-shadow: var(--shadow-premium);
-            padding: 32px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+            object-fit: contain;
         }
 
-        .preview-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--brand-gradient);
-        }
-
-        .preview-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 12px;
-        }
-
-        .preview-message {
-            font-size: 14px;
-            color: #4b5563;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-
-        .preview-button {
-            display: inline-block;
-            padding: 12px 24px;
-            background: var(--brand-primary);
-            color: white;
-            border-radius: 8px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: background 0.3s ease;
-        }
-
-        .preview-button:hover {
-            background: #471ea7;
+        .image-actions {
+            display: flex;
+            gap: 12px;
         }
 
         /* Buttons */
@@ -580,6 +579,7 @@
             font-size: 14px;
             line-height: 20px;
             white-space: nowrap;
+            min-width: 120px;
         }
 
         .btn-primary {
@@ -593,6 +593,10 @@
             box-shadow: 0 8px 20px rgba(81, 39, 186, 0.35);
         }
 
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
         .btn-secondary {
             background: white;
             border: 1px solid #e5e7eb;
@@ -602,6 +606,105 @@
         .btn-secondary:hover {
             background: #f9fafb;
             border-color: #d1d5db;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: #fef2f2;
+            color: var(--danger-color);
+            border: 1px solid #fecaca;
+        }
+
+        .btn-danger:hover {
+            background: #fee2e2;
+            transform: translateY(-1px);
+        }
+
+        /* Form layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .form-column {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .form-section {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            stroke: var(--icon-active);
+        }
+
+        .section-title-text {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--text-color);
+        }
+
+        /* Delay time specific */
+        .delay-input-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .delay-input {
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .delay-unit {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        /* Conditional fields */
+        .conditional-fields {
+            background: #f0f9ff;
+            border: 1px dashed #3b82f6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 16px;
+        }
+
+        .conditional-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .conditional-note svg {
+            width: 16px;
+            height: 16px;
+            stroke: #3b82f6;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .conditional-note p {
+            font-size: 13px;
+            color: #1e40af;
+            margin: 0;
         }
 
         /* ============= MOBILE LAYOUT ============= */
@@ -614,7 +717,7 @@
             overflow-x: hidden;
         }
 
-        /* Mobile header */
+        /* Mobile header - FIXED at top */
         .m-header {
             height: 72px;
             background: var(--header-bg);
@@ -682,14 +785,14 @@
             max-width: 200px;
         }
 
-        /* Mobile main */
+        /* Mobile main bg */
         .m-main {
             flex: 1;
             background: var(--page-bg);
             padding-bottom: 100px;
             width: 100%;
             overflow-x: hidden;
-            margin-top: 72px;
+            margin-top: 72px; /* Account for fixed header */
         }
 
         .mobile-content-inner {
@@ -721,11 +824,75 @@
             text-overflow: ellipsis;
         }
 
-        /* Mobile form */
-        .mobile-editor-form {
+        .mobile-breadcrumb {
             display: flex;
-            flex-direction: column;
-            gap: 20px;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            line-height: 20px;
+            color: #6b7280;
+            flex-wrap: wrap;
+        }
+
+        .mobile-breadcrumb-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: #9ca3af;
+        }
+
+        .mobile-breadcrumb-divider {
+            color: #d1d5db;
+        }
+
+        /* Mobile form */
+        .mobile-form-section {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .mobile-toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: #f9fafb;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 20px;
+        }
+
+        .mobile-popup-toggle {
+            position: relative;
+            width: 52px;
+            height: 28px;
+            background: var(--switch-off);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-popup-toggle.active {
+            background: var(--switch-on);
+        }
+
+        .mobile-popup-toggle::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .mobile-popup-toggle.active::after {
+            transform: translateX(24px);
         }
 
         /* Overlay & drawer */
@@ -897,62 +1064,64 @@
             background: var(--active-bg);
         }
 
-        /* Drawer account */
+        .m-submenu-item .submenu-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+        }
+
+        /* Drawer footer account */
         .m-account-section {
             padding: 16px;
             border-top: 1px solid var(--border-subtle);
             cursor: pointer;
+            position: relative;
             flex-shrink: 0;
         }
 
-        /* Mobile save bar */
-        .mobile-save-bar {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: white;
-            padding: 16px;
-            border-top: 1px solid #e5e7eb;
-            z-index: 90;
-            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
-            gap: 12px;
-        }
-
-        /* Toast */
-        .toast-container {
+        /* Toast notification */
+        .toast {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            z-index: 3000;
-            pointer-events: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .toast {
-            padding: 16px 20px;
             background: white;
             border-radius: 8px;
+            padding: 16px 20px;
             box-shadow: var(--shadow-premium);
-            animation: slideUp 0.3s ease;
             display: flex;
             align-items: center;
             gap: 12px;
+            z-index: 3000;
+            animation: slideInRight 0.3s ease;
             border-left: 4px solid var(--success-color);
-            min-width: 300px;
-            pointer-events: auto;
         }
 
         .toast.error {
             border-left-color: var(--danger-color);
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast-message {
+            font-weight: 500;
+            font-size: 14px;
         }
 
         /* Responsive switch */
@@ -968,21 +1137,14 @@
                 display: none;
             }
 
-            .editor-form {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .mobile-save-bar {
-                display: flex;
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
             }
             
-            .mobile-save-bar .btn {
-                flex: 1;
-            }
-            
-            .m-overlay.open ~ .mobile-save-bar {
-                display: none;
+            .popup-manager-card {
+                padding: 20px;
+                margin: 0 16px;
             }
         }
 
@@ -1033,7 +1195,7 @@
                                 <span class="label">Inventory</span>
                             </div>
 
-                            <!-- Customize Site -->
+                            <!-- Customize Site (Active) -->
                             <div class="d-nav-item d-nav-item--active" id="d-customize-toggle">
                                 <span class="icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -1055,14 +1217,37 @@
 
                             <!-- Desktop Customize Site submenu -->
                             <div class="d-submenu open" id="d-customize-submenu">
-                                <div class="d-submenu-item">Theme & layout</div>
-                                <div class="d-submenu-item">Sections</div>
-                                <div class="d-submenu-item">Navigation</div>
-                                <div class="d-submenu-item active">Popup Manager</div>
+                                <div class="d-submenu-item" onclick="window.location.href='theme-layout.html'">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                        <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+                                        <path d="M9.5 12.5 11 14"/>
+                                        <path d="M14 10l-3.5 4"/>
+                                        <path d="m5 15 4.5-4"/>
+                                    </svg>
+                                    <span>Theme & layout</span>
+                                </div>
+                                <div class="d-submenu-item" onclick="window.location.href='sections.html'">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                        <path d="M3 9h18"/>
+                                        <path d="M9 21V9"/>
+                                    </svg>
+                                    <span>Sections</span>
+                                </div>
+                                <div class="d-submenu-item active" onclick="window.location.href='popup-manager.html'">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                        <path d="M8 12h8"/>
+                                        <path d="M12 8v8"/>
+                                    </svg>
+                                    <span>Popup Manager</span>
+                                </div>
                             </div>
 
                             <!-- MANAGE ORDERS -->
-                            <div class="d-nav-item" id="d-orders-toggle">
+                            <div class="d-nav-item">
                                 <span class="icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                          fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1072,22 +1257,7 @@
                                         <circle cx="8" cy="16" r="6"/>
                                     </svg>
                                 </span>
-                                <span class="label">MANAGE ORDERS</span>
-                                <span class="chevron">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2"
-                                         stroke-linecap="round" stroke-linejoin="round"
-                                         class="chevron-icon">
-                                        <path d="m9 18 6-6-6-6"/>
-                                    </svg>
-                                </span>
-                            </div>
-
-                            <!-- Desktop MANAGE ORDERS submenu -->
-                            <div class="d-submenu" id="d-orders-submenu">
-                                <div class="d-submenu-item">Today</div>
-                                <div class="d-submenu-item">This Month</div>
-                                <div class="d-submenu-item">All Orders</div>
+                                <span class="label">Manage Orders</span>
                             </div>
                         </div>
                     </nav>
@@ -1114,21 +1284,29 @@
                         <div class="page-title-wrap">
                             <div class="page-title">Popup Manager</div>
                             <div class="breadcrumb">
+                                <span class="breadcrumb-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                    </svg>
+                                </span>
                                 <span>Home</span>
-                                <span>/</span>
+                                <span class="breadcrumb-divider">/</span>
                                 <span>Customize Site</span>
-                                <span>/</span>
+                                <span class="breadcrumb-divider">/</span>
                                 <span>Popup Manager</span>
                             </div>
                         </div>
 
                         <div class="header-actions">
-                            <button class="btn btn-secondary" onclick="previewPopup()">
+                            <button class="btn btn-secondary" onclick="resetForm()">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                                    <path d="M3 3v5h5"/>
                                 </svg>
-                                <span>Preview</span>
+                                <span>Reset</span>
                             </button>
                             <button class="btn btn-primary" onclick="savePopupSettings()">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1141,171 +1319,151 @@
                         </div>
                     </div>
 
-                    <!-- Popup Manager Form -->
-                    <div class="editor-form">
-                        <div class="form-left">
-                            <!-- Popup Settings Card -->
-                            <div class="popup-card">
-                                <div class="card-header">
-                                    <h3 class="section-title">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <rect width="18" height="18" x="3" y="3" rx="2"/>
-                                            <path d="M8 10h8"/>
-                                            <path d="M8 14h6"/>
-                                            <circle cx="18" cy="6" r="1"/>
+                    <!-- POPUP MANAGER CARD -->
+                    <div class="popup-manager-card">
+                        <!-- Enable/Disable Toggle -->
+                        <div class="popup-toggle-container">
+                            <div class="popup-toggle active" id="popup-toggle" onclick="togglePopup()"></div>
+                            <div class="toggle-label">
+                                <div class="toggle-title">Enable Popup</div>
+                                <div class="toggle-description">Turn on/off the popup for your store visitors</div>
+                            </div>
+                        </div>
+
+                        <!-- Form Grid -->
+                        <div class="form-grid">
+                            <!-- Left Column: Popup Content -->
+                            <div class="form-column">
+                                <div class="form-section">
+                                    <div class="section-header">
+                                        <svg class="section-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                            <path d="M8 12h8"/>
+                                            <path d="M12 8v8"/>
                                         </svg>
-                                        <span>Popup Settings</span>
-                                    </h3>
-                                </div>
-
-                                <!-- Enable/Disable Toggle -->
-                                <div class="toggle-container">
-                                    <div class="toggle-info">
-                                        <div class="toggle-title">Enable Popup</div>
-                                        <div class="toggle-description">Show or hide the popup on your website</div>
+                                        <div class="section-title-text">Popup Content</div>
                                     </div>
-                                    <div class="toggle-switch active" id="popup-toggle" onclick="togglePopup()"></div>
-                                </div>
 
-                                <!-- Popup Title -->
-                                <div class="form-group">
-                                    <label class="form-label">Popup Title</label>
-                                    <input type="text" class="form-control" id="popup-title" placeholder="Enter popup title" value="Special Offer!">
-                                </div>
+                                    <!-- Image Upload -->
+                                    <div class="form-group">
+                                        <label class="form-label">Popup Image (Optional)</label>
+                                        <div class="image-upload-zone" id="image-upload-zone" onclick="document.getElementById('image-input').click()">
+                                            <div class="upload-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                                    <polyline points="17 8 12 3 7 8"/>
+                                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                                </svg>
+                                            </div>
+                                            <div class="upload-text">Click to upload image</div>
+                                            <div class="upload-subtext">PNG, JPG up to 5MB</div>
+                                            <div class="image-preview-container" id="image-preview-container">
+                                                <img id="image-preview" class="image-preview" alt="Popup Image Preview">
+                                                <div class="image-actions">
+                                                    <button type="button" class="btn btn-secondary btn-sm" onclick="removeImage()">Remove</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="form-hint">If you upload an image, the title and message fields below will be optional</p>
+                                        <input type="file" id="image-input" accept="image/*" style="display: none;">
+                                    </div>
 
-                                <!-- Popup Message -->
-                                <div class="form-group">
-                                    <label class="form-label">Popup Message</label>
-                                    <textarea class="form-control" id="popup-message" placeholder="Enter your message here">Get 20% off on your first order. Use code: WELCOME20</textarea>
-                                </div>
+                                    <!-- Conditional Fields Note -->
+                                    <div class="conditional-fields" id="conditional-fields" style="display: none;">
+                                        <div class="conditional-note">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10"/>
+                                                <path d="M12 16v-4"/>
+                                                <path d="M12 8h.01"/>
+                                            </svg>
+                                            <p>Image uploaded! Title and message are now optional. The image will be displayed instead.</p>
+                                        </div>
+                                    </div>
 
-                                <!-- Button Text -->
-                                <div class="form-group">
-                                    <label class="form-label">Button Text</label>
-                                    <input type="text" class="form-control" id="button-text" placeholder="Enter button text" value="Shop Now">
-                                </div>
+                                    <!-- Popup Title -->
+                                    <div class="form-group">
+                                        <label class="form-label form-label-required" id="title-label">Popup Title</label>
+                                        <input type="text" class="form-control" id="popup-title" placeholder="Enter popup title (e.g., Special Offer!)" value="Special Offer!" required>
+                                    </div>
 
-                                <!-- Button Link -->
-                                <div class="form-group">
-                                    <label class="form-label">Button Link</label>
-                                    <input type="text" class="form-control" id="button-link" placeholder="https://example.com or /shop" value="/shop">
-                                </div>
-
-                                <!-- Delay Time -->
-                                <div class="form-group">
-                                    <label class="form-label">Popup Delay Time (seconds)</label>
-                                    <input type="number" class="form-control" id="delay-time" min="0" max="30" value="5">
-                                    <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">Time before popup appears after page load</div>
+                                    <!-- Popup Message -->
+                                    <div class="form-group">
+                                        <label class="form-label form-label-required" id="message-label">Popup Message</label>
+                                        <textarea class="form-control" id="popup-message" placeholder="Enter your message here..." rows="3" required>Get 20% off on your first order! Use code: WELCOME20</textarea>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Image Upload Card -->
-                            <div class="popup-card">
-                                <div class="card-header">
-                                    <h3 class="section-title">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
-                                            <circle cx="8.5" cy="8.5" r="1.5"/>
-                                            <polyline points="21 15 16 10 5 21"/>
+                            <!-- Right Column: Button & Timing -->
+                            <div class="form-column">
+                                <div class="form-section">
+                                    <div class="section-header">
+                                        <svg class="section-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                                            <polyline points="10 17 15 12 10 7"/>
+                                            <line x1="15" y1="12" x2="3" y2="12"/>
                                         </svg>
-                                        <span>Popup Image (Optional)</span>
-                                    </h3>
+                                        <div class="section-title-text">Button Settings</div>
+                                    </div>
+
+                                    <!-- Button Text -->
+                                    <div class="form-group">
+                                        <label class="form-label form-label-required">Button Text</label>
+                                        <input type="text" class="form-control" id="button-text" placeholder="e.g., Shop Now, Learn More" value="Shop Now" required>
+                                    </div>
+
+                                    <!-- Button Link -->
+                                    <div class="form-group">
+                                        <label class="form-label form-label-required">Button Link</label>
+                                        <input type="text" class="form-control" id="button-link" placeholder="https://example.com or /shop" value="/shop" required>
+                                        <p class="form-hint">Enter URL where the button should lead</p>
+                                    </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <label class="form-label">Upload Popup Image</label>
-                                    <div id="image-upload-zone" class="upload-zone">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                            <polyline points="17 8 12 3 7 8"/>
-                                            <line x1="12" y1="3" x2="12" y2="15"/>
+                                <div class="form-section">
+                                    <div class="section-header">
+                                        <svg class="section-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10"/>
+                                            <polyline points="12 6 12 12 16 14"/>
                                         </svg>
-                                        <div class="upload-text">Click to upload image</div>
-                                        <div class="upload-subtext">PNG, JPG, GIF up to 5MB</div>
+                                        <div class="section-title-text">Timing Settings</div>
                                     </div>
-                                    <input type="file" id="image-input" accept="image/*" style="display: none;">
-                                    
-                                    <div id="image-preview-container" class="preview-container">
-                                        <img id="image-preview" class="preview-img" alt="Image Preview">
-                                        <button class="btn btn-secondary" onclick="removeImage()" style="margin-top: 12px;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M3 6h18"/>
-                                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-                                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-                                            </svg>
-                                            <span>Remove Image</span>
-                                        </button>
+
+                                    <!-- Delay Time -->
+                                    <div class="form-group">
+                                        <label class="form-label form-label-required">Popup Delay Time</label>
+                                        <div class="delay-input-container">
+                                            <input type="number" class="form-control delay-input" id="delay-time" min="0" max="60" value="5" required>
+                                            <span class="delay-unit">seconds</span>
+                                        </div>
+                                        <p class="form-hint">Time delay before popup appears (0 = immediately)</p>
                                     </div>
-                                    
-                                    <div style="font-size: 12px; color: #6b7280; margin-top: 8px;">
-                                        Note: If an image is uploaded, the title and message fields will be hidden in the popup.
+
+                                    <!-- Display Frequency -->
+                                    <div class="form-group">
+                                        <label class="form-label">Display Frequency</label>
+                                        <select class="form-control" id="display-frequency">
+                                            <option value="always">Always show</option>
+                                            <option value="once_per_session" selected>Once per session</option>
+                                            <option value="once_per_day">Once per day</option>
+                                            <option value="once_per_week">Once per week</option>
+                                        </select>
+                                        <p class="form-hint">How often should the popup be shown to the same visitor</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-right">
-                            <!-- Live Preview Card -->
-                            <div class="popup-card">
-                                <div class="card-header">
-                                    <h3 class="section-title">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                            <circle cx="12" cy="12" r="3"/>
-                                        </svg>
-                                        <span>Live Preview</span>
-                                    </h3>
-                                </div>
-
-                                <div class="preview-card">
-                                    <div id="preview-image-container" style="display: none; margin-bottom: 20px;">
-                                        <img id="preview-image" src="" alt="Preview" style="max-width: 100%; border-radius: 8px;">
-                                    </div>
-                                    <div id="preview-text-content">
-                                        <div id="preview-title" class="preview-title">Special Offer!</div>
-                                        <div id="preview-message" class="preview-message">Get 20% off on your first order. Use code: WELCOME20</div>
-                                    </div>
-                                    <a href="#" id="preview-button" class="preview-button">Shop Now</a>
-                                    <div style="font-size: 12px; color: #6b7280; margin-top: 20px;">
-                                        Popup will appear after: <span id="preview-delay">5</span> seconds
-                                    </div>
-                                </div>
-
-                                <div style="text-align: center; margin-top: 20px;">
-                                    <button class="btn btn-secondary" onclick="previewPopup()">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                            <circle cx="12" cy="12" r="3"/>
-                                        </svg>
-                                        <span>Refresh Preview</span>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Instructions Card -->
-                            <div class="popup-card">
-                                <div class="card-header">
-                                    <h3 class="section-title">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <circle cx="12" cy="12" r="10"/>
-                                            <line x1="12" y1="16" x2="12" y2="12"/>
-                                            <line x1="12" y1="8" x2="12.01" y2="8"/>
-                                        </svg>
-                                        <span>Instructions</span>
-                                    </h3>
-                                </div>
-
-                                <div style="font-size: 13px; line-height: 1.5; color: #4b5563;">
-                                    <p><strong>1. Enable/Disable:</strong> Toggle to show or hide the popup.</p>
-                                    <p><strong>2. Title & Message:</strong> Custom text displayed in the popup.</p>
-                                    <p><strong>3. Image Upload:</strong> Optional. If added, hides text content.</p>
-                                    <p><strong>4. Button Settings:</strong> Configure action button text and link.</p>
-                                    <p><strong>5. Delay Time:</strong> Control when popup appears (0-30 seconds).</p>
-                                    <p style="margin-top: 16px; padding: 12px; background: #f3f4f6; border-radius: 8px;">
-                                        <strong>Tip:</strong> Use images for promotional banners or text for announcements.
-                                    </p>
-                                </div>
-                            </div>
+                        <!-- Save Button -->
+                        <div style="margin-top: 32px; text-align: center;">
+                            <button class="btn btn-primary" onclick="savePopupSettings()" style="min-width: 200px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                    <polyline points="17 21 17 13 7 13 7 21"/>
+                                    <polyline points="7 3 7 8 15 8"/>
+                                </svg>
+                                <span>Save Popup Settings</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1315,7 +1473,7 @@
 
     <!-- ================= MOBILE VIEW ================= -->
     <div class="page-mobile">
-        <!-- Mobile header -->
+        <!-- Mobile header: menu left, logo right - FIXED at top -->
         <header class="m-header">
             <button class="m-menu-btn" id="m-menu-toggle" aria-label="Open menu">
                 <div class="m-menu-lines"><span></span></div>
@@ -1332,99 +1490,142 @@
                 <div class="mobile-page-header">
                     <div class="mobile-page-title-wrap">
                         <div class="mobile-page-title">Popup Manager</div>
+                        <div class="mobile-breadcrumb">
+                            <span class="mobile-breadcrumb-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                                    <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                </svg>
+                            </span>
+                            <span>Home</span>
+                            <span class="mobile-breadcrumb-divider">/</span>
+                            <span>Customize Site</span>
+                            <span class="mobile-breadcrumb-divider">/</span>
+                            <span>Popup Manager</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Mobile Form -->
-                <div class="mobile-editor-form">
-                    <!-- Popup Settings Card -->
-                    <div class="popup-card">
-                        <div class="card-header">
-                            <h3 class="section-title">Popup Settings</h3>
-                        </div>
+                <!-- Mobile Toggle -->
+                <div class="mobile-toggle-container">
+                    <div>
+                        <div style="font-weight: 600; font-size: 16px;">Enable Popup</div>
+                        <div style="font-size: 14px; color: #6b7280;">Turn on/off the popup</div>
+                    </div>
+                    <div class="mobile-popup-toggle active" id="mobile-popup-toggle" onclick="toggleMobilePopup()"></div>
+                </div>
 
-                        <!-- Enable/Disable Toggle -->
-                        <div class="toggle-container">
-                            <div class="toggle-info">
-                                <div class="toggle-title">Enable Popup</div>
-                                <div class="toggle-description">Show or hide the popup</div>
-                            </div>
-                            <div class="toggle-switch active" id="mobile-popup-toggle" onclick="togglePopupMobile()"></div>
-                        </div>
-
-                        <!-- Popup Title -->
-                        <div class="form-group">
-                            <label class="form-label">Popup Title</label>
-                            <input type="text" class="form-control" id="mobile-popup-title" placeholder="Enter popup title" value="Special Offer!">
-                        </div>
-
-                        <!-- Popup Message -->
-                        <div class="form-group">
-                            <label class="form-label">Popup Message</label>
-                            <textarea class="form-control" id="mobile-popup-message" rows="3">Get 20% off on your first order. Use code: WELCOME20</textarea>
-                        </div>
-
-                        <!-- Button Text -->
-                        <div class="form-group">
-                            <label class="form-label">Button Text</label>
-                            <input type="text" class="form-control" id="mobile-button-text" placeholder="Enter button text" value="Shop Now">
-                        </div>
-
-                        <!-- Button Link -->
-                        <div class="form-group">
-                            <label class="form-label">Button Link</label>
-                            <input type="text" class="form-control" id="mobile-button-link" placeholder="https://example.com" value="/shop">
-                        </div>
-
-                        <!-- Delay Time -->
-                        <div class="form-group">
-                            <label class="form-label">Popup Delay (seconds)</label>
-                            <input type="number" class="form-control" id="mobile-delay-time" min="0" max="30" value="5">
-                        </div>
+                <!-- Mobile Form Sections -->
+                <div class="mobile-form-section">
+                    <div style="font-weight: 600; font-size: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            <path d="M8 12h8"/>
+                            <path d="M12 8v8"/>
+                        </svg>
+                        Popup Content
                     </div>
 
-                    <!-- Image Upload Card -->
-                    <div class="popup-card">
-                        <div class="card-header">
-                            <h3 class="section-title">Popup Image</h3>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Upload Image (Optional)</label>
-                            <div id="mobile-image-upload-zone" class="upload-zone">
+                    <!-- Image Upload -->
+                    <div class="form-group">
+                        <label class="form-label">Popup Image (Optional)</label>
+                        <div class="image-upload-zone" id="mobile-image-upload-zone" onclick="document.getElementById('mobile-image-input').click()">
+                            <div class="upload-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                                     <polyline points="17 8 12 3 7 8"/>
                                     <line x1="12" y1="3" x2="12" y2="15"/>
                                 </svg>
-                                <div class="upload-text">Tap to upload image</div>
-                                <div class="upload-subtext">PNG, JPG, GIF up to 5MB</div>
                             </div>
-                            <input type="file" id="mobile-image-input" accept="image/*" style="display: none;">
+                            <div class="upload-text">Tap to upload image</div>
+                            <div class="upload-subtext">PNG, JPG up to 5MB</div>
+                            <div class="image-preview-container" id="mobile-image-preview-container">
+                                <img id="mobile-image-preview" class="image-preview" alt="Popup Image Preview">
+                                <div class="image-actions">
+                                    <button type="button" class="btn btn-secondary btn-sm" onclick="removeMobileImage()">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="form-hint">If image uploaded, title & message are optional</p>
+                        <input type="file" id="mobile-image-input" accept="image/*" style="display: none;">
+                    </div>
+
+                    <!-- Title -->
+                    <div class="form-group">
+                        <label class="form-label form-label-required">Popup Title</label>
+                        <input type="text" class="form-control" id="mobile-popup-title" placeholder="Enter popup title" value="Special Offer!" required>
+                    </div>
+
+                    <!-- Message -->
+                    <div class="form-group">
+                        <label class="form-label form-label-required">Popup Message</label>
+                        <textarea class="form-control" id="mobile-popup-message" placeholder="Enter your message" rows="3" required>Get 20% off on your first order!</textarea>
+                    </div>
+                </div>
+
+                <div class="mobile-form-section">
+                    <div style="font-weight: 600; font-size: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                            <polyline points="10 17 15 12 10 7"/>
+                            <line x1="15" y1="12" x2="3" y2="12"/>
+                        </svg>
+                        Button Settings
+                    </div>
+
+                    <!-- Button Text -->
+                    <div class="form-group">
+                        <label class="form-label form-label-required">Button Text</label>
+                        <input type="text" class="form-control" id="mobile-button-text" placeholder="e.g., Shop Now" value="Shop Now" required>
+                    </div>
+
+                    <!-- Button Link -->
+                    <div class="form-group">
+                        <label class="form-label form-label-required">Button Link</label>
+                        <input type="text" class="form-control" id="mobile-button-link" placeholder="Enter URL" value="/shop" required>
+                    </div>
+                </div>
+
+                <div class="mobile-form-section">
+                    <div style="font-weight: 600; font-size: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Timing Settings
+                    </div>
+
+                    <!-- Delay Time -->
+                    <div class="form-group">
+                        <label class="form-label form-label-required">Popup Delay</label>
+                        <div class="delay-input-container">
+                            <input type="number" class="form-control delay-input" id="mobile-delay-time" min="0" max="60" value="5" required>
+                            <span class="delay-unit">seconds</span>
                         </div>
                     </div>
 
-                    <!-- Preview Card -->
-                    <div class="popup-card">
-                        <div class="card-header">
-                            <h3 class="section-title">Preview</h3>
-                        </div>
-
-                        <div class="preview-card">
-                            <div id="mobile-preview-title" class="preview-title">Special Offer!</div>
-                            <div id="mobile-preview-message" class="preview-message">Get 20% off on your first order. Use code: WELCOME20</div>
-                            <a href="#" class="preview-button">Shop Now</a>
-                        </div>
+                    <!-- Display Frequency -->
+                    <div class="form-group">
+                        <label class="form-label">Display Frequency</label>
+                        <select class="form-control" id="mobile-display-frequency">
+                            <option value="always">Always show</option>
+                            <option value="once_per_session" selected>Once per session</option>
+                            <option value="once_per_day">Once per day</option>
+                            <option value="once_per_week">Once per week</option>
+                        </select>
                     </div>
+                </div>
+
+                <!-- Mobile Save Button -->
+                <div style="padding: 16px;">
+                    <button class="btn btn-primary" onclick="saveMobilePopupSettings()" style="width: 100%;">
+                        Save Popup Settings
+                    </button>
                 </div>
             </div>
         </main>
-
-        <!-- Mobile Save Bar -->
-        <div class="mobile-save-bar">
-            <button class="btn btn-secondary" onclick="previewPopup()">Preview</button>
-            <button class="btn btn-primary" onclick="savePopupSettings()">Save</button>
-        </div>
 
         <!-- Overlay & drawer -->
         <div class="m-overlay" id="m-overlay">
@@ -1466,7 +1667,7 @@
                         <span class="label">Inventory</span>
                     </div>
 
-                    <!-- Customize Site -->
+                    <!-- Customize Site with dropdown -->
                     <div class="m-nav-item active" id="m-customize-toggle">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -1487,15 +1688,38 @@
                     </div>
 
                     <!-- Mobile Customize Site submenu -->
-                    <div class="m-submenu open" id="m-customize-submenu">
-                        <div class="m-submenu-item">Theme & layout</div>
-                        <div class="m-submenu-item">Sections</div>
-                        <div class="m-submenu-item">Navigation</div>
-                        <div class="m-submenu-item active">Popup Manager</div>
+                    <div class="m-submenu open">
+                        <div class="m-submenu-item" onclick="window.location.href='theme-layout.html'">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+                                <path d="M9.5 12.5 11 14"/>
+                                <path d="M14 10l-3.5 4"/>
+                                <path d="m5 15 4.5-4"/>
+                            </svg>
+                            <span>Theme & layout</span>
+                        </div>
+                        <div class="m-submenu-item" onclick="window.location.href='sections.html'">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                <path d="M3 9h18"/>
+                                <path d="M9 21V9"/>
+                            </svg>
+                            <span>Sections</span>
+                        </div>
+                        <div class="m-submenu-item active" onclick="window.location.href='popup-manager.html'">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                <path d="M8 12h8"/>
+                                <path d="M12 8v8"/>
+                            </svg>
+                            <span>Popup Manager</span>
+                        </div>
                     </div>
 
                     <!-- MANAGE ORDERS -->
-                    <div class="m-nav-item" id="m-orders-toggle">
+                    <div class="m-nav-item">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                  fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1505,22 +1729,7 @@
                                 <circle cx="8" cy="16" r="6"/>
                             </svg>
                         </span>
-                        <span class="label">MANAGE ORDERS</span>
-                        <span class="chevron">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2"
-                                 stroke-linecap="round" stroke-linejoin="round"
-                                 class="chevron-icon">
-                                <path d="m9 18 6-6-6-6"/>
-                            </svg>
-                        </span>
-                    </div>
-
-                    <!-- Mobile MANAGE ORDERS submenu -->
-                    <div class="m-submenu" id="m-orders-submenu">
-                        <div class="m-submenu-item">Today</div>
-                        <div class="m-submenu-item">This Month</div>
-                        <div class="m-submenu-item">All Orders</div>
+                        <span class="label">Manage Orders</span>
                     </div>
                 </nav>
 
@@ -1540,34 +1749,40 @@
         </div>
     </div>
 
-    <!-- Toast Container -->
-    <div id="toast-container" class="toast-container"></div>
+    <!-- Toast Notification -->
+    <div id="toast"></div>
 
     <script>
-        // ============= POPUP MANAGER LOGIC =============
-        let popupEnabled = true;
-        let uploadedImage = null;
+        // ============= DOM ELEMENTS =============
+        let imageFile = null;
+        let mobileImageFile = null;
 
-        // Initialize
+        // ============= INITIALIZATION =============
         document.addEventListener('DOMContentLoaded', () => {
-            // Mobile drawer behavior
+            // Mobile drawer behaviour
             const mOverlay = document.getElementById('m-overlay');
             const mMenuToggle = document.getElementById('m-menu-toggle');
             const mDrawerClose = document.getElementById('m-drawer-close');
 
             if (mMenuToggle && mOverlay && mDrawerClose) {
-                mMenuToggle.addEventListener('click', () => mOverlay.classList.add('open'));
-                mDrawerClose.addEventListener('click', () => mOverlay.classList.remove('open'));
+                mMenuToggle.addEventListener('click', () => {
+                    mOverlay.classList.add('open');
+                });
+
+                mDrawerClose.addEventListener('click', () => {
+                    mOverlay.classList.remove('open');
+                });
+
                 mOverlay.addEventListener('click', (e) => {
-                    if (e.target === mOverlay) mOverlay.classList.remove('open');
+                    if (e.target === mOverlay) {
+                        mOverlay.classList.remove('open');
+                    }
                 });
             }
 
-            // Desktop dropdowns
+            // Desktop Customize Site dropdown
             const dCustomizeToggle = document.getElementById('d-customize-toggle');
             const dCustomizeSubmenu = document.getElementById('d-customize-submenu');
-            const dOrdersToggle = document.getElementById('d-orders-toggle');
-            const dOrdersSubmenu = document.getElementById('d-orders-submenu');
 
             if (dCustomizeToggle && dCustomizeSubmenu) {
                 dCustomizeToggle.addEventListener('click', () => {
@@ -1576,18 +1791,9 @@
                 });
             }
 
-            if (dOrdersToggle && dOrdersSubmenu) {
-                dOrdersToggle.addEventListener('click', () => {
-                    dOrdersSubmenu.classList.toggle('open');
-                    dOrdersToggle.classList.toggle('dropdown-open');
-                });
-            }
-
-            // Mobile dropdowns
+            // Mobile Customize Site dropdown
             const mCustomizeToggle = document.getElementById('m-customize-toggle');
-            const mCustomizeSubmenu = document.getElementById('m-customize-submenu');
-            const mOrdersToggle = document.getElementById('m-orders-toggle');
-            const mOrdersSubmenu = document.getElementById('m-orders-submenu');
+            const mCustomizeSubmenu = document.querySelector('#m-customize-toggle + .m-submenu');
 
             if (mCustomizeToggle && mCustomizeSubmenu) {
                 mCustomizeToggle.addEventListener('click', () => {
@@ -1596,249 +1802,307 @@
                 });
             }
 
-            if (mOrdersToggle && mOrdersSubmenu) {
-                mOrdersToggle.addEventListener('click', () => {
-                    mOrdersSubmenu.classList.toggle('open');
-                    mOrdersToggle.classList.toggle('dropdown-open');
-                });
+            // Image upload handlers
+            const imageInput = document.getElementById('image-input');
+            const mobileImageInput = document.getElementById('mobile-image-input');
+
+            if (imageInput) {
+                imageInput.addEventListener('change', handleImageUpload);
             }
 
-            // Image upload functionality
-            setupImageUpload('image-upload-zone', 'image-input', 'image-preview-container', 'image-preview');
-            setupImageUpload('mobile-image-upload-zone', 'mobile-image-input', null, null);
-
-            // Initialize preview
-            updatePreview();
-
-            // Update preview when inputs change
-            const inputs = ['popup-title', 'popup-message', 'button-text', 'button-link', 'delay-time'];
-            inputs.forEach(id => {
-                const element = document.getElementById(id);
-                if (element) {
-                    element.addEventListener('input', updatePreview);
-                }
-            });
-
-            // Mobile inputs
-            const mobileInputs = ['mobile-popup-title', 'mobile-popup-message', 'mobile-button-text', 'mobile-button-link', 'mobile-delay-time'];
-            mobileInputs.forEach(id => {
-                const element = document.getElementById(id);
-                if (element) {
-                    element.addEventListener('input', updateMobilePreview);
-                }
-            });
+            if (mobileImageInput) {
+                mobileImageInput.addEventListener('change', handleMobileImageUpload);
+            }
         });
 
-        // Toggle popup enabled/disabled
-        function togglePopup() {
-            const toggle = document.getElementById('popup-toggle');
-            popupEnabled = !popupEnabled;
-            toggle.classList.toggle('active');
-            showToast(`Popup ${popupEnabled ? 'enabled' : 'disabled'}`, !popupEnabled);
+        // ============= IMAGE UPLOAD FUNCTIONS =============
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('Image too large (max 5MB)', true);
+                return;
+            }
+
+            if (!file.type.match('image.*')) {
+                showToast('Please select an image file', true);
+                return;
+            }
+
+            imageFile = file;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const preview = document.getElementById('image-preview');
+                const previewContainer = document.getElementById('image-preview-container');
+                const uploadZone = document.getElementById('image-upload-zone');
+                const conditionalFields = document.getElementById('conditional-fields');
+                const titleLabel = document.getElementById('title-label');
+                const messageLabel = document.getElementById('message-label');
+
+                preview.src = event.target.result;
+                previewContainer.classList.add('active');
+                uploadZone.classList.add('has-image');
+                conditionalFields.style.display = 'block';
+
+                // Remove "required" from title and message labels
+                titleLabel.classList.remove('form-label-required');
+                messageLabel.classList.remove('form-label-required');
+
+                // Hide upload text
+                uploadZone.querySelector('.upload-icon').style.display = 'none';
+                uploadZone.querySelector('.upload-text').style.display = 'none';
+                uploadZone.querySelector('.upload-subtext').style.display = 'none';
+
+                showToast('Image uploaded successfully! Title and message are now optional.', false);
+            };
+            reader.readAsDataURL(file);
         }
 
-        function togglePopupMobile() {
-            const toggle = document.getElementById('mobile-popup-toggle');
-            popupEnabled = !popupEnabled;
-            toggle.classList.toggle('active');
-            showToast(`Popup ${popupEnabled ? 'enabled' : 'disabled'}`, !popupEnabled);
+        function handleMobileImageUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('Image too large (max 5MB)', true);
+                return;
+            }
+
+            if (!file.type.match('image.*')) {
+                showToast('Please select an image file', true);
+                return;
+            }
+
+            mobileImageFile = file;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const preview = document.getElementById('mobile-image-preview');
+                const previewContainer = document.getElementById('mobile-image-preview-container');
+                const uploadZone = document.getElementById('mobile-image-upload-zone');
+
+                preview.src = event.target.result;
+                previewContainer.classList.add('active');
+                uploadZone.classList.add('has-image');
+
+                // Hide upload text
+                uploadZone.querySelector('.upload-icon').style.display = 'none';
+                uploadZone.querySelector('.upload-text').style.display = 'none';
+                uploadZone.querySelector('.upload-subtext').style.display = 'none';
+
+                showToast('Image uploaded! Title and message are now optional.', false);
+            };
+            reader.readAsDataURL(file);
         }
 
-        // Setup image upload
-        function setupImageUpload(uploadZoneId, inputId, previewContainerId, previewId) {
-            const uploadZone = document.getElementById(uploadZoneId);
-            const input = document.getElementById(inputId);
-            
-            if (!uploadZone || !input) return;
-            
-            uploadZone.addEventListener('click', () => input.click());
-            
-            input.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                
-                if (file.size > 5 * 1024 * 1024) {
-                    showToast('Image too large (max 5MB)', true);
-                    return;
-                }
-                
-                if (!file.type.match('image.*')) {
-                    showToast('Please select an image file', true);
-                    return;
-                }
-                
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    uploadedImage = event.target.result;
-                    
-                    // Update preview
-                    if (previewId) {
-                        document.getElementById(previewId).src = uploadedImage;
-                    }
-                    
-                    // Show preview container
-                    if (previewContainerId) {
-                        document.getElementById(previewContainerId).style.display = 'block';
-                        uploadZone.style.display = 'none';
-                    }
-                    
-                    // Update main preview
-                    updatePreview();
-                    
-                    showToast('Image uploaded successfully', false);
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        // Remove uploaded image
         function removeImage() {
-            uploadedImage = null;
-            document.getElementById('image-preview-container').style.display = 'none';
-            document.getElementById('image-upload-zone').style.display = 'flex';
-            document.getElementById('image-input').value = '';
-            updatePreview();
+            imageFile = null;
+            const previewContainer = document.getElementById('image-preview-container');
+            const uploadZone = document.getElementById('image-upload-zone');
+            const conditionalFields = document.getElementById('conditional-fields');
+            const titleLabel = document.getElementById('title-label');
+            const messageLabel = document.getElementById('message-label');
+            const imageInput = document.getElementById('image-input');
+
+            previewContainer.classList.remove('active');
+            uploadZone.classList.remove('has-image');
+            conditionalFields.style.display = 'none';
+
+            // Restore upload text
+            uploadZone.querySelector('.upload-icon').style.display = 'flex';
+            uploadZone.querySelector('.upload-text').style.display = 'block';
+            uploadZone.querySelector('.upload-subtext').style.display = 'block';
+
+            // Add "required" back to title and message labels
+            titleLabel.classList.add('form-label-required');
+            messageLabel.classList.add('form-label-required');
+
+            // Clear file input
+            if (imageInput) {
+                imageInput.value = '';
+            }
+
             showToast('Image removed', false);
         }
 
-        // Update desktop preview
-        function updatePreview() {
-            const title = document.getElementById('popup-title').value;
-            const message = document.getElementById('popup-message').value;
-            const buttonText = document.getElementById('button-text').value;
-            const buttonLink = document.getElementById('button-link').value;
-            const delay = document.getElementById('delay-time').value;
+        function removeMobileImage() {
+            mobileImageFile = null;
+            const previewContainer = document.getElementById('mobile-image-preview-container');
+            const uploadZone = document.getElementById('mobile-image-upload-zone');
+            const mobileImageInput = document.getElementById('mobile-image-input');
 
-            // Update preview elements
-            document.getElementById('preview-title').textContent = title || 'Special Offer!';
-            document.getElementById('preview-message').textContent = message || 'Get 20% off on your first order';
-            document.getElementById('preview-button').textContent = buttonText || 'Shop Now';
-            document.getElementById('preview-button').href = buttonLink || '#';
-            document.getElementById('preview-delay').textContent = delay || '5';
+            previewContainer.classList.remove('active');
+            uploadZone.classList.remove('has-image');
 
-            // Handle image preview
-            const imageContainer = document.getElementById('preview-image-container');
-            const textContent = document.getElementById('preview-text-content');
-            
-            if (uploadedImage) {
-                document.getElementById('preview-image').src = uploadedImage;
-                imageContainer.style.display = 'block';
-                textContent.style.display = 'none';
-            } else {
-                imageContainer.style.display = 'none';
-                textContent.style.display = 'block';
+            // Restore upload text
+            uploadZone.querySelector('.upload-icon').style.display = 'flex';
+            uploadZone.querySelector('.upload-text').style.display = 'block';
+            uploadZone.querySelector('.upload-subtext').style.display = 'block';
+
+            // Clear file input
+            if (mobileImageInput) {
+                mobileImageInput.value = '';
             }
+
+            showToast('Image removed', false);
         }
 
-        // Update mobile preview
-        function updateMobilePreview() {
-            const title = document.getElementById('mobile-popup-title').value;
-            const message = document.getElementById('mobile-popup-message').value;
+        // ============= TOGGLE FUNCTIONS =============
+        function togglePopup() {
+            const toggle = document.getElementById('popup-toggle');
+            toggle.classList.toggle('active');
             
-            const previewTitle = document.getElementById('mobile-preview-title');
-            const previewMessage = document.getElementById('mobile-preview-message');
-            
-            if (previewTitle) previewTitle.textContent = title || 'Special Offer!';
-            if (previewMessage) previewMessage.textContent = message || 'Get 20% off on your first order';
+            const isActive = toggle.classList.contains('active');
+            showToast(`Popup ${isActive ? 'enabled' : 'disabled'}`, false);
         }
 
-        // Preview popup
-        function previewPopup() {
-            const title = document.getElementById('popup-title').value || document.getElementById('mobile-popup-title').value;
-            showToast(`Previewing popup: "${title}"`, false);
+        function toggleMobilePopup() {
+            const toggle = document.getElementById('mobile-popup-toggle');
+            toggle.classList.toggle('active');
             
-            // In a real app, this would show an actual popup preview
-            // For now, we'll just update the preview card
-            updatePreview();
-            updateMobilePreview();
+            const isActive = toggle.classList.contains('active');
+            showToast(`Popup ${isActive ? 'enabled' : 'disabled'}`, false);
         }
 
-        // Save popup settings
+        // ============= SAVE FUNCTIONS =============
         function savePopupSettings() {
-            const title = document.getElementById('popup-title').value || document.getElementById('mobile-popup-title').value;
-            const message = document.getElementById('popup-message').value || document.getElementById('mobile-popup-message').value;
-            const buttonText = document.getElementById('button-text').value || document.getElementById('mobile-button-text').value;
-            const buttonLink = document.getElementById('button-link').value || document.getElementById('mobile-button-link').value;
-            const delay = document.getElementById('delay-time').value || document.getElementById('mobile-delay-time').value;
+            const isEnabled = document.getElementById('popup-toggle').classList.contains('active');
+            const title = document.getElementById('popup-title').value.trim();
+            const message = document.getElementById('popup-message').value.trim();
+            const buttonText = document.getElementById('button-text').value.trim();
+            const buttonLink = document.getElementById('button-link').value.trim();
+            const delayTime = document.getElementById('delay-time').value;
+            const displayFrequency = document.getElementById('display-frequency').value;
 
-            // Validate
-            if (!title.trim()) {
-                showToast('Please enter a popup title', true);
+            // Validation
+            if (!isEnabled) {
+                showToast('Popup is disabled. Enable it to save settings.', false);
                 return;
             }
 
-            if (!message.trim() && !uploadedImage) {
-                showToast('Please enter a popup message or upload an image', true);
+            if (!imageFile && (!title || !message)) {
+                showToast('Please enter both title and message, or upload an image', true);
                 return;
             }
 
-            if (!buttonText.trim()) {
-                showToast('Please enter button text', true);
+            if (!buttonText || !buttonLink || !delayTime) {
+                showToast('Please fill all required fields', true);
                 return;
             }
 
-            // Simulate save to server
+            // Prepare data
             const popupData = {
-                enabled: popupEnabled,
-                title: title,
-                message: message,
-                buttonText: buttonText,
-                buttonLink: buttonLink,
-                delay: parseInt(delay) || 5,
-                image: uploadedImage
+                enabled: isEnabled,
+                title: imageFile ? '' : title,
+                message: imageFile ? '' : message,
+                buttonText,
+                buttonLink,
+                delayTime: parseInt(delayTime),
+                displayFrequency,
+                hasImage: !!imageFile,
+                imageFile: imageFile ? imageFile.name : null,
+                lastUpdated: new Date().toISOString()
             };
 
+            // Simulate save to backend
             console.log('Saving popup settings:', popupData);
             
-            // Show success message
             showToast('Popup settings saved successfully!', false);
             
-            // Close mobile drawer if open
-            document.getElementById('m-overlay').classList.remove('open');
-            
-            // In a real app, you would send this data to your server
-            // For demo purposes, we'll store in localStorage
-            localStorage.setItem('popupSettings', JSON.stringify(popupData));
+            // Simulate API call delay
+            setTimeout(() => {
+                showToast('Popup is now active on your store', false);
+            }, 1000);
         }
 
-        // Toast notification
+        function saveMobilePopupSettings() {
+            const isEnabled = document.getElementById('mobile-popup-toggle').classList.contains('active');
+            const title = document.getElementById('mobile-popup-title').value.trim();
+            const message = document.getElementById('mobile-popup-message').value.trim();
+            const buttonText = document.getElementById('mobile-button-text').value.trim();
+            const buttonLink = document.getElementById('mobile-button-link').value.trim();
+            const delayTime = document.getElementById('mobile-delay-time').value;
+            const displayFrequency = document.getElementById('mobile-display-frequency').value;
+
+            // Validation
+            if (!isEnabled) {
+                showToast('Popup is disabled. Enable it to save settings.', false);
+                return;
+            }
+
+            if (!mobileImageFile && (!title || !message)) {
+                showToast('Please enter both title and message, or upload an image', true);
+                return;
+            }
+
+            if (!buttonText || !buttonLink || !delayTime) {
+                showToast('Please fill all required fields', true);
+                return;
+            }
+
+            // Prepare data
+            const popupData = {
+                enabled: isEnabled,
+                title: mobileImageFile ? '' : title,
+                message: mobileImageFile ? '' : message,
+                buttonText,
+                buttonLink,
+                delayTime: parseInt(delayTime),
+                displayFrequency,
+                hasImage: !!mobileImageFile,
+                imageFile: mobileImageFile ? mobileImageFile.name : null,
+                lastUpdated: new Date().toISOString()
+            };
+
+            // Simulate save to backend
+            console.log('Saving mobile popup settings:', popupData);
+            
+            showToast('Popup settings saved successfully!', false);
+            
+            // Close drawer if open
+            document.getElementById('m-overlay').classList.remove('open');
+        }
+
+        // ============= UTILITY FUNCTIONS =============
+        function resetForm() {
+            // Reset desktop form
+            document.getElementById('popup-title').value = 'Special Offer!';
+            document.getElementById('popup-message').value = 'Get 20% off on your first order! Use code: WELCOME20';
+            document.getElementById('button-text').value = 'Shop Now';
+            document.getElementById('button-link').value = '/shop';
+            document.getElementById('delay-time').value = '5';
+            document.getElementById('display-frequency').value = 'once_per_session';
+            
+            // Reset image
+            if (imageFile) {
+                removeImage();
+            }
+            
+            // Enable popup
+            document.getElementById('popup-toggle').classList.add('active');
+            
+            showToast('Form reset to default values', false);
+        }
+
         function showToast(message, isError) {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${isError ? 'error' : ''}`;
+            const toast = document.getElementById('toast');
+            toast.innerHTML = `
+                <div class="toast ${isError ? 'error' : ''}">
+                    <div class="toast-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            ${isError ? 
+                                '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>' : 
+                                '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>'}
+                        </svg>
+                    </div>
+                    <div class="toast-message">${message}</div>
+                </div>
+            `;
             
-            const icon = isError ? 
-                `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-                </svg>` :
-                `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-                </svg>`;
-            
-            toast.innerHTML = `${icon}<span>${message}</span>`;
-            container.appendChild(toast);
-            
-            // Remove after 3 seconds
+            // Remove toast after 3 seconds
             setTimeout(() => {
-                toast.style.animation = 'slideUp 0.3s ease reverse';
-                setTimeout(() => toast.remove(), 300);
+                toast.innerHTML = '';
             }, 3000);
         }
-
-        // Load saved settings on page load
-        window.addEventListener('load', () => {
-            const saved = localStorage.getItem('popupSettings');
-            if (saved) {
-                try {
-                    const data = JSON.parse(saved);
-                    // Apply saved settings to form
-                    // This would populate the form fields with saved data
-                    console.log('Loaded saved settings:', data);
-                } catch (e) {
-                    console.error('Error loading saved settings:', e);
-                }
-            }
-        });
     </script>
 </body>
 </html>
