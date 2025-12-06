@@ -11,9 +11,6 @@
         :root {
             --header-height-desktop: 70px;
             --sidebar-width: 260px;
-            --row-height: 48px;
-            --sidebar-bg: #ffffff;
-            --header-bg: #ffffff;
             --page-bg: #f4f5f7;
             --text-color: rgb(24, 24, 26);
             --icon-color: #6b7280;
@@ -28,19 +25,14 @@
             --switch-on: #5127ba;
             --switch-off: #9CA3AF;
             --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --radius-md: 8px;
-            --radius-lg: 12px;
-            --skeleton-color: #f0f0f0;
-            --skeleton-highlight: #f8f8f8;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { min-height: 100vh; background: var(--page-bg); font-family: "DM Sans", sans-serif; font-size: 14px; color: var(--text-color); overflow-x: hidden; }
 
-        /* LAYOUT & UTILS */
+        /* LAYOUT */
         .page-desktop { display: flex; flex-direction: column; min-height: 100vh; }
         .d-topbar { height: var(--header-height-desktop); background: white; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; padding-left: 40px; position: fixed; top: 0; width: 100%; z-index: 100; }
-        .d-topbar-logo { height: 52px; width: auto; }
         .d-app { display: flex; margin-top: var(--header-height-desktop); height: calc(100vh - var(--header-height-desktop)); }
         .d-sidebar { width: var(--sidebar-width); background: white; border-right: 1px solid var(--border-subtle); height: 100%; overflow-y: auto; position: fixed; }
         .d-content { margin-left: var(--sidebar-width); flex: 1; padding: 24px; overflow-y: auto; }
@@ -55,15 +47,14 @@
         .d-submenu-item:hover { background: var(--hover-bg); }
         .d-submenu-item.active { background: var(--active-bg); color: var(--brand-primary); }
         
-        /* CARD & SECTIONS */
+        /* CARD */
         .sections-manager-card { background: white; border-radius: 12px; border: 1px solid var(--border-subtle); padding: 32px; box-shadow: var(--shadow-premium); }
-        .toggle-container { display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 20px; border-radius: 12px; border: 1px solid var(--border-subtle); margin-bottom: 30px; }
-        .toggle-switch { width: 52px; height: 28px; background: var(--switch-off); border-radius: 20px; position: relative; cursor: pointer; transition: 0.3s; }
+        .toggle-switch { width: 44px; height: 24px; background: var(--switch-off); border-radius: 20px; position: relative; cursor: pointer; transition: 0.3s; flex-shrink: 0; }
         .toggle-switch.active { background: var(--switch-on); }
-        .toggle-switch::after { content: ''; position: absolute; width: 24px; height: 24px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: 0.3s; }
-        .toggle-switch.active::after { transform: translateX(24px); }
+        .toggle-switch::after { content: ''; position: absolute; width: 20px; height: 20px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: 0.3s; }
+        .toggle-switch.active::after { transform: translateX(20px); }
 
-        /* PRODUCT GRID & LIST */
+        /* PRODUCT GRID */
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 16px; }
         .product-card { border: 1px solid var(--border-subtle); border-radius: 8px; overflow: hidden; cursor: pointer; position: relative; transition: 0.2s; }
         .product-card:hover { border-color: var(--brand-primary); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
@@ -75,10 +66,14 @@
         .product-select-checkbox.checked { background: var(--brand-primary); border-color: var(--brand-primary); color: white; }
         .product-select-checkbox.checked::after { content: '✓'; font-size: 12px; font-weight: bold; }
 
-        /* SELECTED LIST (DRAGGABLE) */
-        .selected-product-item, .category-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: white; border: 1px solid var(--border-subtle); border-radius: 8px; margin-bottom: 8px; cursor: grab; }
-        .selected-product-item.dragging, .category-item.dragging { opacity: 0.5; background: #f3f4f6; }
-        .drag-handle { color: #9ca3af; cursor: grab; }
+        /* LIST ITEMS (DRAGGABLE) */
+        .draggable-list { display: flex; flex-direction: column; gap: 8px; }
+        .list-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: white; border: 1px solid var(--border-subtle); border-radius: 8px; cursor: grab; transition: background 0.2s; user-select: none; }
+        .list-item:hover { border-color: #d1d5db; }
+        .list-item.dragging { opacity: 0.5; background: #f3f4f6; border: 1px dashed var(--brand-primary); }
+        .drag-handle { color: #9ca3af; cursor: grab; font-size: 18px; padding: 4px; }
+        .list-item:active { cursor: grabbing; }
+        
         .action-btn { width: 32px; height: 32px; border: 1px solid var(--border-subtle); border-radius: 6px; background: white; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #6b7280; }
         .action-btn:hover { background: #f9fafb; color: var(--text-color); }
         .action-btn.delete:hover { color: var(--danger-color); border-color: #fecaca; background: #fef2f2; }
@@ -147,15 +142,7 @@
             </div>
 
             <div class="sections-manager-card">
-                <!-- Global Enable -->
-                <div class="toggle-container">
-                    <div>
-                        <div style="font-weight: 600; font-size: 16px;">Enable All Sections</div>
-                        <div style="color: #6b7280; font-size: 13px;">Show/Hide all store sections on your homepage</div>
-                    </div>
-                    <div class="toggle-switch" id="global-toggle" onclick="toggleGlobal()"></div>
-                </div>
-
+                
                 <!-- Best Sellers -->
                 <div style="margin-bottom: 40px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -163,7 +150,7 @@
                         <button class="btn btn-primary" onclick="openProductSelector()">+ Add Products</button>
                     </div>
                     
-                    <div id="selected-products-list">
+                    <div id="selected-products-list" class="draggable-list">
                         <!-- Populated by JS -->
                         <div style="text-align: center; padding: 40px; background: #f9fafb; border-radius: 8px; color: #6b7280;">
                             Loading selected products...
@@ -179,7 +166,7 @@
                             <p style="font-size: 13px; color: #6b7280;">Drag to rearrange display order</p>
                         </div>
                     </div>
-                    <div id="categories-list">
+                    <div id="categories-list" class="draggable-list">
                         <!-- Populated by JS -->
                         <div style="text-align: center; padding: 40px; background: #f9fafb; border-radius: 8px; color: #6b7280;">
                             Loading categories...
@@ -216,21 +203,15 @@
 
         <main class="m-main">
             <div class="m-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <b>Enable All Sections</b>
-                    <div class="toggle-switch" id="mobile-global-toggle" onclick="toggleGlobal()"></div>
-                </div>
-            </div>
-
-            <div class="m-card">
                 <h3 style="margin-bottom: 15px;">Best Sellers</h3>
-                <div id="mobile-selected-products"></div>
-                <button class="btn btn-secondary" style="width: 100%; margin-top: 10px;" onclick="openProductSelector()">Edit Selection</button>
+                <div id="mobile-selected-products" class="draggable-list"></div>
+                <button class="btn btn-secondary" style="width: 100%; margin-top: 15px;" onclick="openProductSelector()">Edit Selection</button>
             </div>
 
             <div class="m-card">
                 <h3 style="margin-bottom: 15px;">Categories Order</h3>
-                <div id="mobile-categories-list"></div>
+                <p style="font-size:12px; color:#6b7280; margin-bottom:10px;">Long press & drag to reorder</p>
+                <div id="mobile-categories-list" class="draggable-list"></div>
             </div>
 
             <button class="btn btn-primary" style="width: 100%; position: fixed; bottom: 0; left: 0; border-radius: 0; padding: 15px; z-index: 90;" onclick="saveSections()">Save All Changes</button>
@@ -280,54 +261,48 @@
         };
         const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
 
-        // Initialize Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // --- STATE MANAGEMENT ---
+        // --- STATE ---
         let state = {
             allProducts: [],
-            selectedProductIds: [], // Strings (Product IDs)
-            categories: [], // Array of objects {id, name, order, enabled}
-            globalEnabled: true
+            selectedProductIds: [],
+            categories: []
         };
-
-        // Drag and Drop State
-        let dragSrcEl = null;
 
         // --- AUTH & INIT ---
         auth.onAuthStateChanged(user => {
             if (user && user.email === ADMIN_EMAIL) {
                 loadData();
             } else {
-                window.location.href = 'index.html'; // Redirect if not admin
+                window.location.href = 'index.html';
             }
         });
 
-        // --- DATA LOADING ---
+        // --- LOAD DATA ---
         async function loadData() {
             showToast('Loading data...');
             try {
-                // 1. Fetch All Products
+                // 1. Fetch Products
                 const prodsSnap = await db.collection('products').get();
                 state.allProducts = prodsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-                // 2. Fetch All Categories (Source of Truth for available categories)
+                // 2. Fetch DB Categories
                 const catsSnap = await db.collection('categories').get();
                 const dbCategories = catsSnap.docs.map(doc => ({ id: doc.id, name: doc.data().name }));
 
-                // 3. Fetch Saved Configuration
+                // 3. Fetch Saved Config
                 const configDoc = await db.collection('landingPage').doc('Sections').get();
                 
                 if (configDoc.exists) {
                     const data = configDoc.data();
-                    state.globalEnabled = data.allSectionsEnabled !== false;
                     state.selectedProductIds = data.bestSellers || [];
                     
-                    // Merge saved category config with actual DB categories
+                    // Merge saved order with current DB categories
                     const savedCats = data.categories || [];
                     state.categories = dbCategories.map(dbCat => {
                         const saved = savedCats.find(sc => sc.id === dbCat.id);
@@ -339,55 +314,39 @@
                         };
                     }).sort((a, b) => a.order - b.order);
                 } else {
-                    // Default State if no config exists
                     state.categories = dbCategories.map((c, i) => ({ ...c, enabled: true, order: i + 1 }));
                 }
 
                 renderAll();
             } catch (error) {
-                console.error("Error loading data:", error);
+                console.error("Error:", error);
                 showToast("Failed to load data", true);
             }
         }
 
-        // --- RENDERING ---
         function renderAll() {
-            updateGlobalToggleUI();
-            renderSelectedProducts();
-            renderCategories();
+            renderSelectedProducts('selected-products-list');
+            renderSelectedProducts('mobile-selected-products'); // Mobile specific
+            renderCategories('categories-list');
+            renderCategories('mobile-categories-list'); // Mobile specific
         }
 
-        function updateGlobalToggleUI() {
-            const el = document.getElementById('global-toggle');
-            const mobileEl = document.getElementById('mobile-global-toggle');
-            if(state.globalEnabled) {
-                el.classList.add('active');
-                if(mobileEl) mobileEl.classList.add('active');
-            } else {
-                el.classList.remove('active');
-                if(mobileEl) mobileEl.classList.remove('active');
-            }
-        }
+        // --- RENDER PRODUCTS LIST ---
+        function renderSelectedProducts(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
 
-        // 1. Selected Products Render
-        function renderSelectedProducts() {
-            const listEl = document.getElementById('selected-products-list');
-            const mobileEl = document.getElementById('mobile-selected-products');
-            
-            // Filter full product objects based on selected IDs
             const selectedObjs = state.selectedProductIds
                 .map(id => state.allProducts.find(p => p.id === id))
-                .filter(p => p); // remove nulls if product deleted
+                .filter(p => p);
 
             if (selectedObjs.length === 0) {
-                const emptyHTML = `<div style="text-align:center; padding:20px; background:#f9fafb; border-radius:8px;">No products selected.</div>`;
-                listEl.innerHTML = emptyHTML;
-                if(mobileEl) mobileEl.innerHTML = emptyHTML;
+                container.innerHTML = `<div style="text-align:center; padding:20px; background:#f9fafb; border-radius:8px;">No products selected.</div>`;
                 return;
             }
 
-            const html = selectedObjs.map((p, index) => `
-                <div class="selected-product-item" draggable="true" data-index="${index}" data-type="product">
+            container.innerHTML = selectedObjs.map((p, index) => `
+                <div class="list-item" draggable="true" data-index="${index}" data-type="product">
                     <span class="drag-handle">☰</span>
                     <img src="${p.image || p.images?.[0] || 'https://via.placeholder.com/40'}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">
                     <div style="flex:1">
@@ -398,58 +357,97 @@
                 </div>
             `).join('');
 
-            listEl.innerHTML = html;
-            if(mobileEl) mobileEl.innerHTML = html; // Re-use html for mobile for simplicity
-
-            addDragListeners(listEl, 'product');
+            attachDragEvents(container, 'product');
         }
 
-        // 2. Categories Render
-        function renderCategories() {
-            const listEl = document.getElementById('categories-list');
-            const mobileEl = document.getElementById('mobile-categories-list');
+        // --- RENDER CATEGORIES LIST ---
+        function renderCategories(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
 
-            const html = state.categories.map((cat, index) => `
-                <div class="category-item" draggable="true" data-index="${index}" data-type="category">
+            container.innerHTML = state.categories.map((cat, index) => `
+                <div class="list-item" draggable="true" data-index="${index}" data-type="category">
                     <span class="drag-handle">☰</span>
                     <div style="flex:1">
                         <div style="font-weight:600">${cat.name}</div>
                         <div style="font-size:12px; color:${cat.enabled ? '#10B981' : '#9CA3AF'}">${cat.enabled ? 'Visible' : 'Hidden'}</div>
                     </div>
-                    <div class="toggle-switch ${cat.enabled ? 'active' : ''}" style="transform:scale(0.8);" onclick="toggleCategory('${cat.id}')"></div>
+                    <div class="toggle-switch ${cat.enabled ? 'active' : ''}" onclick="toggleCategory('${cat.id}')"></div>
                 </div>
             `).join('');
 
-            listEl.innerHTML = html;
-            if(mobileEl) mobileEl.innerHTML = html;
+            attachDragEvents(container, 'category');
+        }
 
-            addDragListeners(listEl, 'category');
+        // --- DRAG & DROP LOGIC (FIXED) ---
+        function attachDragEvents(container, type) {
+            const items = container.querySelectorAll('.list-item');
+            
+            items.forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    item.classList.add('dragging');
+                    // Store source index
+                    e.dataTransfer.setData('text/plain', item.dataset.index);
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+
+                item.addEventListener('dragend', () => {
+                    item.classList.remove('dragging');
+                });
+
+                item.addEventListener('dragover', (e) => {
+                    e.preventDefault(); // Necessary to allow dropping
+                    e.dataTransfer.dropEffect = 'move';
+                });
+
+                item.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const sourceIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                    
+                    // Identify target row reliably
+                    const targetRow = e.target.closest('.list-item');
+                    if (!targetRow) return;
+                    
+                    const targetIndex = parseInt(targetRow.dataset.index);
+
+                    if (sourceIndex === targetIndex) return;
+
+                    // Execute Swap Logic
+                    if (type === 'product') {
+                        const itemToMove = state.selectedProductIds.splice(sourceIndex, 1)[0];
+                        state.selectedProductIds.splice(targetIndex, 0, itemToMove);
+                        renderSelectedProducts('selected-products-list');
+                        renderSelectedProducts('mobile-selected-products');
+                    } else if (type === 'category') {
+                        const itemToMove = state.categories.splice(sourceIndex, 1)[0];
+                        state.categories.splice(targetIndex, 0, itemToMove);
+                        // Update order properties
+                        state.categories.forEach((c, i) => c.order = i + 1);
+                        renderCategories('categories-list');
+                        renderCategories('mobile-categories-list');
+                    }
+                });
+            });
         }
 
         // --- INTERACTIONS ---
-
-        function toggleGlobal() {
-            state.globalEnabled = !state.globalEnabled;
-            updateGlobalToggleUI();
-        }
-
         function toggleCategory(catId) {
             const cat = state.categories.find(c => c.id === catId);
             if (cat) {
                 cat.enabled = !cat.enabled;
-                renderCategories();
+                renderCategories('categories-list');
+                renderCategories('mobile-categories-list');
             }
         }
 
         function removeProduct(id) {
             state.selectedProductIds = state.selectedProductIds.filter(pid => pid !== id);
-            renderSelectedProducts();
+            renderSelectedProducts('selected-products-list');
+            renderSelectedProducts('mobile-selected-products');
         }
 
         function resetChanges() {
-            if(confirm("Discard unsaved changes and reload data?")) {
-                loadData();
-            }
+            if(confirm("Discard changes?")) loadData();
         }
 
         // --- MODAL LOGIC ---
@@ -457,20 +455,20 @@
 
         function openProductSelector() {
             tempSelectedIds = [...state.selectedProductIds];
-            const modal = document.getElementById('product-modal');
-            const grid = document.getElementById('modal-product-grid');
-            
-            // Initial Render of Modal Grid
-            renderModalGrid(grid);
+            document.getElementById('product-modal').style.display = 'flex';
+            renderModalGrid();
             updateModalCount();
-            
-            modal.style.display = 'flex';
         }
 
-        function renderModalGrid(container) {
+        function closeProductSelector() {
+            document.getElementById('product-modal').style.display = 'none';
+        }
+
+        function renderModalGrid() {
             const searchVal = document.getElementById('modal-search').value.toLowerCase();
+            const grid = document.getElementById('modal-product-grid');
             
-            container.innerHTML = state.allProducts
+            grid.innerHTML = state.allProducts
                 .filter(p => p.name.toLowerCase().includes(searchVal))
                 .map(p => {
                     const isSelected = tempSelectedIds.includes(p.id);
@@ -494,96 +492,28 @@
             } else {
                 tempSelectedIds.push(id);
             }
-            renderModalGrid(document.getElementById('modal-product-grid'));
+            renderModalGrid();
             updateModalCount();
         }
 
-        function filterModalProducts() {
-            renderModalGrid(document.getElementById('modal-product-grid'));
-        }
-
-        function updateModalCount() {
-            document.getElementById('modal-selected-count').innerText = tempSelectedIds.length;
-        }
+        function filterModalProducts() { renderModalGrid(); }
+        function updateModalCount() { document.getElementById('modal-selected-count').innerText = tempSelectedIds.length; }
 
         function confirmProductSelection() {
             state.selectedProductIds = [...tempSelectedIds];
-            renderSelectedProducts();
+            renderSelectedProducts('selected-products-list');
+            renderSelectedProducts('mobile-selected-products');
             closeProductSelector();
-        }
-
-        function closeProductSelector() {
-            document.getElementById('product-modal').style.display = 'none';
-        }
-
-        // --- DRAG AND DROP ---
-        function addDragListeners(container, type) {
-            const items = container.querySelectorAll('.selected-product-item, .category-item');
-            items.forEach(item => {
-                item.addEventListener('dragstart', handleDragStart);
-                item.addEventListener('dragenter', handleDragEnter);
-                item.addEventListener('dragover', handleDragOver);
-                item.addEventListener('dragleave', handleDragLeave);
-                item.addEventListener('drop', (e) => handleDrop(e, type));
-                item.addEventListener('dragend', handleDragEnd);
-            });
-        }
-
-        function handleDragStart(e) {
-            this.style.opacity = '0.4';
-            dragSrcEl = this;
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/html', this.innerHTML);
-        }
-
-        function handleDragOver(e) {
-            if (e.preventDefault) e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            return false;
-        }
-
-        function handleDragEnter(e) { this.classList.add('over'); }
-        function handleDragLeave(e) { this.classList.remove('over'); }
-
-        function handleDrop(e, type) {
-            if (e.stopPropagation) e.stopPropagation();
-
-            if (dragSrcEl !== this) {
-                const srcIndex = parseInt(dragSrcEl.getAttribute('data-index'));
-                const targetIndex = parseInt(this.getAttribute('data-index'));
-
-                if (type === 'product') {
-                    // Move item in array
-                    const item = state.selectedProductIds.splice(srcIndex, 1)[0];
-                    state.selectedProductIds.splice(targetIndex, 0, item);
-                    renderSelectedProducts();
-                } else if (type === 'category') {
-                    const item = state.categories.splice(srcIndex, 1)[0];
-                    state.categories.splice(targetIndex, 0, item);
-                    // Re-assign order based on new index
-                    state.categories.forEach((cat, idx) => cat.order = idx + 1);
-                    renderCategories();
-                }
-            }
-            return false;
-        }
-
-        function handleDragEnd() {
-            this.style.opacity = '1';
-            const items = document.querySelectorAll('.selected-product-item, .category-item');
-            items.forEach(item => item.classList.remove('over'));
         }
 
         // --- SAVING ---
         async function saveSections() {
-            const btn = document.querySelector('.btn-primary');
+            const btn = document.querySelector('.page-desktop .btn-primary') || document.querySelector('.page-mobile .btn-primary'); // grab either
             const originalText = btn.innerText;
             btn.innerText = "Saving...";
             btn.disabled = true;
 
             try {
-                // Prepare Categories payload (strip names if you want to save generic, but here saving fully)
-                // It's cleaner to save minimal data, but saving name helps if category name changes later (trade-off)
                 const categoriesPayload = state.categories.map((c, idx) => ({
                     id: c.id,
                     order: idx + 1,
@@ -591,32 +521,28 @@
                 }));
 
                 const payload = {
-                    allSectionsEnabled: state.globalEnabled,
                     bestSellers: state.selectedProductIds,
                     categories: categoriesPayload,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
                 await db.collection('landingPage').doc('Sections').set(payload, { merge: true });
-                
-                showToast("Sections updated successfully!");
+                showToast("Changes saved successfully!");
             } catch (error) {
                 console.error("Save error:", error);
-                showToast("Error saving sections", true);
+                showToast("Error saving changes", true);
             } finally {
                 btn.innerText = originalText;
                 btn.disabled = false;
             }
         }
 
-        // --- UTILS ---
         function showToast(msg, isError = false) {
             const toast = document.createElement('div');
             toast.className = 'toast-msg';
             if (isError) toast.style.borderLeftColor = 'var(--danger-color)';
             toast.innerText = msg;
-            const container = document.getElementById('toast');
-            container.appendChild(toast);
+            document.getElementById('toast').appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         }
     </script>
