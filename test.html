@@ -79,11 +79,11 @@
         .form-control { width: 100%; padding: 10px; border: 1px solid var(--border-subtle); border-radius: 8px; }
         
         /* IMAGE UPLOAD */
-        .image-upload-zone { border: 2px dashed #e5e7eb; padding: 30px; text-align: center; border-radius: 12px; cursor: pointer; margin-bottom: 16px; }
+        .image-upload-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .image-upload-zone { border: 2px dashed #e5e7eb; padding: 20px; text-align: center; border-radius: 12px; cursor: pointer; position: relative; min-height: 180px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: white; }
         .image-upload-zone:hover { border-color: var(--brand-primary); background: #f9fafb; }
-        .image-preview-container { margin-top: 10px; display: none; flex-direction: column; align-items: center; }
-        .image-preview-container.active { display: flex; }
-        .image-preview { max-height: 150px; border-radius: 8px; border: 1px solid var(--border-subtle); }
+        .image-preview { max-width: 100%; max-height: 140px; border-radius: 8px; object-fit: contain; margin-bottom: 10px; }
+        .remove-img-btn { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); border: 1px solid #e5e7eb; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: var(--danger-color); cursor: pointer; font-size: 16px; }
 
         /* BUTTONS */
         .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
@@ -94,7 +94,7 @@
 
         /* MODAL */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-        .modal-content { background: white; width: 90%; max-width: 600px; border-radius: 12px; display: flex; flex-direction: column; max-height: 85vh; }
+        .modal-content { background: white; width: 90%; max-width: 700px; border-radius: 12px; display: flex; flex-direction: column; max-height: 90vh; }
         .modal-header { padding: 16px 24px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 18px; }
         .modal-body { padding: 24px; overflow-y: auto; }
         .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: flex-end; gap: 12px; }
@@ -111,7 +111,7 @@
             .page-mobile { display: block; }
             .m-header { height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; background: white; border-bottom: 1px solid var(--border-subtle); position: fixed; top: 0; width: 100%; z-index: 50; }
             .m-main { margin-top: 70px; padding: 16px; padding-bottom: 100px; }
-            .form-grid { grid-template-columns: 1fr; }
+            .form-grid, .image-upload-wrapper { grid-template-columns: 1fr; }
             
             /* Mobile Drawer */
             .m-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: none; }
@@ -252,7 +252,7 @@
             <div style="margin-bottom: 16px;">
                 <h3 style="margin-bottom: 12px;">Slides</h3>
                 <div id="mobile-slider-list" style="display: flex; flex-direction: column; gap: 12px;"></div>
-                <button class="btn btn-secondary" style="width: 100%; margin-top: 12px;" onclick="openAddSlideModal()">+ Add Slide</button>
+                <button class="btn btn-secondary" style="width: 100%; margin-top: 12px;" onclick="openSlideModal()">+ Add Slide</button>
             </div>
 
             <button class="btn btn-primary" style="width: 100%; position: fixed; bottom: 0; left: 0; border-radius: 0; padding: 15px; z-index: 90;" onclick="saveMobileHeroSettings()">Save Changes</button>
@@ -268,44 +268,56 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label class="form-label">Image</label>
-                    <div class="image-upload-zone" id="modal-upload-zone" onclick="document.getElementById('modal-image-input').click()">
-                        <div class="upload-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                        </div>
-                        <div class="upload-text">Click to upload image</div>
-                        <div class="image-preview-container" id="modal-preview-container">
-                            <img id="modal-image-preview" class="image-preview">
-                            <div style="margin-top: 8px;">
-                                <button type="button" class="btn btn-sm btn-danger" onclick="event.stopPropagation(); removeModalImage()">Remove</button>
+                    <label class="form-label">Slide Images</label>
+                    <div class="image-upload-wrapper">
+                        <!-- Desktop Image -->
+                        <div class="image-upload-zone" id="desktop-upload-zone" onclick="document.getElementById('desktop-img-input').click()">
+                            <div id="desktop-placeholder">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto; display: block; margin-bottom: 8px;"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                <div>Desktop Image</div>
+                                <div style="font-size: 11px; color: #6b7280;">Recommended: 1920x600px</div>
                             </div>
+                            <img id="desktop-preview" class="image-preview" style="display: none;">
+                            <div class="remove-img-btn" id="remove-desktop-btn" style="display: none;" onclick="event.stopPropagation(); removeImage('desktop')">✕</div>
                         </div>
+                        <input type="file" id="desktop-img-input" style="display: none;" accept="image/*" onchange="handleImageUpload(this, 'desktop')">
+
+                        <!-- Mobile Image -->
+                        <div class="image-upload-zone" id="mobile-upload-zone" onclick="document.getElementById('mobile-img-input').click()">
+                            <div id="mobile-placeholder">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto; display: block; margin-bottom: 8px;"><rect width="14" height="20" x="5" y="2" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                                <div>Mobile Image</div>
+                                <div style="font-size: 11px; color: #6b7280;">Recommended: 800x1000px</div>
+                            </div>
+                            <img id="mobile-preview" class="image-preview" style="display: none;">
+                            <div class="remove-img-btn" id="remove-mobile-btn" style="display: none;" onclick="event.stopPropagation(); removeImage('mobile')">✕</div>
+                        </div>
+                        <input type="file" id="mobile-img-input" style="display: none;" accept="image/*" onchange="handleImageUpload(this, 'mobile')">
                     </div>
-                    <input type="file" id="modal-image-input" style="display: none;" accept="image/*" onchange="handleModalImageUpload(this)">
                 </div>
                 
                 <div class="form-group">
                     <label class="form-label">Title</label>
-                    <input type="text" class="form-control" id="modal-slide-title" placeholder="Summer Collection">
+                    <input type="text" class="form-control" id="slide-title" placeholder="Summer Collection">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Description</label>
-                    <input type="text" class="form-control" id="modal-slide-desc" placeholder="Up to 50% off">
+                    <input type="text" class="form-control" id="slide-desc" placeholder="Up to 50% off">
                 </div>
                 <div class="form-grid">
                     <div class="form-group">
                         <label class="form-label">Button Text</label>
-                        <input type="text" class="form-control" id="modal-button-text" placeholder="Shop Now">
+                        <input type="text" class="form-control" id="slide-btn-text" placeholder="Shop Now">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Button Link</label>
-                        <input type="text" class="form-control" id="modal-button-link" placeholder="/shop">
+                        <input type="text" class="form-control" id="slide-btn-link" placeholder="/shop">
                     </div>
                 </div>
                 <div class="form-group">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <label class="form-label" style="margin: 0;">Active</label>
-                        <div class="toggle-switch active" id="modal-slide-toggle" onclick="toggleModalSlideStatus()"></div>
+                        <div class="toggle-switch active" id="slide-active-toggle" onclick="this.classList.toggle('active')"></div>
                     </div>
                 </div>
             </div>
@@ -358,7 +370,8 @@
         };
 
         let currentEditingIndex = -1;
-        let pendingImageFile = null;
+        let pendingDesktopFile = null;
+        let pendingMobileFile = null;
 
         // --- AUTH & INIT ---
         auth.onAuthStateChanged(user => {
@@ -387,7 +400,7 @@
 
         // --- RENDERING ---
         function renderAll() {
-            // Main Toggles
+            // Toggles
             const desktopToggle = document.getElementById('hero-toggle');
             const mobileToggle = document.getElementById('mobile-hero-toggle');
             
@@ -403,7 +416,6 @@
             document.getElementById('setting-animation').value = state.settings.animation;
             document.getElementById('setting-autoplay').value = state.settings.autoplaySpeed;
             
-            // Settings Toggles
             const arrowsToggle = document.getElementById('setting-arrows');
             state.settings.showArrows ? arrowsToggle.classList.add('active') : arrowsToggle.classList.remove('active');
             
@@ -418,16 +430,18 @@
 
         function renderSlidesDesktop() {
             const container = document.getElementById('slider-cards');
-            container.innerHTML = ''; // Clear existing
+            const addBtn = container.lastElementChild;
+            container.innerHTML = ''; // Clear
 
             state.slides.forEach((slide, index) => {
                 const card = document.createElement('div');
                 card.className = `slider-card ${slide.active ? 'active' : ''}`;
-                // This connects the static HTML's need for editing to the JS function
-                card.onclick = () => openSlideModal(index); 
+                card.onclick = () => openSlideModal(index);
+                
+                // Use desktop image for preview
                 card.innerHTML = `
                     <div class="slider-image-container">
-                        <img src="${slide.image}" class="slider-image">
+                        <img src="${slide.desktopImage}" class="slider-image">
                         ${slide.active ? '<div class="slider-badge">Active</div>' : ''}
                     </div>
                     <div class="slider-content">
@@ -441,23 +455,23 @@
                 `;
                 container.appendChild(card);
             });
-
-            // Add the "Add New" button card at the end
-            const addBtn = document.createElement('div');
-            addBtn.className = "add-slider-btn";
-            addBtn.onclick = () => openSlideModal(-1); // Wrapper for openAddSlideModal
-            addBtn.innerHTML = `
+            
+            // Re-add the "Add New" button
+            const newAddBtn = document.createElement('div');
+            newAddBtn.className = "add-slider-btn";
+            newAddBtn.onclick = () => openSlideModal(-1);
+            newAddBtn.innerHTML = `
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
                 <div>Add New Slide</div>
             `;
-            container.appendChild(addBtn);
+            container.appendChild(newAddBtn);
         }
 
         function renderSlidesMobile() {
             const container = document.getElementById('mobile-slider-list');
             container.innerHTML = state.slides.map((slide, index) => `
                 <div style="display:flex; align-items:center; gap:12px; padding:12px; background:#f9fafb; border:1px solid #e5e7eb; border-radius:8px;">
-                    <img src="${slide.image}" style="width:60px; height:40px; object-fit:cover; border-radius:4px;">
+                    <img src="${slide.mobileImage || slide.desktopImage}" style="width:60px; height:40px; object-fit:cover; border-radius:4px;">
                     <div style="flex:1;">
                         <div style="font-weight:600; font-size:14px;">${slide.title}</div>
                         <div style="font-size:12px; color:${slide.active?'#10B981':'#9CA3AF'}">${slide.active?'Active':'Inactive'}</div>
@@ -468,7 +482,6 @@
         }
 
         // --- INTERACTIONS & WRAPPERS ---
-        // 1. Toggle Hero Section
         function toggleHeroSection() {
             state.enabled = !state.enabled;
             renderAll();
@@ -477,11 +490,8 @@
             toggleHeroSection();
         }
 
-        // 2. Settings Logic
         function toggleSetting(element, key) {
-            // Update UI class immediately for feedback
             element.classList.toggle('active');
-            // Update state
             state.settings[key] = element.classList.contains('active');
         }
 
@@ -492,25 +502,14 @@
 
         function resetSettings() {
             if(confirm("Reset all slider settings to default?")) {
-                state.settings = {
-                    animation: 'slide',
-                    autoplaySpeed: 5000,
-                    showArrows: true,
-                    showDots: true
-                };
+                state.settings = { animation: 'slide', autoplaySpeed: 5000, showArrows: true, showDots: true };
                 renderAll();
                 showToast("Settings reset to defaults");
             }
         }
 
-        // 3. Slide Management Wrappers
-        function openAddSlideModal() {
-            openSlideModal(-1);
-        }
-
-        function editHeroSlide(index) {
-            openSlideModal(index);
-        }
+        function openAddSlideModal() { openSlideModal(-1); }
+        function editHeroSlide(index) { openSlideModal(index); }
 
         function toggleSlideStatus(index) {
             state.slides[index].active = !state.slides[index].active;
@@ -521,9 +520,10 @@
         // --- MODAL LOGIC ---
         function openSlideModal(index = -1) {
             currentEditingIndex = index;
-            pendingImageFile = null;
+            pendingDesktopFile = null;
+            pendingMobileFile = null;
             
-            // UI References
+            // Elements
             const titleEl = document.getElementById('modal-title');
             const titleInput = document.getElementById('modal-slide-title');
             const descInput = document.getElementById('modal-slide-desc');
@@ -531,14 +531,9 @@
             const btnLinkInput = document.getElementById('modal-button-link');
             const toggle = document.getElementById('modal-slide-toggle');
             const deleteBtn = document.getElementById('delete-slide-btn');
-            
-            const previewContainer = document.getElementById('modal-preview-container');
-            const previewImg = document.getElementById('modal-image-preview');
-            const uploadText = document.querySelector('.upload-text');
-            const uploadIcon = document.querySelector('.upload-icon');
 
             if (index > -1) {
-                // Edit Mode
+                // Edit
                 const slide = state.slides[index];
                 titleEl.innerText = "Edit Slide";
                 titleInput.value = slide.title;
@@ -546,32 +541,25 @@
                 btnTextInput.value = slide.buttonText || "";
                 btnLinkInput.value = slide.buttonLink || "";
                 
-                if (slide.active) toggle.classList.add('active');
-                else toggle.classList.remove('active');
-
-                // Show existing image
-                previewImg.src = slide.image;
-                previewContainer.classList.add('active');
-                uploadText.style.display = 'none';
-                uploadIcon.style.display = 'none';
-                
+                if (slide.active) toggle.classList.add('active'); else toggle.classList.remove('active');
                 deleteBtn.style.display = 'block';
+
+                // Setup Preview Images
+                setupImagePreview('desktop', slide.desktopImage);
+                setupImagePreview('mobile', slide.mobileImage);
             } else {
-                // Add Mode
+                // Add
                 titleEl.innerText = "Add New Slide";
                 titleInput.value = "";
                 descInput.value = "";
                 btnTextInput.value = "";
                 btnLinkInput.value = "";
                 toggle.classList.add('active');
-
-                // Reset image
-                previewContainer.classList.remove('active');
-                previewImg.src = "";
-                uploadText.style.display = 'block';
-                uploadIcon.style.display = 'flex';
-                
                 deleteBtn.style.display = 'none';
+
+                // Clear Images
+                removeImage('desktop');
+                removeImage('mobile');
             }
 
             document.getElementById('slide-modal').style.display = 'flex';
@@ -585,34 +573,45 @@
             document.getElementById('modal-slide-toggle').classList.toggle('active');
         }
 
-        function removeModalImage() {
-            pendingImageFile = null;
-            document.getElementById('modal-preview-container').classList.remove('active');
-            document.querySelector('.upload-text').style.display = 'block';
-            document.querySelector('.upload-icon').style.display = 'flex';
-            document.getElementById('modal-image-input').value = '';
-        }
-
-        function handleModalImageUpload(input) {
+        // --- IMAGE HANDLING ---
+        function handleImageUpload(input, type) {
             if (input.files && input.files[0]) {
                 const file = input.files[0];
-                if(file.size > 5 * 1024 * 1024) {
-                    showToast("Image too large (max 5MB)", true);
-                    return;
-                }
-                pendingImageFile = file;
+                if(file.size > 5 * 1024 * 1024) return showToast("Image too large (max 5MB)", true);
+                
+                if (type === 'desktop') pendingDesktopFile = file;
+                else pendingMobileFile = file;
+
                 const reader = new FileReader();
-                reader.onload = (e) => {
-                    const previewContainer = document.getElementById('modal-preview-container');
-                    const previewImg = document.getElementById('modal-image-preview');
-                    previewImg.src = e.target.result;
-                    previewContainer.classList.add('active');
-                    
-                    document.querySelector('.upload-text').style.display = 'none';
-                    document.querySelector('.upload-icon').style.display = 'none';
-                };
+                reader.onload = (e) => setupImagePreview(type, e.target.result);
                 reader.readAsDataURL(file);
             }
+        }
+
+        function setupImagePreview(type, src) {
+            const preview = document.getElementById(`${type}-preview`);
+            const placeholder = document.getElementById(`${type}-placeholder`);
+            const removeBtn = document.getElementById(`remove-${type}-btn`);
+
+            if (src) {
+                preview.src = src;
+                preview.style.display = 'block';
+                placeholder.style.display = 'none';
+                removeBtn.style.display = 'flex';
+            } else {
+                removeImage(type);
+            }
+        }
+
+        function removeImage(type) {
+            if (type === 'desktop') pendingDesktopFile = null;
+            else pendingMobileFile = null;
+
+            document.getElementById(`${type}-preview`).src = '';
+            document.getElementById(`${type}-preview`).style.display = 'none';
+            document.getElementById(`${type}-placeholder`).style.display = 'block';
+            document.getElementById(`remove-${type}-btn`).style.display = 'none';
+            document.getElementById(`${type}-img-input`).value = '';
         }
 
         async function confirmSaveSlide() {
@@ -621,21 +620,33 @@
             
             if (!title) return showToast("Title is required", true);
 
-            // Determine Image URL
-            let imageUrl = currentEditingIndex > -1 ? state.slides[currentEditingIndex].image : '';
-            
-            if (pendingImageFile) {
-                showToast("Uploading image...");
-                try {
-                    const storageRef = storage.ref(`hero-slides/${Date.now()}_${pendingImageFile.name}`);
-                    await storageRef.put(pendingImageFile);
-                    imageUrl = await storageRef.getDownloadURL();
-                } catch (e) {
-                    console.error(e);
-                    return showToast("Image upload failed", true);
+            // Desktop Image is mandatory if new
+            if (currentEditingIndex === -1 && !pendingDesktopFile) {
+                return showToast("Desktop image is required", true);
+            }
+
+            // Existing Images
+            let desktopUrl = currentEditingIndex > -1 ? state.slides[currentEditingIndex].desktopImage : '';
+            let mobileUrl = currentEditingIndex > -1 ? (state.slides[currentEditingIndex].mobileImage || '') : '';
+
+            // Upload Logic
+            try {
+                if (pendingDesktopFile) {
+                    showToast("Uploading desktop image...");
+                    const ref = storage.ref(`hero-slides/desktop/${Date.now()}_${pendingDesktopFile.name}`);
+                    await ref.put(pendingDesktopFile);
+                    desktopUrl = await ref.getDownloadURL();
                 }
-            } else if (currentEditingIndex === -1) {
-                return showToast("Image is required for new slides", true);
+
+                if (pendingMobileFile) {
+                    showToast("Uploading mobile image...");
+                    const ref = storage.ref(`hero-slides/mobile/${Date.now()}_${pendingMobileFile.name}`);
+                    await ref.put(pendingMobileFile);
+                    mobileUrl = await ref.getDownloadURL();
+                }
+            } catch (e) {
+                console.error(e);
+                return showToast("Image upload failed", true);
             }
 
             const slideData = {
@@ -644,7 +655,8 @@
                 description: document.getElementById('modal-slide-desc').value.trim(),
                 buttonText: document.getElementById('modal-button-text').value.trim(),
                 buttonLink: document.getElementById('modal-button-link').value.trim(),
-                image: imageUrl,
+                desktopImage: desktopUrl,
+                mobileImage: mobileUrl, // Can be empty if not provided
                 active: isActive,
                 status: isActive ? 'active' : 'inactive'
             };
@@ -673,13 +685,12 @@
 
         // --- SAVING ---
         async function saveAllSettings() {
-            const btns = document.querySelectorAll('.btn-primary'); // desktop & mobile buttons
+            const btns = document.querySelectorAll('.btn-primary');
             btns.forEach(b => {
                 b.innerText = "Saving...";
                 b.disabled = true;
             });
 
-            // Ensure settings state is fresh from DOM
             updateSettingsState();
 
             try {
@@ -704,14 +715,12 @@
 
         function saveMobileHeroSettings() {
             saveAllSettings().then(() => {
-                // Close mobile drawer if needed
                 document.getElementById('m-overlay').classList.remove('open');
             });
         }
 
         function previewHeroSection() {
             showToast("Opening preview...");
-            // In a real scenario, open your live site or a preview modal
             setTimeout(() => window.open('https://vastramaya-magic.web.app', '_blank'), 500);
         }
 
