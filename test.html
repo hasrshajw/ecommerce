@@ -139,7 +139,7 @@
             <div class="popup-manager-card">
                 <!-- Enable Toggle -->
                 <div class="popup-toggle-container">
-                    <div class="popup-toggle" id="popup-toggle" onclick="togglePopup('desktop')"></div>
+                    <div class="popup-toggle" id="popup-toggle" onclick="togglePopup()"></div>
                     <div>
                         <div style="font-weight: 600; font-size: 16px;">Enable Popup</div>
                         <div style="color: #6b7280;">Turn on/off the popup for your store visitors</div>
@@ -162,7 +162,7 @@
                                     </div>
                                     <div class="image-preview-container" id="d-preview-container">
                                         <img id="d-image-preview" class="image-preview">
-                                        <button type="button" class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); removeImage('desktop')">Remove</button>
+                                        <button type="button" class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); removeImage()">Remove</button>
                                     </div>
                                 </div>
                                 <input type="file" id="d-image-input" style="display: none;" accept="image/*">
@@ -256,7 +256,7 @@
                     <div style="font-weight: 600;">Enable Popup</div>
                     <div style="font-size: 12px; color: #6b7280;">Show/Hide popup</div>
                 </div>
-                <div class="popup-toggle" id="m-popup-toggle" onclick="togglePopup('mobile')"></div>
+                <div class="popup-toggle" id="m-popup-toggle" onclick="toggleMobilePopup()"></div>
             </div>
 
             <div class="mobile-form-section">
@@ -269,7 +269,7 @@
                     </div>
                     <div class="image-preview-container" id="m-preview-container">
                         <img id="m-image-preview" class="image-preview">
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); removeImage('mobile')">Remove</button>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); removeMobileImage()">Remove</button>
                     </div>
                 </div>
                 <input type="file" id="m-image-input" style="display: none;" accept="image/*">
@@ -300,7 +300,7 @@
                 </div>
             </div>
 
-            <button class="btn btn-primary" style="width: 100%; position: fixed; bottom: 0; left: 0; border-radius: 0; padding: 15px; z-index: 90;" onclick="savePopupSettings('mobile')">Save Settings</button>
+            <button class="btn btn-primary" style="width: 100%; position: fixed; bottom: 0; left: 0; border-radius: 0; padding: 15px; z-index: 90;" onclick="saveMobilePopupSettings()">Save Settings</button>
         </main>
     </div>
 
@@ -370,7 +370,7 @@
 
         // --- UI SYNC ---
         function updateUI() {
-            // Desktop
+            // Desktop Inputs
             document.getElementById('popup-toggle').classList.toggle('active', state.enabled);
             document.getElementById('d-popup-title').value = state.title;
             document.getElementById('d-popup-message').value = state.message;
@@ -379,7 +379,7 @@
             document.getElementById('d-delay-time').value = state.delayTime;
             document.getElementById('d-display-frequency').value = state.displayFrequency;
 
-            // Mobile
+            // Mobile Inputs
             document.getElementById('m-popup-toggle').classList.toggle('active', state.enabled);
             document.getElementById('m-popup-title').value = state.title;
             document.getElementById('m-popup-message').value = state.message;
@@ -396,36 +396,36 @@
         }
 
         function showImagePreview(url) {
-            // Desktop
+            // Update Desktop View
             document.getElementById('d-image-preview').src = url;
             document.getElementById('d-preview-container').classList.add('active');
             document.querySelector('#d-upload-zone .upload-content').style.display = 'none';
             document.getElementById('d-upload-zone').classList.add('has-image');
             document.getElementById('d-conditional-fields').style.display = 'block';
             
-            // Mobile
+            // Update Mobile View
             document.getElementById('m-image-preview').src = url;
             document.getElementById('m-preview-container').classList.add('active');
             document.querySelector('#m-upload-zone .upload-content').style.display = 'none';
             
-            // Optional Fields logic
+            // Logic: Title/Msg are optional if image exists
             updateRequiredFields(false);
         }
 
         function hideImagePreview() {
-            // Desktop
+            // Reset Desktop
             document.getElementById('d-image-preview').src = '';
             document.getElementById('d-preview-container').classList.remove('active');
             document.querySelector('#d-upload-zone .upload-content').style.display = 'block';
             document.getElementById('d-upload-zone').classList.remove('has-image');
             document.getElementById('d-conditional-fields').style.display = 'none';
 
-            // Mobile
+            // Reset Mobile
             document.getElementById('m-image-preview').src = '';
             document.getElementById('m-preview-container').classList.remove('active');
             document.querySelector('#m-upload-zone .upload-content').style.display = 'block';
 
-            // Required Fields logic
+            // Logic: Title/Msg required again
             updateRequiredFields(true);
         }
 
@@ -433,22 +433,28 @@
             const labels = ['d-title-label', 'd-message-label', 'm-title-label', 'm-message-label'];
             labels.forEach(id => {
                 const el = document.getElementById(id);
-                if (isRequired) el.classList.add('form-label-required');
-                else el.classList.remove('form-label-required');
+                if (el) {
+                    if (isRequired) el.classList.add('form-label-required');
+                    else el.classList.remove('form-label-required');
+                }
             });
         }
 
-        // --- HANDLERS ---
-        function togglePopup(view) {
+        // --- INTERACTION HANDLERS ---
+        function togglePopup() {
             state.enabled = !state.enabled;
-            // Immediate UI feedback
+            // Update both UI elements immediately
             document.getElementById('popup-toggle').classList.toggle('active', state.enabled);
             document.getElementById('m-popup-toggle').classList.toggle('active', state.enabled);
         }
 
-        // Image Selection
-        document.getElementById('d-image-input').addEventListener('change', (e) => handleFileSelect(e));
-        document.getElementById('m-image-input').addEventListener('change', (e) => handleFileSelect(e));
+        function toggleMobilePopup() {
+            togglePopup(); // Alias to same logic
+        }
+
+        // Image Selection Logic
+        document.getElementById('d-image-input').addEventListener('change', handleFileSelect);
+        document.getElementById('m-image-input').addEventListener('change', handleFileSelect);
 
         function handleFileSelect(e) {
             const file = e.target.files[0];
@@ -462,14 +468,19 @@
             reader.readAsDataURL(file);
         }
 
-        function removeImage(view) {
+        function removeImage() {
             pendingImageFile = null;
-            state.imageUrl = ''; // Mark for clearing on save if desired, or immediate visual clear
+            state.imageUrl = ''; 
             hideImagePreview();
             
             // Clear inputs
             document.getElementById('d-image-input').value = '';
             document.getElementById('m-image-input').value = '';
+            showToast('Image removed', false);
+        }
+
+        function removeMobileImage() {
+            removeImage(); // Alias
         }
 
         function resetForm() {
@@ -490,24 +501,26 @@
             }
         }
 
-        // --- SAVE ---
+        // --- SAVE LOGIC ---
         async function savePopupSettings(viewPrefix) {
-            const btn = event.target;
+            // viewPrefix is 'desktop' or 'mobile'
+            const btn = event.target; // The button clicked
             const originalText = btn.innerText;
             btn.innerText = "Saving...";
             btn.disabled = true;
 
-            // Get values based on which view triggered save (d=desktop, m=mobile)
-            // Actually, we should sync all values first or just grab from the triggering view
+            // Determine which inputs to read from
             const prefix = viewPrefix === 'desktop' ? 'd-' : 'm-';
             
+            // Update State from DOM elements of the active view
             state.title = document.getElementById(`${prefix}popup-title`).value.trim();
             state.message = document.getElementById(`${prefix}popup-message`).value.trim();
             state.buttonText = document.getElementById(`${prefix}button-text`).value.trim();
             state.buttonLink = document.getElementById(`${prefix}button-link`).value.trim();
             state.delayTime = parseInt(document.getElementById(`${prefix}delay-time`).value);
-            // Frequency is only on desktop form in this layout, or default
-            if(viewPrefix === 'desktop') {
+            
+            // Frequency is only on desktop form visually in this design, so fall back to existing state if mobile saving, or grab if desktop
+            if (viewPrefix === 'desktop') {
                 state.displayFrequency = document.getElementById('d-display-frequency').value;
             }
 
@@ -516,6 +529,12 @@
                 btn.innerText = originalText;
                 btn.disabled = false;
                 return showToast("Please provide Title/Message OR an Image", true);
+            }
+
+            if (state.enabled && (!state.buttonText || !state.buttonLink)) {
+                btn.innerText = originalText;
+                btn.disabled = false;
+                return showToast("Button Text and Link are required", true);
             }
 
             try {
@@ -533,12 +552,14 @@
                     lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                // Update UI to ensure sync between views
+                // Sync UI across views
                 updateUI();
                 showToast("Popup settings saved successfully!");
                 
-                // Close mobile drawer if open
-                document.getElementById('m-overlay').classList.remove('open');
+                // If saved from mobile, close drawer
+                if (viewPrefix === 'mobile') {
+                    document.getElementById('m-overlay').classList.remove('open');
+                }
 
             } catch (error) {
                 console.error("Save Error:", error);
@@ -547,6 +568,10 @@
                 btn.innerText = originalText;
                 btn.disabled = false;
             }
+        }
+
+        function saveMobilePopupSettings() {
+            savePopupSettings('mobile');
         }
 
         // --- UTILS ---
