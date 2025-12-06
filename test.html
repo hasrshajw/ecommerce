@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Popup Manager - Vastramaya</title>
+    <title>Manage Categories - Vastramaya</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -11,6 +11,9 @@
         :root {
             --header-height-desktop: 70px;
             --sidebar-width: 260px;
+            --row-height: 48px;
+            --sidebar-bg: #ffffff;
+            --header-bg: #ffffff;
             --page-bg: #f4f5f7;
             --text-color: rgb(24, 24, 26);
             --icon-color: #6b7280;
@@ -27,293 +30,3196 @@
             --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             --radius-md: 8px;
             --radius-lg: 12px;
+            --skeleton-color: #f0f0f0;
+            --skeleton-highlight: #f8f8f8;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { min-height: 100vh; background: var(--page-bg); font-family: "DM Sans", sans-serif; font-size: 14px; color: var(--text-color); overflow-x: hidden; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        /* LAYOUT */
-        .page-desktop { display: flex; flex-direction: column; min-height: 100vh; }
-        .d-topbar { height: var(--header-height-desktop); background: white; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; padding-left: 40px; position: fixed; top: 0; width: 100%; z-index: 100; }
-        .d-topbar-logo { height: 52px; width: auto; }
-        .d-app { display: flex; margin-top: var(--header-height-desktop); height: calc(100vh - var(--header-height-desktop)); }
-        .d-sidebar { width: var(--sidebar-width); background: white; border-right: 1px solid var(--border-subtle); height: 100%; overflow-y: auto; position: fixed; }
-        .d-content { margin-left: var(--sidebar-width); flex: 1; padding: 24px; overflow-y: auto; }
+        body {
+            min-height: 100vh;
+            background: var(--page-bg);
+            font-family: "DM Sans", Roboto, sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 20px;
+            color: var(--text-color);
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        /* ============= DESKTOP LAYOUT ============= */
+        .page-desktop {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        /* Desktop header */
+        .d-topbar {
+            height: var(--header-height-desktop);
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--border-subtle);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            padding-left: 40px;
+        }
+
+        .d-topbar-logo {
+            height: 52px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* Desktop main area */
+        .d-app {
+            flex: 1;
+            display: flex;
+            width: 100%;
+        }
+
+        /* Desktop sidebar */
+        .d-sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .d-sidebar-inner {
+            padding: 32px 16px 16px 12px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        /* Desktop nav */
+        .d-nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .d-nav-group + .d-nav-group {
+            margin-top: 6px;
+        }
+
+        .d-nav-item {
+            display: flex;
+            align-items: center;
+            height: var(--row-height);
+            padding: 0 20px 0 12px;
+            margin: 2px 0;
+            border-radius: 8px;
+            gap: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-color);
+            line-height: 20px;
+            transition: background 0.15s ease;
+        }
+
+        .d-nav-item .label {
+            flex: 1;
+        }
+
+        .d-nav-item .icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--icon-color);
+        }
+
+        .chevron-icon {
+            width: 18px;
+            height: 18px;
+            stroke: var(--icon-color);
+            transition: transform 0.2s ease;
+        }
+
+        .dropdown-open .chevron-icon {
+            transform: rotate(90deg);
+        }
+
+        /* Desktop active */
+        .d-nav-item--active {
+            background: var(--active-bg);
+        }
+        .d-nav-item--active .icon svg {
+            stroke: var(--icon-active);
+        }
+
+        /* Desktop hover */
+        .d-nav-item:hover {
+            background: var(--hover-bg);
+        }
+
+        /* Desktop submenus */
+        .d-submenu {
+            display: none;
+            margin-left: 28px;
+            padding-left: 16px;
+            border-left: 1px solid var(--border-subtle);
+            margin-top: 4px;
+        }
+        .d-submenu.open {
+            display: block;
+        }
+        .d-submenu-item {
+            height: 44px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            border-radius: 8px;
+            margin: 2px 0;
+            cursor: pointer;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .d-submenu-item:hover {
+            background: var(--hover-bg);
+        }
+        .d-submenu-item.active {
+            background: var(--active-bg);
+        }
+
+        .d-submenu-item .submenu-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+        }
+
+        /* Desktop account section */
+        .d-account-section {
+            margin-top: auto;
+            padding: 16px;
+            border-top: 1px solid var(--border-subtle);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .account-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .account-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .account-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .account-name {
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        .account-email {
+            font-size: 12px;
+            color: #6b7280;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        /* Desktop content */
+        .d-content {
+            flex: 1;
+            background: var(--page-bg);
+            overflow-y: auto;
+            width: 100%;
+        }
+
+        /* ============= BODY CONTENT ============= */
+        .content-inner {
+            max-width: 1110px;
+            margin: 0 auto;
+            padding: 24px 24px 40px;
+            width: 100%;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            width: 100%;
+        }
+
+        .page-title-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .page-title {
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 32px;
+            color: rgb(29, 30, 32);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            line-height: 20px;
+            color: #6b7280;
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: #9ca3af;
+        }
+
+        .breadcrumb-divider {
+            color: #d1d5db;
+        }
+
+        .primary-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 20px;
+            color: #ffffff;
+            background: var(--brand-primary);
+            transition: background 0.15s ease;
+            white-space: nowrap;
+        }
+        .primary-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: #ffffff;
+        }
+        .primary-btn:hover {
+            background: #471ea7;
+        }
+
+        /* Card - FIXED: Increased search bar padding */
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .card-header {
+            padding: 24px 20px; /* Increased from 16px to 24px */
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .search-input-wrap {
+            background: #f9fafb;
+            border-radius: 999px;
+            border: 1px solid #e5e7eb;
+            padding: 12px 16px; /* Increased from 0 16px */
+            height: 48px; /* Increased from 40px */
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: border-color 0.15s ease;
+            width: 100%;
+        }
+
+        .search-input-wrap:focus-within {
+            border-color: #673de6;
+        }
+
+        .search-icon {
+            width: 16px;
+            height: 16px;
+            stroke: #9ca3af;
+        }
+
+        .search-input-wrap input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            font-family: "DM Sans", Roboto, sans-serif;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        /* Table area - IMPORTANT: Fixed for popup positioning */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            position: relative;
+            /* Ensure popups are not clipped */
+            overflow: visible !important;
+        }
+
+        /* Force table to have proper stacking context */
+        .domain-table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+            z-index: 1;
+        }
+
+        .domain-table thead tr {
+            height: 48px;
+        }
+
+        .domain-table th,
+        .domain-table td {
+            padding: 12px 20px;
+            vertical-align: middle;
+        }
+
+        .domain-table thead th {
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 24px;
+            color: rgb(29, 30, 32);
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+            white-space: nowrap;
+        }
+
+        /* FIXED: Image column with heading */
+        .th-image {
+            width: 120px;
+            min-width: 120px;
+        }
+
+        .th-image-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 24px;
+            color: rgb(29, 30, 32);
+        }
+
+        .th-image-content svg {
+            width: 18px;
+            height: 18px;
+            stroke: rgb(29, 30, 32);
+        }
+
+        .td-image {
+            width: 120px;
+        }
+
+        /* FIXED: Status column - left aligned */
+        .th-status {
+            width: 120px;
+            text-align: left;
+        }
+
+        .td-status {
+            width: 120px;
+            text-align: left;
+        }
+
+        .domain-table tbody tr {
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .domain-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .product-thumb {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #e5e7eb;
+        }
+
+        .product-name {
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 24px;
+            color: rgb(29, 30, 32);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        .product-count,
+        .product-status,
+        .product-actions {
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 24px;
+            color: rgb(59, 61, 74);
+        }
+
+        .action-buttons {
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            position: relative;
+        }
+
+        .btn-secondary {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            font-size: 13px;
+            line-height: 20px;
+            color: #673de6;
+            cursor: pointer;
+            transition: background 0.15s ease;
+            white-space: nowrap;
+        }
+        .btn-secondary:hover {
+            background: #f2efff;
+        }
+
+        .kebab {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s ease;
+        }
         
-        /* NAV */
-        .d-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; margin: 4px 12px; border-radius: 8px; cursor: pointer; color: var(--text-color); font-weight: 500; }
-        .d-nav-item:hover { background: var(--hover-bg); }
-        .d-nav-item--active { background: var(--active-bg); color: var(--brand-primary); }
-        .d-nav-item--active svg { stroke: var(--icon-active); }
-        .d-submenu { margin-left: 28px; padding-left: 12px; border-left: 1px solid var(--border-subtle); }
-        .d-submenu-item { padding: 10px 12px; display: flex; gap: 10px; align-items: center; cursor: pointer; border-radius: 6px; font-weight: 500; }
-        .d-submenu-item:hover { background: var(--hover-bg); }
-        .d-submenu-item.active { background: var(--active-bg); color: var(--brand-primary); }
-
-        /* POPUP MANAGER CARD */
-        .popup-manager-card { background: white; border-radius: 12px; border: 1px solid var(--border-subtle); padding: 32px; box-shadow: var(--shadow-premium); }
-        .popup-toggle-container { display: flex; align-items: center; gap: 16px; padding: 20px; background: #f9fafb; border-radius: 12px; border: 1px solid var(--border-subtle); margin-bottom: 32px; }
-        .popup-toggle { width: 52px; height: 28px; background: var(--switch-off); border-radius: 20px; position: relative; cursor: pointer; transition: 0.3s; }
-        .popup-toggle.active { background: var(--switch-on); }
-        .popup-toggle::after { content: ''; position: absolute; width: 24px; height: 24px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: 0.3s; }
-        .popup-toggle.active::after { transform: translateX(24px); }
-
-        /* FORMS */
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-        .form-section { background: #f9fafb; padding: 24px; border-radius: 12px; border: 1px solid var(--border-subtle); margin-bottom: 24px; }
-        .form-group { margin-bottom: 20px; }
-        .form-label { display: block; margin-bottom: 8px; font-weight: 600; }
-        .form-label-required::after { content: " *"; color: var(--danger-color); }
-        .form-control { width: 100%; padding: 10px; border: 1px solid var(--border-subtle); border-radius: 8px; font-family: inherit; }
-        .form-hint { font-size: 12px; color: #6b7280; margin-top: 4px; }
+        .kebab:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
         
-        /* IMAGE UPLOAD */
-        .image-upload-zone { border: 2px dashed #e5e7eb; padding: 30px; text-align: center; border-radius: 12px; cursor: pointer; margin-bottom: 10px; position: relative; }
-        .image-upload-zone:hover { border-color: var(--brand-primary); background: #f9fafb; }
-        .image-upload-zone.has-image { border-style: solid; padding: 10px; }
-        .image-preview-container { display: none; flex-direction: column; align-items: center; gap: 10px; }
-        .image-preview-container.active { display: flex; }
-        .image-preview { max-width: 100%; max-height: 200px; object-fit: contain; border-radius: 8px; }
-        .conditional-fields { background: #eff6ff; border: 1px dashed #3b82f6; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none; }
-        .conditional-note { display: flex; gap: 10px; align-items: center; color: #1e40af; font-size: 13px; }
+        .kebab-dots {
+            width: 4px;
+            height: 4px;
+            border-radius: 999px;
+            background: #6b7280;
+            position: relative;
+        }
+        
+        .kebab-dots::before,
+        .kebab-dots::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 999px;
+            background: #6b7280;
+            left: 0;
+        }
+        
+        .kebab-dots::before {
+            top: -6px;
+        }
+        
+        .kebab-dots::after {
+            bottom: -6px;
+        }
 
-        /* BUTTONS */
-        .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
-        .btn-primary { background: var(--brand-gradient); color: white; }
-        .btn-secondary { background: white; border: 1px solid var(--border-subtle); color: var(--text-color); }
-        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        /* FIXED: Desktop popup - positioned relative to viewport */
+        .popup-container {
+            position: relative;
+            display: inline-block;
+        }
 
-        /* TOAST */
-        #toast { position: fixed; bottom: 20px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 10px; }
-        .toast-msg { background: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-left: 4px solid var(--success-color); animation: slideIn 0.3s ease; }
-        .toast-msg.error { border-left-color: var(--danger-color); }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        .desktop-popup {
+            position: fixed; /* Changed from absolute to fixed */
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            min-width: 180px;
+            z-index: 10002;
+            display: none;
+            overflow: hidden;
+            margin-top: 8px;
+            animation: fadeInUp 0.2s ease-out;
+        }
 
-        /* MOBILE */
+        .desktop-popup.open {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .desktop-popup-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            width: 100%;
+            border: none;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 20px;
+            color: rgb(29, 30, 32);
+            transition: background 0.15s ease;
+            white-space: nowrap;
+            border-bottom: 1px solid #f9fafb;
+        }
+
+        .desktop-popup-item:last-child {
+            border-bottom: none;
+        }
+
+        .desktop-popup-item:hover {
+            background: #f9fafb;
+        }
+
+        .desktop-popup-item svg {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+        }
+
+        .desktop-popup-item.delete-item {
+            color: var(--danger-color);
+        }
+
+        .desktop-popup-item.delete-item svg {
+            stroke: var(--danger-color);
+        }
+
+        /* Status toggle switch - FIXED: Left aligned under Status heading */
+        .status-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--switch-off);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--brand-primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        /* ============= SKELETON LOADING ============= */
+        .skeleton-loading {
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .skeleton {
+            background: linear-gradient(
+                90deg,
+                var(--skeleton-color) 25%,
+                var(--skeleton-highlight) 50%,
+                var(--skeleton-color) 75%
+            );
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes skeleton-loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        /* Desktop skeleton */
+        .desktop-skeleton-row {
+            height: 72px;
+        }
+
+        .desktop-skeleton-row td {
+            padding: 12px 20px;
+        }
+
+        .skeleton-image {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+        }
+
+        .skeleton-text {
+            height: 20px;
+            width: 120px;
+        }
+
+        .skeleton-text-small {
+            height: 16px;
+            width: 80px;
+        }
+
+        .skeleton-toggle {
+            width: 44px;
+            height: 24px;
+            border-radius: 24px;
+        }
+
+        .skeleton-button {
+            width: 80px;
+            height: 32px;
+            border-radius: 8px;
+        }
+
+        .skeleton-kebab {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+        }
+
+        /* Mobile skeleton */
+        .mobile-skeleton-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            height: 88px;
+        }
+
+        .skeleton-mobile-image {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+
+        .skeleton-mobile-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .skeleton-mobile-title {
+            height: 24px;
+            width: 150px;
+            border-radius: 4px;
+        }
+
+        .skeleton-mobile-subtitle {
+            height: 18px;
+            width: 100px;
+            border-radius: 4px;
+        }
+
+        .skeleton-mobile-toggle {
+            width: 44px;
+            height: 24px;
+            border-radius: 24px;
+            margin-right: 12px;
+        }
+
+        .skeleton-mobile-menu {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+        }
+
+        /* ============= MOBILE LAYOUT ============= */
+        .page-mobile {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            display: none;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Mobile header */
+        .m-header {
+            height: 72px;
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            width: 100%;
+        }
+
+        /* FIXED: Mobile menu button with border and styling like advanced-menu-close */
+        .m-menu-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .m-menu-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .m-menu-lines {
+            width: 18px;
+            height: 14px;
+            position: relative;
+        }
+        .m-menu-lines::before,
+        .m-menu-lines::after,
+        .m-menu-lines span {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            border-radius: 999px;
+            background: #111827;
+        }
+        .m-menu-lines::before {
+            top: 0;
+        }
+        .m-menu-lines span {
+            top: 6px;
+        }
+        .m-menu-lines::after {
+            bottom: 0;
+        }
+
+        .m-logo {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+            max-width: 200px;
+        }
+
+        /* Mobile main bg */
+        .m-main {
+            flex: 1;
+            background: var(--page-bg);
+            padding-bottom: 20px;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Overlay & drawer */
+        .m-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.45);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease-out;
+            z-index: 40;
+        }
+
+        .m-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .m-drawer {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 320px;
+            max-width: 90vw;
+            height: 100%;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(-100%);
+            transition: transform 0.25s ease-out;
+            overflow-y: auto;
+        }
+
+        .m-overlay.open .m-drawer {
+            transform: translateX(0);
+        }
+
+        /* Drawer header */
+        .m-drawer-header {
+            height: 72px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+
+        .m-drawer-logo {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+            max-width: 200px;
+        }
+
+        /* FIXED: Mobile drawer close button with border and styling like advanced-menu-close */
+        .m-drawer-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+        
+        .m-drawer-close:hover {
+            background: #f3f4f6;
+        }
+        
+        .m-drawer-close-icon {
+            width: 14px;
+            height: 14px;
+            position: relative;
+        }
+        .m-drawer-close-icon::before,
+        .m-drawer-close-icon::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: 14px;
+            height: 2px;
+            border-radius: 999px;
+            background: #111827;
+        }
+        .m-drawer-close-icon::before {
+            transform: rotate(45deg);
+        }
+        .m-drawer-close-icon::after {
+            transform: rotate(-45deg);
+        }
+
+        /* Drawer nav */
+        .m-drawer-nav {
+            padding: 32px 8px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .m-nav-item {
+            display: flex;
+            align-items: center;
+            height: 52px;
+            padding: 0 16px;
+            margin: 2px 0;
+            border-radius: 8px;
+            gap: 12px;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: background 0.15s ease;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .m-nav-item .label {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .m-nav-item .icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--icon-color);
+        }
+
+        /* active mobile */
+        .m-nav-item.active {
+            background: var(--active-bg);
+        }
+        .m-nav-item.active .icon svg {
+            stroke: var(--icon-active);
+        }
+
+        /* Mobile submenu */
+        .m-submenu {
+            display: none;
+            margin-left: 28px;
+            padding-left: 16px;
+            border-left: 1px solid var(--border-subtle);
+            margin-top: 4px;
+        }
+        .m-submenu.open {
+            display: block;
+        }
+        .m-submenu-item {
+            height: 48px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            border-radius: 8px;
+            margin: 2px 0;
+            cursor: pointer;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .m-submenu-item:hover {
+            background: var(--hover-bg);
+        }
+        .m-submenu-item.active {
+            background: var(--active-bg);
+        }
+
+        .m-submenu-item .submenu-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+        }
+
+        /* Drawer footer account */
+        .m-account-section {
+            margin-top: auto;
+            padding: 16px;
+            border-top: 1px solid var(--border-subtle);
+            cursor: pointer;
+            position: relative;
+        }
+
+        /* Mobile content layout */
+        .mobile-content-inner {
+            padding: 16px;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Mobile page header */
+        .mobile-page-header {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .mobile-page-title-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+            width: 100%;
+        }
+
+        .mobile-page-title {
+            font-weight: 700;
+            font-size: 22px;
+            line-height: 32px;
+            color: rgb(29, 30, 32);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mobile-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            line-height: 20px;
+            color: #6b7280;
+            flex-wrap: wrap;
+        }
+
+        .mobile-breadcrumb-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: #9ca3af;
+        }
+
+        .mobile-breadcrumb-divider {
+            color: #d1d5db;
+        }
+
+        /* Mobile search and add button row */
+        .mobile-controls-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .mobile-search-wrap {
+            flex: 1;
+            position: relative;
+            min-width: 0;
+        }
+
+        .mobile-search-input-wrap {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+            padding: 0 16px 0 44px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            width: 100%;
+        }
+
+        .mobile-search-input-wrap:focus-within {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
+        }
+
+        .mobile-search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            stroke: #6b7280;
+            z-index: 2;
+        }
+
+        .mobile-search-input-wrap input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            font-size: 16px;
+            color: #111827;
+            font-weight: 500;
+            width: 100%;
+            min-width: 0;
+        }
+
+        .mobile-search-input-wrap input::placeholder {
+            color: #9ca3af;
+            font-weight: 400;
+        }
+
+        .mobile-add-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+            line-height: 20px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(81, 39, 186, 0.2);
+            flex-shrink: 0;
+            max-width: 120px;
+        }
+
+        .mobile-add-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(81, 39, 186, 0.25);
+        }
+
+        .mobile-add-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: #ffffff;
+        }
+
+        /* Mobile category cards - UPDATED LAYOUT */
+        .mobile-category-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .category-card-mobile {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 100%;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .category-card-mobile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .category-card-image {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            flex-shrink: 0;
+            padding: 8px;
+        }
+
+        .category-card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .category-card-name {
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 24px;
+            color: rgb(29, 30, 32);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        .category-card-products {
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 18px;
+            color: #6b7280;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Mobile card actions - UPDATED: toggle moved to left of 3 dots */
+        .category-card-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        .mobile-status-toggle {
+            display: flex;
+            align-items: center;
+            margin: 0;
+        }
+
+        .category-card-menu-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .category-card-menu-btn:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
+
+        .category-card-menu-dots {
+            width: 4px;
+            height: 4px;
+            border-radius: 999px;
+            background: #6b7280;
+            box-shadow: 0 -6px 0 0 #6b7280, 0 6px 0 0 #6b7280;
+        }
+
+        /* Advanced Menu (Bottom Sheet) */
+        .advanced-menu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-radius: 24px 24px 0 0;
+            padding: 24px 0;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2000;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
+            max-height: 80vh;
+            overflow-y: auto;
+            width: 100%;
+        }
+
+        .advanced-menu.open {
+            transform: translateY(0);
+        }
+
+        .advanced-menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 1999;
+        }
+
+        .advanced-menu-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .advanced-menu-header {
+            padding: 0 24px 20px 24px;
+            border-bottom: 1px solid #f3f4f6;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .advanced-menu-title {
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 28px;
+            color: rgb(29, 30, 32);
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .advanced-menu-items {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .advanced-menu-item {
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 24px;
+            color: rgb(29, 30, 32);
+            transition: background 0.15s ease;
+            border-bottom: 1px solid #f9fafb;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .advanced-menu-item:last-child {
+            border-bottom: none;
+            color: var(--danger-color);
+        }
+
+        .advanced-menu-item:last-child svg {
+            stroke: var(--danger-color);
+        }
+
+        .advanced-menu-item:hover {
+            background: #f9fafb;
+        }
+
+        .advanced-menu-item svg {
+            width: 22px;
+            height: 22px;
+            stroke: #6b7280;
+            flex-shrink: 0;
+        }
+
+        .advanced-menu-close {
+            position: absolute;
+            top: 0;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .advanced-menu-close:hover {
+            background: #f3f4f6;
+        }
+
+        .advanced-menu-close-icon {
+            width: 16px;
+            height: 16px;
+            position: relative;
+        }
+
+        .advanced-menu-close-icon::before,
+        .advanced-menu-close-icon::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: 16px;
+            height: 2px;
+            border-radius: 999px;
+            background: #111827;
+        }
+
+        .advanced-menu-close-icon::before {
+            transform: rotate(45deg);
+        }
+
+        .advanced-menu-close-icon::after {
+            transform: rotate(-45deg);
+        }
+
+        .menu-handle {
+            width: 40px;
+            height: 4px;
+            border-radius: 999px;
+            background: #e5e7eb;
+            margin: 0 auto 20px auto;
+        }
+
+        /* --- UPDATED MODAL STYLES --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 480px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-premium);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            background: #fff;
+            position: relative;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            background: #F8FAFC;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem 1.5rem;
+            background: white;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        .modal-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: rgb(29, 30, 32);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn-icon {
+            background: #f3f4f6;
+            border: none;
+            cursor: pointer;
+            color: #6b7280;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            width: 100%;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: rgb(29, 30, 32);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--radius-md);
+            background: white;
+            transition: all 0.15s ease;
+            font-family: "DM Sans", Roboto, sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .form-input:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
+            outline: none;
+        }
+
+        /* ============= UPDATED PREMIUM IMAGE UPLOAD AREA ============= */
+        .image-upload-container {
+            width: 100%;
+        }
+
+        /* Premium upload box */
+        .image-upload-box {
+            border: 2px dashed #E5E7EB;
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            background: linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 100%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            width: 100%;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 220px;
+            overflow: hidden;
+        }
+
+        .image-upload-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #5127ba, #673de6, #5127ba);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .image-upload-box:hover {
+            border-color: var(--brand-primary);
+            background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(81, 39, 186, 0.15);
+        }
+
+        .image-upload-box:active {
+            transform: translateY(0);
+        }
+
+        .image-upload-box svg {
+            stroke: var(--brand-primary);
+            margin-bottom: 1rem;
+            width: 64px;
+            height: 64px;
+            filter: drop-shadow(0 4px 6px rgba(81, 39, 186, 0.1));
+        }
+
+        .upload-text {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .upload-subtext {
+            font-size: 0.875rem;
+            color: #6B7280;
+            max-width: 80%;
+            margin: 0 auto;
+            line-height: 1.4;
+        }
+
+        /* Progress bar styles */
+        .upload-progress {
+            margin-top: 1rem;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #F3F4F6;
+            border-radius: 5px;
+            overflow: hidden;
+            width: 100%;
+            max-width: 300px;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #5127ba, #673de6);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-image: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            animation: shimmer 2s infinite;
+        }
+
+        .progress-text {
+            font-size: 0.875rem;
+            color: #6b7280;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Premium preview container */
+        .image-preview-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-preview-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #5127ba, #673de6, #5127ba);
+            background-size: 200% 100%;
+        }
+
+        .preview-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .preview-img-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 100%);
+            border-radius: 12px;
+            border: 1px dashed #E5E7EB;
+        }
+
+        .preview-img {
+            width: 160px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 2px solid white;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .preview-img:hover {
+            transform: scale(1.02);
+        }
+
+        /* Action buttons container */
+        .preview-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .change-image-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid var(--brand-primary);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--brand-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 180px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .change-image-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .change-image-btn:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(81, 39, 186, 0.25);
+        }
+
+        .change-image-btn:hover::before {
+            opacity: 1;
+        }
+
+        .change-image-btn:active {
+            transform: translateY(0);
+        }
+
+        .change-image-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            transition: stroke 0.3s ease;
+        }
+
+        /* Success message for new uploads only */
+        .upload-success-message {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%);
+            border: 1px solid #BBF7D0;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            width: 100%;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .upload-success-message svg {
+            stroke: var(--success-color);
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .upload-success-message-text {
+            color: var(--success-color);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .image-required {
+            color: var(--danger-color);
+            font-size: 0.875rem;
+            margin-top: 0.75rem;
+            text-align: center;
+            display: none;
+            font-weight: 500;
+            padding: 0.75rem 1rem;
+            background: #FEF2F2;
+            border-radius: 8px;
+            border: 1px solid #FECACA;
+        }
+
+        .upload-error {
+            color: var(--danger-color);
+            font-size: 0.875rem;
+            margin-top: 0.75rem;
+            text-align: center;
+            font-weight: 500;
+            padding: 0.75rem 1rem;
+            background: #FEF2F2;
+            border-radius: 8px;
+            border: 1px solid #FECACA;
+            display: none;
+        }
+
+        /* Updated button styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.5rem;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: none;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            min-width: 100px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #471ea7 0%, #5127ba 100%);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(81, 39, 186, 0.25);
+        }
+
+        .btn-primary:hover::before {
+            opacity: 1;
+        }
+
+        .btn-primary:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-primary:disabled::before {
+            display: none;
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 1px solid #e5e7eb;
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: #FEF2F2;
+            color: var(--danger-color);
+            border: 1px solid #FECACA;
+        }
+
+        .btn-danger:hover {
+            background: #FEE2E2;
+            transform: translateY(-1px);
+        }
+
+        /* Toast */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 3000;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 1rem 1.5rem;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-premium);
+            animation: slideUp 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-left: 4px solid var(--brand-primary);
+            min-width: 300px;
+            pointer-events: auto;
+            max-width: 90vw;
+        }
+
+        .toast.success {
+            border-left-color: var(--success-color);
+        }
+
+        .toast.error {
+            border-left-color: var(--danger-color);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============= FIXED PROFILE POPUP ============= */
+        .profile-popup {
+            position: fixed;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid #e5e7eb;
+            padding: 0;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+            width: 280px;
+            max-width: 90vw;
+            overflow: hidden;
+        }
+
+        .profile-popup.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0);
+        }
+
+        /* Desktop positioning - FIXED: Show on LEFT side */
+        @media (min-width: 769px) {
+            .profile-popup {
+                left: 30px !important;
+                right: auto !important;
+                bottom: 100px !important;
+                top: auto !important;
+            }
+        }
+
+        /* Mobile positioning */
+        @media (max-width: 768px) {
+            .profile-popup {
+                left: 50% !important;
+                right: auto !important;
+                bottom: 100px !important;
+                top: auto !important;
+                transform: translateX(-50%) translateY(10px);
+            }
+            
+            .profile-popup.active {
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .popup-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            background: #f9fafb;
+        }
+
+        .popup-list {
+            list-style: none;
+            padding: 0.5rem;
+        }
+
+        .popup-list li {
+            margin: 0;
+            padding: 0;
+        }
+
+        .popup-list a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: background 0.15s ease;
+            cursor: pointer;
+            font-size: 14px;
+            white-space: nowrap;
+            width: 100%;
+            background: none;
+            border: none;
+            text-align: left;
+        }
+
+        .popup-list a:hover {
+            background: #f3f4f6;
+        }
+
+        .popup-list a i {
+            font-size: 1.2rem;
+            color: #6b7280;
+            min-width: 20px;
+        }
+
+        .popup-list a.logout {
+            color: var(--danger-color);
+        }
+
+        .popup-list a.logout i {
+            color: var(--danger-color);
+        }
+
+        .popup-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+            flex-shrink: 0;
+        }
+
+        .logout-icon {
+            stroke: var(--danger-color) !important;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: #6b7280;
+            grid-column: 1/-1;
+            width: 100%;
+        }
+
+        /* Responsive switch */
         @media (max-width: 768px) {
             .page-desktop { display: none; }
-            .page-mobile { display: block; }
-            .m-header { height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; background: white; border-bottom: 1px solid var(--border-subtle); position: fixed; top: 0; width: 100%; z-index: 50; }
-            .m-main { margin-top: 70px; padding: 16px; padding-bottom: 100px; }
-            .form-grid { grid-template-columns: 1fr; }
-            .mobile-form-section { background: white; border-radius: 12px; border: 1px solid var(--border-subtle); padding: 16px; margin-bottom: 20px; }
+            .page-mobile  { display: flex; }
             
-            /* Mobile Drawer */
-            .m-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: none; }
-            .m-overlay.open { display: block; }
-            .m-drawer { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: white; transform: translateX(-100%); transition: 0.3s; z-index: 101; }
-            .m-overlay.open .m-drawer { transform: translateX(0); }
+            .card {
+                display: none;
+            }
+            
+            .content-inner {
+                padding: 0;
+            }
+            
+            .page-header {
+                display: none;
+            }
+
+            .modal-overlay {
+                align-items: flex-end;
+                padding: 0;
+            }
+            
+            .modal-content {
+                width: 100%;
+                border-radius: 24px 24px 0 0;
+                animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                max-height: 90vh;
+                overflow-y: auto;
+                max-width: 100%;
+            }
+            
+            @keyframes slideUpModal {
+                from { transform: translateY(100%); }
+                to { transform: translateY(0); }
+            }
+            
+            /* Prevent horizontal scrolling */
+            body, html {
+                overflow-x: hidden;
+                position: relative;
+                width: 100%;
+            }
+            
+            .mobile-content-inner {
+                padding: 16px;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+            
+            .mobile-controls-row {
+                padding-right: 4px;
+            }
+            
+            .mobile-add-btn {
+                padding: 12px 14px;
+                font-size: 14px;
+            }
         }
-        @media (min-width: 769px) { .page-mobile { display: none; } }
+
+        @media (min-width: 769px) {
+            .page-desktop { display: flex; }
+            .page-mobile { display: none; }
+            
+            /* Fix desktop popup z-index */
+            .product-actions {
+                position: relative;
+            }
+            
+            .desktop-popup {
+                z-index: 10002;
+            }
+        }
+
+        /* Text truncation fixes */
+        .text-truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
 </head>
 <body>
-
     <!-- ================= DESKTOP VIEW ================= -->
     <div class="page-desktop">
-        <aside class="d-sidebar">
-            <div style="padding: 20px;">
-                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Logo" style="height: 40px;">
-            </div>
-            <div style="padding: 0 12px;">
-                <div class="d-nav-item" onclick="window.location.href='index.html'">Dashboard</div>
-                <div class="d-nav-item" onclick="window.location.href='manage-products.html'">Inventory</div>
-                <div class="d-nav-item d-nav-item--active">Customize Site</div>
-                <div class="d-submenu">
-                    <div class="d-submenu-item" onclick="window.location.href='hero-section.html'">Hero Section</div>
-                    <div class="d-submenu-item" onclick="window.location.href='sections-manager.html'">Sections</div>
-                    <div class="d-submenu-item active">Popup Manager</div>
-                </div>
-            </div>
-        </aside>
+        <header class="d-topbar">
+            <img class="d-topbar-logo"
+                 src="https://product-ecommerces.netlify.app/vastramaya.png"
+                 alt="Vastramaya Logo" />
+        </header>
 
-        <main class="d-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                <h1 style="font-size: 24px; font-weight: 700;">Popup Manager</h1>
-                <div style="display: flex; gap: 12px;">
-                    <button class="btn btn-secondary" onclick="resetForm()">Reset</button>
-                    <button class="btn btn-primary" onclick="savePopupSettings('desktop')">Save Settings</button>
-                </div>
-            </div>
+        <div class="d-app">
+            <aside class="d-sidebar">
+                <div class="d-sidebar-inner">
+                    <nav class="d-nav">
+                        <div class="d-nav-group">
+                            <!-- Dashboard -->
+                            <div class="d-nav-item" onclick="window.location.href='index.html'">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="7" height="7" x="3" y="3" rx="1"/>
+                                        <rect width="7" height="7" x="14" y="3" rx="1"/>
+                                        <rect width="7" height="7" x="14" y="14" rx="1"/>
+                                        <rect width="7" height="7" x="3" y="14" rx="1"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Dashboard</span>
+                            </div>
 
-            <div class="popup-manager-card">
-                <!-- Enable Toggle -->
-                <div class="popup-toggle-container">
-                    <div class="popup-toggle" id="popup-toggle" onclick="togglePopup()"></div>
-                    <div>
-                        <div style="font-weight: 600; font-size: 16px;">Enable Popup</div>
-                        <div style="color: #6b7280;">Turn on/off the popup for your store visitors</div>
-                    </div>
-                </div>
+                            <!-- Inventory (Active) -->
+                            <div class="d-nav-item d-nav-item--active">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 7v10"/>
+                                        <path d="M6 5v14"/>
+                                        <rect width="12" height="18" x="10" y="3" rx="2"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Inventory</span>
+                            </div>
 
-                <div class="form-grid">
-                    <!-- Left Col -->
-                    <div>
-                        <div class="form-section">
-                            <h4 style="margin-bottom: 20px; font-weight: 600;">Popup Content</h4>
-                            
-                            <!-- Image Upload -->
-                            <div class="form-group">
-                                <label class="form-label">Popup Image</label>
-                                <div class="image-upload-zone" id="d-upload-zone" onclick="document.getElementById('d-image-input').click()">
-                                    <div class="upload-content">
-                                        <div style="font-weight: 600; margin-bottom: 4px;">Click to upload image</div>
-                                        <div style="font-size: 12px; color: #6b7280;">PNG, JPG up to 5MB</div>
-                                    </div>
-                                    <div class="image-preview-container" id="d-preview-container">
-                                        <img id="d-image-preview" class="image-preview">
-                                        <button type="button" class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); removeImage()">Remove</button>
-                                    </div>
+                            <!-- Customize Site -->
+                            <div class="d-nav-item" id="d-customize-toggle">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
+                                        <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Customize Site</span>
+                                <span class="chevron">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round"
+                                         class="chevron-icon">
+                                        <path d="m9 18 6-6-6-6"/>
+                                    </svg>
+                                </span>
+                            </div>
+
+                            <!-- Desktop Customize Site submenu -->
+                            <div class="d-submenu" id="d-customize-submenu">
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dock-icon lucide-dock"><path d="M2 8h20"/><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 16h12"/></svg>
+                                    <span>Hero Section</span>
                                 </div>
-                                <input type="file" id="d-image-input" style="display: none;" accept="image/*">
-                            </div>
-
-                            <!-- Conditional Msg -->
-                            <div class="conditional-fields" id="d-conditional-fields">
-                                <div class="conditional-note">
-                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>
-                                    Image uploaded! Title and message are now optional.
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-list-icon lucide-layout-list"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><path d="M14 4h7"/><path d="M14 9h7"/><path d="M14 15h7"/><path d="M14 20h7"/></svg>
+                                    <span>Sections</span>
+                                </div>
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tv-minimal-icon lucide-tv-minimal"><path d="M7 21h10"/><rect width="20" height="14" x="2" y="3" rx="2"/></svg>
+                                    <span>Popup</span>
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label class="form-label" id="d-title-label">Popup Title</label>
-                                <input type="text" class="form-control" id="d-popup-title" placeholder="Special Offer!">
+                            <!-- MANAGE ORDERS -->
+                            <div class="d-nav-item" id="d-orders-toggle">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                        <path d="M8 14v2.2l1.6 1"/>
+                                        <circle cx="8" cy="16" r="6"/>
+                                    </svg>
+                                </span>
+                                <span class="label">MANAGE ORDERS</span>
+                                <span class="chevron">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round"
+                                         class="chevron-icon">
+                                        <path d="m9 18 6-6-6-6"/>
+                                    </svg>
+                                </span>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label" id="d-message-label">Popup Message</label>
-                                <textarea class="form-control" id="d-popup-message" rows="3" placeholder="Enter message..."></textarea>
+
+                            <!-- Desktop MANAGE ORDERS submenu -->
+                            <div class="d-submenu" id="d-orders-submenu">
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 6v6l4 2"/>
+                                        <path d="M22 12a10 10 0 1 0-11 9.95"/>
+                                        <path d="m22 16-5.5 5.5L14 19"/>
+                                    </svg>
+                                    <span>Today</span>
+                                </div>
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M8 2v4"/>
+                                        <path d="M16 2v4"/>
+                                        <rect width="18" height="18" x="3" y="4" rx="2"/>
+                                        <path d="M3 10h18"/>
+                                        <path d="M8 14h.01"/>
+                                        <path d="M12 14h.01"/>
+                                        <path d="M16 14h.01"/>
+                                        <path d="M8 18h.01"/>
+                                        <path d="M12 18h.01"/>
+                                        <path d="M16 18h.01"/>
+                                    </svg>
+                                    <span>This Month</span>
+                                </div>
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2v2"/>
+                                        <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
+                                        <path d="M18 2v2"/>
+                                        <path d="M2 13h2"/>
+                                        <path d="M8 8h14"/>
+                                        <rect x="8" y="3" width="14" height="14" rx="2"/>
+                                    </svg>
+                                    <span>All Orders</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </nav>
 
-                    <!-- Right Col -->
-                    <div>
-                        <div class="form-section">
-                            <h4 style="margin-bottom: 20px; font-weight: 600;">Button Settings</h4>
-                            <div class="form-group">
-                                <label class="form-label form-label-required">Button Text</label>
-                                <input type="text" class="form-control" id="d-button-text" placeholder="Shop Now">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label form-label-required">Button Link</label>
-                                <input type="text" class="form-control" id="d-button-link" placeholder="/shop">
-                            </div>
-                        </div>
-
-                        <div class="form-section">
-                            <h4 style="margin-bottom: 20px; font-weight: 600;">Timing</h4>
-                            <div class="form-group">
-                                <label class="form-label">Delay (Seconds)</label>
-                                <input type="number" class="form-control" id="d-delay-time" value="5" min="0">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Frequency</label>
-                                <select class="form-control" id="d-display-frequency">
-                                    <option value="always">Always show</option>
-                                    <option value="once_per_session">Once per session</option>
-                                    <option value="once_per_day">Once per day</option>
-                                </select>
+                    <!-- Desktop Account section -->
+                    <div class="d-account-section" id="profile-section">
+                        <div class="account-card">
+                            <img id="sidebar-avatar" class="account-avatar"
+                                 src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
+                                 alt="Profile" />
+                            <div class="account-text">
+                                <div class="account-name" id="sidebar-name">Loading...</div>
+                                <div class="account-email" id="sidebar-email">Admin</div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <div style="text-align: center; margin-top: 20px;">
-                    <button class="btn btn-primary" style="min-width: 200px;" onclick="savePopupSettings('desktop')">Save Popup Settings</button>
+            </aside>
+
+            <main class="d-content">
+                <div class="content-inner">
+                    <!-- PAGE HEADER -->
+                    <div class="page-header">
+                        <div class="page-title-wrap">
+                            <div class="page-title">Manage Categories</div>
+                            <div class="breadcrumb">
+                                <span class="breadcrumb-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                    </svg>
+                                </span>
+                                <span>Home</span>
+                                <span class="breadcrumb-divider">/</span>
+                                <span>Manage Categories</span>
+                            </div>
+                        </div>
+
+                        <button class="primary-btn" onclick="openAddModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14"/>
+                                <path d="M12 5v14"/>
+                            </svg>
+                            <span>Add Category</span>
+                        button>
+                    </div>
+
+                    <!-- CARD -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="search-input-wrap">
+                                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="7"></circle>
+                                    <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+                                </svg>
+                                <input type="text" id="search-input" placeholder="Search categories..." />
+                            </div>
+                        </div>
+
+                        <div class="table-wrapper">
+                            <table class="domain-table">
+                                <thead>
+                                    <tr>
+                                        <th class="th-image">
+                                            <div class="th-image-content">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-images-icon lucide-images">
+                                                    <path d="m22 11-1.296-1.296a2.4 2.4 0 0 0-3.408 0L11 16"/>
+                                                    <path d="M4 8a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2"/>
+                                                    <circle cx="13" cy="7" r="1" fill="currentColor"/>
+                                                    <rect x="8" y="2" width="14" height="14" rx="2"/>
+                                                </svg>
+                                                <span>Image</span>
+                                            </div>
+                                        </th>
+                                        <th>Name</th>
+                                        <th>No. of products</th>
+                                        <th class="th-status">Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="desktop-categories-table">
+                                    <!-- Skeleton loading for desktop -->
+                                    <tr class="desktop-skeleton-row">
+                                        <td class="td-image">
+                                            <div class="skeleton skeleton-image"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-toggle"></div>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <div class="skeleton skeleton-button"></div>
+                                                <div class="skeleton skeleton-kebab"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="desktop-skeleton-row">
+                                        <td class="td-image">
+                                            <div class="skeleton skeleton-image"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-toggle"></div>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <div class="skeleton skeleton-button"></div>
+                                                <div class="skeleton skeleton-kebab"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="desktop-skeleton-row">
+                                        <td class="td-image">
+                                            <div class="skeleton skeleton-image"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-toggle"></div>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <div class="skeleton skeleton-button"></div>
+                                                <div class="skeleton skeleton-kebab"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="desktop-skeleton-row">
+                                        <td class="td-image">
+                                            <div class="skeleton skeleton-image"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-toggle"></div>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <div class="skeleton skeleton-button"></div>
+                                                <div class="skeleton skeleton-kebab"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="desktop-skeleton-row">
+                                        <td class="td-image">
+                                            <div class="skeleton skeleton-image"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-toggle"></div>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <div class="skeleton skeleton-button"></div>
+                                                <div class="skeleton skeleton-kebab"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </main>
+            </main>
+        </div>
     </div>
 
     <!-- ================= MOBILE VIEW ================= -->
     <div class="page-mobile">
+        <!-- Mobile header: menu left, logo right -->
         <header class="m-header">
-            <div onclick="document.getElementById('m-overlay').classList.add('open')" style="padding: 10px;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-            </div>
-            <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Logo" style="height: 32px;">
-            <div style="width: 44px;"></div>
+            <button class="m-menu-btn" id="m-menu-toggle" aria-label="Open menu">
+                <div class="m-menu-lines"><span></span></div>
+            </button>
+
+            <img
+              class="m-logo"
+              src="https://product-ecommerces.netlify.app/vastramaya.png"
+              alt="Vastramaya Logo" />
         </header>
 
-        <div class="m-overlay" id="m-overlay" onclick="if(event.target===this) this.classList.remove('open')">
-            <div class="m-drawer">
-                <div style="padding: 20px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between;">
-                    <span style="font-weight: 700;">Menu</span>
-                    <span onclick="document.getElementById('m-overlay').classList.remove('open')">✕</span>
+        <main class="m-main">
+            <div class="mobile-content-inner">
+                <!-- Mobile Page Header -->
+                <div class="mobile-page-header">
+                    <div class="mobile-page-title-wrap">
+                        <div class="mobile-page-title">Manage Categories</div>
+                        <div class="mobile-breadcrumb">
+                            <span class="mobile-breadcrumb-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                                    <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                </svg>
+                            </span>
+                            <span>Home</span>
+                            <span class="mobile-breadcrumb-divider">/</span>
+                            <span>Manage Categories</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Mobile Search and Add Button Row -->
+                    <div class="mobile-controls-row">
+                        <div class="mobile-search-wrap">
+                            <div class="mobile-search-input-wrap">
+                                <svg class="mobile-search-icon" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="7"></circle>
+                                    <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+                                </svg>
+                                <input type="text" id="mobile-search-input" placeholder="Search categories..." />
+                            </div>
+                        </div>
+                        <button class="mobile-add-btn" onclick="openAddModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14"/>
+                                <path d="M12 5v14"/>
+                            </svg>
+                            <span>Add</span>
+                        </button>
+                    </div>
                 </div>
-                <div style="padding: 10px;">
-                    <div class="d-nav-item" onclick="window.location.href='index.html'">Dashboard</div>
-                    <div class="d-nav-item" onclick="window.location.href='manage-products.html'">Inventory</div>
-                    <div class="d-nav-item d-nav-item--active">Popup Manager</div>
+
+                <!-- Mobile Category Cards -->
+                <div class="mobile-category-cards" id="mobile-category-cards">
+                    <!-- Skeleton loading for mobile -->
+                    <div class="mobile-skeleton-card">
+                        <div class="skeleton skeleton-mobile-image"></div>
+                        <div class="skeleton-mobile-content">
+                            <div class="skeleton skeleton-mobile-title"></div>
+                            <div class="skeleton skeleton-mobile-subtitle"></div>
+                        </div>
+                        <div class="category-card-actions">
+                            <div class="skeleton skeleton-mobile-toggle"></div>
+                            <div class="skeleton skeleton-mobile-menu"></div>
+                        </div>
+                    </div>
+                    <div class="mobile-skeleton-card">
+                        <div class="skeleton skeleton-mobile-image"></div>
+                        <div class="skeleton-mobile-content">
+                            <div class="skeleton skeleton-mobile-title"></div>
+                            <div class="skeleton skeleton-mobile-subtitle"></div>
+                        </div>
+                        <div class="category-card-actions">
+                            <div class="skeleton skeleton-mobile-toggle"></div>
+                            <div class="skeleton skeleton-mobile-menu"></div>
+                        </div>
+                    </div>
+                    <div class="mobile-skeleton-card">
+                        <div class="skeleton skeleton-mobile-image"></div>
+                        <div class="skeleton-mobile-content">
+                            <div class="skeleton skeleton-mobile-title"></div>
+                            <div class="skeleton skeleton-mobile-subtitle"></div>
+                        </div>
+                        <div class="category-card-actions">
+                            <div class="skeleton skeleton-mobile-toggle"></div>
+                            <div class="skeleton skeleton-mobile-menu"></div>
+                        </div>
+                    </div>
+                    <div class="mobile-skeleton-card">
+                        <div class="skeleton skeleton-mobile-image"></div>
+                        <div class="skeleton-mobile-content">
+                            <div class="skeleton skeleton-mobile-title"></div>
+                            <div class="skeleton skeleton-mobile-subtitle"></div>
+                        </div>
+                        <div class="category-card-actions">
+                            <div class="skeleton skeleton-mobile-toggle"></div>
+                            <div class="skeleton skeleton-mobile-menu"></div>
+                        </div>
+                    </div>
+                    <div class="mobile-skeleton-card">
+                        <div class="skeleton skeleton-mobile-image"></div>
+                        <div class="skeleton-mobile-content">
+                            <div class="skeleton skeleton-mobile-title"></div>
+                            <div class="skeleton skeleton-mobile-subtitle"></div>
+                        </div>
+                        <div class="category-card-actions">
+                            <div class="skeleton skeleton-mobile-toggle"></div>
+                            <div class="skeleton skeleton-mobile-menu"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Overlay & drawer -->
+        <div class="m-overlay" id="m-overlay">
+            <div class="m-drawer">
+                <div class="m-drawer-header">
+                    <img
+                      class="m-drawer-logo"
+                      src="https://product-ecommerces.netlify.app/vastramaya.png"
+                      alt="Vastramaya Logo" />
+                    <button class="m-drawer-close" id="m-drawer-close" aria-label="Close menu">
+                        <div class="m-drawer-close-icon"></div>
+                    </button>
+                </div>
+
+                <nav class="m-drawer-nav">
+                    <!-- Dashboard -->
+                    <div class="m-nav-item" onclick="window.location.href='index.html'">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="7" height="7" x="3" y="3" rx="1"/>
+                                <rect width="7" height="7" x="14" y="3" rx="1"/>
+                                <rect width="7" height="7" x="14" y="14" rx="1"/>
+                                <rect width="7" height="7" x="3" y="14" rx="1"/>
+                            </svg>
+                        </span>
+                        <span class="label">Dashboard</span>
+                    </div>
+
+                    <!-- Inventory (Active) -->
+                    <div class="m-nav-item active">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 7v10"/>
+                                <path d="M6 5v14"/>
+                                <rect width="12" height="18" x="10" y="3" rx="2"/>
+                            </svg>
+                        </span>
+                        <span class="label">Inventory</span>
+                    </div>
+
+                    <!-- Customize Site with dropdown -->
+                    <div class="m-nav-item" id="m-customize-toggle">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
+                                <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+                            </svg>
+                        </span>
+                        <span class="label">Customize Site</span>
+                        <span class="chevron">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round"
+                                 class="chevron-icon">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <!-- Mobile Customize Site submenu -->
+                    <div class="m-submenu" id="m-customize-submenu">
+                        <div class="m-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dock-icon lucide-dock"><path d="M2 8h20"/><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 16h12"/></svg>
+                                    <span>Hero Section</span>
+                        </div>
+                        <div class="m-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-list-icon lucide-layout-list"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><path d="M14 4h7"/><path d="M14 9h7"/><path d="M14 15h7"/><path d="M14 20h7"/></svg>
+                                    <span>Sections</span>
+                        </div>
+                        <div class="m-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tv-minimal-icon lucide-tv-minimal"><path d="M7 21h10"/><rect width="20" height="14" x="2" y="3" rx="2"/></svg>
+                                    <span>Popup</span>
+                        </div>
+                    </div>
+
+                    <!-- MANAGE ORDERS with dropdown -->
+                    <div class="m-nav-item" id="m-orders-toggle">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                <path d="M8 14v2.2l1.6 1"/>
+                                <circle cx="8" cy="16" r="6"/>
+                            </svg>
+                        </span>
+                        <span class="label">MANAGE ORDERS</span>
+                        <span class="chevron">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round"
+                                 class="chevron-icon">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <!-- Mobile MANAGE ORDERS submenu -->
+                    <div class="m-submenu" id="m-orders-submenu">
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 6v6l4 2"/>
+                                <path d="M22 12a10 10 0 1 0-11 9.95"/>
+                                <path d="m22 16-5.5 5.5L14 19"/>
+                            </svg>
+                            <span>Today</span>
+                        </div>
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M8 2v4"/>
+                                <path d="M16 2v4"/>
+                                <rect width="18" height="18" x="3" y="4" rx="2"/>
+                                <path d="M3 10h18"/>
+                                <path d="M8 14h.01"/>
+                                <path d="M12 14h.01"/>
+                                <path d="M16 14h.01"/>
+                                <path d="M8 18h.01"/>
+                                <path d="M12 18h.01"/>
+                                <path d="M16 18h.01"/>
+                            </svg>
+                            <span>This Month</span>
+                        </div>
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2v2"/>
+                                <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
+                                <path d="M18 2v2"/>
+                                <path d="M2 13h2"/>
+                                <path d="M8 8h14"/>
+                                <rect x="8" y="3" width="14" height="14" rx="2"/>
+                            </svg>
+                            <span>All Orders</span>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Mobile account sharing -->
+                <div class="m-account-section" id="mobile-profile-section">
+                    <div class="account-card">
+                        <img id="mobile-sidebar-avatar" class="account-avatar"
+                             src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
+                             alt="Profile" />
+                        <div class="account-text">
+                            <div class="account-name" id="mobile-sidebar-name">Loading...</div>
+                            <div class="account-email" id="mobile-sidebar-email">Admin</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <main class="m-main">
-            <div class="mobile-form-section" style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <div style="font-weight: 600;">Enable Popup</div>
-                    <div style="font-size: 12px; color: #6b7280;">Show/Hide popup</div>
-                </div>
-                <div class="popup-toggle" id="m-popup-toggle" onclick="toggleMobilePopup()"></div>
+        
+        <!-- Advanced Menu (Bottom Sheet) -->
+        <div class="advanced-menu-overlay" id="advanced-menu-overlay"></div>
+        <div class="advanced-menu" id="advanced-menu">
+            <div class="menu-handle"></div>
+            <div class="advanced-menu-header">
+                <div class="advanced-menu-title">Category Actions</div>
+                <button class="advanced-menu-close" id="advanced-menu-close">
+                    <div class="advanced-menu-close-icon"></div>
+                </button>
             </div>
-
-            <div class="mobile-form-section">
-                <h4 style="margin-bottom: 15px; font-weight: 600;">Content</h4>
-                
-                <!-- Mobile Image Upload -->
-                <div class="image-upload-zone" id="m-upload-zone" onclick="document.getElementById('m-image-input').click()">
-                    <div class="upload-content">
-                        <div>Tap to upload image</div>
-                    </div>
-                    <div class="image-preview-container" id="m-preview-container">
-                        <img id="m-image-preview" class="image-preview">
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); removeMobileImage()">Remove</button>
-                    </div>
-                </div>
-                <input type="file" id="m-image-input" style="display: none;" accept="image/*">
-
-                <div class="form-group">
-                    <label class="form-label" id="m-title-label">Title</label>
-                    <input type="text" class="form-control" id="m-popup-title" placeholder="Special Offer!">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" id="m-message-label">Message</label>
-                    <textarea class="form-control" id="m-popup-message" rows="3"></textarea>
-                </div>
+            <div class="advanced-menu-items">
+                <button class="advanced-menu-item" id="mobile-edit-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 21h8"/>
+                        <path d="m15 5 4 4"/>
+                        <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                    </svg>
+                    <span>Edit</span>
+                </button>
+                <button class="advanced-menu-item" id="mobile-delete-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10 11v6"/>
+                        <path d="M14 11v6"/>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                        <path d="M3 6h18"/>
+                        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                    <span>Delete Category</span>
+                </button>
             </div>
-
-            <div class="mobile-form-section">
-                <h4 style="margin-bottom: 15px; font-weight: 600;">Button & Timing</h4>
-                <div class="form-group">
-                    <label class="form-label form-label-required">Button Text</label>
-                    <input type="text" class="form-control" id="m-button-text">
-                </div>
-                <div class="form-group">
-                    <label class="form-label form-label-required">Button Link</label>
-                    <input type="text" class="form-control" id="m-button-link">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Delay (sec)</label>
-                    <input type="number" class="form-control" id="m-delay-time">
-                </div>
-            </div>
-
-            <button class="btn btn-primary" style="width: 100%; position: fixed; bottom: 0; left: 0; border-radius: 0; padding: 15px; z-index: 90;" onclick="saveMobilePopupSettings()">Save Settings</button>
-        </main>
+        </div>
     </div>
 
-    <div id="toast"></div>
+    <!-- Profile Popup with updated SVG icons -->
+    <div class="profile-popup" id="profile-popup">
+        <div class="popup-header">
+            <img id="popup-avatar" src="" class="account-avatar">
+            <div class="account-text">
+                <span class="account-name" id="popup-name">Loading...</span>
+                <span class="account-email" id="popup-email">Admin</span>
+            </div>
+        </div>
+        <ul class="popup-list">
+            <li>
+                <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
+                        <circle cx="12" cy="8" r="5"/>
+                        <path d="M20 21a8 8 0 0 0-16 0"/>
+                    </svg>
+                    <span>Profile</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
+                        <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="auth.signOut()" class="logout">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon logout-icon">
+                        <path d="m16 17 5-5-5-5"/>
+                        <path d="M21 12H9"/>
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    </svg>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
 
-    <!-- Firebase SDKs -->
+    <!-- UPDATED: ADD/EDIT MODAL with premium image area -->
+    <div class="modal-overlay" id="category-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modal-title">Add Category</div>
+                <button class="btn-icon" onclick="closeModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18"/>
+                        <path d="m6 6 12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <form id="category-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Category Name</label>
+                        <input type="text" class="form-input" id="cat-name-input" required placeholder="e.g. Ethnic Wear">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category Image <span style="color: var(--danger-color);">*</span></label>
+                        <div class="image-upload-container">
+                            <!-- Upload Box (shown initially for new category) -->
+                            <div class="image-upload-box" id="image-upload-box" onclick="triggerFileInput()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                                <div class="upload-text">Click to upload image</div>
+                                <div class="upload-subtext">PNG, JPG up to 5MB</div>
+                            </div>
+                            
+                            <!-- Progress bar (hidden by default) -->
+                            <div class="upload-progress" id="upload-progress" style="display: none;">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="progress-fill"></div>
+                                </div>
+                                <div class="progress-text" id="progress-text">0% uploaded</div>
+                            </div>
+                            
+                            <!-- Success message for new uploads only -->
+                            <div class="upload-success-message" id="upload-success-message" style="display: none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
+                                <div class="upload-success-message-text">Image uploaded successfully!</div>
+                            </div>
+                            
+                            <!-- Preview container (for both editing and new uploads) -->
+                            <div class="image-preview-container" id="image-preview-container" style="display: none;">
+                                <div class="preview-content">
+                                    <div class="preview-img-wrapper">
+                                        <img id="cat-preview" class="preview-img">
+                                    </div>
+                                    <div class="preview-actions">
+                                        <button type="button" class="change-image-btn" onclick="showUploadBox()">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                                            </svg>
+                                            Change Image
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="image-required" id="image-required">Image is required for new categories</div>
+                            <div class="upload-error" id="upload-error"></div>
+                        </div>
+                        <input type="file" id="cat-file-input" accept="image/*" style="display:none;">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="modal-submit-btn" disabled>Save Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- UPDATED: DELETE MODAL with improved UI -->
+    <div class="modal-overlay" id="delete-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" style="color: var(--danger-color);">Delete Category</div>
+                <button class="btn-icon" onclick="closeDeleteModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18"/>
+                        <path d="m6 6 12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p style="color: #6b7280; margin-bottom: 1rem; font-size: 0.95rem;">Are you sure you want to delete <strong id="del-cat-name" style="color: rgb(29, 30, 32);"></strong>? This action cannot be undone.</p>
+                <div class="form-group">
+                    <label class="form-label">Type category name to confirm</label>
+                    <input type="text" class="form-input" id="confirm-del-input" placeholder="Category Name">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+                    <button class="btn btn-danger" id="confirm-del-btn" disabled>Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script src='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css'></script>
 
     <script>
-        // --- CONFIGURATION ---
+        // --- UI INTERACTIONS ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile drawer behaviour
+            const mOverlay = document.getElementById('m-overlay');
+            const mMenuToggle = document.getElementById('m-menu-toggle');
+            const mDrawerClose = document.getElementById('m-drawer-close');
+
+            if (mMenuToggle && mOverlay && mDrawerClose) {
+                mMenuToggle.addEventListener('click', () => {
+                    mOverlay.classList.add('open');
+                });
+
+                mDrawerClose.addEventListener('click', () => {
+                    mOverlay.classList.remove('open');
+                });
+
+                mOverlay.addEventListener('click', (e) => {
+                    if (e.target === mOverlay) {
+                        mOverlay.classList.remove('open');
+                    }
+                });
+            }
+
+            // Desktop Customize Site dropdown
+            const dCustomizeToggle = document.getElementById('d-customize-toggle');
+            const dCustomizeSubmenu = document.getElementById('d-customize-submenu');
+
+            if (dCustomizeToggle && dCustomizeSubmenu) {
+                dCustomizeToggle.addEventListener('click', () => {
+                    dCustomizeSubmenu.classList.toggle('open');
+                    dCustomizeToggle.classList.toggle('dropdown-open');
+                });
+            }
+
+            // Desktop MANAGE ORDERS dropdown
+            const dOrdersToggle = document.getElementById('d-orders-toggle');
+            const dOrdersSubmenu = document.getElementById('d-orders-submenu');
+
+            if (dOrdersToggle && dOrdersSubmenu) {
+                dOrdersToggle.addEventListener('click', () => {
+                    dOrdersSubmenu.classList.toggle('open');
+                    dOrdersToggle.classList.toggle('dropdown-open');
+                });
+            }
+
+            // Mobile Customize Site dropdown
+            const mCustomizeToggle = document.getElementById('m-customize-toggle');
+            const mCustomizeSubmenu = document.getElementById('m-customize-submenu');
+
+            if (mCustomizeToggle && mCustomizeSubmenu) {
+                mCustomizeToggle.addEventListener('click', () => {
+                    mCustomizeSubmenu.classList.toggle('open');
+                    mCustomizeToggle.classList.toggle('dropdown-open');
+                });
+            }
+
+            // Mobile MANAGE ORDERS dropdown
+            const mOrdersToggle = document.getElementById('m-orders-toggle');
+            const mOrdersSubmenu = document.getElementById('m-orders-submenu');
+
+            if (mOrdersToggle && mOrdersSubmenu) {
+                mOrdersToggle.addEventListener('click', () => {
+                    mOrdersSubmenu.classList.toggle('open');
+                    mOrdersToggle.classList.toggle('dropdown-open');
+                });
+            }
+
+            // Profile section
+            const profileSection = document.getElementById('profile-section');
+            const mobileProfileSection = document.getElementById('mobile-profile-section');
+            const profilePopup = document.getElementById('profile-popup');
+
+            // Fix profile popup positioning for desktop - show on LEFT side
+            if (profileSection) {
+                profileSection.addEventListener('click', e => {
+                    e.stopPropagation();
+                    
+                    // Position the popup at the bottom left of the account section for desktop
+                    if (window.innerWidth >= 769) {
+                        const rect = profileSection.getBoundingClientRect();
+                        profilePopup.style.left = '30px';
+                        profilePopup.style.right = 'auto';
+                        profilePopup.style.bottom = '100px';
+                        profilePopup.style.top = 'auto';
+                    }
+                    
+                    profilePopup.classList.toggle('active');
+                });
+                
+                document.addEventListener('click', e => {
+                    if (!profileSection.contains(e.target) && !profilePopup.contains(e.target)) {
+                        profilePopup.classList.remove('active');
+                    }
+                });
+            }
+
+            if (mobileProfileSection) {
+                mobileProfileSection.addEventListener('click', e => {
+                    e.stopPropagation();
+                    profilePopup.classList.toggle('active');
+                });
+            }
+
+            // Advanced Menu functionality
+            const advancedMenu = document.getElementById('advanced-menu');
+            const advancedMenuOverlay = document.getElementById('advanced-menu-overlay');
+            const advancedMenuClose = document.getElementById('advanced-menu-close');
+
+            // Close advanced menu
+            if (advancedMenuClose && advancedMenuOverlay) {
+                advancedMenuClose.addEventListener('click', () => {
+                    advancedMenu.classList.remove('open');
+                    advancedMenuOverlay.classList.remove('open');
+                });
+
+                advancedMenuOverlay.addEventListener('click', () => {
+                    advancedMenu.classList.remove('open');
+                    advancedMenuOverlay.classList.remove('open');
+                });
+            }
+
+            // Prevent horizontal scrolling on mobile
+            if (window.innerWidth <= 768) {
+                document.body.style.overflowX = 'hidden';
+                document.body.style.maxWidth = '100vw';
+            }
+
+            // Close popups when clicking outside
+            document.addEventListener('click', function(e) {
+                // Close profile popup when clicking outside
+                const profilePopup = document.getElementById('profile-popup');
+                const profileSection = document.getElementById('profile-section');
+                const mobileProfileSection = document.getElementById('mobile-profile-section');
+                
+                if (profilePopup && profilePopup.classList.contains('active')) {
+                    if (!profilePopup.contains(e.target) && 
+                        !profileSection?.contains(e.target) && 
+                        !mobileProfileSection?.contains(e.target)) {
+                        profilePopup.classList.remove('active');
+                    }
+                }
+                
+                // Close desktop popups when clicking outside
+                document.querySelectorAll('.desktop-popup').forEach(popup => {
+                    if (popup.classList.contains('open') && 
+                        !popup.contains(e.target) && 
+                        !e.target.closest('.kebab')) {
+                        popup.classList.remove('open');
+                    }
+                });
+            });
+
+            // Close popups when pressing Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    document.getElementById('profile-popup')?.classList.remove('active');
+                    document.querySelectorAll('.desktop-popup').forEach(popup => {
+                        popup.classList.remove('open');
+                    });
+                    closeAdvancedMenu();
+                }
+            });
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth <= 768) {
+                document.body.style.overflowX = 'hidden';
+                document.body.style.maxWidth = '100vw';
+            } else {
+                document.body.style.overflowX = '';
+                document.body.style.maxWidth = '';
+            }
+            
+            // Close popups on resize
+            document.getElementById('profile-popup')?.classList.remove('active');
+            document.querySelectorAll('.desktop-popup').forEach(popup => {
+                popup.classList.remove('open');
+            });
+        });
+
+        // --- FIREBASE CONFIG ---
         const firebaseConfig = {
             apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
             authDomain: "vastramaya---magic.firebaseapp.com",
@@ -324,263 +3230,720 @@
             measurementId: "G-E39VNDCFVE"
         };
         const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
-
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
         const storage = firebase.storage();
 
-        // --- STATE ---
-        let state = {
-            enabled: false,
-            title: '',
-            message: '',
-            buttonText: 'Shop Now',
-            buttonLink: '/shop',
-            delayTime: 5,
-            displayFrequency: 'once_per_session',
-            imageUrl: ''
-        };
-        
-        let pendingImageFile = null;
+        // --- APP LOGIC ---
+        let allCategories = [];
+        let productCounts = {};
+        let editingId = null;
+        let deletingId = null;
+        let deletingName = null;
+        let currentFileUpload = null;
+        let existingImageUrl = null;
+        let currentMenuCategoryId = null;
+        let imageUploaded = false;
+        let currentUploadTask = null;
+        let previousImageRef = null;
+        let previousImageUrlToDelete = null;
+        let isLoading = true; // Track loading state
+        let isNewUpload = false; // Track if this is a new upload (for success message)
 
-        // --- AUTH ---
         auth.onAuthStateChanged(user => {
-            if (user && user.email === ADMIN_EMAIL) {
-                loadData();
-            } else {
+            if (!user || user.email !== ADMIN_EMAIL) {
                 window.location.href = 'index.html';
+                return;
             }
+            initProfile(user);
+            loadData();
         });
 
-        // --- LOAD DATA ---
+        function initProfile(user) {
+            const name = user.displayName || 'Admin';
+            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=5127ba&color=fff`;
+            
+            // Desktop
+            document.getElementById('sidebar-name').textContent = name;
+            document.getElementById('sidebar-email').textContent = user.email;
+            document.getElementById('sidebar-avatar').src = avatar;
+            
+            // Mobile
+            document.getElementById('mobile-sidebar-name').textContent = name;
+            document.getElementById('mobile-sidebar-email').textContent = user.email;
+            document.getElementById('mobile-sidebar-avatar').src = avatar;
+            
+            // Popup
+            document.getElementById('popup-name').textContent = name;
+            document.getElementById('popup-email').textContent = user.email;
+            document.getElementById('popup-avatar').src = avatar;
+        }
+
         async function loadData() {
-            showToast('Loading settings...');
             try {
-                const doc = await db.collection('landingPage').doc('HeroPopup').get();
-                if (doc.exists) {
-                    state = { ...state, ...doc.data() };
-                }
-                updateUI();
-            } catch (error) {
-                console.error("Error loading data:", error);
-                showToast("Failed to load settings", true);
+                // Show skeleton loading initially
+                isLoading = true;
+                
+                const prodSnap = await db.collection('products').get();
+                productCounts = {};
+                prodSnap.forEach(doc => {
+                    const cat = doc.data().category;
+                    if(cat) productCounts[cat] = (productCounts[cat] || 0) + 1;
+                });
+
+                const catSnap = await db.collection('categories').orderBy('name').get();
+                allCategories = catSnap.docs.map(doc => { 
+                    const data = doc.data();
+                    return { 
+                        id: doc.id, 
+                        ...data,
+                        enabled: data.enabled !== undefined ? data.enabled : true // Default to true if not set
+                    };
+                });
+                
+                isLoading = false;
+                renderCategories(allCategories);
+            } catch (e) {
+                console.error(e);
+                isLoading = false;
+                showToast('Error loading data', 'error');
+                renderCategories([]);
             }
         }
 
-        // --- UI SYNC ---
-        function updateUI() {
-            // Desktop Inputs
-            document.getElementById('popup-toggle').classList.toggle('active', state.enabled);
-            document.getElementById('d-popup-title').value = state.title;
-            document.getElementById('d-popup-message').value = state.message;
-            document.getElementById('d-button-text').value = state.buttonText;
-            document.getElementById('d-button-link').value = state.buttonLink;
-            document.getElementById('d-delay-time').value = state.delayTime;
-            document.getElementById('d-display-frequency').value = state.displayFrequency;
-
-            // Mobile Inputs
-            document.getElementById('m-popup-toggle').classList.toggle('active', state.enabled);
-            document.getElementById('m-popup-title').value = state.title;
-            document.getElementById('m-popup-message').value = state.message;
-            document.getElementById('m-button-text').value = state.buttonText;
-            document.getElementById('m-button-link').value = state.buttonLink;
-            document.getElementById('m-delay-time').value = state.delayTime;
-
-            // Image Handling
-            if (state.imageUrl) {
-                showImagePreview(state.imageUrl);
-            } else {
-                hideImagePreview();
+        function renderCategories(list) {
+            // Desktop table
+            const desktopTable = document.getElementById('desktop-categories-table');
+            // Mobile cards
+            const mobileCards = document.getElementById('mobile-category-cards');
+            
+            // Show loading skeleton
+            if (isLoading) {
+                // Skeleton is already shown in HTML
+                return;
             }
-        }
-
-        function showImagePreview(url) {
-            // Update Desktop View
-            document.getElementById('d-image-preview').src = url;
-            document.getElementById('d-preview-container').classList.add('active');
-            document.querySelector('#d-upload-zone .upload-content').style.display = 'none';
-            document.getElementById('d-upload-zone').classList.add('has-image');
-            document.getElementById('d-conditional-fields').style.display = 'block';
             
-            // Update Mobile View
-            document.getElementById('m-image-preview').src = url;
-            document.getElementById('m-preview-container').classList.add('active');
-            document.querySelector('#m-upload-zone .upload-content').style.display = 'none';
+            if(list.length === 0) {
+                desktopTable.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="empty-state">
+                            <h3>No Categories Found</h3>
+                            <p>Create a new category to get started.</p>
+                        </td>
+                    </tr>`;
+                mobileCards.innerHTML = `<div class="empty-state"><h3>No Categories Found</h3><p>Create a new category to get started.</p></div>`;
+                return;
+            }
             
-            // Logic: Title/Msg are optional if image exists
-            updateRequiredFields(false);
-        }
-
-        function hideImagePreview() {
-            // Reset Desktop
-            document.getElementById('d-image-preview').src = '';
-            document.getElementById('d-preview-container').classList.remove('active');
-            document.querySelector('#d-upload-zone .upload-content').style.display = 'block';
-            document.getElementById('d-upload-zone').classList.remove('has-image');
-            document.getElementById('d-conditional-fields').style.display = 'none';
-
-            // Reset Mobile
-            document.getElementById('m-image-preview').src = '';
-            document.getElementById('m-preview-container').classList.remove('active');
-            document.querySelector('#m-upload-zone .upload-content').style.display = 'block';
-
-            // Logic: Title/Msg required again
-            updateRequiredFields(true);
-        }
-
-        function updateRequiredFields(isRequired) {
-            const labels = ['d-title-label', 'd-message-label', 'm-title-label', 'm-message-label'];
-            labels.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    if (isRequired) el.classList.add('form-label-required');
-                    else el.classList.remove('form-label-required');
+            // Desktop table rows
+            desktopTable.innerHTML = list.map(cat => `
+                <tr>
+                    <td class="td-image">
+                        <img class="product-thumb"
+                             src="${cat.imageUrl || 'https://via.placeholder.com/100?text=No+Image'}"
+                             alt="${cat.name}" />
+                    </td>
+                    <td class="product-name">${cat.name}</td>
+                    <td class="product-count">${productCounts[cat.name] || 0} products</td>
+                    <td class="td-status">
+                        <div class="status-toggle">
+                            <label class="toggle-switch">
+                                <input type="checkbox" ${cat.enabled ? 'checked' : ''} 
+                                       onchange="toggleCategoryStatus('${cat.id}', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </td>
+                    <td class="product-actions">
+                        <div class="action-buttons">
+                            <button class="btn-secondary" onclick="window.location.href='manage-products.html?category=${encodeURIComponent(cat.name)}'">Manage</button>
+                            <div class="popup-container">
+                                <div class="kebab" data-category-id="${cat.id}">
+                                    <span class="kebab-dots"></span>
+                                </div>
+                                <div class="desktop-popup" id="desktop-popup-${cat.id}">
+                                    <button class="desktop-popup-item" onclick="openEditModal('${cat.id}')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M13 21h8"/>
+                                            <path d="m15 5 4 4"/>
+                                            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                                        </svg>
+                                        <span>Edit</span>
+                                    </button>
+                                    <button class="desktop-popup-item delete-item" onclick="openDeleteModal('${cat.id}', '${cat.name}')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M10 11v6"/>
+                                            <path d="M14 11v6"/>
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                                            <path d="M3 6h18"/>
+                                            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                        </svg>
+                                        <span>Delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            
+            // Mobile cards - UPDATED LAYOUT with toggle left to 3 dots and card redirect
+            mobileCards.innerHTML = list.map(cat => `
+                <div class="category-card-mobile" onclick="handleMobileCardClick(event, '${encodeURIComponent(cat.name)}')">
+                    <img class="category-card-image"
+                         src="${cat.imageUrl || 'https://via.placeholder.com/100?text=No+Image'}"
+                         alt="${cat.name}" />
+                    <div class="category-card-content">
+                        <div class="category-card-name">${cat.name}</div>
+                        <div class="category-card-products">${productCounts[cat.name] || 0} products</div>
+                    </div>
+                    <div class="category-card-actions">
+                        <div class="mobile-status-toggle">
+                            <label class="toggle-switch">
+                                <input type="checkbox" ${cat.enabled ? 'checked' : ''} 
+                                       onchange="toggleCategoryStatus('${cat.id}', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <button class="category-card-menu-btn" data-category-id="${cat.id}">
+                            <span class="category-card-menu-dots"></span>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            // FIXED: Desktop popup positioning - now using fixed positioning
+            document.querySelectorAll('.kebab').forEach(kebab => {
+                kebab.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    
+                    const categoryId = kebab.getAttribute('data-category-id');
+                    const popup = document.getElementById(`desktop-popup-${categoryId}`);
+                    
+                    // Close all other popups
+                    document.querySelectorAll('.desktop-popup').forEach(p => {
+                        if (p !== popup) {
+                            p.classList.remove('open');
+                        }
+                    });
+                    
+                    // Toggle current popup
+                    popup.classList.toggle('open');
+                    
+                    if (popup.classList.contains('open')) {
+                        // Get the position of the kebab button
+                        const rect = kebab.getBoundingClientRect();
+                        
+                        // Position the popup relative to the viewport
+                        popup.style.position = 'fixed';
+                        popup.style.top = `${rect.bottom + window.scrollY + 5}px`;
+                        popup.style.right = `${window.innerWidth - rect.right}px`;
+                        
+                        // Ensure popup stays within viewport
+                        const popupRect = popup.getBoundingClientRect();
+                        if (popupRect.bottom > window.innerHeight) {
+                            popup.style.top = `${rect.top + window.scrollY - popupRect.height - 5}px`;
+                        }
+                        if (popupRect.right > window.innerWidth) {
+                            popup.style.right = '10px';
+                        }
+                    }
+                });
+            });
+            
+            // Close popups when clicking elsewhere
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.popup-container') && !e.target.closest('.desktop-popup')) {
+                    document.querySelectorAll('.desktop-popup').forEach(popup => {
+                        popup.classList.remove('open');
+                    });
                 }
+            });
+            
+            // Prevent desktop popups from closing when clicking inside
+            document.querySelectorAll('.desktop-popup').forEach(popup => {
+                popup.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+            });
+            
+            // Attach event listeners for mobile menu buttons
+            document.querySelectorAll('.category-card-menu-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    currentMenuCategoryId = btn.getAttribute('data-category-id');
+                    const cat = allCategories.find(c => c.id === currentMenuCategoryId);
+                    
+                    if (!cat) return;
+                    
+                    // Set up the mobile menu buttons
+                    document.getElementById('mobile-edit-btn').onclick = () => {
+                        openEditModal(currentMenuCategoryId);
+                        closeAdvancedMenu();
+                    };
+                    
+                    document.getElementById('mobile-delete-btn').onclick = () => {
+                        openDeleteModal(cat.id, cat.name);
+                        closeAdvancedMenu();
+                    };
+                    
+                    openAdvancedMenu();
+                });
+            });
+            
+            // Prevent toggle clicks from triggering card redirect
+            document.querySelectorAll('.category-card-actions .toggle-switch input').forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent the click from bubbling up to parent
+                });
             });
         }
 
-        // --- INTERACTION HANDLERS ---
-        function togglePopup() {
-            state.enabled = !state.enabled;
-            // Update both UI elements immediately
-            document.getElementById('popup-toggle').classList.toggle('active', state.enabled);
-            document.getElementById('m-popup-toggle').classList.toggle('active', state.enabled);
+        // Handle mobile card click - redirect to products page
+        function handleMobileCardClick(event, categoryName) {
+            // Only redirect if the click wasn't on the actions area (toggle or menu button)
+            if (!event.target.closest('.category-card-actions') && 
+                !event.target.classList.contains('toggle-switch') &&
+                !event.target.classList.contains('toggle-slider') &&
+                event.target.type !== 'checkbox') {
+                window.location.href = 'manage-products.html?category=' + categoryName;
+            }
         }
 
-        function toggleMobilePopup() {
-            togglePopup(); // Alias to same logic
+        // Toggle category status
+        async function toggleCategoryStatus(id, enabled) {
+            try {
+                await db.collection('categories').doc(id).update({
+                    enabled: enabled,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // Update local state
+                const category = allCategories.find(c => c.id === id);
+                if (category) {
+                    category.enabled = enabled;
+                }
+                
+                // Re-render to update UI
+                renderCategories(allCategories.filter(c => allCategories.includes(c)));
+                
+                showToast(`Category ${enabled ? 'enabled' : 'disabled'} successfully`, 'success');
+                
+                // Close any open desktop popups
+                document.querySelectorAll('.desktop-popup').forEach(popup => {
+                    popup.classList.remove('open');
+                });
+                
+            } catch (e) {
+                console.error(e);
+                showToast('Failed to update category status', 'error');
+            }
         }
 
-        // Image Selection Logic
-        document.getElementById('d-image-input').addEventListener('change', handleFileSelect);
-        document.getElementById('m-image-input').addEventListener('change', handleFileSelect);
+        function openAdvancedMenu() {
+            document.getElementById('advanced-menu').classList.add('open');
+            document.getElementById('advanced-menu-overlay').classList.add('open');
+        }
 
-        function handleFileSelect(e) {
+        function closeAdvancedMenu() {
+            document.getElementById('advanced-menu').classList.remove('open');
+            document.getElementById('advanced-menu-overlay').classList.remove('open');
+        }
+
+        // Search functionality
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allCategories.filter(c => c.name.toLowerCase().includes(term));
+            renderCategories(filtered);
+        });
+
+        document.getElementById('mobile-search-input').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allCategories.filter(c => c.name.toLowerCase().includes(term));
+            renderCategories(filtered);
+        });
+
+        // --- ADD/EDIT LOGIC ---
+        function triggerFileInput() {
+            document.getElementById('cat-file-input').click();
+        }
+
+        function showUploadBox() {
+            // Hide success message and preview, show upload box
+            document.getElementById('upload-success-message').style.display = 'none';
+            document.getElementById('upload-progress').style.display = 'none';
+            document.getElementById('image-preview-container').style.display = 'none';
+            document.getElementById('image-upload-box').style.display = 'flex';
+            document.getElementById('cat-preview').style.display = 'none';
+            
+            // Reset file input
+            document.getElementById('cat-file-input').value = '';
+            
+            // Clear previous image URL
+            existingImageUrl = null;
+            
+            // For new category, show required message
+            if (!editingId) {
+                document.getElementById('image-required').style.display = 'block';
+                document.getElementById('modal-submit-btn').disabled = true;
+            }
+            
+            // Mark image as not uploaded
+            imageUploaded = false;
+            isNewUpload = false;
+        }
+
+        function openAddModal() {
+            editingId = null;
+            currentFileUpload = null;
+            existingImageUrl = null;
+            imageUploaded = false;
+            previousImageRef = null;
+            previousImageUrlToDelete = null;
+            isNewUpload = false;
+            
+            document.getElementById('modal-title').textContent = "Add Category";
+            document.getElementById('modal-submit-btn').textContent = "Save Category";
+            document.getElementById('modal-submit-btn').disabled = true; // Disable until image is uploaded
+            document.getElementById('category-form').reset();
+            
+            // Reset image upload UI
+            document.getElementById('upload-success-message').style.display = 'none';
+            document.getElementById('image-upload-box').style.display = 'flex';
+            document.getElementById('upload-progress').style.display = 'none';
+            document.getElementById('image-preview-container').style.display = 'none';
+            document.getElementById('image-required').style.display = 'block';
+            document.getElementById('upload-error').style.display = 'none';
+            document.getElementById('upload-error').textContent = '';
+            
+            document.getElementById('category-modal').style.display = 'flex';
+        }
+
+        function openEditModal(id) {
+            const cat = allCategories.find(c => c.id === id);
+            if(!cat) return;
+            editingId = id;
+            currentFileUpload = null;
+            existingImageUrl = cat.imageUrl || null;
+            imageUploaded = true; // Mark as uploaded since we have existing image
+            previousImageRef = null;
+            previousImageUrlToDelete = cat.imageUrl || null;
+            isNewUpload = false;
+            
+            document.getElementById('modal-title').textContent = "Edit Category";
+            document.getElementById('modal-submit-btn').textContent = "Update Category";
+            document.getElementById('modal-submit-btn').disabled = false; // Enable for editing
+            document.getElementById('cat-name-input').value = cat.name;
+            document.getElementById('image-required').style.display = 'none';
+            document.getElementById('upload-success-message').style.display = 'none';
+            
+            if(cat.imageUrl) {
+                document.getElementById('cat-preview').src = cat.imageUrl;
+                document.getElementById('cat-preview').style.display = 'block';
+                document.getElementById('image-preview-container').style.display = 'flex';
+                document.getElementById('upload-progress').style.display = 'none';
+                document.getElementById('image-upload-box').style.display = 'none';
+            } else {
+                // If no existing image, show upload box
+                document.getElementById('cat-preview').style.display = 'none';
+                document.getElementById('image-preview-container').style.display = 'none';
+                document.getElementById('upload-progress').style.display = 'none';
+                document.getElementById('image-upload-box').style.display = 'flex';
+                document.getElementById('image-required').style.display = 'block';
+                imageUploaded = false;
+                document.getElementById('modal-submit-btn').disabled = true;
+            }
+            
+            document.getElementById('category-modal').style.display = 'flex';
+            
+            // Clean up menus
+            document.querySelectorAll('.desktop-popup').forEach(d => d.classList.remove('open'));
+            closeAdvancedMenu();
+        }
+
+        function closeModal() {
+            // Cancel any ongoing upload
+            if (currentUploadTask) {
+                currentUploadTask.cancel();
+                currentUploadTask = null;
+            }
+            
+            document.getElementById('category-modal').style.display = 'none';
+        }
+
+        document.getElementById('cat-file-input').addEventListener('change', async (e) => {
             const file = e.target.files[0];
-            if (!file) return;
+            if(!file) return;
             
-            if (file.size > 5 * 1024 * 1024) return showToast("Image too large (Max 5MB)", true);
+            // Validate file size
+            if(file.size > 5*1024*1024) {
+                document.getElementById('upload-error').textContent = 'Image too large (max 5MB)';
+                document.getElementById('upload-error').style.display = 'block';
+                return;
+            }
             
-            pendingImageFile = file;
-            const reader = new FileReader();
-            reader.onload = (event) => showImagePreview(event.target.result);
-            reader.readAsDataURL(file);
-        }
-
-        function removeImage() {
-            pendingImageFile = null;
-            state.imageUrl = ''; 
-            hideImagePreview();
+            // Validate file type
+            if(!file.type.match('image.*')) {
+                document.getElementById('upload-error').textContent = 'Please select an image file';
+                document.getElementById('upload-error').style.display = 'block';
+                return;
+            }
             
-            // Clear inputs
-            document.getElementById('d-image-input').value = '';
-            document.getElementById('m-image-input').value = '';
-            showToast('Image removed', false);
-        }
+            document.getElementById('upload-error').style.display = 'none';
+            document.getElementById('upload-error').textContent = '';
+            document.getElementById('image-required').style.display = 'none';
+            
+            // Cancel previous upload if exists
+            if (currentUploadTask) {
+                currentUploadTask.cancel();
+            }
+            
+            // Delete previous image from storage if exists (when changing image)
+            if (previousImageUrlToDelete) {
+                try {
+                    // Extract the file path from the URL and delete from storage
+                    const imageRef = storage.refFromURL(previousImageUrlToDelete);
+                    await imageRef.delete();
+                    console.log('Previous image deleted from storage');
+                } catch (error) {
+                    console.log('Previous image not found or already deleted:', error);
+                }
+                previousImageUrlToDelete = null;
+            }
+            
+            // Show preview
+            const preview = document.getElementById('cat-preview');
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = 'block';
+            
+            // Hide upload box and show progress
+            document.getElementById('image-upload-box').style.display = 'none';
+            document.getElementById('upload-success-message').style.display = 'none';
+            document.getElementById('image-preview-container').style.display = 'none';
+            document.getElementById('upload-progress').style.display = 'flex';
+            
+            // Disable submit button during upload
+            document.getElementById('modal-submit-btn').disabled = true;
+            
+            // Start upload
+            currentFileUpload = file;
+            uploadImage(file);
+        });
 
-        function removeMobileImage() {
-            removeImage(); // Alias
-        }
-
-        function resetForm() {
-            if (confirm("Reset all settings to default?")) {
-                state = {
-                    enabled: false,
-                    title: 'Special Offer!',
-                    message: 'Get 20% off on your first order!',
-                    buttonText: 'Shop Now',
-                    buttonLink: '/shop',
-                    delayTime: 5,
-                    displayFrequency: 'once_per_session',
-                    imageUrl: ''
-                };
-                pendingImageFile = null;
-                updateUI();
-                showToast("Settings reset");
+        async function uploadImage(file) {
+            try {
+                // Create a reference to the file location
+                const fileExtension = file.name.split('.').pop();
+                const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExtension}`;
+                const storageRef = storage.ref().child(`categories/${fileName}`);
+                
+                // Start upload task
+                currentUploadTask = storageRef.put(file);
+                
+                // Track upload progress
+                currentUploadTask.on('state_changed',
+                    (snapshot) => {
+                        // Update progress bar
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        document.getElementById('progress-fill').style.width = `${progress}%`;
+                        document.getElementById('progress-text').textContent = `${Math.round(progress)}% uploaded`;
+                    },
+                    (error) => {
+                        // Upload failed
+                        console.error('Upload error:', error);
+                        document.getElementById('upload-error').textContent = 'Upload failed. Please try again.';
+                        document.getElementById('upload-error').style.display = 'block';
+                        document.getElementById('upload-progress').style.display = 'none';
+                        document.getElementById('modal-submit-btn').disabled = true;
+                        
+                        // Show upload box again
+                        document.getElementById('image-upload-box').style.display = 'flex';
+                        
+                        currentUploadTask = null;
+                    },
+                    async () => {
+                        // Upload completed successfully
+                        const downloadURL = await storageRef.getDownloadURL();
+                        
+                        // Store the reference for potential deletion later
+                        previousImageRef = storageRef;
+                        
+                        // Show success message only for new uploads (not when editing)
+                        isNewUpload = true;
+                        
+                        // Update UI for success
+                        document.getElementById('upload-progress').style.display = 'none';
+                        
+                        // Show preview with image
+                        document.getElementById('image-preview-container').style.display = 'flex';
+                        
+                        // Show success message only for new uploads
+                        if (isNewUpload && !editingId) {
+                            document.getElementById('upload-success-message').style.display = 'flex';
+                        }
+                        
+                        document.getElementById('modal-submit-btn').disabled = false;
+                        imageUploaded = true;
+                        
+                        // Store the download URL for later use
+                        existingImageUrl = downloadURL;
+                        
+                        // Store the URL to delete if user changes image again
+                        previousImageUrlToDelete = downloadURL;
+                        
+                        currentUploadTask = null;
+                    }
+                );
+                
+            } catch (error) {
+                console.error('Upload error:', error);
+                document.getElementById('upload-error').textContent = 'Upload failed. Please try again.';
+                document.getElementById('upload-error').style.display = 'block';
+                document.getElementById('upload-progress').style.display = 'none';
+                document.getElementById('modal-submit-btn').disabled = true;
+                document.getElementById('image-upload-box').style.display = 'flex';
+                currentUploadTask = null;
             }
         }
 
-        // --- SAVE LOGIC ---
-        async function savePopupSettings(viewPrefix) {
-            // viewPrefix is 'desktop' or 'mobile'
-            const btn = event.target; // The button clicked
-            const originalText = btn.innerText;
-            btn.innerText = "Saving...";
-            btn.disabled = true;
-
-            // Determine which inputs to read from
-            const prefix = viewPrefix === 'desktop' ? 'd-' : 'm-';
-            
-            // Update State from DOM elements of the active view
-            state.title = document.getElementById(`${prefix}popup-title`).value.trim();
-            state.message = document.getElementById(`${prefix}popup-message`).value.trim();
-            state.buttonText = document.getElementById(`${prefix}button-text`).value.trim();
-            state.buttonLink = document.getElementById(`${prefix}button-link`).value.trim();
-            state.delayTime = parseInt(document.getElementById(`${prefix}delay-time`).value);
-            
-            // Frequency is only on desktop form visually in this design, so fall back to existing state if mobile saving, or grab if desktop
-            if (viewPrefix === 'desktop') {
-                state.displayFrequency = document.getElementById('d-display-frequency').value;
+        document.getElementById('category-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('cat-name-input').value.trim();
+            if(!name) {
+                showToast('Category name is required', 'error');
+                return;
             }
 
-            // Validation
-            if (state.enabled && !pendingImageFile && !state.imageUrl && (!state.title || !state.message)) {
-                btn.innerText = originalText;
-                btn.disabled = false;
-                return showToast("Please provide Title/Message OR an Image", true);
+            // Check if image is uploaded (required for new categories)
+            if (!editingId && !imageUploaded) {
+                document.getElementById('image-required').style.display = 'block';
+                showToast('Please upload an image for the category', 'error');
+                return;
             }
 
-            if (state.enabled && (!state.buttonText || !state.buttonLink)) {
-                btn.innerText = originalText;
-                btn.disabled = false;
-                return showToast("Button Text and Link are required", true);
+            // For editing, if no new image uploaded and no existing image, require image
+            if (editingId && !imageUploaded && !existingImageUrl) {
+                document.getElementById('image-required').style.display = 'block';
+                showToast('Please upload an image for the category', 'error');
+                return;
             }
+
+            const exists = allCategories.some(c => c.id !== editingId && c.name.toLowerCase() === name.toLowerCase());
+            if(exists) {
+                showToast('Category name already exists', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('modal-submit-btn');
+            btn.disabled = true; 
+            btn.textContent = editingId ? "Updating..." : "Saving...";
 
             try {
-                // Upload Image if changed
-                if (pendingImageFile) {
-                    const ref = storage.ref(`hero-popup/${Date.now()}_${pendingImageFile.name}`);
-                    await ref.put(pendingImageFile);
-                    state.imageUrl = await ref.getDownloadURL();
-                    pendingImageFile = null;
-                }
-
-                // Save to Firestore
-                await db.collection('landingPage').doc('HeroPopup').set({
-                    ...state,
-                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                // Sync UI across views
-                updateUI();
-                showToast("Popup settings saved successfully!");
+                let imageUrl = existingImageUrl;
                 
-                // If saved from mobile, close drawer
-                if (viewPrefix === 'mobile') {
-                    document.getElementById('m-overlay').classList.remove('open');
+                // If we have a new file upload in progress, wait for it to complete
+                if (currentUploadTask) {
+                    showToast('Please wait for image upload to complete', 'error');
+                    btn.disabled = false;
+                    btn.textContent = editingId ? "Update Category" : "Save Category";
+                    return;
                 }
 
-            } catch (error) {
-                console.error("Save Error:", error);
-                showToast("Error saving settings", true);
-            } finally {
-                btn.innerText = originalText;
-                btn.disabled = false;
+                const data = {
+                    name,
+                    imageUrl: imageUrl || '',
+                    enabled: true, // Default to enabled when creating/updating
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                if(editingId) {
+                    await db.collection('categories').doc(editingId).update(data);
+                    showToast('Category updated successfully', 'success');
+                } else {
+                    data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    await db.collection('categories').add(data);
+                    showToast('Category created successfully', 'success');
+                }
+                
+                closeModal();
+                loadData();
+            } catch(e) {
+                console.error(e);
+                showToast('Operation failed', 'error');
+                btn.disabled = false; 
+                btn.textContent = editingId ? "Update Category" : "Save Category";
             }
+        });
+
+        // --- DELETE LOGIC ---
+        function openDeleteModal(id, name) {
+            deletingId = id;
+            deletingName = name;
+            document.getElementById('del-cat-name').textContent = name;
+            document.getElementById('confirm-del-input').value = '';
+            document.getElementById('confirm-del-btn').disabled = true;
+            document.getElementById('delete-modal').style.display = 'flex';
+            
+            // Clean up menus
+            document.querySelectorAll('.desktop-popup').forEach(d => d.classList.remove('open'));
+            closeAdvancedMenu();
         }
 
-        function saveMobilePopupSettings() {
-            savePopupSettings('mobile');
+        function closeDeleteModal() {
+            document.getElementById('delete-modal').style.display = 'none';
         }
 
-        // --- UTILS ---
-        function showToast(msg, isError = false) {
-            const toast = document.createElement('div');
-            toast.className = `toast-msg ${isError ? 'error' : ''}`;
-            toast.innerText = msg;
-            document.getElementById('toast').appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+        document.getElementById('confirm-del-input').addEventListener('input', (e) => {
+            document.getElementById('confirm-del-btn').disabled = e.target.value !== deletingName;
+        });
+
+        document.getElementById('confirm-del-btn').addEventListener('click', async () => {
+            if(!deletingId) return;
+            
+            const btn = document.getElementById('confirm-del-btn');
+            btn.disabled = true;
+            btn.textContent = "Deleting...";
+            
+            try {
+                // Get the category to delete its image from storage
+                const cat = allCategories.find(c => c.id === deletingId);
+                if (cat && cat.imageUrl) {
+                    try {
+                        // Extract the file path from the URL and delete from storage
+                        const imageRef = storage.refFromURL(cat.imageUrl);
+                        await imageRef.delete();
+                    } catch (error) {
+                        console.log('Image not found or already deleted:', error);
+                    }
+                }
+                
+                await db.collection('categories').doc(deletingId).delete();
+                showToast('Category deleted successfully', 'success');
+                closeDeleteModal();
+                loadData();
+            } catch(e) {
+                showToast('Delete failed', 'error');
+                btn.disabled = false;
+                btn.textContent = "Delete";
+            }
+        });
+
+        function showToast(msg, type='success') {
+            const container = document.getElementById('toast-container');
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    ${type === 'success' ? 
+                        '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' : 
+                        '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}
+                </svg>
+                <span>${msg}</span>`;
+            container.appendChild(el);
+            setTimeout(() => el.remove(), 3000);
         }
     </script>
 </body>
