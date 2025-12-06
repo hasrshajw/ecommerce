@@ -44,6 +44,7 @@
         .d-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; margin: 4px 12px; border-radius: 8px; cursor: pointer; color: var(--text-color); font-weight: 500; }
         .d-nav-item:hover { background: var(--hover-bg); }
         .d-nav-item--active { background: var(--active-bg); color: var(--brand-primary); }
+        .d-nav-item--active svg { stroke: var(--icon-active); }
         .d-submenu { margin-left: 28px; padding-left: 12px; border-left: 1px solid var(--border-subtle); }
         .d-submenu-item { padding: 10px 12px; display: flex; gap: 10px; align-items: center; cursor: pointer; border-radius: 6px; font-weight: 500; }
         .d-submenu-item:hover { background: var(--hover-bg); }
@@ -145,6 +146,7 @@
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                 <h1 style="font-size: 24px; font-weight: 700;">Hero Section Manager</h1>
                 <div style="display: flex; gap: 12px;">
+                    <button class="btn btn-secondary" onclick="previewHeroSection()">Preview</button>
                     <button class="btn btn-primary" onclick="saveAllSettings()">Save Changes</button>
                 </div>
             </div>
@@ -168,10 +170,6 @@
 
                     <div class="slider-cards" id="slider-cards">
                         <!-- Populated via JS -->
-                        <div class="add-slider-btn" onclick="openSlideModal()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-                            <div>Add New Slide</div>
-                        </div>
                     </div>
                 </div>
 
@@ -185,7 +183,7 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label class="form-label">Animation</label>
-                            <select class="form-control" id="setting-animation">
+                            <select class="form-control" id="setting-animation" onchange="updateSettingsState()">
                                 <option value="slide">Slide</option>
                                 <option value="fade">Fade</option>
                                 <option value="zoom">Zoom</option>
@@ -193,7 +191,7 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label">Autoplay Speed</label>
-                            <select class="form-control" id="setting-autoplay">
+                            <select class="form-control" id="setting-autoplay" onchange="updateSettingsState()">
                                 <option value="3000">3 Seconds</option>
                                 <option value="5000">5 Seconds</option>
                                 <option value="7000">7 Seconds</option>
@@ -202,13 +200,18 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label">Show Arrows</label>
-                            <div class="toggle-switch active" id="setting-arrows" onclick="this.classList.toggle('active')"></div>
+                            <div class="toggle-switch" id="setting-arrows" onclick="toggleSetting(this, 'showArrows')"></div>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Show Dots</label>
-                            <div class="toggle-switch active" id="setting-dots" onclick="this.classList.toggle('active')"></div>
+                            <div class="toggle-switch" id="setting-dots" onclick="toggleSetting(this, 'showDots')"></div>
                         </div>
                     </div>
+                </div>
+
+                <div style="margin-top: 24px; display: flex; gap: 12px; justify-content: flex-end;">
+                    <button class="btn btn-secondary" onclick="resetSettings()">Reset to Defaults</button>
+                    <button class="btn btn-primary" onclick="saveAllSettings()">Save Changes</button>
                 </div>
             </div>
         </main>
@@ -242,17 +245,17 @@
             <div style="background: white; padding: 16px; border-radius: 12px; border: 1px solid #e5e7eb; margin-bottom: 16px;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <b>Enable Hero Section</b>
-                    <div class="toggle-switch" id="mobile-hero-toggle" onclick="toggleHeroSection()"></div>
+                    <div class="toggle-switch" id="mobile-hero-toggle" onclick="toggleMobileHeroSection()"></div>
                 </div>
             </div>
 
             <div style="margin-bottom: 16px;">
                 <h3 style="margin-bottom: 12px;">Slides</h3>
                 <div id="mobile-slider-list" style="display: flex; flex-direction: column; gap: 12px;"></div>
-                <button class="btn btn-secondary" style="width: 100%; margin-top: 12px;" onclick="openSlideModal()">+ Add Slide</button>
+                <button class="btn btn-secondary" style="width: 100%; margin-top: 12px;" onclick="openAddSlideModal()">+ Add Slide</button>
             </div>
 
-            <button class="btn btn-primary" style="width: 100%; position: fixed; bottom: 0; left: 0; border-radius: 0; padding: 15px; z-index: 90;" onclick="saveAllSettings()">Save Changes</button>
+            <button class="btn btn-primary" style="width: 100%; position: fixed; bottom: 0; left: 0; border-radius: 0; padding: 15px; z-index: 90;" onclick="saveMobileHeroSettings()">Save Changes</button>
         </main>
     </div>
 
@@ -266,37 +269,43 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label class="form-label">Image</label>
-                    <div class="image-upload-zone" id="upload-zone" onclick="document.getElementById('slide-img-input').click()">
-                        <div>Click to upload image</div>
-                        <div class="image-preview-container" id="preview-container">
-                            <img id="img-preview" class="image-preview">
+                    <div class="image-upload-zone" id="modal-upload-zone" onclick="document.getElementById('modal-image-input').click()">
+                        <div class="upload-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        </div>
+                        <div class="upload-text">Click to upload image</div>
+                        <div class="image-preview-container" id="modal-preview-container">
+                            <img id="modal-image-preview" class="image-preview">
+                            <div style="margin-top: 8px;">
+                                <button type="button" class="btn btn-sm btn-danger" onclick="event.stopPropagation(); removeModalImage()">Remove</button>
+                            </div>
                         </div>
                     </div>
-                    <input type="file" id="slide-img-input" style="display: none;" accept="image/*" onchange="handleImageUpload(this)">
+                    <input type="file" id="modal-image-input" style="display: none;" accept="image/*" onchange="handleModalImageUpload(this)">
                 </div>
                 
                 <div class="form-group">
                     <label class="form-label">Title</label>
-                    <input type="text" class="form-control" id="slide-title" placeholder="Summer Collection">
+                    <input type="text" class="form-control" id="modal-slide-title" placeholder="Summer Collection">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Description</label>
-                    <input type="text" class="form-control" id="slide-desc" placeholder="Up to 50% off">
+                    <input type="text" class="form-control" id="modal-slide-desc" placeholder="Up to 50% off">
                 </div>
                 <div class="form-grid">
                     <div class="form-group">
                         <label class="form-label">Button Text</label>
-                        <input type="text" class="form-control" id="slide-btn-text" placeholder="Shop Now">
+                        <input type="text" class="form-control" id="modal-button-text" placeholder="Shop Now">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Button Link</label>
-                        <input type="text" class="form-control" id="slide-btn-link" placeholder="/shop">
+                        <input type="text" class="form-control" id="modal-button-link" placeholder="/shop">
                     </div>
                 </div>
                 <div class="form-group">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <label class="form-label" style="margin: 0;">Active</label>
-                        <div class="toggle-switch active" id="slide-active-toggle" onclick="this.classList.toggle('active')"></div>
+                        <div class="toggle-switch active" id="modal-slide-toggle" onclick="toggleModalSlideStatus()"></div>
                     </div>
                 </div>
             </div>
@@ -378,24 +387,30 @@
 
         // --- RENDERING ---
         function renderAll() {
-            // Toggles
-            const globalToggles = document.querySelectorAll('#hero-toggle, #mobile-hero-toggle');
-            globalToggles.forEach(el => {
-                if (state.enabled) el.classList.add('active');
-                else el.classList.remove('active');
-            });
+            // Main Toggles
+            const desktopToggle = document.getElementById('hero-toggle');
+            const mobileToggle = document.getElementById('mobile-hero-toggle');
+            
+            if (state.enabled) {
+                desktopToggle.classList.add('active');
+                mobileToggle.classList.add('active');
+            } else {
+                desktopToggle.classList.remove('active');
+                mobileToggle.classList.remove('active');
+            }
 
-            // Settings
+            // Settings Inputs
             document.getElementById('setting-animation').value = state.settings.animation;
             document.getElementById('setting-autoplay').value = state.settings.autoplaySpeed;
             
-            const arrowToggle = document.getElementById('setting-arrows');
-            state.settings.showArrows ? arrowToggle.classList.add('active') : arrowToggle.classList.remove('active');
+            // Settings Toggles
+            const arrowsToggle = document.getElementById('setting-arrows');
+            state.settings.showArrows ? arrowsToggle.classList.add('active') : arrowsToggle.classList.remove('active');
             
             const dotsToggle = document.getElementById('setting-dots');
             state.settings.showDots ? dotsToggle.classList.add('active') : dotsToggle.classList.remove('active');
 
-            // Slides
+            // Render Slides
             document.getElementById('slide-count').innerText = `${state.slides.length} slides`;
             renderSlidesDesktop();
             renderSlidesMobile();
@@ -403,14 +418,13 @@
 
         function renderSlidesDesktop() {
             const container = document.getElementById('slider-cards');
-            // Keep the "Add New" button (last child)
-            const addBtn = container.lastElementChild;
-            container.innerHTML = '';
-            
+            container.innerHTML = ''; // Clear existing
+
             state.slides.forEach((slide, index) => {
                 const card = document.createElement('div');
                 card.className = `slider-card ${slide.active ? 'active' : ''}`;
-                card.onclick = () => openSlideModal(index);
+                // This connects the static HTML's need for editing to the JS function
+                card.onclick = () => openSlideModal(index); 
                 card.innerHTML = `
                     <div class="slider-image-container">
                         <img src="${slide.image}" class="slider-image">
@@ -421,12 +435,21 @@
                         <div style="font-size:12px; color:#6b7280; margin-bottom:10px;">${slide.description}</div>
                         <div style="display:flex; justify-content:space-between;">
                             <span style="font-size:12px; background:${slide.active?'#d1fae5':'#f3f4f6'}; color:${slide.active?'#065f46':'#6b7280'}; padding:2px 6px; border-radius:4px;">${slide.active?'Active':'Inactive'}</span>
-                            <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); toggleSlideActive(${index})">${slide.active?'Disable':'Enable'}</button>
+                            <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); toggleSlideStatus(${index})">${slide.active?'Disable':'Enable'}</button>
                         </div>
                     </div>
                 `;
                 container.appendChild(card);
             });
+
+            // Add the "Add New" button card at the end
+            const addBtn = document.createElement('div');
+            addBtn.className = "add-slider-btn";
+            addBtn.onclick = () => openSlideModal(-1); // Wrapper for openAddSlideModal
+            addBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                <div>Add New Slide</div>
+            `;
             container.appendChild(addBtn);
         }
 
@@ -444,14 +467,54 @@
             `).join('');
         }
 
-        // --- INTERACTION ---
+        // --- INTERACTIONS & WRAPPERS ---
+        // 1. Toggle Hero Section
         function toggleHeroSection() {
             state.enabled = !state.enabled;
             renderAll();
         }
+        function toggleMobileHeroSection() {
+            toggleHeroSection();
+        }
 
-        function toggleSlideActive(index) {
+        // 2. Settings Logic
+        function toggleSetting(element, key) {
+            // Update UI class immediately for feedback
+            element.classList.toggle('active');
+            // Update state
+            state.settings[key] = element.classList.contains('active');
+        }
+
+        function updateSettingsState() {
+            state.settings.animation = document.getElementById('setting-animation').value;
+            state.settings.autoplaySpeed = document.getElementById('setting-autoplay').value;
+        }
+
+        function resetSettings() {
+            if(confirm("Reset all slider settings to default?")) {
+                state.settings = {
+                    animation: 'slide',
+                    autoplaySpeed: 5000,
+                    showArrows: true,
+                    showDots: true
+                };
+                renderAll();
+                showToast("Settings reset to defaults");
+            }
+        }
+
+        // 3. Slide Management Wrappers
+        function openAddSlideModal() {
+            openSlideModal(-1);
+        }
+
+        function editHeroSlide(index) {
+            openSlideModal(index);
+        }
+
+        function toggleSlideStatus(index) {
             state.slides[index].active = !state.slides[index].active;
+            state.slides[index].status = state.slides[index].active ? 'active' : 'inactive';
             renderAll();
         }
 
@@ -459,67 +522,106 @@
         function openSlideModal(index = -1) {
             currentEditingIndex = index;
             pendingImageFile = null;
-            const modal = document.getElementById('slide-modal');
+            
+            // UI References
+            const titleEl = document.getElementById('modal-title');
+            const titleInput = document.getElementById('modal-slide-title');
+            const descInput = document.getElementById('modal-slide-desc');
+            const btnTextInput = document.getElementById('modal-button-text');
+            const btnLinkInput = document.getElementById('modal-button-link');
+            const toggle = document.getElementById('modal-slide-toggle');
             const deleteBtn = document.getElementById('delete-slide-btn');
             
-            if (index > -1) {
-                // Edit existing
-                const slide = state.slides[index];
-                document.getElementById('modal-title').innerText = "Edit Slide";
-                document.getElementById('slide-title').value = slide.title;
-                document.getElementById('slide-desc').value = slide.description;
-                document.getElementById('slide-btn-text').value = slide.buttonText;
-                document.getElementById('slide-btn-link').value = slide.buttonLink;
-                
-                const toggle = document.getElementById('slide-active-toggle');
-                slide.active ? toggle.classList.add('active') : toggle.classList.remove('active');
+            const previewContainer = document.getElementById('modal-preview-container');
+            const previewImg = document.getElementById('modal-image-preview');
+            const uploadText = document.querySelector('.upload-text');
+            const uploadIcon = document.querySelector('.upload-icon');
 
-                // Image Preview
-                document.getElementById('preview-container').classList.add('active');
-                document.getElementById('img-preview').src = slide.image;
+            if (index > -1) {
+                // Edit Mode
+                const slide = state.slides[index];
+                titleEl.innerText = "Edit Slide";
+                titleInput.value = slide.title;
+                descInput.value = slide.description;
+                btnTextInput.value = slide.buttonText || "";
+                btnLinkInput.value = slide.buttonLink || "";
+                
+                if (slide.active) toggle.classList.add('active');
+                else toggle.classList.remove('active');
+
+                // Show existing image
+                previewImg.src = slide.image;
+                previewContainer.classList.add('active');
+                uploadText.style.display = 'none';
+                uploadIcon.style.display = 'none';
                 
                 deleteBtn.style.display = 'block';
             } else {
-                // Add New
-                document.getElementById('modal-title').innerText = "Add New Slide";
-                document.getElementById('slide-title').value = "";
-                document.getElementById('slide-desc').value = "";
-                document.getElementById('slide-btn-text').value = "";
-                document.getElementById('slide-btn-link').value = "";
-                document.getElementById('slide-active-toggle').classList.add('active');
-                
-                document.getElementById('preview-container').classList.remove('active');
-                document.getElementById('img-preview').src = "";
+                // Add Mode
+                titleEl.innerText = "Add New Slide";
+                titleInput.value = "";
+                descInput.value = "";
+                btnTextInput.value = "";
+                btnLinkInput.value = "";
+                toggle.classList.add('active');
+
+                // Reset image
+                previewContainer.classList.remove('active');
+                previewImg.src = "";
+                uploadText.style.display = 'block';
+                uploadIcon.style.display = 'flex';
                 
                 deleteBtn.style.display = 'none';
             }
-            
-            modal.style.display = 'flex';
+
+            document.getElementById('slide-modal').style.display = 'flex';
         }
 
         function closeSlideModal() {
             document.getElementById('slide-modal').style.display = 'none';
         }
 
-        function handleImageUpload(input) {
+        function toggleModalSlideStatus() {
+            document.getElementById('modal-slide-toggle').classList.toggle('active');
+        }
+
+        function removeModalImage() {
+            pendingImageFile = null;
+            document.getElementById('modal-preview-container').classList.remove('active');
+            document.querySelector('.upload-text').style.display = 'block';
+            document.querySelector('.upload-icon').style.display = 'flex';
+            document.getElementById('modal-image-input').value = '';
+        }
+
+        function handleModalImageUpload(input) {
             if (input.files && input.files[0]) {
-                pendingImageFile = input.files[0];
+                const file = input.files[0];
+                if(file.size > 5 * 1024 * 1024) {
+                    showToast("Image too large (max 5MB)", true);
+                    return;
+                }
+                pendingImageFile = file;
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    document.getElementById('preview-container').classList.add('active');
-                    document.getElementById('img-preview').src = e.target.result;
+                    const previewContainer = document.getElementById('modal-preview-container');
+                    const previewImg = document.getElementById('modal-image-preview');
+                    previewImg.src = e.target.result;
+                    previewContainer.classList.add('active');
+                    
+                    document.querySelector('.upload-text').style.display = 'none';
+                    document.querySelector('.upload-icon').style.display = 'none';
                 };
-                reader.readAsDataURL(input.files[0]);
+                reader.readAsDataURL(file);
             }
         }
 
         async function confirmSaveSlide() {
-            const title = document.getElementById('slide-title').value;
-            const active = document.getElementById('slide-active-toggle').classList.contains('active');
+            const title = document.getElementById('modal-slide-title').value.trim();
+            const isActive = document.getElementById('modal-slide-toggle').classList.contains('active');
             
             if (!title) return showToast("Title is required", true);
 
-            // Handle Image Upload
+            // Determine Image URL
             let imageUrl = currentEditingIndex > -1 ? state.slides[currentEditingIndex].image : '';
             
             if (pendingImageFile) {
@@ -529,6 +631,7 @@
                     await storageRef.put(pendingImageFile);
                     imageUrl = await storageRef.getDownloadURL();
                 } catch (e) {
+                    console.error(e);
                     return showToast("Image upload failed", true);
                 }
             } else if (currentEditingIndex === -1) {
@@ -538,11 +641,12 @@
             const slideData = {
                 id: currentEditingIndex > -1 ? state.slides[currentEditingIndex].id : Date.now(),
                 title: title,
-                description: document.getElementById('slide-desc').value,
-                buttonText: document.getElementById('slide-btn-text').value,
-                buttonLink: document.getElementById('slide-btn-link').value,
+                description: document.getElementById('modal-slide-desc').value.trim(),
+                buttonText: document.getElementById('modal-button-text').value.trim(),
+                buttonLink: document.getElementById('modal-button-link').value.trim(),
                 image: imageUrl,
-                active: active
+                active: isActive,
+                status: isActive ? 'active' : 'inactive'
             };
 
             if (currentEditingIndex > -1) {
@@ -553,34 +657,32 @@
 
             closeSlideModal();
             renderAll();
-            showToast("Slide updated (Click 'Save Changes' to persist)");
+            showToast("Slide updated locally (Click 'Save Changes' to persist)");
         }
 
         function deleteCurrentSlide() {
-            if(confirm("Are you sure you want to remove this slide?")) {
+            if (confirm("Are you sure you want to remove this slide?")) {
                 if (currentEditingIndex > -1) {
                     state.slides.splice(currentEditingIndex, 1);
                     renderAll();
                     closeSlideModal();
+                    showToast("Slide removed");
                 }
             }
         }
 
         // --- SAVING ---
         async function saveAllSettings() {
-            const btn = document.querySelector('.page-desktop .btn-primary');
-            const originalText = btn.innerText;
-            btn.innerText = "Saving...";
-            btn.disabled = true;
+            const btns = document.querySelectorAll('.btn-primary'); // desktop & mobile buttons
+            btns.forEach(b => {
+                b.innerText = "Saving...";
+                b.disabled = true;
+            });
 
-            // Collect Settings
-            state.settings.animation = document.getElementById('setting-animation').value;
-            state.settings.autoplaySpeed = document.getElementById('setting-autoplay').value;
-            state.settings.showArrows = document.getElementById('setting-arrows').classList.contains('active');
-            state.settings.showDots = document.getElementById('setting-dots').classList.contains('active');
+            // Ensure settings state is fresh from DOM
+            updateSettingsState();
 
             try {
-                // Ensure correct path: landingPage > HeroSections
                 await db.collection('landingPage').doc('HeroSections').set({
                     enabled: state.enabled,
                     settings: state.settings,
@@ -593,11 +695,27 @@
                 console.error("Save error:", error);
                 showToast("Error saving changes", true);
             } finally {
-                btn.innerText = originalText;
-                btn.disabled = false;
+                btns.forEach(b => {
+                    b.innerText = "Save Changes";
+                    b.disabled = false;
+                });
             }
         }
 
+        function saveMobileHeroSettings() {
+            saveAllSettings().then(() => {
+                // Close mobile drawer if needed
+                document.getElementById('m-overlay').classList.remove('open');
+            });
+        }
+
+        function previewHeroSection() {
+            showToast("Opening preview...");
+            // In a real scenario, open your live site or a preview modal
+            setTimeout(() => window.open('https://vastramaya-magic.web.app', '_blank'), 500);
+        }
+
+        // --- UTILS ---
         function showToast(msg, isError = false) {
             const toast = document.createElement('div');
             toast.className = `toast-msg ${isError ? 'error' : ''}`;
